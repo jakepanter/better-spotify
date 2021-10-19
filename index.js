@@ -1,5 +1,7 @@
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const routes = require('./routes/api');
 require('dotenv').config();
@@ -21,6 +23,10 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.json());
+
+app.use(cors());
+
+app.use(cookieParser());
 
 app.use('/api', routes);
 
