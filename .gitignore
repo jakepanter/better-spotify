@@ -1,2 +1,4 @@
 .idea
 .node-modules
+package-lock.json
+.env
