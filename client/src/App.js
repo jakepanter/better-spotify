@@ -43,7 +43,7 @@ export default class App extends React.Component {
                     Login with Spotify
                 </a>
 
-                <p>Loggin in as:</p>
+                <p>Logged in as:</p>
                 <p>{ Object.keys(this.state.profile).toString() }</p>
                 <p>access_token: {queryString.parse(window.location.hash).access_token}</p>
                 <p>refresh_token: {queryString.parse(window.location.hash).refresh_token}</p>
