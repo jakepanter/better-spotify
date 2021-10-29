@@ -1,0 +1,135 @@
+/*
+  You will find a collection of assets, variables and snippets of code.
+  Furthermore some basic mixins are implemented -
+  check SASS-Boilerplate Docu for further information: https://github.com/jakepanter/better-spotify/wiki/SASS-Documentation
+*/
+
+// Imports
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap');
+@import "normalize-css";
+
+/*
+   Variables Setup
+*/
+
+// colors
+$none: none;
+$transparent: transparent;
+$black: #000 !default;
+$white: #fff !default;
+$green: #1EB972 !default;
+$yellow: #D9BB0B !default;
+$red: #D83010 !default;
+$blue: #0072C5 !default;
+$gray-dark: #3a3c3b !default;
+$gray: #7a7c7b !default;
+$gray-light: #CDCECD !default;
+
+// project base colors
+$color-background: #E4E3E2 !default;
+$color-primary: #121E2A !default;
+$color-secondary: #2F4766 !default;
+$color-default: #263950 !default;
+
+// project special colors
+$color-accent-dark: #33A9FE !default;
+$color-accent-darker: #008FF7 !default;
+$color-accent-darkest: #0072C5 !default;
+$color-waring-dark: #F47960 !default;
+$color-waring-darker: #EA5030 !default;
+$color-waring-darkest: #D83010 !default;
+$color-positive-dark: #35DF91 !default;
+$color-positive-darker: #1EB972 !default;
+$color-positive-darkest: #188D58 !default;
+
+
+// Sizes
+$breakpoint-sm: 48rem !default; // ~ 768px
+$breakpoint-md: 61rem !default; // ~ 976px
+$breakpoint-lg: 75rem !default; // ~ 1200px
+$breakpoint-xl: 100rem !default; // ~ 1600px
+
+// padding
+$spacer: 2rem !default;
+$padding-vertical: $spacer/2 !default;
+$padding-horizontal: $spacer !default;
+
+// borders
+$border-width: 1px !default;
+$border-radius: 5px !default;
+
+// transitions
+$transition-base: all 0.5s ease-in-out !default;
+$transition-fade: opacity .2s linear !default;
+
+// fonts
+$font-default: 'Montserrat' !default;
+$font-special: 'Roboto' !default;
+
+$fz-base: 16px !default;
+$lh-base: 1.5rem !default;
+$ls-base: 0px !default;
+$fw-base: 400 !default;
+$fs-base: normal !default;
+$fw-bold: 700 !default;
+
+// shadows
+$text-shadow: 0 0 1px rgba($gray-light, .7) !default;
+$box-shadow: 0 0 ($spacer/2) rgba($gray-light, .7) !default;
+
+// Text - links
+$link-color: $color-default !default;
+$link-hover-color: $color-primary !default;
+$link-decoration: none !default;
+$link-hover-decoration: underline !default;
+
+// Text - Headlines
+$color-headlines: $color-primary !default;
+$ff-headlines: $font-special !default;
+$lh-headlines: 1.5 !default;
+$fw-headlines: $fw-bold !default;
+$ls-headlines: 0px !default;
+$fs-headlines: normal !default;
+$fz-h1: 40px !default;
+$fz-h2: 32px !default;
+$fz-h3: 28px !default;
+$fz-h4: 24px !default;
+$fz-h5: 20px !default;
+$fz-h6: 18px !default;
+
+// tables
+$table-cell-padding: .75rem !default;
+$table-bg: transparent !default;
+$table-border-width: $border-width !default;
+$table-border-color: $gray-light !default;
+$table-head-bg: $gray-light !default;
+$table-head-color: $gray !default;
+
+// Buttons
+$button-background: $color-primary !default;
+$button-background-active: none !default;
+$button-color: $white !default;
+$button-color-active: $color-primary !default;
+$ff-buttons: $font-default !default;
+$lh-buttons: 1.5 !default;
+$ls-buttons: 0px !default;
+$fw-buttons: $fw-base !default;
+$tt-buttons: none !default;
+$button-border-style: solid !default;
+$button-border-width: 1px !default;
+$button-border-color: $color-primary !default;
+$button-border-color-active: $color-primary !default;
+$button-border-radius: 0px !default;
+$button-padding-horizontal: 10px !default;
+$button-padding-vertical: 15px !default;
+$button-transition-base: $transition-base !default;
+
+/*
+   STANDARD FUNCTIONS
+*/
+//Do we even need some?
+
+/*
+   STANDARD MIXINS
+*/
+// Let see if we need one

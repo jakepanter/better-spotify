@@ -1,0 +1,81 @@
+@import "boilerplate";
+
+//Text
+
+p{
+  font-family: $font-default;
+  line-height: $lh-base;
+  letter-spacing: $ls-base;
+  font-weight: $fw-base;
+  font-style: normal;
+  max-width: 100%;
+  color: $color-default;
+}
+
+// Button
+.button {
+  padding: $button-padding-horizontal $button-padding-vertical;
+  display: inline-block;
+  font-family: $ff-buttons;
+  line-height: $lh-buttons;
+  letter-spacing: $ls-buttons;
+  font-weight: $fw-buttons;
+  text-transform: $tt-buttons;
+  text-decoration: none;
+  font-style: $fs-base;
+  border-width: $button-border-width;
+  border-style: $button-border-style;
+  border-radius: $button-border-radius;
+  max-width: 100%;
+  transition: $button-transition-base;
+  background: $button-background;
+  color: $button-color;
+  border-color: $button-border-color;
+
+  &.active,
+  &:hover {
+    background: $button-background-active;
+    color: $button-color-active;
+    border-color: $button-border-color-active;
+    cursor: pointer;
+    text-decoration: none;
+  }
+}
+
+// Headlines
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $ff-headlines;
+  font-weight: $fw-bold;
+  color: $color-primary;
+  margin-top: 0;
+}
+
+h1 {
+  font-size: $fz-h1;
+}
+
+h2 {
+  font-size: $fz-h2;
+}
+
+h3 {
+  font-size: $fz-h3;
+}
+
+h4 {
+  font-size: $fz-h4;
+}
+
+h5 {
+  font-size: $fz-h5;
+}
+
+
+h6 {
+  font-size: $fz-h6;
+}
