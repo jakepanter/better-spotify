@@ -17,10 +17,10 @@ function App() {
       <div>
         <ul>
           <li>
-            <Link to="/">Home</Link>
+            <Link className="button" to="/">Home</Link>
           </li>
           <li>
-            <button onClick={authorize}>Authorize</button>
+            <button className="button" onClick={authorize}>Authorize</button>
           </li>
         </ul>
 
