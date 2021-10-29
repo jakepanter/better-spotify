@@ -24,6 +24,8 @@ function App() {
           </li>
         </ul>
 
+        <p>I just need to check the basic style, please feel free to delete this later</p>
+
         <Switch>
           <Route path="/">
             <h1>Works</h1>
