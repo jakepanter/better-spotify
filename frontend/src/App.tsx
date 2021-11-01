@@ -17,12 +17,14 @@ function App() {
       <div>
         <ul>
           <li>
-            <Link to="/">Home</Link>
+            <Link className="button" to="/">Home</Link>
           </li>
           <li>
-            <button onClick={authorize}>Authorize</button>
+            <button className="button" onClick={authorize}>Authorize</button>
           </li>
         </ul>
+
+        <p>I just need to check the basic style, please feel free to delete this later</p>
 
         <Switch>
           <Route path="/">
