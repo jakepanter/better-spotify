@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Link, Switch, Route } from 'react-router-dom';
 import './App.scss';
+import Searchbar from "./components/Searchbar/Searchbar";
 
 function authorize() {
   fetch(`http://localhost:5000/api/spotify/get-auth-url`)
@@ -15,6 +16,7 @@ function App() {
   return (
     <Router>
       <div>
+        <Searchbar/>
         <ul>
           <li>
             <Link className="button" to="/">Home</Link>
