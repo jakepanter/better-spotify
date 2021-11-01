@@ -46,4 +46,16 @@ export default class SpotifyService {
 
     return true;
   }
+
+  searchTracks = async (query: string) => {
+    const searchRes = await this.spotifyApi.search(query, ['track']);
+
+    if (searchRes.statusCode !== 200) {
+      // Authorization did not work
+      // TODO: Error handling
+      return [];
+    }
+
+    return searchRes.body.tracks;
+  }
 }

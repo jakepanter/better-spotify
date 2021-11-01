@@ -37,6 +37,18 @@ export default class App {
       return res.redirect('http://localhost:3000');
     });
 
+    /**
+     * Perform a user's search with a given query
+     */
+    this.server.get('/api/spotify/search', async (req: Request, res: Response) => {
+      const { query } = req.query;
+      if (query === undefined || query === '') return res.sendStatus(400);
+
+      const tracks = await this.spotifyService.searchTracks(query.toString());
+
+      return res.json(tracks);
+    });
+
     // DB
     // TODO
 
