@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './Player.scss';
 import SpotifyWebPlayer from "react-spotify-web-playback";
 
+
 interface IProps {}
 
 interface IState {
