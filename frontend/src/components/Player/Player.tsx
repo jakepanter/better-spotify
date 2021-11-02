@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Player.scss';
 import SpotifyWebPlayer from "react-spotify-web-playback";
+// import Player2 from "../Player2/Player2";
 
 interface IProps {}
 
@@ -49,7 +50,9 @@ class Player extends Component<IProps, IState> {
                             trackArtistColor: '#333',
                             trackNameColor: '#333',
                         }}
+                        syncExternalDevice={true}
                     />
+                // <Player2 token={this.state.token}/>
             }
             </div>
         )
