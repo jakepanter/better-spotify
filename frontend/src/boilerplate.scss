@@ -163,6 +163,7 @@ $button-transition-base: $transition-base !default;
       margin-right: $margin;
     }
   }
+
   // breakpoint tablet
   @media screen and(max-width: $breakpoint-md){
     .column {
@@ -174,13 +175,14 @@ $button-transition-base: $transition-base !default;
       }
     }
   }
+
   // breakpoint phone
   @media screen and(max-width: $breakpoint-sm){
     .column {
       width: calc(100% / #{$columns-xs} - #{$margin-xs} *2);
       padding: $box-padding-xs;
       margin-left: $margin-xs;
-      margin-right: $margin-xs !important;
+      margin-right: $margin-xs !important; // important necessary, because we have to overwrite values from desktop
 
       &:not(:last-child) {
         margin-bottom: $margin-xs;
