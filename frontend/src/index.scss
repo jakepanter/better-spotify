@@ -1,5 +1,10 @@
 @import "boilerplate";
 
+.columns-test{
+  @include columns(
+    $columns: 2
+  );
+}
 //Text
 
 p{

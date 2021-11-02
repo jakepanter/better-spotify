@@ -34,6 +34,10 @@ function App() {
           </Route>
         </Switch>
       </div>
+      <div className="columns-test">
+          <div className="column">Test</div>
+          <div className="column">Test</div>
+      </div>
     </Router>
   );
 }

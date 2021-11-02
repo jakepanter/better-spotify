@@ -56,6 +56,8 @@ $padding-horizontal: $spacer !default;
 
 // borders
 $border-width: 1px !default;
+$border-color: $color-primary;
+$border-style: solid;
 $border-radius: 5px !default;
 
 // transitions
@@ -127,9 +129,62 @@ $button-transition-base: $transition-base !default;
 /*
    STANDARD FUNCTIONS
 */
-//Do we even need some?
+
 
 /*
    STANDARD MIXINS
 */
-// Let see if we need one
+@mixin columns(
+  $columns: 3,
+  $columns-md: $columns,
+  $columns-xs: 1,
+  $margin: 2rem,
+  $margin-md: $margin,
+  $margin-xs: 1rem,
+  $box-padding: 1rem,
+  $box-padding-md: $box-padding,
+  $box-padding-xs: 1rem
+){
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: $padding-horizontal $padding-vertical;
+  .column{
+    width: calc( 100% / #{$columns} - #{$margin} / 2);
+    border: $border-width $border-style $border-color;
+    border-radius: $border-radius;
+    padding: $box-padding;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    &:not(:last-child){
+      margin-right: $margin;
+    }
+  }
+  // breakpoint tablet
+  @media screen and(max-width: $breakpoint-md){
+    .column {
+      width: calc(100% / #{$columns-md} - #{$margin-md}/2);
+      padding: $box-padding-md;
+
+      &:not(:last-child){
+        margin-right: $margin-md;
+      }
+    }
+  }
+  // breakpoint phone
+  @media screen and(max-width: $breakpoint-sm){
+    .column {
+      width: calc(100% / #{$columns-xs} - #{$margin-xs} *2);
+      padding: $box-padding-xs;
+      margin-left: $margin-xs;
+      margin-right: $margin-xs !important;
+
+      &:not(:last-child) {
+        margin-bottom: $margin-xs;
+      }
+    }
+  }
+};
