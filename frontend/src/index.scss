@@ -1,7 +1,11 @@
 @import "boilerplate";
+@import "grid-mixin";
 
 //Text
-
+.test{
+  background: red;
+  @include grid();
+}
 p{
   font-family: $font-default;
   line-height: $lh-base;
