@@ -58,4 +58,14 @@ export default class SpotifyService {
 
     return searchRes.body.tracks;
   }
+
+  getMyPlaylists = async () => {
+    const result = await this.spotifyApi.getUserPlaylists();
+    return result.body;
+  }
+
+  getPlaylist = async (playlistId: string) => {
+    const result = await this.spotifyApi.getPlaylist(playlistId);
+    return result.body;
+  }
 }
