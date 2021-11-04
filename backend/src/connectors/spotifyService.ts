@@ -2,7 +2,27 @@ import SpotifyWebApi from 'spotify-web-api-node';
 import Config from '../config/variables';
 
 export default class SpotifyService {
-  private static readonly scopes: string[] = []; // TODO
+  private static readonly scopes: string[] = [
+    'ugc-image-upload',
+    'playlist-modify-private',
+    'playlist-read-private',
+    'playlist-modify-public',
+    'playlist-read-collaborative',
+    'user-read-private',
+    'user-read-email',
+    'user-read-playback-state',
+    'user-modify-playback-state',
+    'user-read-currently-playing',
+    'user-library-modify',
+    'user-library-read',
+    'user-read-playback-position',
+    'user-read-recently-played',
+    'user-top-read',
+    'app-remote-control',
+    'streaming',
+    'user-follow-modify',
+    'user-follow-read',
+  ]; // TODO
 
   private spotifyApi: SpotifyWebApi;
 
@@ -57,5 +77,16 @@ export default class SpotifyService {
     }
 
     return searchRes.body.tracks;
+  }
+
+  getAlbum = async (id: string) => {
+    const album = await this.spotifyApi.getAlbum(id);
+    return album.body;
+  }
+
+  getMySavedAlbums = async (limit: number, offset: number) => {
+    const options: any = { limit, offset };
+    const albums = await this.spotifyApi.getMySavedAlbums(options);
+    return albums.body;
   }
 }
