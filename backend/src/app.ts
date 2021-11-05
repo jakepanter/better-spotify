@@ -43,9 +43,8 @@ export default class App {
     this.server.get('/api/spotify/search', async (req: Request, res: Response) => {
       const { query } = req.query;
       if (query === undefined || query === '') return res.sendStatus(400);
-
       const tracks = await this.spotifyService.searchTracks(query.toString());
-
+      console.log("hallo");
       return res.json(tracks);
     });
 
