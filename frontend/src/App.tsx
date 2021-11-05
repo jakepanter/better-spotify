@@ -33,7 +33,7 @@ function App() {
         <p>I just need to check the basic style, please feel free to delete this later</p>
 
         <Switch>
-          <Route path="/">
+          <Route exact path="/">
             <h1>Works</h1>
           </Route>
           <Route path="/me/tracks">
