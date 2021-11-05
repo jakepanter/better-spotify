@@ -26,9 +26,7 @@ function App() {
             <button className="button" onClick={authorize}>Authorize</button>
           </li>
           <li>
-            <Link className="button" to="/me/tracks">
-              Saved Tracks
-            </Link>
+            <Link className="button" to="/me/tracks">Saved Tracks</Link>
           </li>
         </ul>
 

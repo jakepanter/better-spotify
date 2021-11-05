@@ -31,12 +31,12 @@ export default function SavedTracks() {
   };
 
   if (!tracks|| !items) return <p>loading...</p>;
-  console.log("bin hier");
   return (
     <div onScroll={onScroll} style={{ height: "500px", overflow: "scroll" }}>
       {items.map((item: any) => {
         return (
           <div key={item.id}>
+              <img src={item.album.images[0].url} alt="" />
               <p>{item.name}</p> 
           </div>
         );
