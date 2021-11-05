@@ -30,14 +30,14 @@ export default function SavedTracks() {
     }
   };
 
-  if (!tracks|| !items) return <p>loading...</p>;
+  if (!tracks || !items) return <p>loading...</p>;
   return (
     <div onScroll={onScroll} style={{ height: "500px", overflow: "scroll" }}>
       {items.map((item: any) => {
         return (
-          <div key={item.id}>
-              <img src={item.album.images[0].url} alt="" />
-              <p>{item.name}</p> 
+          <div key={item.track.id}>
+            <img src={item.track.album.images[0].url} alt="" width={64} />
+            <p>{item.track.name}</p>
           </div>
         );
       })}
