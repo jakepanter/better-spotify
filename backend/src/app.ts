@@ -49,6 +49,17 @@ export default class App {
       return res.json(tracks);
     });
 
+    /**
+     * Get liked/saved songs of current user
+     */
+    this.server.get('/api/spotify/me/tracks', async (req: Request, res: Response) => {
+      const limit: any = req.query?.limit ?? 50;
+      const offset: any = req.query?.offset ?? 0;
+
+      const tracks = await this.spotifyService.getMySavedTracks(limit, offset);
+      return res.json(tracks);
+    });
+
     // DB
     // TODO
 
