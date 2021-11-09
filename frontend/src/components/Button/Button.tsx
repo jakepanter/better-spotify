@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
+import './Button.scss';
 
 interface IProps {
   label?: string;
   icon?: string;
   style?: string;
-  children?: any;
   onClick?: () => void;
 }
 
@@ -16,7 +16,7 @@ class Button extends Component<IProps, IState> {
   }
 
   render() {
-    const className = `button ${this.props.icon ? 'has-icon' : ''} ${this.props.label ? 'has-label' : ''}`;
+    const className = `button Button ${this.props.icon ? 'has-icon' : ''} ${this.props.label ? 'has-label' : ''}`;
 
     return (<button className={className} title={this.props.label} onClick={this.props.onClick}>
       {this.props.icon ? <span className={'material-icons'}>{this.props.icon}</span> : ''}
