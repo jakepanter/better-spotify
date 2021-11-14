@@ -37,6 +37,11 @@ export default class App {
       return res.redirect('http://localhost:3000');
     });
 
+    this.server.get('/api/spotify/access-token', async (req: Request, res: Response) => {
+      const token = await this.spotifyService.getAccessToken();
+      return res.json(token);
+    });
+
     /**
      * Perform a user's search with a given query
      */
