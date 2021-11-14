@@ -4,6 +4,7 @@ import "./App.scss";
 import Playlist from "./components/Playlist/Playlist";
 import Playlists from "./components/Playlists/Playlists";
 import Searchbar from "./components/Searchbar/Searchbar";
+import Player from "./components/Player/Player";
 
 function authorize() {
   fetch(`http://localhost:5000/api/spotify/get-auth-url`)
@@ -18,7 +19,8 @@ function App() {
   return (
     <Router>
       <div>
-        <Searchbar />
+        <Searchbar/>
+        <Player/>
         <ul>
           <li>
             <Link className="button" to="/">
@@ -48,6 +50,10 @@ function App() {
             <Playlist />
           </Route>
         </Switch>
+      </div>
+      <div className="columns-test">
+          <div className="column">Test</div>
+          <div className="column">Test</div>
       </div>
     </Router>
   );
