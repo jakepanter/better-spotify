@@ -1,6 +1,11 @@
 @import "boilerplate";
 @import "grid-mixin";
 
+.columns-test{
+  @include columns(
+    $columns: 2
+  );
+}
 //Text
 .test{
   background: red;
