@@ -33,7 +33,7 @@ function Playlist() {
               <TrackListItem
                 key={item.track.id}
                 track={item.track}
-              ></TrackListItem>
+              />
             );
           })}
         </ul>

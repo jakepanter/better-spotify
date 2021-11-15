@@ -32,7 +32,7 @@ class Playlists extends Component<IProps, IState> {
       return (
         <Link to={`/playlist/${playlist.id}`} key={playlist.id}>
           <li>
-            <img src={playlist.images[0].url} alt="Playlist Image" width={64} />
+            <img src={playlist.images[playlist.images.length - 1].url} alt="Playlist Image" width={64} height={64} />
             <span>{playlist.name}</span>
           </li>
         </Link>
