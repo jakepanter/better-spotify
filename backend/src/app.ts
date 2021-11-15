@@ -54,6 +54,17 @@ export default class App {
       return res.json(tracks);
     });
 
+    this.server.get('/api/spotify/playlists', async (req: Request, res: Response) => {
+      const playlists = await this.spotifyService.getMyPlaylists();
+      return res.json(playlists);
+    });
+
+    this.server.get('/api/spotify/playlist/:playlistId', async (req: Request, res: Response) => {
+      const { playlistId } = req.params;
+      const playlist = await this.spotifyService.getPlaylist(playlistId);
+      return res.json(playlist);
+    });
+
     // DB
     // TODO
 
