@@ -55,6 +55,13 @@ function App() {
           <div className="column">Test</div>
           <div className="column">Test</div>
       </div>
+      <div className="grid-test">
+        <div className="grid-box">1</div>
+        <div className="grid-box">2</div>
+        <div className="grid-box">3</div>
+        <div className="grid-box">4</div>
+
+      </div>
     </Router>
   );
 }
