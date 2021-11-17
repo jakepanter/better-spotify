@@ -66,6 +66,7 @@ export default class App {
 
       const albums = await this.spotifyService.getMySavedAlbums(limit, offset);
       return res.json(albums);
+    });
 
     this.server.get('/api/spotify/playlists', async (req: Request, res: Response) => {
       const playlists = await this.spotifyService.getMyPlaylists();

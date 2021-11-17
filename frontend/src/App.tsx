@@ -33,6 +33,8 @@ function App() {
             <Link className="button" to="/collections/albums">
               Saved Albums
             </Link>
+          </li>
+          <li>
             <Link className="button" to="/playlists">
               My Playlists
             </Link>
