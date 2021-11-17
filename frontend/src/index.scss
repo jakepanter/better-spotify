@@ -1,5 +1,10 @@
 @import "boilerplate";
 
+.columns-test{
+  @include columns(
+    $columns: 2
+  );
+}
 //Text
 
 //added this to test the Albums component scrolling

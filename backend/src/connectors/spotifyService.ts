@@ -89,4 +89,16 @@ export default class SpotifyService {
     const albums = await this.spotifyApi.getMySavedAlbums(options);
     return albums.body;
   }
+
+  getMyPlaylists = async () => {
+    const result = await this.spotifyApi.getUserPlaylists();
+    return result.body;
+  }
+
+  getPlaylist = async (playlistId: string) => {
+    const result = await this.spotifyApi.getPlaylist(playlistId);
+    return result.body;
+  }
+
+  getAccessToken = async () => this.spotifyApi.getAccessToken();
 }
