@@ -33,7 +33,7 @@ export default function Albums() {
 
   if (!albums || !items) return <p>loading...</p>;
   return (
-    <div onScroll={onScroll} style={{ height: "500px", overflow: "scroll" }}>
+    <div onScroll={onScroll} style={{ height: "500px", overflowY: "scroll" }}>
       {items.map((item: any) => {
         return (
           <div key={item.album.id}>
