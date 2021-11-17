@@ -6,6 +6,7 @@ import Albums from "./components/Albums/Albums";
 import Playlist from "./components/Playlist/Playlist";
 import Playlists from "./components/Playlists/Playlists";
 import Searchbar from "./components/Searchbar/Searchbar";
+import SavedTracks from "./components/SavedTracks/SavedTracks"
 import Player from "./components/Player/Player";
 
 function authorize() {
@@ -44,6 +45,9 @@ function App() {
               Authorize
             </button>
           </li>
+          <li>
+            <Link className="button" to="/me/tracks">Saved Tracks</Link>
+          </li>
         </ul>
         
         <Switch>
@@ -63,6 +67,10 @@ function App() {
           <Route path="/collections/albums">
             <h1>Albums</h1>
             <Albums />
+          </Route>
+          <Route path="/me/tracks">
+            <h1>Saved Tracks</h1>
+            <SavedTracks/>
           </Route>
         </Switch>
       </div>

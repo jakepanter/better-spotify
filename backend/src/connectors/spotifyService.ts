@@ -79,6 +79,13 @@ export default class SpotifyService {
     return searchRes.body.tracks;
   }
 
+  getMySavedTracks = async (limit: number, offset: number) => {
+    const options: any = { limit, offset };
+    const tracks = await this.spotifyApi.getMySavedTracks(options);
+
+    return tracks.body;
+  }
+  
   getAlbum = async (id: string) => {
     const album = await this.spotifyApi.getAlbum(id);
     return album.body;
