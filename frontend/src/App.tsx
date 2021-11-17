@@ -1,6 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
 import "./App.scss";
+import Album from "./components/Album/Album";
+import Albums from "./components/Albums/Albums";
 import Playlist from "./components/Playlist/Playlist";
 import Playlists from "./components/Playlists/Playlists";
 import Searchbar from "./components/Searchbar/Searchbar";
@@ -28,6 +30,11 @@ function App() {
             </Link>
           </li>
           <li>
+            <Link className="button" to="/collections/albums">
+              Saved Albums
+            </Link>
+          </li>
+          <li>
             <Link className="button" to="/playlists">
               My Playlists
             </Link>
@@ -38,7 +45,7 @@ function App() {
             </button>
           </li>
         </ul>
-
+        
         <Switch>
           <Route exact path="/">
             <h1>Home</h1>
@@ -48,6 +55,14 @@ function App() {
           </Route>
           <Route path="/playlist/:id">
             <Playlist />
+          </Route>
+          <Route path="/album/:id">
+            <h1>Album</h1>
+            <Album />
+          </Route>
+          <Route path="/collections/albums">
+            <h1>Albums</h1>
+            <Albums />
           </Route>
         </Switch>
       </div>
