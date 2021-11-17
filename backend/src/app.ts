@@ -37,6 +37,11 @@ export default class App {
       return res.redirect('http://localhost:3000');
     });
 
+    this.server.get('/api/spotify/access-token', async (req: Request, res: Response) => {
+      const token = await this.spotifyService.getAccessToken();
+      return res.json(token);
+    });
+
     /**
      * Perform a user's search with a given query
      */
@@ -55,6 +60,31 @@ export default class App {
 
       const tracks = await this.spotifyService.getMySavedTracks(limit, offset);
       return res.json(tracks);
+    });
+
+    this.server.get('/api/spotify/album/:albumId', async (req: Request, res: Response) => {
+      const { albumId } = req.params;
+      const album = await this.spotifyService.getAlbum(albumId);
+      return res.json(album);
+    });
+
+    this.server.get('/api/spotify/collections/albums', async (req: Request, res: Response) => {
+      const limit: any = req.query?.limit ?? 20;
+      const offset: any = req.query?.offset ?? 0;
+
+      const albums = await this.spotifyService.getMySavedAlbums(limit, offset);
+      return res.json(albums);
+    });
+
+    this.server.get('/api/spotify/playlists', async (req: Request, res: Response) => {
+      const playlists = await this.spotifyService.getMyPlaylists();
+      return res.json(playlists);
+    });
+
+    this.server.get('/api/spotify/playlist/:playlistId', async (req: Request, res: Response) => {
+      const { playlistId } = req.params;
+      const playlist = await this.spotifyService.getPlaylist(playlistId);
+      return res.json(playlist);
     });
 
     // DB

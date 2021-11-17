@@ -1,8 +1,13 @@
 @import "boilerplate";
 
+.columns-test{
+  @include columns(
+    $columns: 2
+  );
+}
 //Text
 
-p{
+p {
   font-family: $font-default;
   line-height: $lh-base;
   letter-spacing: $ls-base;
@@ -74,7 +79,6 @@ h4 {
 h5 {
   font-size: $fz-h5;
 }
-
 
 h6 {
   font-size: $fz-h6;
