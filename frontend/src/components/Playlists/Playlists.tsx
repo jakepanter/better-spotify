@@ -1,11 +1,15 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import {
+  ListOfUsersPlaylistsResponse,
+  PlaylistObjectSimplified,
+} from "spotify-types";
 import "./Playlists.scss";
 
 interface IProps {}
 
 interface IState {
-  results: any[];
+  results: PlaylistObjectSimplified[];
 }
 
 class Playlists extends Component<IProps, IState> {
@@ -19,7 +23,7 @@ class Playlists extends Component<IProps, IState> {
 
   async componentDidMount() {
     // Fetch playlists
-    const data = await fetch(
+    const data: ListOfUsersPlaylistsResponse = await fetch(
       `http://localhost:5000/api/spotify/playlists`
     ).then((res) => res.json());
     // Save to state
@@ -32,7 +36,12 @@ class Playlists extends Component<IProps, IState> {
       return (
         <Link to={`/playlist/${playlist.id}`} key={playlist.id}>
           <li>
-            <img src={playlist.images[playlist.images.length - 1].url} alt="Playlist Image" width={64} height={64} />
+            <img
+              src={playlist.images[playlist.images.length - 1].url}
+              alt="Playlist Image"
+              width={64}
+              height={64}
+            />
             <span>{playlist.name}</span>
           </li>
         </Link>

@@ -1,19 +1,8 @@
 import React from "react";
+import { TrackObjectFull } from "spotify-types";
 
 type Props = {
-  track: {
-    id: string;
-    name: string;
-    album: {
-      name: string;
-      images: {
-        height: number;
-        width: number;
-        url: string;
-      }[];
-    };
-    artists: [string];
-  };
+  track: TrackObjectFull;
 };
 
 function TrackListItem(props: Props) {
@@ -27,7 +16,7 @@ function TrackListItem(props: Props) {
         />
         <p style={{ display: "inline-block", verticalAlign: "bottom" }}>
           {track.name} - {track.album.name} <br />
-          {track.artists.map((artist: any) => artist.name).join(", ")}
+          {track.artists.map((artist) => artist.name).join(", ")}
         </p>
       </div>
     </li>
