@@ -3,10 +3,12 @@ if (process.env.SPOTIFY_CLIENT_SECRET === undefined) throw new Error('SPOTIFY_CL
 if (process.env.SPOTIFY_REDIRECT_URI === undefined) throw new Error('SPOTIFY_REDIRECT_URI in .env is undefined');
 if (process.env.DB === undefined) throw new Error('DB in .env is undefined');
 if (process.env.PORT === undefined) throw new Error('PORT in .env is undefined');
+if (process.env.FRONTEND_URL === undefined) throw new Error('FRONTEND_URL in .env is undefined');
 
 export default {
   general: {
     port: process.env.PORT,
+    frontend_url: process.env.FRONTEND_URL,
   },
   spotify: {
     clientId: process.env.SPOTIFY_CLIENT_ID,

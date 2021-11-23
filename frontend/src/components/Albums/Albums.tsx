@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { UsersSavedAlbumsResponse, SavedAlbumObject } from "spotify-types";
+import { API_URL } from '../../utils/constants';
 
 export default function Albums() {
   const [albums, setAlbums] = useState<UsersSavedAlbumsResponse>();
   const [items, setItems] = useState<SavedAlbumObject[]>([]);
   const [next, setNext] = useState<string>(
-    "http://localhost:5000/api/spotify/collections/albums"
+    `${API_URL}api/spotify/collections/albums`
   );
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export default function Albums() {
     if (bottom && albums) {
       const limit = albums.limit;
       const offset = albums.offset + limit;
-      const url = `http://localhost:5000/api/spotify/collections/albums?offset=${offset}&limit=${limit}`;
+      const url = `${API_URL}api/spotify/collections/albums?offset=${offset}&limit=${limit}`;
       setNext(url);
     }
   };
