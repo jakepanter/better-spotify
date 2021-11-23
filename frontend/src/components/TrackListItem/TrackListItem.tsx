@@ -17,7 +17,7 @@ function TrackListItem(props: Props) {
   useEffect(() => {
     async function fetchData() {
       const data: TrackObjectFull = await fetch(
-        `http://localhost:5000/api/spotify/tracks/${id}`
+        `http://localhost:5000/api/spotify/track/${id}`
       ).then((res) => res.json());
       setTrack(data);
     }
