@@ -20,7 +20,7 @@ function TrackList(props: Props) {
     //Hier koennen Unterschiedliche angelegt werden. Dabei muss aber auch TrackListItem angepasst werden!
 
     //ALBUM TRACKLIST
-    if(type=="album") {
+    if(type==="album") {
       const album = props.data;
 
       return(
