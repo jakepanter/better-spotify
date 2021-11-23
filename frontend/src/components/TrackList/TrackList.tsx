@@ -47,7 +47,7 @@ function TrackList(props: Props) {
     }
 
     //PLAYLIST TRACKLIST
-    else if(type == "playlist") {
+    else if(type === "playlist") {
       const playlist = props.data;
 
       return (
