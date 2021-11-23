@@ -12,7 +12,6 @@ function TrackListItem(props: Props) {
   //const type = props.type
 
   const [track, setTrack] = useState<TrackObjectFull>();
-  console.log(id);
   useEffect(() => {
     async function fetchData() {
       const data: TrackObjectFull = await fetch(
