@@ -126,10 +126,6 @@ $button-padding-horizontal: 10px !default;
 $button-padding-vertical: 15px !default;
 $button-transition-base: $transition-base !default;
 
-/*
-   STANDARD FUNCTIONS
-*/
-
 
 /*
    STANDARD MIXINS
@@ -144,48 +140,157 @@ $button-transition-base: $transition-base !default;
   $box-padding: 1rem,
   $box-padding-md: $box-padding,
   $box-padding-xs: 1rem
-){
+) {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   padding: $padding-horizontal $padding-vertical;
-  .column{
-    width: calc( 100% / #{$columns} - #{$margin} / 2);
+  .column {
+    width: calc(100% / #{$columns} - #{$margin} / 2);
     border: $border-width $border-style $border-color;
     border-radius: $border-radius;
     padding: $box-padding;
     box-sizing: border-box;
     overflow: hidden;
 
-    &:not(:last-child){
+    &:not(:last-child) {
       margin-right: $margin;
     }
   }
 
   // breakpoint tablet
-  @media screen and(max-width: $breakpoint-md){
+  @media screen and(max-width: $breakpoint-md) {
     .column {
-      width: calc(100% / #{$columns-md} - #{$margin-md}/2);
+      width: calc(100% / #{$columns-md} - #{$margin-md} / 2);
       padding: $box-padding-md;
 
-      &:not(:last-child){
+      &:not(:last-child) {
         margin-right: $margin-md;
       }
     }
   }
 
   // breakpoint phone
-  @media screen and(max-width: $breakpoint-sm){
+  @media screen and(max-width: $breakpoint-sm) {
     .column {
-      width: calc(100% / #{$columns-xs} - #{$margin-xs} *2);
+      width: calc(100% / #{$columns-xs} - #{$margin-xs} * 2);
       padding: $box-padding-xs;
       margin-left: $margin-xs;
       margin-right: $margin-xs !important; // important necessary, because we have to overwrite values from desktop
 
       &:not(:last-child) {
         margin-bottom: $margin-xs;
+      }
+    }
+  }
+};
+
+/*
+  Make sure, you used "grid-box"-class for all child container
+  You have the option of using "auto" grid - this has a basic style, see if it fits for your case
+  -> It is also possible to use auto an manipulate the css via custom css
+  -------------------------------------------------
+  If you want to build a manual grid, implement this mixin anyway:
+  set the number for your grid with "$grid-template-columns"
+  used "grid-box"-class for all child container
+  then you are able to add the basic grid css
+
+  .grid-box:nth-child(1) {
+    grid-column:1/2;
+    grid-row: 1/2;
+  }
+  You just need the code for the childes, rest should work
+  https://css-tricks.com/snippets/css/complete-guide-grid/
+*/
+
+@mixin grid(
+  $grid: auto, // "auto" or "manual"
+  $grid-template-columns: 4, // 3,4,6,8,12 ...
+  $grid-template-columns-md: 3, // 3,4,6,8,12 ...
+  $grid-unequal: false, // false or true
+  $margin: 1rem,
+  $margin-md: 1rem,
+  $margin-sm: 1rem
+) {
+  $grid-template-rows: floor($grid-template-columns/2);
+  $grid-items: if($grid-template-rows < 2, 3, ($grid-template-rows * $grid-template-rows) + 1);
+  $grid-first: 1;
+  $grid-end: ($grid-items + $grid-first + $grid-template-rows);
+
+  //TABLET
+  $grid-template-rows-md: floor($grid-template-columns-md/2);
+  $grid-items-md: if($grid-template-rows-md < 2, 3, ($grid-template-rows-md * $grid-template-rows-md) + 1);
+  $grid-end-md: ($grid-items-md + $grid-first + $grid-template-rows-md);
+
+
+  @supports (display: grid) {
+    display: grid;
+    grid-auto-flow: dense;
+
+    grid-template-columns: repeat($grid-template-columns, 1fr);
+    grid-template-rows: repeat(calc(max(#{ $grid-template-rows} , 2)), 1fr);
+
+    @media screen and (max-width: $breakpoint-md) {
+      grid-template-columns: repeat($grid-template-columns-md, 1fr);
+      grid-template-rows: repeat(calc(max(#{ $grid-template-rows-md} , 2)), 1fr);
+    }
+
+    @media screen and (max-width: $breakpoint-sm) {
+      display: flex;
+      max-width: 100%;
+      flex-direction: column;
+      padding: $margin-sm;
+    }
+  }
+  .grid-box {
+    background: $color-primary;
+    margin: calc(#{$margin} / 2);
+
+    @media screen and (max-width: $breakpoint-md) {
+      margin: calc(#{$margin-md} / 2);
+    }
+
+    @media screen and(max-width: $breakpoint-sm) {
+      margin: 0 0 $margin-sm 0;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    @if $grid == "auto" {
+      @media screen and (min-width: $breakpoint-md) {
+
+        @if $grid-unequal == true {
+          // Grid implementation
+          &:nth-child(#{2*$grid-items}n+#{$grid-first}),
+          &:nth-child(#{2*$grid-items}n+#{$grid-end}) {
+            grid-column: span calc(max( #{ $grid-template-rows} ,2)) / auto;
+            grid-row: auto / span calc(max(#{ $grid-template-rows} , 2));
+          }
+        } @else {
+          &:nth-child(#{2*$grid-items}n+#{$grid-first}),
+          &:nth-child(#{$grid-items}n+#{$grid-first}) {
+            grid-column: span calc(max( #{ $grid-template-rows} ,2)) / auto;
+            grid-row: auto / span calc(max(#{ $grid-template-rows} , 2));
+          }
+        }
+      }
+      @media screen and (max-width: $breakpoint-md) {
+        @if $grid-unequal == true {
+          // Grid implementation
+          &:nth-child(#{2*$grid-items-md}n+#{$grid-first}),
+          &:nth-child(#{2*$grid-items-md}n+#{$grid-end-md}) {
+            grid-column: span calc(max( #{ $grid-template-rows-md} ,2)) / auto;
+            grid-row: auto / span calc(max(#{ $grid-template-rows-md} , 2));
+          }
+        } @else {
+          &:nth-child(#{2*$grid-items-md}n+#{$grid-first}),
+          &:nth-child(#{$grid-items-md}n+#{$grid-first}) {
+            grid-column: span calc(max( #{ $grid-template-rows-md} ,2)) / auto;
+            grid-row: auto / span calc(max(#{ $grid-template-rows-md} , 2));
+          }
+        }
       }
     }
   }
