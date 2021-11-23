@@ -62,7 +62,7 @@ export default class App {
       return res.json(tracks);
     });
 
-    this.server.get('/api/spotify/tracks/:trackId', async (req: Request, res: Response) => {
+    this.server.get('/api/spotify/track/:trackId', async (req: Request, res: Response) => {
       const { trackId } = req.params;
       const track = await this.spotifyService.getTrack(trackId);
       return res.json(track);
