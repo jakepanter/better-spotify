@@ -71,7 +71,7 @@ function TrackList(props: Props) {
     }
 
     //SAVED TRACKS TRACKLIST
-    else if(type == "saved") {
+    else if(type === "saved") {
       const saved = props.data;
         
       return(
