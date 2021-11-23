@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { SavedTrackObject, UsersSavedTracksResponse } from "spotify-types";
+import TrackList from "../TrackList/TrackList";
 
 export default function SavedTracks() {
   const [tracks, setTracks] = useState<UsersSavedTracksResponse>();
@@ -35,15 +36,18 @@ export default function SavedTracks() {
 
   if (!tracks || !items) return <p>loading...</p>;
   return (
-    <div onScroll={onScroll} style={{ height: "500px", overflow: "scroll" }}>
-      {items.map((item) => {
-        return (
-          <div key={item.track.id}>
-            <img src={item.track.album.images[0].url} alt="" width={64} />
-            <p>{item.track.name}</p>
-          </div>
-        );
-      })}
-    </div>
+    <>
+      <table onScroll={onScroll} style={{display: "block", height: "500px", overflow: "auto" }}>
+        <thead>
+          <th></th>
+          <th>Title</th>
+          <th>Artists</th>
+          <th>Duration</th>
+        </thead>
+        <tbody >
+          <TrackList type={"saved"} data={items}/>
+        </tbody>
+      </table>
+    </>
   );
 }
