@@ -16,7 +16,7 @@ type Props = {
 }
 
 function TrackList(props: Props) {
-    const type = props.type;
+    const { type } = props;
     //Hier koennen Unterschiedliche angelegt werden. Dabei muss aber auch TrackListItem angepasst werden!
 
     //ALBUM TRACKLIST
