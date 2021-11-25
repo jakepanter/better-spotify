@@ -28,44 +28,44 @@ function App() {
                     <ul className="left-side-panel">
                         <li>
                             <NavLink exact activeClassName="active" className="button" to="/">
-                                <span className="material-icons">home</span>
-                                Home
+                                <span className="material-icons left-side-panel--icon">home</span>
+                                <br />Home
                             </NavLink>
                         </li>
                         <li>
                             <NavLink activeClassName="active" className="button" to="/me/tracks">
-                                <span className="material-icons">favorite</span>
-                                Favorites
+                                <span className="material-icons left-side-panel--icon">favorite</span>
+                                <br />Favorites
                             </NavLink>
                         </li>
                         <li>
                             <NavLink activeClassName="active" className="button" to="/playlists">
-                                <span className="material-icons">queue_music</span>
-                                Playlists
+                                <span className="material-icons left-side-panel--icon">queue_music</span>
+                                <br />Playlists
                             </NavLink>
                         </li>
                         <li>
                             <NavLink activeClassName="active" className="button" to="/collections/albums">
-                                <span className="material-icons">library_music</span>
-                                Albums
+                                <span className="material-icons left-side-panel--icon">library_music</span>
+                                <br />Albums
                             </NavLink>
                         </li>
                         <li>
                             <NavLink activeClassName="active" className="button" to="">
-                                    <span className="material-icons">grid_view</span>
-                                    Library
+                                    <span className="material-icons left-side-panel--icon">grid_view</span>
+                                    <br />Library
                             </NavLink>
                         </li>
                         <li>
                             <NavLink activeClassName="active" className="button" to="">
-                                    <span className="material-icons">manage_search</span>
-                                    Discover
+                                    <span className="material-icons left-side-panel--icon">manage_search</span>
+                                    <br />Discover
                             </NavLink>
                         </li>
                         <li>
                             <NavLink activeClassName="active" className="button" to="">
-                                    <span className="material-icons">queue</span>
-                                    Queue
+                                    <span className="material-icons left-side-panel--icon">queue</span>
+                                    <br />Queue
                             </NavLink>
                         </li>
                     </ul>

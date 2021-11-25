@@ -30,7 +30,7 @@ p {
   line-height: $lh-base;
   letter-spacing: $ls-base;
   font-weight: $fw-base;
-  font-style: normal;
+  font-style: $fs-base;
   max-width: 100%;
   color: $color-default;
 }

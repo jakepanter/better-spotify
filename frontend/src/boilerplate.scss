@@ -16,10 +16,6 @@ $none: none;
 $transparent: transparent;
 $black: #000 !default;
 $white: #fff !default;
-$green: #1EB972 !default;
-$yellow: #D9BB0B !default;
-$red: #D83010 !default;
-$blue: #0072C5 !default;
 $gray-dark: #CDCECD !default;
 $gray: #E4E3E2 !default;
 $gray-light: #F2F2F2 !default;
@@ -31,7 +27,7 @@ $color-secondary: #18283A !default;
 $color-default: #CDCECD  !default;
 
 // project special colors
-$color-accent-dark: #33A9FE !default;
+$color-accent-dark: #2F4766 !default;
 $color-accent-darker: #008FF7 !default;
 $color-accent-darkest: #0072C5 !default;
 $color-waring-dark: #F47960 !default;
@@ -49,7 +45,7 @@ $breakpoint-lg: 75rem !default; // ~ 1200px
 $breakpoint-xl: 100rem !default; // ~ 1600px
 
 // Panels
-$side-panel-size: 150px;
+$side-panel-size: 130px;
 
 // padding
 $spacer: 2rem !default;
