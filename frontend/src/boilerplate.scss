@@ -5,8 +5,7 @@
 */
 
 // Imports
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap');
-@import "normalize-css";
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap');
 
 /*
    Variables Setup
@@ -21,15 +20,15 @@ $green: #1EB972 !default;
 $yellow: #D9BB0B !default;
 $red: #D83010 !default;
 $blue: #0072C5 !default;
-$gray-dark: #3a3c3b !default;
-$gray: #7a7c7b !default;
-$gray-light: #CDCECD !default;
+$gray-dark: #CDCECD !default;
+$gray: #E4E3E2 !default;
+$gray-light: #F2F2F2 !default;
 
 // project base colors
-$color-background: #E4E3E2 !default;
-$color-primary: #121E2A !default;
-$color-secondary: #2F4766 !default;
-$color-default: #263950 !default;
+$color-background: #0C141D !default;
+$color-primary: #008FF7 !default;
+$color-secondary: #18283A !default;
+$color-default: #CDCECD  !default;
 
 // project special colors
 $color-accent-dark: #33A9FE !default;
@@ -49,6 +48,9 @@ $breakpoint-md: 61rem !default; // ~ 976px
 $breakpoint-lg: 75rem !default; // ~ 1200px
 $breakpoint-xl: 100rem !default; // ~ 1600px
 
+// Panels
+$side-panel-size: 150px;
+
 // padding
 $spacer: 2rem !default;
 $padding-vertical: $spacer/2 !default;
@@ -65,8 +67,8 @@ $transition-base: all 0.5s ease-in-out !default;
 $transition-fade: opacity .2s linear !default;
 
 // fonts
-$font-default: 'Montserrat' !default;
-$font-special: 'Roboto' !default;
+$font-default: 'Roboto' !default;
+$font-special: 'Roboto Condensed' !default;
 
 $fz-base: 16px !default;
 $lh-base: 1.5rem !default;
