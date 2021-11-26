@@ -1,5 +1,4 @@
 import React from "react";
-import {NavLink} from 'react-router-dom'
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import "./App.scss";
 import Album from "./components/Album/Album";
@@ -9,6 +8,7 @@ import Playlists from "./components/Playlists/Playlists";
 import Searchbar from "./components/Searchbar/Searchbar";
 import SavedTracks from "./components/SavedTracks/SavedTracks"
 import Player from "./components/Player/Player";
+import Sidebar from "./components/Sidebar/Sidebar";
 
 
 function authorize() {
@@ -25,51 +25,7 @@ function App() {
         <Router>
             <div className="structure">
                 <div className="structure--left-panel">
-                    <ul className="left-side-panel">
-                        <li>
-                            <NavLink exact activeClassName="active" className="button" to="/">
-                                <span className="material-icons left-side-panel--icon">home</span>
-                                <br />Home
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink activeClassName="active" className="button" to="/me/tracks">
-                                <span className="material-icons left-side-panel--icon">favorite</span>
-                                <br />Favorites
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink activeClassName="active" className="button" to="/playlists">
-                                <span className="material-icons left-side-panel--icon">queue_music</span>
-                                <br />Playlists
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink activeClassName="active" className="button" to="/collections/albums">
-                                <span className="material-icons left-side-panel--icon">library_music</span>
-                                <br />Albums
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink activeClassName="active" className="button" to="">
-                                    <span className="material-icons left-side-panel--icon">grid_view</span>
-                                    <br />Library
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink activeClassName="active" className="button" to="">
-                                    <span className="material-icons left-side-panel--icon">manage_search</span>
-                                    <br />Discover
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink activeClassName="active" className="button" to="">
-                                    <span className="material-icons left-side-panel--icon">queue</span>
-                                    <br />Queue
-                            </NavLink>
-                        </li>
-                    </ul>
-
+                    <Sidebar/>
                 </div>
                 <div className="structure--main">
                     <Searchbar/>
@@ -104,17 +60,6 @@ function App() {
                             <SavedTracks/>
                         </Route>
                     </Switch>
-                    <div className="columns-test">
-                        <div className="column">Test</div>
-                        <div className="column">Test</div>
-                    </div>
-                    <div className="grid-test">
-                        <div className="grid-box">1</div>
-                        <div className="grid-box">2</div>
-                        <div className="grid-box">3</div>
-                        <div className="grid-box">4</div>
-
-                    </div>
                 </div>
             </div>
         </Router>

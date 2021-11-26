@@ -1,4 +1,4 @@
-@import "boilerplate";
+@import './src/boilerplate.scss';
 
 .left-side-panel {
   display: flex;
@@ -12,6 +12,10 @@
     list-style: none;
   }
 
+  .hiddenDesktop {
+    display: none;
+  }
+
   a {
     font-family: $font-special;
     font-size: 14px;
@@ -20,21 +24,40 @@
     padding: 0px;
   }
 
+  &--text {
+    width: 100%;
+  }
+
   &--icon {
     transition: $transition-base;
     padding: 7px;
     border-radius: 100%;
     font-size: 35px;
     color: $color-accent-dark;
-    &:not(.last-child){
-    margin-bottom: 5px;}
+
+    &:not(.last-child) {
+      margin-bottom: 5px;
+    }
   }
 
   a:hover, a.active {
     color: $color-default;
+
     .left-side-panel--icon {
       background: $color-accent-dark;
       color: $color-primary;
+    }
+  }
+
+  @media screen and(max-width: $breakpoint-sm) {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+    &--text, .hiddenMenu{
+      display: none;
+    }
+    .hiddenDesktop {
+      display: flex;
     }
   }
 }
