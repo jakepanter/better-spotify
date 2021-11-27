@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./Playlist.scss";
-import TrackListItem from "../TrackListItem/TrackListItem";
+import TrackList from "../TrackList/TrackList";
 import { PlaylistObjectFull } from "spotify-types";
 import { API_URL } from '../../utils/constants';
 
@@ -24,17 +24,7 @@ function Playlist() {
 
   return (
     <>
-      <div className={"Playlist"}>
-        <img src={playlist.images[0].url} alt="" width={128} />
-        <h1>{playlist.name}</h1>
-        <p>{playlist.description}</p>
-        <p>by {playlist.owner.display_name}</p>
-        <ul>
-          {playlist?.tracks.items.map((item) => {
-            return <TrackListItem key={item.track.id} track={item.track} />;
-          })}
-        </ul>
-      </div>
+      <TrackList type={"playlist"} data={playlist}/>
     </>
   );
 }
