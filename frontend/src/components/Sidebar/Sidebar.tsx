@@ -11,11 +11,6 @@ const Sidebar = () => {
                     <span className="left-side-panel--text">Home</span>
                 </NavLink>
             </li>
-            <li className="hiddenDesktop">
-                <NavLink activeClassName="active" className="button" to="">
-                    <span className="material-icons left-side-panel--icon">radio_button_unchecked</span>
-                </NavLink>
-            </li>
             <li>
                 <NavLink activeClassName="active" className="button" to="/me/tracks">
                     <span className="material-icons left-side-panel--icon">favorite</span>
@@ -35,19 +30,19 @@ const Sidebar = () => {
                 </NavLink>
             </li>
             <li className="hiddenMenu">
-                <NavLink activeClassName="active" className="button" to="">
+                <NavLink exact activeClassName="active" className="button" to="/">
                     <span className="material-icons left-side-panel--icon">grid_view</span>
                     <span className="left-side-panel--text">Library</span>
                 </NavLink>
             </li>
             <li className="hiddenMenu">
-                <NavLink activeClassName="active" className="button" to="">
+                <NavLink exact activeClassName="active" className="button" to="/">
                     <span className="material-icons left-side-panel--icon">manage_search</span>
                     <span className="left-side-panel--text">Discover</span>
                 </NavLink>
             </li>
             <li className="hiddenMenu">
-                <NavLink activeClassName="active" className="button" to="">
+                <NavLink exact activeClassName="active" className="button" to="/">
                     <span className="material-icons left-side-panel--icon">queue</span>
                     <span className="left-side-panel--text">Queue</span>
                 </NavLink>
