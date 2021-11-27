@@ -147,7 +147,7 @@ $button-transition-base: $transition-base !default;
   padding: $padding-horizontal $padding-vertical;
   .column {
     width: calc(100% / #{$columns} - #{$margin} / 2);
-    border: $border-width $border-style $border-color;
+    //border: $border-width $border-style $border-color;
     border-radius: $border-radius;
     padding: $box-padding;
     box-sizing: border-box;
