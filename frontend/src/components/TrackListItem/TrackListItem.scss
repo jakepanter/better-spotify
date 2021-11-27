@@ -1,0 +1,9 @@
+.TrackListItem {
+  user-select: none;
+  &:hover:not(.selected) {
+    background-color: rgb(233, 233, 233);
+  }
+}
+.selected {
+  background-color: lightgrey;
+}

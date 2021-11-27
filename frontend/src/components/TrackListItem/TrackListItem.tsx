@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { TrackObjectFull } from "spotify-types";
-//import SpotifyWebPlayer from "react-spotify-web-playback";
+import "./TrackListItem.scss";
 
 type Props = {
   list_index: number;
@@ -13,6 +13,7 @@ type Props = {
     isSelected: boolean,
     specialKey: String
   ) => void;
+  onContextMenuOpen: (trackId: String, x: number, y: number) => void;
 };
 
 function TrackListItem(props: Props) {
@@ -29,7 +30,6 @@ function TrackListItem(props: Props) {
   }, [props.selected]);
 
   const handleClick = (e: any) => {
-    console.log(e.button);
     if (e.button === 2) {
       //rightclick
       console.log("rightclick");
@@ -45,6 +45,11 @@ function TrackListItem(props: Props) {
       setSpecialKey("");
     }
     setSelected(!selected);
+  };
+
+  const handleRightClick = (e: any) => {
+    e.preventDefault();
+    props.onContextMenuOpen(id, e.pageX, e.pageY);
   };
 
   const [track, setTrack] = useState<TrackObjectFull>();
@@ -69,11 +74,9 @@ function TrackListItem(props: Props) {
   return (
     <>
       <tr
-        style={{
-          backgroundColor: `${selected ? "lightgrey" : ""}`,
-          userSelect: "none",
-        }}
+        className={`TrackListItem ${selected ? "selected" : ""}`}
         onClick={(e) => handleClick(e)}
+        onContextMenu={(e) => handleRightClick(e)}
       >
         <td>
           <img
