@@ -8,12 +8,16 @@
 
   &--left-panel {
     background: $black;
-    width: $side-panel-size;
-    padding: $padding-horizontal;
+    padding: $padding-horizontal $padding-vertical;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
+    @media screen and(min-width: $breakpoint-md) {
+      box-sizing: content-box;
+      width: $side-panel-size;
+      min-width: $side-panel-size;
+    }
   }
 
   &--main {
@@ -44,6 +48,7 @@
     }
   }
 }
+
 p {
   font-family: $font-default;
   line-height: $lh-base;
