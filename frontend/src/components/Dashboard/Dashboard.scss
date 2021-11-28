@@ -1,0 +1,40 @@
+@import "/node_modules/react-grid-layout/css/styles.css";
+//@import "/node_modules/react-resizable/css/styles.css";
+
+$dashboard-item-border-radius: 20px;
+
+.Dashboard {
+  width: 100%;
+
+  .DashboardItem {
+    background-color: #DDDDDD;
+    border-radius: $dashboard-item-border-radius;
+    box-sizing: border-box;
+    padding: 16px;
+    overflow: hidden;
+  }
+
+  .react-grid-item {
+    &.react-grid-placeholder {
+      border-radius: $dashboard-item-border-radius;
+      background-color: rgba(0, 0, 0, 0.05);
+      opacity: 1;
+      z-index: 0;
+    }
+
+    & > .react-resizable-handle {
+      border-top-left-radius: $dashboard-item-border-radius;
+      height: $dashboard-item-border-radius;
+      width: $dashboard-item-border-radius;
+
+      &::after {
+        height: 0;
+        width: 0;
+      }
+    }
+
+    &:hover > .react-resizable-handle {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
+}
