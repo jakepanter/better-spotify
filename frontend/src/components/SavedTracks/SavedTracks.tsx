@@ -7,7 +7,7 @@ export default function SavedTracks() {
   const [items, setItems] = useState<SavedTrackObject[]>([]);
   const [user, setUser] = useState<CurrentUsersProfileResponse>();
   const [next, setNext] = useState<string>(
-    "http://localhost:5000/api/spotify/me/tracks"
+    `${API_URL}api/spotify/me/tracks`
   );
   
   useEffect(() => {
@@ -40,7 +40,7 @@ export default function SavedTracks() {
     if (bottom && tracks) {
       const limit = tracks.limit;
       const offset = tracks.offset + limit;
-      const url = `http://localhost:5000/api/spotify/me/tracks?offset=${offset}&limit=${limit}`;
+      const url = `${API_URL}api/spotify/me/tracks?offset=${offset}&limit=${limit}`;
       setNext(url);
     }
   };

@@ -5,6 +5,7 @@ import {
   PlaylistObjectSimplified,
 } from "spotify-types";
 import "./Playlists.scss";
+import { API_URL } from '../../utils/constants';
 
 interface IProps {}
 
@@ -24,7 +25,7 @@ class Playlists extends Component<IProps, IState> {
   async componentDidMount() {
     // Fetch playlists
     const data: ListOfUsersPlaylistsResponse = await fetch(
-      `http://localhost:5000/api/spotify/playlists`
+      `${API_URL}api/spotify/playlists`
     ).then((res) => res.json());
     // Save to state
     this.setState((state) => ({ ...state, results: data.items }));

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AlbumObjectFull } from "spotify-types";
+import { API_URL } from '../../utils/constants';
 import TrackList from "../TrackList/TrackList";
 
 export default function Album() {
@@ -11,7 +12,7 @@ export default function Album() {
   useEffect(() => {
     async function fetchData() {
       const data: AlbumObjectFull = await fetch(
-        `http://localhost:5000/api/spotify/album/${params.id}`
+        `${API_URL}api/spotify/album/${params.id}`
       ).then((res) => res.json());
       setAlbum(data);
     }
