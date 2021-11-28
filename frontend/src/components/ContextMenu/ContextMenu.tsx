@@ -17,7 +17,9 @@ function ContextMenu(props: Props) {
   const [playlists, setPlaylists] = useState<PlaylistObjectSimplified[]>();
   const [me, setMe] = useState<CurrentUsersProfileResponse>();
   const [width, setWidth] = useState<number>(0);
+  const [height, setHeight] = useState<number>(0);
   const [childWidth, setChildWidth] = useState<number>(0);
+  const [childHeight, setChildHeight] = useState<number>(0);
   const [showPlaylistsMenu, setShowPlaylistsMenu] = useState<boolean>(false);
 
   const fetchPlaylists = async () => {
@@ -53,11 +55,12 @@ function ContextMenu(props: Props) {
     );
   };
 
-  const enoughSpaceToleft = (posX: number, width: number) => {
-    // console.log("----------------------");
-    // console.log(window.innerWidth - posX);
-    // console.log(width);
+  const enoughSpaceToLeft = (posX: number, width: number) => {
     return window.innerWidth - posX >= width;
+  };
+
+  const enoughSpaceToBottom = (posY: number, height: number) => {
+    return window.innerHeight - posY >= height;
   };
 
   return (
@@ -67,12 +70,15 @@ function ContextMenu(props: Props) {
         ref={(el) => {
           if (!el) return;
           setWidth(el.getBoundingClientRect().width);
+          setHeight(el.getBoundingClientRect().height);
         }}
         style={{
-          left: enoughSpaceToleft(positionX, width)
+          left: enoughSpaceToLeft(positionX, width)
             ? positionX + "px"
             : positionX - width + "px",
-          top: positionY + "px",
+          top: enoughSpaceToBottom(positionY, height)
+            ? positionY + "px"
+            : positionY - height + "px",
         }}
       >
         <ul>
@@ -95,14 +101,17 @@ function ContextMenu(props: Props) {
           ref={(el) => {
             if (!el) return;
             setChildWidth(el.getBoundingClientRect().width);
+            setChildHeight(el.getBoundingClientRect().height);
           }}
           style={{
-            left: enoughSpaceToleft(positionX + width, childWidth)
+            left: enoughSpaceToLeft(positionX + width, childWidth)
               ? positionX + width + "px"
-              : enoughSpaceToleft(positionX, width)
+              : enoughSpaceToLeft(positionX, width)
               ? positionX - childWidth + "px"
               : positionX - width - childWidth + "px",
-            top: positionY + 26.5 + "px",
+            top: enoughSpaceToBottom(positionY, childHeight)
+              ? positionY + 26.5 + "px"
+              : positionY - childHeight + 26.5 * 2 + "px",
           }}
         >
           <ul
