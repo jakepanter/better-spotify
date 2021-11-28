@@ -72,7 +72,8 @@ function TrackList(props: Props) {
       y: y,
       clickedTrackUri: trackUri,
     });
-    setSelected([trackUri]);
+    if (!selectedTracks.some((track) => track === trackUri))
+      setSelected([trackUri]);
   };
 
   const addSelected = (trackUri: String) => {
