@@ -56,6 +56,14 @@ export default class App {
     });
 
     /**
+     * Get me
+     */
+    this.server.get('/api/spotify/me', async (req: Request, res: Response) => {
+      const me = await this.spotifyService.getMe();
+      return res.json(me);
+    });
+
+    /**
      * Get liked/saved songs of current user
      */
     this.server.get('/api/spotify/me/tracks', async (req: Request, res: Response) => {
