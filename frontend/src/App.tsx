@@ -8,6 +8,7 @@ import Playlists from "./components/Playlists/Playlists";
 import Searchbar from "./components/Searchbar/Searchbar";
 import SavedTracks from "./components/SavedTracks/SavedTracks"
 import Player from "./components/Player/Player";
+
 import Sidebar from "./components/Sidebar/Sidebar";
 
 
@@ -18,6 +19,16 @@ function authorize() {
             console.log(url);
             window.location.href = url;
         });
+
+import { API_URL } from "./utils/constants";
+
+function authorize() {
+  fetch(`${API_URL}api/spotify/get-auth-url`)
+    .then((res) => res.text())
+    .then((url) => {
+      console.log(url);
+      window.location.href = url;
+    });
 }
 
 function App() {

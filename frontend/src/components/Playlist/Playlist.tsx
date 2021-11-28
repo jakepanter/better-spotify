@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import "./Playlist.scss";
 import TrackList from "../TrackList/TrackList";
 import { PlaylistObjectFull } from "spotify-types";
+import { API_URL } from '../../utils/constants';
 
 function Playlist() {
   const [playlist, setPlaylist] = useState<PlaylistObjectFull>();
@@ -12,7 +13,7 @@ function Playlist() {
   useEffect(() => {
     async function fetchData() {
       const data: PlaylistObjectFull = await fetch(
-        `http://localhost:5000/api/spotify/playlist/${params.id}`
+        `${API_URL}api/spotify/playlist/${params.id}`
       ).then((res) => res.json());
       setPlaylist(data);
     }

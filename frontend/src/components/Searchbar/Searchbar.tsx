@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './Searchbar.scss';
+import { API_URL } from '../../utils/constants';
 
 interface IProps {}
 
@@ -41,7 +42,7 @@ class Searchbar extends Component<IProps, IState> {
     }
 
     // Fetch results
-    const data = await fetch(`http://localhost:5000/api/spotify/search?query=${value}`).then(res => res.json());
+    const data = await fetch(`${API_URL}api/spotify/search?query=${value}`).then(res => res.json());
 
     // Save to state
     this.setState((state) => ({...state, results: data.items}));
