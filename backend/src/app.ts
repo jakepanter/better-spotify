@@ -11,9 +11,13 @@ export default class App {
   constructor() {
     this.spotifyService = new SpotifyService();
 
+    const bodyParser  = require('body-parser');
+
     // Init express server
     this.server = express();
     this.server.use(cors());
+    this.server.use(bodyParser.json());
+    this.server.use(bodyParser.urlencoded({ extended: false }));
 
     // Routes
     // Spotify authentication
@@ -93,6 +97,15 @@ export default class App {
       return res.json(playlist);
     });
 
+    this.server.put('/api/spotify/me/player/play', async (req: Request, res: Response) => {
+      const answer = this.spotifyService.setTrack(req.body);
+      return res.json(answer);
+    });
+
+    this.server.get('/api/spotify/me', async (req: Request, res: Response) =>{
+      const answer = this.spotifyService.getMe();
+      return res.json(answer);
+    });
     // DB
     // TODO
 

@@ -23,7 +23,7 @@ function Playlist() {
 
   return (
     <>
-      <TrackList type={"playlist"} data={playlist}/>
+      <TrackList type={"playlist"} id_tracklist={playlist.id} data={playlist}/>
     </>
   );
 }

@@ -1,13 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { SavedTrackObject, UsersSavedTracksResponse } from "spotify-types";
+import { CurrentUsersProfileResponse, SavedTrackObject, UsersSavedTracksResponse } from "spotify-types";
 import TrackList from "../TrackList/TrackList";
 
 export default function SavedTracks() {
   const [tracks, setTracks] = useState<UsersSavedTracksResponse>();
   const [items, setItems] = useState<SavedTrackObject[]>([]);
+  const [user, setUser] = useState<CurrentUsersProfileResponse>();
   const [next, setNext] = useState<string>(
     "http://localhost:5000/api/spotify/me/tracks"
   );
+  
+  useEffect(() => {
+    async function fetchData() {
+      const data: CurrentUsersProfileResponse = await fetch(
+        `http://localhost:5000/api/spotify/me`
+      ).then((res) => res.json());
+      setUser(data);
+    }
+    fetchData();
+  }, []);
 
   useEffect(() => {
     fetchData(next);
@@ -34,7 +45,8 @@ export default function SavedTracks() {
     }
   };
 
-  if (!tracks || !items) return <p>loading...</p>;
+  if (!tracks || !items || user) return <p>loading...</p>;
+  console.log(user);
   return (
     <>
       <table onScroll={onScroll} style={{display: "block", height: "500px", overflow: "auto" }}>
@@ -45,7 +57,7 @@ export default function SavedTracks() {
           <th>Duration</th>
         </thead>
         <tbody >
-          <TrackList type={"saved"} data={items}/>
+          <TrackList type={"saved"} id_tracklist={user.uri} data={items}/>
         </tbody>
       </table>
     </>

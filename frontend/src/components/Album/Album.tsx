@@ -22,7 +22,7 @@ export default function Album() {
 
   return (
     <>
-      <TrackList type={"album"} data={album}/>
+      <TrackList type={"album"} id_tracklist={album.id} data={album}/>
     </>
   );
 }

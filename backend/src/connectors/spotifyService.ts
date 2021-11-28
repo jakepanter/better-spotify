@@ -111,6 +111,16 @@ export default class SpotifyService {
     const result = await this.spotifyApi.getPlaylist(playlistId);
     return result.body;
   }
+ 
+  setTrack = async(options: Object) => {
+    const result = await this.spotifyApi.play(options);
+    return result.body;
+  }
 
+  getMe = async() => {
+    const result = await this.spotifyApi.getMe();
+    return result.body;
+  }
+  
   getAccessToken = async () => this.spotifyApi.getAccessToken();
 }

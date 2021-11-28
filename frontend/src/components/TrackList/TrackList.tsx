@@ -5,18 +5,22 @@ import { AlbumObjectFull, PlaylistObjectFull, SavedTrackObject } from "spotify-t
 
 type Props = {
   type: 'album',
+  id_tracklist: String,
   data: AlbumObjectFull,
 } | {
   type: 'playlist',
+  id_tracklist: String,
   data: PlaylistObjectFull,
 } |
 {
-  type: 'saved'
+  type: 'saved',
+  id_tracklist: String,
   data: SavedTrackObject[],
 }
 
 function TrackList(props: Props) {
     const { type } = props;
+    const { id_tracklist } = props;
     //Hier koennen Unterschiedliche angelegt werden. Dabei muss aber auch TrackListItem angepasst werden!
 
     //ALBUM TRACKLIST
@@ -36,8 +40,8 @@ function TrackList(props: Props) {
                     <th>Duration</th>
                 </tr>
 
-                {album?.tracks.items.map((item) => {
-                    return <TrackListItem id_track={item.id} key={item.id} type={type}/>;
+                {album?.tracks.items.map((item, index) => {
+                    return <TrackListItem id_track={item.id} offset={index} id_tracklist={id_tracklist} key={item.id} type={type}/>;
                 })}
 
             </table>
@@ -61,8 +65,8 @@ function TrackList(props: Props) {
                       <th>Artists</th>
                       <th>Duration</th>
                   </tr>
-                  {playlist?.tracks.items.map((item) => {
-                      return <TrackListItem id_track={item.track.id} key={item.track.id} type={type}/>;
+                  {playlist?.tracks.items.map((item, index) => {
+                      return <TrackListItem id_track={item.track.id} id_tracklist={id_tracklist} offset={index} key={item.track.id} type={type}/>;
                   })}
               </table>
             </div>
@@ -76,8 +80,8 @@ function TrackList(props: Props) {
         
       return(
         <>
-          {saved.map((item) => {
-              return <TrackListItem id_track={item.track.id} key={item.track.id} type={type}/>
+          {saved.map((item, index) => {
+              return <TrackListItem id_track={item.track.id} id_tracklist={id_tracklist} offset={index} key={item.track.id} type={type}/>
           })}    
         </>
       )
