@@ -1,0 +1,22 @@
+.ContextMenu {
+  position: absolute;
+  background-color: lightgrey;
+  min-width: 200px;
+  cursor: default;
+  box-shadow: 0px 0px 3px grey;
+  border-radius: 2px;
+  ul {
+    padding: 0px;
+    list-style: none;
+    li {
+      padding: 5px;
+      border-radius: inherit;
+    }
+    li:hover {
+      background-color: grey;
+      li:hover {
+        background-color: red;
+      }
+    }
+  }
+}

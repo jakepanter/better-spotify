@@ -90,7 +90,7 @@ export default class SpotifyService {
     const track = await this.spotifyApi.getTrack(id);
     return track.body;
   }
-  
+
   getAlbum = async (id: string) => {
     const album = await this.spotifyApi.getAlbum(id);
     return album.body;
@@ -105,6 +105,11 @@ export default class SpotifyService {
   getMyPlaylists = async () => {
     const result = await this.spotifyApi.getUserPlaylists();
     return result.body;
+  }
+
+  addTracksToPlaylist = async (playlistId: string, tracks: string[]) => {
+    // TODO: error handling
+    await this.spotifyApi.addTracksToPlaylist(playlistId, tracks);
   }
 
   getPlaylist = async (playlistId: string) => {

@@ -5,24 +5,26 @@ import "./TrackListItem.scss";
 
 type Props = {
   list_index: number;
-  id_track: String;
+  track_id: String;
+  track_uri: String;
   type: String;
   selected: boolean;
   onSelectionChange: (
     trackId: String,
     isSelected: boolean,
-    specialKey: String
+    specialKey: String | null
   ) => void;
   onContextMenuOpen: (trackId: String, x: number, y: number) => void;
 };
 
 function TrackListItem(props: Props) {
-  const id = props.id_track;
+  const id = props.track_id;
+  const uri = props.track_uri;
   const [selected, setSelected] = useState<boolean>(props.selected);
-  const [specialKey, setSpecialKey] = useState<String>("");
+  const [specialKey, setSpecialKey] = useState<String | null>(null);
 
   useEffect(() => {
-    props.onSelectionChange(id, selected, specialKey);
+    props.onSelectionChange(uri, selected, specialKey);
   }, [selected]);
 
   useEffect(() => {
@@ -30,10 +32,6 @@ function TrackListItem(props: Props) {
   }, [props.selected]);
 
   const handleClick = (e: any) => {
-    if (e.button === 2) {
-      //rightclick
-      console.log("rightclick");
-    }
     if (e.shiftKey) {
       console.log("shift");
       setSpecialKey("shift");
@@ -42,14 +40,14 @@ function TrackListItem(props: Props) {
       setSpecialKey("ctrl");
     } else {
       console.log("nope");
-      setSpecialKey("");
+      setSpecialKey(null);
     }
     setSelected(!selected);
   };
 
   const handleRightClick = (e: any) => {
     e.preventDefault();
-    props.onContextMenuOpen(id, e.pageX, e.pageY);
+    props.onContextMenuOpen(uri, e.pageX, e.pageY);
   };
 
   const [track, setTrack] = useState<TrackObjectFull>();

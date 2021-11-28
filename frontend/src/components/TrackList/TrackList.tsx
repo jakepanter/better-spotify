@@ -27,17 +27,18 @@ type ContextMenuType = {
   show: boolean;
   x: number | null;
   y: number | null;
-  clickedTrackId: String;
+  clickedTrackUri: String;
 };
 
 function TrackList(props: Props) {
   const { type } = props;
+  //stores currently selected track uris
   const [selectedTracks, setSelected] = useState<String[]>([]);
   const [contextMenu, setContextMenu] = useState<ContextMenuType>({
     show: false,
-    x: 0,
-    y: 0,
-    clickedTrackId: "",
+    x: null,
+    y: null,
+    clickedTrackUri: "",
   });
   //Hier koennen Unterschiedliche angelegt werden. Dabei muss aber auch TrackListItem angepasst werden!
 
@@ -47,147 +48,155 @@ function TrackList(props: Props) {
     if (
       selectedTracks.length === 0 ||
       (selectedTracks.length === 1 &&
-        selectedTracks[0] !== contextMenu.clickedTrackId)
+        selectedTracks[0] !== contextMenu.clickedTrackUri)
     ) {
-      setContextMenu({ show: false, x: null, y: null, clickedTrackId: "" });
+      setContextMenu({ show: false, x: null, y: null, clickedTrackUri: "" });
     }
   }, [selectedTracks]);
 
   const handleSelectionChange = (
     track: String,
     selected: boolean,
-    specialKey: String
+    specialKey: String | null
   ) => {
     if (selected) {
-      if (specialKey === "") setSelected([track]);
+      if (!specialKey) setSelected([track]);
       if (specialKey === "shift") addSelected(track);
-      // if (specialKey === "shift") addSelected(track);
     } else removeSelected(track);
   };
 
-  const handleContextMenuOpen = (trackId: String, x: number, y: number) => {
+  const handleContextMenuOpen = (trackUri: String, x: number, y: number) => {
     setContextMenu({
       show: true,
       x: x,
       y: y,
-      clickedTrackId: trackId,
+      clickedTrackUri: trackUri,
     });
-    setSelected([trackId]);
+    setSelected([trackUri]);
   };
 
-  const addSelected = (trackId: String) => {
-    setSelected([...selectedTracks, trackId]);
+  const addSelected = (trackUri: String) => {
+    setSelected([...selectedTracks, trackUri]);
   };
-  const removeSelected = (trackId: String) => {
-    const arr: String[] = selectedTracks.filter((track) => track !== trackId);
+  const removeSelected = (trackUri: String) => {
+    const arr: String[] = selectedTracks.filter((track) => track !== trackUri);
     setSelected(arr);
   };
   const resetSelected = () => {
     setSelected([]);
   };
 
-  //ALBUM TRACKLIST
-  if (type === "album") {
-    const album = props.data;
+  if (!props.data) return <p>...loading</p>;
 
-    return (
-      <>
-        <div className={"Playlist"}>
-          <h2>{album.name}</h2>
-          <h3>{album.artists.map((artist) => artist.name).join(", ")}</h3>
-          <table>
-            <tr>
-              <th></th>
-              <th>Title</th>
-              <th>Artists</th>
-              <th>Duration</th>
-            </tr>
+  return (
+    <>
+      {contextMenu.show && (
+        <ContextMenu
+          tracks={selectedTracks}
+          positionX={contextMenu.x!}
+          positionY={contextMenu.y!}
+        />
+      )}
 
-            {album?.tracks.items.map((item, i) => {
-              return (
-                <TrackListItem
-                  list_index={i}
-                  id_track={item.id}
-                  key={item.id}
-                  type={type}
-                  selected={selectedTracks.some((track) => track === item.id)}
-                  onSelectionChange={handleSelectionChange}
-                  onContextMenuOpen={handleContextMenuOpen}
-                />
-              );
-            })}
-          </table>
-        </div>
-      </>
-    );
-  }
+      {props.type === "album" && (
+        <>
+          <div className={"TrackList Album"}>
+            <h2>{props.data.name}</h2>
+            <h3>
+              {props.data.artists.map((artist) => artist.name).join(", ")}
+            </h3>
+            <table>
+              <tr className="table-header">
+                <th></th>
+                <th>Title</th>
+                <th>Artists</th>
+                <th>Duration</th>
+              </tr>
 
-  //PLAYLIST TRACKLIST
-  else if (type === "playlist") {
-    const playlist = props.data;
+              {props.data.tracks.items.map((item, i) => {
+                return (
+                  <TrackListItem
+                    list_index={i}
+                    track_id={item.id}
+                    track_uri={item.uri}
+                    key={item.id}
+                    type={type}
+                    selected={selectedTracks.some(
+                      (track) => track === item.uri
+                    )}
+                    onSelectionChange={handleSelectionChange}
+                    onContextMenuOpen={handleContextMenuOpen}
+                  />
+                );
+              })}
+            </table>
+          </div>
+        </>
+      )}
 
-    return (
-      <>
-        <div className={"Playlist"}>
-          <h2>{playlist.name}</h2>
-          <table>
-            <tr>
-              <th></th>
-              <th>Title</th>
-              <th>Artists</th>
-              <th>Duration</th>
-            </tr>
-            {playlist?.tracks.items.map((item, i) => {
-              return (
-                <TrackListItem
-                  list_index={i}
-                  id_track={item.track.id}
-                  key={item.track.id}
-                  type={type}
-                  selected={selectedTracks.some(
-                    (track) => track === item.track.id
-                  )}
-                  onSelectionChange={handleSelectionChange}
-                  onContextMenuOpen={handleContextMenuOpen}
-                />
-              );
-            })}
-          </table>
-        </div>
-      </>
-    );
-  }
+      {props.type === "playlist" && (
+        <>
+          <div className={"TrackList Playlist"}>
+            <h2>{props.data.name}</h2>
+            <table>
+              <tr className="table-header">
+                <th></th>
+                <th>Title</th>
+                <th>Artists</th>
+                <th>Duration</th>
+              </tr>
+              {props.data.tracks.items.map((item, i) => {
+                return (
+                  <TrackListItem
+                    list_index={i}
+                    track_id={item.track.id}
+                    track_uri={item.track.uri}
+                    key={item.track.id}
+                    type={type}
+                    selected={selectedTracks.some(
+                      (track) => track === item.track.uri
+                    )}
+                    onSelectionChange={handleSelectionChange}
+                    onContextMenuOpen={handleContextMenuOpen}
+                  />
+                );
+              })}
+            </table>
+          </div>
+        </>
+      )}
 
-  //SAVED TRACKS TRACKLIST
-  else if (type === "saved") {
-    const saved = props.data;
-    return (
-      <>
-        {contextMenu.show && (
-          <ContextMenu
-            tracks={selectedTracks}
-            positionX={contextMenu.x!}
-            positionY={contextMenu.y!}
-          />
-        )}
-        {saved.map((item, i) => {
-          return (
-            <TrackListItem
-              list_index={i}
-              id_track={item.track.id}
-              key={item.track.id}
-              type={type}
-              selected={selectedTracks.some((track) => track === item.track.id)}
-              onSelectionChange={handleSelectionChange}
-              onContextMenuOpen={handleContextMenuOpen}
-            />
-          );
-        })}
-      </>
-    );
-  } else {
-    return <p>unsupported tracklist type</p>;
-  }
+      {props.type === "saved" && (
+        <>
+          <div className={"TrackList Saved"}>
+            <table>
+              <tr className="table-header">
+                <th></th>
+                <th>Title</th>
+                <th>Artists</th>
+                <th>Duration</th>
+              </tr>
+              {props.data.map((item, i) => {
+                return (
+                  <TrackListItem
+                    list_index={i}
+                    track_id={item.track.id}
+                    track_uri={item.track.uri}
+                    key={item.track.id}
+                    type={type}
+                    selected={selectedTracks.some(
+                      (track) => track === item.track.uri
+                    )}
+                    onSelectionChange={handleSelectionChange}
+                    onContextMenuOpen={handleContextMenuOpen}
+                  />
+                );
+              })}
+            </table>
+          </div>
+        </>
+      )}
+    </>
+  );
 }
-
 export default TrackList;

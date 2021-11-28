@@ -1,4 +1,5 @@
 import express, { Application, Request, Response } from 'express';
+import bodyParser from 'body-parser';
 import cors from 'cors';
 import SpotifyService from './connectors/spotifyService';
 import Config from './config/variables';
@@ -14,6 +15,8 @@ export default class App {
     // Init express server
     this.server = express();
     this.server.use(cors());
+    this.server.use(bodyParser.json());
+    this.server.use(bodyParser.urlencoded({ extended: true }));
 
     // Routes
     // Spotify authentication
@@ -55,7 +58,8 @@ export default class App {
     /**
      * Get liked/saved songs of current user
      */
-    this.server.get('/api/spotify/me/tracks', async (req: Request, res: Response) => {      const limit: any = req.query?.limit ?? 50;
+    this.server.get('/api/spotify/me/tracks', async (req: Request, res: Response) => {
+      const limit: any = req.query?.limit ?? 50;
       const offset: any = req.query?.offset ?? 0;
 
       const tracks = await this.spotifyService.getMySavedTracks(limit, offset);
@@ -91,6 +95,14 @@ export default class App {
       const { playlistId } = req.params;
       const playlist = await this.spotifyService.getPlaylist(playlistId);
       return res.json(playlist);
+    });
+
+    this.server.post('/api/spotify/playlist/:playlistId/add', async (req: Request, res: Response) => {
+      const { playlistId } = req.params;
+      const tracks = req.body;
+      console.log(req.body);
+      await this.spotifyService.addTracksToPlaylist(playlistId, tracks);
+      return res.status(200);
     });
 
     // DB
