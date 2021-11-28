@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { SavedTrackObject, UsersSavedTracksResponse } from "spotify-types";
+import { API_URL } from '../../utils/constants';
+import TrackList from "../TrackList/TrackList";
 
 export default function SavedTracks() {
   const [tracks, setTracks] = useState<UsersSavedTracksResponse>();
   const [items, setItems] = useState<SavedTrackObject[]>([]);
   const [next, setNext] = useState<string>(
-    "http://localhost:5000/api/spotify/me/tracks"
+    `${API_URL}api/spotify/me/tracks`
   );
 
   useEffect(() => {
@@ -28,22 +30,25 @@ export default function SavedTracks() {
     if (bottom && tracks) {
       const limit = tracks.limit;
       const offset = tracks.offset + limit;
-      const url = `http://localhost:5000/api/spotify/me/tracks?offset=${offset}&limit=${limit}`;
+      const url = `${API_URL}api/spotify/me/tracks?offset=${offset}&limit=${limit}`;
       setNext(url);
     }
   };
 
   if (!tracks || !items) return <p>loading...</p>;
   return (
-    <div onScroll={onScroll} style={{ height: "500px", overflow: "scroll" }}>
-      {items.map((item) => {
-        return (
-          <div key={item.track.id}>
-            <img src={item.track.album.images[0].url} alt="" width={64} />
-            <p>{item.track.name}</p>
-          </div>
-        );
-      })}
-    </div>
+    <>
+      <table onScroll={onScroll} style={{display: "block", height: "500px", overflow: "auto" }}>
+        <thead>
+          <th></th>
+          <th>Title</th>
+          <th>Artists</th>
+          <th>Duration</th>
+        </thead>
+        <tbody >
+          <TrackList type={"saved"} data={items}/>
+        </tbody>
+      </table>
+    </>
   );
 }

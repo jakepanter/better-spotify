@@ -147,3 +147,5 @@ dist
 .idea
 .vscode
 package-lock.json
+/frontend/build/
+/frontend/.env.staging

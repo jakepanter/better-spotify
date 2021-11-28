@@ -28,13 +28,13 @@ export default class App {
 
       const isAuthorized = await this.spotifyService.authorizationCodeGrant(code.toString());
       if (!isAuthorized) {
-        return res.redirect('http://localhost:3000?error');
+        return res.redirect(`${Config.general.frontend_url}?error`);
       }
 
       // eslint-disable-next-line no-console
       console.log('Authorized');
 
-      return res.redirect('http://localhost:3000');
+      return res.redirect(`${Config.general.frontend_url}`);
     });
 
     this.server.get('/api/spotify/access-token', async (req: Request, res: Response) => {
@@ -55,11 +55,18 @@ export default class App {
     /**
      * Get liked/saved songs of current user
      */
-    this.server.get('/api/spotify/me/tracks', async (req: Request, res: Response) => {      const limit: any = req.query?.limit ?? 50;
+    this.server.get('/api/spotify/me/tracks', async (req: Request, res: Response) => {
+      const limit: any = req.query?.limit ?? 50;
       const offset: any = req.query?.offset ?? 0;
 
       const tracks = await this.spotifyService.getMySavedTracks(limit, offset);
       return res.json(tracks);
+    });
+
+    this.server.get('/api/spotify/track/:trackId', async (req: Request, res: Response) => {
+      const { trackId } = req.params;
+      const track = await this.spotifyService.getTrack(trackId);
+      return res.json(track);
     });
 
     this.server.get('/api/spotify/album/:albumId', async (req: Request, res: Response) => {
