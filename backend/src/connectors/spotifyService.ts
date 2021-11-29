@@ -119,7 +119,6 @@ export default class SpotifyService {
 
   getMe = async () => {
     const result = await this.spotifyApi.getMe();
-    console.log(result.body);
     return result.body;
   }
 
