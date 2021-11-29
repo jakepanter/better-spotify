@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { CurrentUsersProfileResponse, SavedTrackObject, UsersSavedTracksResponse } from "spotify-types";
+import { API_URL } from '../../utils/constants';
 import TrackList from "../TrackList/TrackList";
 
 export default function SavedTracks() {
@@ -45,8 +46,8 @@ export default function SavedTracks() {
     }
   };
 
-  if (!tracks || !items || user) return <p>loading...</p>;
-  console.log(user);
+  if (!tracks || !items || !user) return <p>loading...</p>;
+  console.log(user.uri);
   return (
     <>
       <table onScroll={onScroll} style={{display: "block", height: "500px", overflow: "auto" }}>
