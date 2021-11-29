@@ -11,7 +11,7 @@ export default class App {
   constructor() {
     this.spotifyService = new SpotifyService();
 
-    const bodyParser  = require('body-parser');
+    const bodyParser = require('body-parser');
 
     // Init express server
     this.server = express();
@@ -99,12 +99,12 @@ export default class App {
     });
 
     this.server.put('/api/spotify/me/player/play', async (req: Request, res: Response) => {
-      const answer = this.spotifyService.setTrack(req.body);
+      const answer = await this.spotifyService.setTrack(req.body);
       return res.json(answer);
     });
 
-    this.server.get('/api/spotify/me', async (req: Request, res: Response) =>{
-      const answer = this.spotifyService.getMe();
+    this.server.get('/api/spotify/me', async (req: Request, res: Response) => {
+      const answer = await this.spotifyService.getMe();
       return res.json(answer);
     });
     // DB
