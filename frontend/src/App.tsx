@@ -5,10 +5,10 @@ import Album from "./components/Album/Album";
 import Albums from "./components/Albums/Albums";
 import Playlist from "./components/Playlist/Playlist";
 import Playlists from "./components/Playlists/Playlists";
-import Searchbar from "./components/Searchbar/Searchbar";
 import SavedTracks from "./components/SavedTracks/SavedTracks"
 import Player from "./components/Player/Player";
 import { API_URL } from "./utils/constants";
+import Topbar from "./components/Topbar/Topbar";
 
 function authorize() {
   fetch(`${API_URL}api/spotify/get-auth-url`)
@@ -23,7 +23,7 @@ function App() {
   return (
     <Router>
       <div>
-        <Searchbar/>
+        <Topbar />
         <Player/>
         <ul>
           <li>

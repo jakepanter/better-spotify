@@ -1,9 +1,29 @@
+@import './src/boilerplate.scss';
+
 .Searchbar {
 
+  .SearchbarInput {
+    min-width: 500px;
+    background: $color-secondary;
+    color: $white;
+    padding: 9px 20px;
+    border: none;
+    border-radius: 50px 0 0 50px;
+  }
 
-  .SearchbarInput {}
+  .SearchbarInput::placeholder {
+    color: $white;
+    opacity: 0.7;
+  }
 
-  .SearchbarButton {}
+  .SearchbarButton {
+    background: $color-secondary;
+    color: $white;
+    padding: 6px 9px 1px 10px;
+    border: none;
+    border-radius: 0 50px 50px 0;
+
+  }
 
   .SearchbarResults {}
 

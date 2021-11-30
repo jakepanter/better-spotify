@@ -63,8 +63,10 @@ class Searchbar extends Component<IProps, IState> {
 
     return (
       <div className={'Searchbar'}>
-        <input className={'SearchbarInput'} type={'search'} placeholder={'Search...'} onKeyUp={this.handleKeyUp} />
-        <button className={'SearchbarButton'} onClick={this.search}>Search</button>
+        <input className={'SearchbarInput'} type={'search'} placeholder={'Artist, Albums, Songs ...'} onKeyUp={this.handleKeyUp} />
+        <button className={'SearchbarButton'} onClick={this.search}>
+          <span className={'material-icons'}>search</span>
+        </button>
         <ul className={'SearchbarResults'}>
           {autofill}
         </ul>
