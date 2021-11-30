@@ -1,83 +1,239 @@
+/* eslint-disable */
 import React, {Component} from 'react';
 import './Dashboard.scss';
 import GridLayout, {Layout} from 'react-grid-layout';
+import SavedTracks from "../SavedTracks/SavedTracks";
 
-export interface DashboardProps {
-  components: ReadonlyArray<DashboardItem>;
-  editable: boolean;
-}
+export interface DashboardProps {}
 
-export interface DashboardItem extends Layout {
-  //i: string;
-  //x: number;
-  //y: number;
-  //w: number;
-  //h: number;
-  type: DasboardItemType;
-}
-
-export type DasboardItemType = 'player' | 'playlists' | 'queue' | 'friendActivity' | 'chart' | 'releases' | 'recentlyPlayed' | 'podcasts' | 'followedArtists' | 'albums' | 'playlist' | 'radio' | 'lyrics' | 'audiobook' | 'favorites' | 'search' | 'sidebar';
+export interface DashboardItem {}
 
 export interface IDashboardPlayer extends DashboardItem {
-  type: 'player';
 }
 
-export interface IDashboardPlaylists extends DashboardItem {
-  type: 'playlists';
+export interface IDashboardPlaylist extends DashboardItem {
+  id: string;
 }
 
-export interface IDashboardQueue extends DashboardItem {
-  type: 'queue';
+export interface IDashboardAlbum extends DashboardItem {
+  id: string;
 }
 
-export interface IDashboardFriendActivity extends DashboardItem {
-  type: 'friendActivity';
+export interface IDashboardLikedTracks extends DashboardItem {
 }
+
+export interface IDashboardChart extends DashboardItem {
+  countryCode: CountryCode;
+  chartType: ChartType;
+  period: ChartPeriod;
+}
+
+export interface IDashboardNavbar {
+}
+
+export interface IDashboardSidebar {
+}
+
+interface IProps {}
 
 interface IState {
   layout: Layout[];
+  playlists: ReadonlyArray<IDashboardPlaylist>;
+  albums: ReadonlyArray<IDashboardAlbum>;
+  charts: ReadonlyArray<IDashboardChart>;
   editable: boolean;
 }
 
-class Dashboard extends Component<DashboardProps, IState> {
-  constructor(props: DashboardProps) {
+class Dashboard extends Component<IProps, IState> {
+  private static readonly DEFAULT_STATE: IState = {
+    layout: [
+      {i: 'player', x: 0, y: 0, w: 1, h: 2},
+      {i: 'likes', x: 1, y: 0, w: 2, h: 2, minW: 2, maxW: 2},
+      {i: 'test', x: 1, y: 0, w: 2, h: 2, minW: 2, maxW: 2},
+    ],
+    albums: [
+      {id: '3Clnd6NGYKXGHfI4SFzdjM'}
+    ],
+    playlists: [
+      {id: '7pCijPDtZHF5jyT1ZIV7Hh'}
+    ],
+    charts: [
+      {chartType: 'top', period: 'daily', countryCode: 'DE'}
+    ],
+    editable: true,
+  };
+
+  constructor(props: IProps) {
     super(props);
 
-    this.state = {
-      layout: [
-        {i: 'a', x: 0, y: 0, w: 1, h: 2, static: true},
-        {i: 'b', x: 1, y: 0, w: 2, h: 2, minW: 2, maxW: 2},
-        {i: 'c', x: 0, y: 2, w: 1, h: 2}
-      ],
-      editable: props.editable,
-    };
+    const storedState = localStorage.getItem('dashboardState')?.toString();
+    console.log(storedState);
+    let state = Dashboard.DEFAULT_STATE;
+    if (storedState !== undefined) {
+      state = JSON.parse(storedState);
+    } else {
+      localStorage.setItem('dashboardState', JSON.stringify(Dashboard.DEFAULT_STATE));
+    }
+    this.state = state
   }
+
+  //addAlbum(id: string) {}
 
   saveLayout(newLayout: Layout[]) {
     console.log(newLayout);
     this.setState((state) => ({...state, layout: newLayout}));
+    localStorage.setItem('dashboardState', JSON.stringify({...this.state, layout: newLayout}));
   }
 
   render() {
-    console.log(this.props.children);
-    const { layout, editable } = this.state;
+    const { layout, albums, playlists, charts, editable } = this.state;
 
-    return <GridLayout
-      className={'Dashboard'}
-      layout={layout}
-      cols={2}
-      rowHeight={100}
-      isResizable={editable}
-      isDraggable={editable}
-      width={document.body.clientWidth}
-      onDragStop={(e) => this.saveLayout(e)}
-    >
-      <div key="a" className={'DashboardItem'}>a</div>
-      <div key="b" className={'DashboardItem'}>b</div>
-      <div key="c" className={'DashboardItem'}>c</div>
+    return (
+      <GridLayout
+        className={'Dashboard'}
+        layout={layout}
+        cols={4}
+        rowHeight={100}
+        isResizable={editable}
+        isDraggable={editable}
+        width={document.body.clientWidth}
+        onDragStop={(e) => this.saveLayout(e)}
+        onResizeStop={(e) => this.saveLayout(e)}
+      >
+        <div key={'player'} className={'DashboardItem'}>
+          Player
+        </div>
+        <div key={'favorites'} className={'DashboardItem'}>
+          <SavedTracks />
+        </div>
+        <div key={'search'} className={'DashboardItem'}>
+          Search
+        </div>
 
-    </GridLayout>;
+        {albums.map((a) => <div key={a.id} className={'DashboardItem'}>Album {a.id}</div>)}
+        {playlists.map((p) => <div key={p.id} className={'DashboardItem'}>Playlist {p.id}</div>)}
+        {charts.map((c) => {
+          const id = `${c.chartType}-${c.period}-${c.countryCode}`;
+          return <div key={id} className={'DashboardItem'}>Chart {getChatCode(c.countryCode, c.chartType, c.period)}</div>
+        })}
+      </GridLayout>
+    );
   }
 }
 
 export default Dashboard;
+
+
+export type CountryCode =   'global' | 'EG' | 'AR' | 'AU' | 'BE' | 'BO' | 'BR' | 'BG' | 'CL' | 'CR' | 'DK' | 'DE' | 'DO'
+  | 'EC' | 'SV' | 'EE' | 'FI' | 'FR' | 'GR' | 'GT' | 'HN' | 'IN' | 'ID' | 'IE' | 'IS' | 'IL' | 'IT' | 'JP' | 'CA' | 'CO'
+  | 'LV' | 'LT' | 'LU' | 'MY' | 'MA' | 'MX' | 'NZ' | 'NI' | 'NL' | 'NO' | 'AT' | 'PA' | 'PY' | 'PE' | 'PH' | 'PL' | 'PT'
+  | 'RO' | 'RU' | 'SA' | 'SE' | 'CH' | 'SG' | 'SK' | 'HK' | 'ES' | 'ZA' | 'KR' | 'TW' | 'TH' | 'CZ' | 'TR' | 'UA' | 'HU'
+  | 'UY' | 'AE' | 'UK' | 'US' | 'VN';
+
+export type ChartType = 'top' | 'viral';
+
+export type ChartPeriod = 'daily' | 'weekly';
+
+export type ChartCode = [CountryCode, ChartType, ChartPeriod, string];
+
+export const CHART_CODES: ReadonlyArray<ChartCode> = [
+  // Top daily charts
+  ['global', 'top', 'daily', '37i9dQZEVXbMDoHDwVN2tF'],
+
+  ['EG', 'top', 'daily', '37i9dQZEVXbLn7RQmT5Xv2'],
+  ['AR', 'top', 'daily', '37i9dQZEVXbMMy2roB9myp'],
+  ['AU', 'top', 'daily', '37i9dQZEVXbJPcfkRz0wJ0'],
+
+  ['BE', 'top', 'daily', '37i9dQZEVXbJNSeeHswcKB'],
+  ['BO', 'top', 'daily', '37i9dQZEVXbJqfMFK4d691'],
+  ['BR', 'top', 'daily', '37i9dQZEVXbMXbN3EUUhlg'],
+  ['BG', 'top', 'daily', '37i9dQZEVXbNfM2w2mq1B8'],
+
+  ['CL', 'top', 'daily', '37i9dQZEVXbL0GavIqMTeb'],
+  ['CR', 'top', 'daily', '37i9dQZEVXbMZAjGMynsQX'],
+  ['DK', 'top', 'daily', '37i9dQZEVXbL3J0k32lWnN'],
+  ['DE', 'top', 'daily', '37i9dQZEVXbJiZcmkrIHGU'],
+
+  ['DO', 'top', 'daily', '37i9dQZEVXbKAbrMR8uuf7'],
+  ['EC', 'top', 'daily', '37i9dQZEVXbJlM6nvL1nD1'],
+  ['SV', 'top', 'daily', '37i9dQZEVXbLxoIml4MYkT'],
+  ['EE', 'top', 'daily', '37i9dQZEVXbLesry2Qw2xS'],
+
+  ['FI', 'top', 'daily', '37i9dQZEVXbMxcczTSoGwZ'],
+  ['FR', 'top', 'daily', '37i9dQZEVXbIPWwFssbupI'],
+  ['GR', 'top', 'daily', '37i9dQZEVXbJqdarpmTJDL'],
+  ['GT', 'top', 'daily', '37i9dQZEVXbLy5tBFyQvd4'],
+
+  ['HN', 'top', 'daily', '37i9dQZEVXbJp9wcIM9Eo5'],
+  ['IN', 'top', 'daily', '37i9dQZEVXbLZ52XmnySJg'],
+  ['ID', 'top', 'daily', '37i9dQZEVXbObFQZ3JLcXt'],
+  ['IE', 'top', 'daily', '37i9dQZEVXbKM896FDX8L1'],
+
+  ['IS', 'top', 'daily', '37i9dQZEVXbKMzVsSGQ49S'],
+  ['IL', 'top', 'daily', '37i9dQZEVXbJ6IpvItkve3'],
+  ['IT', 'top', 'daily', '37i9dQZEVXbIQnj7RRhdSX'],
+  ['JP', 'top', 'daily', '37i9dQZEVXbKXQ4mDTEBXq'],
+
+  ['CA', 'top', 'daily', '37i9dQZEVXbKj23U1GF4IR'],
+  ['CO', 'top', 'daily', '37i9dQZEVXbOa2lmxNORXQ'],
+  ['LV', 'top', 'daily', '37i9dQZEVXbJWuzDrTxbKS'],
+  ['LT', 'top', 'daily', '37i9dQZEVXbMx56Rdq5lwc'],
+
+  ['LU', 'top', 'daily', '37i9dQZEVXbKGcyg6TFGx6'],
+  ['MY', 'top', 'daily', '37i9dQZEVXbJlfUljuZExa'],
+  ['MA', 'top', 'daily', '37i9dQZEVXbJU9eQpX8gPT'],
+  ['MX', 'top', 'daily', '37i9dQZEVXbO3qyFxbkOE1'],
+
+  ['NZ', 'top', 'daily', '37i9dQZEVXbM8SIrkERIYl'],
+  ['NI', 'top', 'daily', '37i9dQZEVXbISk8kxnzfCq'],
+  ['NL', 'top', 'daily', '37i9dQZEVXbKCF6dqVpDkS'],
+  ['NO', 'top', 'daily', '37i9dQZEVXbJvfa0Yxg7E7'],
+
+  ['AT', 'top', 'daily', '37i9dQZEVXbKNHh6NIXu36'],
+  ['PA', 'top', 'daily', '37i9dQZEVXbKypXHVwk1f0'],
+  ['PY', 'top', 'daily', '37i9dQZEVXbNOUPGj7tW6T'],
+  ['PE', 'top', 'daily', '37i9dQZEVXbJfdy5b0KP7W'],
+
+  ['PH', 'top', 'daily', '37i9dQZEVXbNBz9cRCSFkY'],
+  ['PL', 'top', 'daily', '37i9dQZEVXbN6itCcaL3Tt'],
+  ['PT', 'top', 'daily', '37i9dQZEVXbKyJS56d1pgi'],
+  ['RO', 'top', 'daily', '37i9dQZEVXbNZbJ6TZelCq'],
+
+  ['RU', 'top', 'daily', '37i9dQZEVXbL8l7ra5vVdB'],
+  ['SA', 'top', 'daily', '37i9dQZEVXbLrQBcXqUtaC'],
+  ['SE', 'top', 'daily', '37i9dQZEVXbLoATJ81JYXz'],
+  ['CH', 'top', 'daily', '37i9dQZEVXbJiyhoAPEfMK'],
+
+  ['SG', 'top', 'daily', '37i9dQZEVXbK4gjvS1FjPY'],
+  ['SK', 'top', 'daily', '37i9dQZEVXbKIVTPX9a2Sb'],
+  ['HK', 'top', 'daily', '37i9dQZEVXbLwpL8TjsxOG'],
+  ['ES', 'top', 'daily', '37i9dQZEVXbNFJfN1Vw8d9'],
+
+  ['ZA', 'top', 'daily', '37i9dQZEVXbMH2jvi6jvjk'],
+  ['KR', 'top', 'daily', '37i9dQZEVXbNxXF4SkHj9F'],
+  ['TW', 'top', 'daily', '37i9dQZEVXbMnZEatlMSiu'],
+  ['TH', 'top', 'daily', '37i9dQZEVXbMnz8KIWsvf9'],
+
+  ['CZ', 'top', 'daily', '37i9dQZEVXbIP3c3fqVrJY'],
+  ['TR', 'top', 'daily', '37i9dQZEVXbIVYVBNw9D5K'],
+  ['UA', 'top', 'daily', '37i9dQZEVXbKkidEfWYRuD'],
+  ['HU', 'top', 'daily', '37i9dQZEVXbNHwMxAkvmF8'],
+
+  ['UY', 'top', 'daily', '37i9dQZEVXbMJJi3wgRbAy'],
+  ['UA', 'top', 'daily', '37i9dQZEVXbM4UZuIrvHvA'],
+  ['UK', 'top', 'daily', '37i9dQZEVXbLnolsZ8PSNw'],
+  ['US', 'top', 'daily', '37i9dQZEVXbLRQDuF5jeBp'],
+
+  ['VN', 'top', 'daily', '37i9dQZEVXbLdGSmz6xilI'],
+
+  // Top weekly charts
+  ['global', 'top', 'weekly', '37i9dQZEVXbNG2KDcFcKOF'],
+
+  // Viral daily charts
+  ['global', 'viral', 'daily', '37i9dQZEVXbLiRSasKsNU9'],
+];
+
+export function getChatCode(countryCode: CountryCode, type: ChartType, period: ChartPeriod) {
+  return CHART_CODES.filter((chartCode) => chartCode[0] === countryCode && chartCode[1] === type && chartCode[2] === period)[0][3] ?? null;
+}
+

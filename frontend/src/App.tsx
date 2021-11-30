@@ -9,6 +9,7 @@ import Searchbar from "./components/Searchbar/Searchbar";
 import SavedTracks from "./components/SavedTracks/SavedTracks"
 import Player from "./components/Player/Player";
 import { API_URL } from "./utils/constants";
+import Dashboard from "./components/Dashboard/Dashboard";
 
 function authorize() {
   fetch(`${API_URL}api/spotify/get-auth-url`)
@@ -54,6 +55,7 @@ function App() {
         <Switch>
           <Route exact path="/">
             <h1>Home</h1>
+            <Dashboard/>
           </Route>
           <Route path="/playlists">
             <Playlists />
