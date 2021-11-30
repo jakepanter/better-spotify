@@ -32,6 +32,7 @@ class Player extends Component<IProps, IState> {
                 token: token
             })
         }
+
     }
 
     render() {

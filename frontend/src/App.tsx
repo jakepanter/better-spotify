@@ -7,8 +7,8 @@ import Playlist from "./components/Playlist/Playlist";
 import Playlists from "./components/Playlists/Playlists";
 import Searchbar from "./components/Searchbar/Searchbar";
 import SavedTracks from "./components/SavedTracks/SavedTracks"
-import Player from "./components/Player/Player";
 import { API_URL } from "./utils/constants";
+import SpotifyWebPlayer from "./components/PlayerModified";
 
 function authorize() {
   fetch(`${API_URL}api/spotify/get-auth-url`)
@@ -24,7 +24,7 @@ function App() {
     <Router>
       <div>
         <Searchbar/>
-        <Player/>
+        <SpotifyWebPlayer token={'sfsd'} />
         <ul>
           <li>
             <Link className="button" to="/">
