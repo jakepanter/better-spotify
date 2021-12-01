@@ -1,15 +1,11 @@
 /* eslint-disable */
-import React, {Component} from 'react';
+import React, {ChangeEvent, Component} from 'react';
 import './Dashboard.scss';
 import GridLayout, {Layout} from 'react-grid-layout';
 import SavedTracks from "../SavedTracks/SavedTracks";
-
-export interface DashboardProps {}
+import Checkbox from "../Checkbox/Checkbox";
 
 export interface DashboardItem {}
-
-export interface IDashboardPlayer extends DashboardItem {
-}
 
 export interface IDashboardPlaylist extends DashboardItem {
   id: string;
@@ -19,104 +15,315 @@ export interface IDashboardAlbum extends DashboardItem {
   id: string;
 }
 
-export interface IDashboardLikedTracks extends DashboardItem {
-}
-
 export interface IDashboardChart extends DashboardItem {
   countryCode: CountryCode;
   chartType: ChartType;
   period: ChartPeriod;
 }
 
-export interface IDashboardNavbar {
-}
-
-export interface IDashboardSidebar {
-}
-
-interface IProps {}
-
-interface IState {
-  layout: Layout[];
-  playlists: ReadonlyArray<IDashboardPlaylist>;
-  albums: ReadonlyArray<IDashboardAlbum>;
-  charts: ReadonlyArray<IDashboardChart>;
+interface IProps {
   editable: boolean;
 }
 
-class Dashboard extends Component<IProps, IState> {
-  private static readonly DEFAULT_STATE: IState = {
-    layout: [
-      {i: 'player', x: 0, y: 0, w: 1, h: 2},
-      {i: 'likes', x: 1, y: 0, w: 2, h: 2, minW: 2, maxW: 2},
-      {i: 'test', x: 1, y: 0, w: 2, h: 2, minW: 2, maxW: 2},
-    ],
-    albums: [
-      {id: '3Clnd6NGYKXGHfI4SFzdjM'}
-    ],
-    playlists: [
-      {id: '7pCijPDtZHF5jyT1ZIV7Hh'}
-    ],
-    charts: [
-      {chartType: 'top', period: 'daily', countryCode: 'DE'}
-    ],
-    editable: true,
+interface IState {
+  layout: Layout[];
+  playlists: IDashboardPlaylist[];
+  albums: IDashboardAlbum[];
+  charts: IDashboardChart[];
+  showFavorites: boolean;
+  chartSelection: {
+    countryCode: CountryCode,
+    type: ChartType,
+    period: ChartPeriod,
   };
+}
 
+/**
+ * A service with methods to add elements to the start page
+ */
+export class DashboardService {
+  // Album methods
+  static addAlbum(id: string) {
+    const currentDashboard = DashboardService.getCurrentDashboardState();
+    if (!currentDashboard.albums.some((a) => a.id === id)) {
+      currentDashboard.albums.push({id: id});
+      DashboardService.saveCurrentDashboardState(currentDashboard);
+    }
+  }
+
+  static removeAlbum(id: string) {
+    const currentDashboard = DashboardService.getCurrentDashboardState();
+    const newAlbums = currentDashboard.albums.filter((a) => a.id !== id);
+    DashboardService.saveCurrentDashboardState({...currentDashboard, albums: newAlbums});
+  }
+
+  static containsAlbum(id: string) {
+    const currentDashboard = DashboardService.getCurrentDashboardState();
+    return currentDashboard.albums.some((a) => a.id === id);
+  }
+
+  // Playlist methods
+  static addPlaylist(id: string) {
+    const currentDashboard = DashboardService.getCurrentDashboardState();
+    if (!currentDashboard.playlists.some((a) => a.id === id)) {
+      currentDashboard.playlists.push({id: id});
+      DashboardService.saveCurrentDashboardState(currentDashboard);
+    }
+  }
+
+  static removePlaylist(id: string) {
+    const currentDashboard = DashboardService.getCurrentDashboardState();
+    const newPlaylists = currentDashboard.playlists.filter((p) => p.id !== id);
+    DashboardService.saveCurrentDashboardState({...currentDashboard, playlists: newPlaylists});
+  }
+
+  static containsPlaylist(id: string) {
+    const currentDashboard = DashboardService.getCurrentDashboardState();
+    return currentDashboard.playlists.some((p) => p.id === id);
+  }
+
+  // Helper methods
+  private static getCurrentDashboardState() {
+    const currentDashboardString = localStorage.getItem('dashboardState')?.toString();
+    if (currentDashboardString !== undefined) {
+      return JSON.parse(currentDashboardString) as IState;
+    }
+    return DEFAULT_DASHBOARD_STATE;
+  }
+
+  private static saveCurrentDashboardState(dashboard: IState) {
+    localStorage.setItem('dashboardState', JSON.stringify(dashboard));
+  }
+}
+
+const DEFAULT_DASHBOARD_STATE: IState = {
+  layout: [],
+  albums: [
+    {id: '3Clnd6NGYKXGHfI4SFzdjM'}
+  ],
+  playlists: [
+    {id: '7pCijPDtZHF5jyT1ZIV7Hh'}
+  ],
+  charts: [
+    {countryCode: 'DE', chartType: 'top', period: 'daily'}
+  ],
+  showFavorites: true,
+  chartSelection: {
+    countryCode: 'global',
+    type: 'top',
+    period: 'daily',
+  },
+};
+
+class Dashboard extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
 
     const storedState = localStorage.getItem('dashboardState')?.toString();
-    console.log(storedState);
-    let state = Dashboard.DEFAULT_STATE;
+    let state = DEFAULT_DASHBOARD_STATE;
     if (storedState !== undefined) {
       state = JSON.parse(storedState);
     } else {
-      localStorage.setItem('dashboardState', JSON.stringify(Dashboard.DEFAULT_STATE));
+      localStorage.setItem('dashboardState', JSON.stringify(DEFAULT_DASHBOARD_STATE));
     }
-    this.state = state
+    this.state = state;
   }
 
-  //addAlbum(id: string) {}
-
-  saveLayout(newLayout: Layout[]) {
-    console.log(newLayout);
-    this.setState((state) => ({...state, layout: newLayout}));
-    localStorage.setItem('dashboardState', JSON.stringify({...this.state, layout: newLayout}));
+  // Albums
+  private addAlbum(id: string) {
+    const {albums} = this.state;
+    if (!albums.some((a) => a.id === id)) {
+      const newAlbums = [...albums, {id: id}]
+      this.updatePlaylists(newAlbums);
+    }
   }
 
+  private removeAlbum(id: string) {
+    const {albums} = this.state;
+    const newAlbums = albums.filter((a) => a.id !== id);
+    this.updateAlbums(newAlbums);
+  }
+
+  private updateAlbums(newAlbums: IDashboardAlbum[]) {
+    this.setState(
+      (state) => ({...state, albums: newAlbums}),
+      () => this.saveState(),
+    );
+  }
+
+  // Playlists
+  private addPlaylist(id: string) {
+    const {playlists} = this.state;
+    if (!playlists.some((p) => p.id === id)) {
+      const newPlaylists = [...playlists, {id: id}]
+      this.updatePlaylists(newPlaylists);
+    }
+  }
+
+  private removePlaylist(id: string) {
+    const {playlists} = this.state;
+    const newPlaylists = playlists.filter((p) => p.id !== id);
+    this.updatePlaylists(newPlaylists);
+  }
+
+  private updatePlaylists(newPlaylists: IDashboardPlaylist[]) {
+    this.setState(
+      (state) => ({...state, playlists: newPlaylists}),
+      () => this.saveState(),
+    );
+  }
+
+  // Charts
+  private addChart(countryCode: CountryCode, type: ChartType, period: ChartPeriod) {
+    const {charts} = this.state;
+    if (!charts.some(
+      (c) => c.countryCode === countryCode && c.chartType === type && c.period === period)
+        && chartExists(countryCode, type, period)
+    ) {
+      const newCharts = [...charts, {countryCode: countryCode, chartType: type, period}]
+      this.updateCharts(newCharts);
+    }
+  }
+
+  private removeChart(countryCode: CountryCode, type: ChartType, period: ChartPeriod) {
+    const {charts} = this.state;
+    const newCharts = charts.filter((c) => !(c.countryCode === countryCode && c.chartType === type && c.period === period));
+    this.updateCharts(newCharts);
+  }
+
+  private updateCharts(newCharts: IDashboardChart[]) {
+    this.setState(
+      (state) => ({...state, charts: newCharts}),
+      () => this.saveState(),
+    );
+  }
+
+  // Save Layout
+  private saveLayout(newLayout: Layout[]) {
+    this.setState(
+      (state) => ({...state, layout: newLayout}),
+      () => this.saveState(),
+    );
+  }
+
+  private saveState() {
+    localStorage.setItem('dashboardState', JSON.stringify(this.state));
+  }
+
+  // Charts form
+  private updateChartSelection(e: ChangeEvent<HTMLSelectElement>, property: 'countryCode' | 'type' | 'period') {
+    let newProp: {};
+    switch (property) {
+      case "countryCode":
+        newProp = {countryCode: e.target.value}
+        break;
+      case "type":
+        newProp = {type: e.target.value}
+        break;
+      case "period":
+        newProp = {period: e.target.value}
+        break;
+    }
+
+    this.setState(
+      (state) => ({...state, chartSelection: {...state.chartSelection, ...newProp}}),
+      () => this.saveState(),
+    );
+  }
+
+  private showFavorites(e: ChangeEvent<HTMLInputElement>) {
+    this.setState(
+      (state) => ({...state, showFavorites: e.target.checked}),
+      () => this.saveState(),
+    );
+  }
+
+  // Render
   render() {
-    const { layout, albums, playlists, charts, editable } = this.state;
+    const { layout, albums, playlists, charts, showFavorites, chartSelection } = this.state;
+    const { editable } = this.props;
 
     return (
-      <GridLayout
-        className={'Dashboard'}
-        layout={layout}
-        cols={4}
-        rowHeight={100}
-        isResizable={editable}
-        isDraggable={editable}
-        width={document.body.clientWidth}
-        onDragStop={(e) => this.saveLayout(e)}
-        onResizeStop={(e) => this.saveLayout(e)}
-      >
-        <div key={'player'} className={'DashboardItem'}>
-          Player
-        </div>
-        <div key={'favorites'} className={'DashboardItem'}>
-          <SavedTracks />
-        </div>
-        <div key={'search'} className={'DashboardItem'}>
-          Search
-        </div>
-
-        {albums.map((a) => <div key={a.id} className={'DashboardItem'}>Album {a.id}</div>)}
-        {playlists.map((p) => <div key={p.id} className={'DashboardItem'}>Playlist {p.id}</div>)}
-        {charts.map((c) => {
-          const id = `${c.chartType}-${c.period}-${c.countryCode}`;
-          return <div key={id} className={'DashboardItem'}>Chart {getChatCode(c.countryCode, c.chartType, c.period)}</div>
-        })}
-      </GridLayout>
+      <>
+        {editable ?
+          <div className={'DashboardConfigurator'}>
+            <div className={'DashboardChartsForm'}>
+              <select
+                className={'DashboardChartsCountryCode'}
+                value={chartSelection.countryCode}
+                onChange={(e) => this.updateChartSelection(e, 'countryCode')}
+              >
+                {ALL_COUNTRY_CODES.map((code) => <option key={code} value={code}>{code}</option>)}
+              </select>
+              <select
+                className={'DashboardChartsType'}
+                value={chartSelection.type}
+                onChange={(e) => this.updateChartSelection(e, 'type')}
+              >
+                {ALL_CHART_TYPES.map((code) => <option key={code} value={code}>{code}</option>)}
+              </select>
+              <select
+                className={'DashboardChartsPeriod'}
+                value={chartSelection.period}
+                onChange={(e) => this.updateChartSelection(e, 'period')}
+              >
+                {ALL_CHART_PERIODS.map((code) => <option key={code} value={code}>{code}</option>)}
+              </select>
+              <button
+                className={'button'}
+                disabled={!chartExists(chartSelection.countryCode, chartSelection.type, chartSelection.period)}
+                onClick={() => this.addChart(chartSelection.countryCode, chartSelection.type, chartSelection.period)}
+              >
+                Add Chart
+              </button>
+              <button
+                className={'button'}
+                onClick={() => this.removeChart(chartSelection.countryCode, chartSelection.type, chartSelection.period)}
+              >
+                Remove Chart
+              </button>
+            </div>
+            <div className={'DashboardSettingsForm'}>
+              <Checkbox
+                checked={showFavorites}
+                label={'Show Favorites'}
+                onChange={(e) => this.showFavorites(e)}
+              />
+            </div>
+          </div>
+          : <></>
+        }
+        <GridLayout
+          className={'Dashboard'}
+          layout={layout}
+          cols={4}
+          rowHeight={200}
+          isResizable={editable}
+          isDraggable={editable}
+          width={document.body.clientWidth}
+          onDragStop={(e) => this.saveLayout(e)}
+          onResizeStop={(e) => this.saveLayout(e)}
+        >
+          {showFavorites ?
+            <div key={'favorites'} className={'DashboardItem'}>
+              <SavedTracks />
+            </div>
+            : <></>
+          }
+          {albums.map((a) => <div key={a.id} className={'DashboardItem'}>Album {a.id}</div>)}
+          {playlists.map((p) => <div key={p.id} className={'DashboardItem'}>Playlist {p.id}</div>)}
+          {charts.map((c) => {
+            const chartCode = `${c.chartType}-${c.period}-${c.countryCode}`;
+            return (
+              <div key={chartCode} className={'DashboardItem'}>
+                Chart {chartCode}
+                <br />
+                (Playlist: {getChartCode(c.countryCode, c.chartType, c.period)})
+              </div>
+            );
+          })}
+        </GridLayout>
+      </>
     );
   }
 }
@@ -124,19 +331,34 @@ class Dashboard extends Component<IProps, IState> {
 export default Dashboard;
 
 
-export type CountryCode =   'global' | 'EG' | 'AR' | 'AU' | 'BE' | 'BO' | 'BR' | 'BG' | 'CL' | 'CR' | 'DK' | 'DE' | 'DO'
-  | 'EC' | 'SV' | 'EE' | 'FI' | 'FR' | 'GR' | 'GT' | 'HN' | 'IN' | 'ID' | 'IE' | 'IS' | 'IL' | 'IT' | 'JP' | 'CA' | 'CO'
-  | 'LV' | 'LT' | 'LU' | 'MY' | 'MA' | 'MX' | 'NZ' | 'NI' | 'NL' | 'NO' | 'AT' | 'PA' | 'PY' | 'PE' | 'PH' | 'PL' | 'PT'
-  | 'RO' | 'RU' | 'SA' | 'SE' | 'CH' | 'SG' | 'SK' | 'HK' | 'ES' | 'ZA' | 'KR' | 'TW' | 'TH' | 'CZ' | 'TR' | 'UA' | 'HU'
-  | 'UY' | 'AE' | 'UK' | 'US' | 'VN';
+// Chart types
+type CountryCode =   'global' | 'EG' | 'AR' | 'AU' | 'BE' | 'BO' | 'BR' | 'BG' | 'CL' | 'CR' | 'DK' | 'DE' | 'DO' | 'EC'
+  | 'SV' | 'EE' | 'FI' | 'FR' | 'GR' | 'GT' | 'HN' | 'IN' | 'ID' | 'IE' | 'IS' | 'IL' | 'IT' | 'JP' | 'CA' | 'CO' | 'LV'
+  | 'LT' | 'LU' | 'MY' | 'MA' | 'MX' | 'NZ' | 'NI' | 'NL' | 'NO' | 'AT' | 'PA' | 'PY' | 'PE' | 'PH' | 'PL' | 'PT' | 'RO'
+  | 'RU' | 'SA' | 'SE' | 'CH' | 'SG' | 'SK' | 'HK' | 'ES' | 'ZA' | 'KR' | 'TW' | 'TH' | 'CZ' | 'TR' | 'UA' | 'HU' | 'UY'
+  | 'AE' | 'UK' | 'US' | 'VN';
 
-export type ChartType = 'top' | 'viral';
+const ALL_COUNTRY_CODES: ReadonlyArray<CountryCode> = [
+  'global', 'EG', 'AR', 'AU', 'BE', 'BO', 'BR', 'BG', 'CL', 'CR', 'DK', 'DE', 'DO', 'EC', 'SV', 'EE', 'FI', 'FR', 'GR',
+  'GT', 'HN', 'IN', 'ID', 'IE', 'IS', 'IL', 'IT', 'JP', 'CA', 'CO', 'LV', 'LT', 'LU', 'MY', 'MA', 'MX', 'NZ', 'NI',
+  'NL', 'NO', 'AT', 'PA', 'PY', 'PE', 'PH', 'PL', 'PT', 'RO', 'RU', 'SA', 'SE', 'CH', 'SG', 'SK', 'HK', 'ES', 'ZA',
+  'KR', 'TW', 'TH', 'CZ', 'TR', 'UA', 'HU', 'UY', 'AE', 'UK', 'US', 'VN',
+];
 
-export type ChartPeriod = 'daily' | 'weekly';
 
-export type ChartCode = [CountryCode, ChartType, ChartPeriod, string];
+type ChartType = 'top' | 'viral';
 
-export const CHART_CODES: ReadonlyArray<ChartCode> = [
+const ALL_CHART_TYPES: ReadonlyArray<ChartType> = ['top', 'viral'];
+
+
+type ChartPeriod = 'daily' | 'weekly';
+
+const ALL_CHART_PERIODS: ReadonlyArray<ChartPeriod> = ['daily', 'weekly'];
+
+
+type ChartCode = [CountryCode, ChartType, ChartPeriod, string];
+
+const CHART_CODES: ReadonlyArray<ChartCode> = [
   // Top daily charts
   ['global', 'top', 'daily', '37i9dQZEVXbMDoHDwVN2tF'],
 
@@ -233,7 +455,11 @@ export const CHART_CODES: ReadonlyArray<ChartCode> = [
   ['global', 'viral', 'daily', '37i9dQZEVXbLiRSasKsNU9'],
 ];
 
-export function getChatCode(countryCode: CountryCode, type: ChartType, period: ChartPeriod) {
+function getChartCode(countryCode: CountryCode, type: ChartType, period: ChartPeriod) {
   return CHART_CODES.filter((chartCode) => chartCode[0] === countryCode && chartCode[1] === type && chartCode[2] === period)[0][3] ?? null;
+}
+
+function chartExists(countryCode: CountryCode, type: ChartType, period: ChartPeriod) {
+  return CHART_CODES.some((chartCode) => chartCode[0] === countryCode && chartCode[1] === type && chartCode[2] === period);
 }
 

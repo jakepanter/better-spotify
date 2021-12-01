@@ -3,6 +3,14 @@
 
 $dashboard-item-border-radius: 20px;
 
+.DashboardConfigurator {
+  padding: 16px;
+
+  .DashboardChartsForm {}
+
+  .DashboardSettingsForm {}
+}
+
 .Dashboard {
   width: 100%;
 
@@ -12,6 +20,12 @@ $dashboard-item-border-radius: 20px;
     box-sizing: border-box;
     padding: 16px;
     overflow: hidden;
+    position: relative;
+    
+    &>* {
+      height: 100%;
+      width: 100%;
+    }
   }
 
   .react-grid-item {

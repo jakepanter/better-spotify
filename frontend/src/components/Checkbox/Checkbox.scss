@@ -1,0 +1,13 @@
+.Checkbox {
+  cursor: pointer;
+  display: inline-block;
+  user-select: none;
+
+  .CheckboxElement {
+    display: none;
+  }
+
+  .CheckboxLabel {
+    margin-left: 4px;
+  }
+}

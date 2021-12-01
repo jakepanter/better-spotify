@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
 import "./App.scss";
 import Album from "./components/Album/Album";
@@ -21,6 +21,12 @@ function authorize() {
 }
 
 function App() {
+  const [editable, setEditable] = useState(
+    false
+  );
+
+  const toggleEditable = () => setEditable(!editable);
+
   return (
     <Router>
       <div>
@@ -55,7 +61,8 @@ function App() {
         <Switch>
           <Route exact path="/">
             <h1>Home</h1>
-            <Dashboard/>
+            <button onClick={toggleEditable}>IsEditable: {editable ? 'true' : 'false'}</button>
+            <Dashboard editable={editable}/>
           </Route>
           <Route path="/playlists">
             <Playlists />
