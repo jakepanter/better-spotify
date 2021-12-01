@@ -33,13 +33,10 @@ function TrackListItem(props: Props) {
 
   const handleClick = (e: any) => {
     if (e.shiftKey) {
-      console.log("shift");
       setSpecialKey("shift");
     } else if (e.ctrlKey) {
-      console.log("ctrl");
       setSpecialKey("ctrl");
     } else {
-      console.log("nope");
       setSpecialKey(null);
     }
     setSelected(!selected);
@@ -61,7 +58,12 @@ function TrackListItem(props: Props) {
     fetchData();
   }, [id]);
 
-  if (!track) return <p>loading...</p>;
+  if (!track)
+    return (
+      <tr>
+        <td>loading...</td>
+      </tr>
+    );
 
   function millisToMinutesAndSeconds(millis: number) {
     var minutes = Math.floor(millis / 60000);

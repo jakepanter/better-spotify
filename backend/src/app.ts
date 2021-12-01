@@ -108,7 +108,6 @@ export default class App {
     this.server.post('/api/spotify/playlist/:playlistId/add', async (req: Request, res: Response) => {
       const { playlistId } = req.params;
       const tracks = req.body;
-      console.log(req.body);
       await this.spotifyService.addTracksToPlaylist(playlistId, tracks);
       return res.status(200);
     });
