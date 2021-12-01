@@ -53,7 +53,7 @@ class Playlists extends Component<IProps, IState> {
       <>
         <h2>My Playlists</h2>
         <div className={"Playlists"}>
-          <ul>{playlists}</ul>
+          <ul className={"Playlist-items"}>{playlists}</ul>
         </div>
       </>
     );
