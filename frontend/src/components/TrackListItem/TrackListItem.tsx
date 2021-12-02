@@ -5,7 +5,6 @@ import { TrackObjectFull } from "spotify-types";
 type Props = {
   id_track: String;
   id_tracklist: String;
-  offset: Number;
   type: String;
 };
 
@@ -13,27 +12,26 @@ function TrackListItem(props: Props) {
   const id = props.id_track;
   const id_tracklist= props.id_tracklist;
   const type = props.type;
-  const offset = props.offset;
+  const track_uri = "spotify:track:" + id;
+  var requestOptions;
   const sendRequest = useCallback(async () => {
     // POST request using fetch inside useEffect React hook
     var context_uri;
-    if(type=="album"){
+    if(type==="album"){
       context_uri = "spotify:album:" + id_tracklist;
-    } else if (type=="playlist") {
+    } else if (type==="playlist") {
       context_uri = "spotify:playlist:" + id_tracklist;
-    } else if (type=="saved") {
-      console.log(context_uri);
+    } else if (type==="saved") {
       context_uri = id_tracklist + ":collection";
-    }
-    console.log(offset);
-    const requestOptions = {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          "context_uri": context_uri,
-          "offset": {"position": offset},
-          "position_ms": 0,
-        })
+    } 
+    requestOptions = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        "context_uri": context_uri,
+        "offset": {"uri": track_uri},
+        "position_ms": 0,
+      })
     };
     fetch('http://localhost:5000/api/spotify/me/player/play', requestOptions)
         .then(response => response.json()) 

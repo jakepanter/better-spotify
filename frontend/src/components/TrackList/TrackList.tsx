@@ -40,8 +40,8 @@ function TrackList(props: Props) {
                     <th>Duration</th>
                 </tr>
 
-                {album?.tracks.items.map((item, index) => {
-                    return <TrackListItem id_track={item.id} offset={index} id_tracklist={id_tracklist} key={item.id} type={type}/>;
+                {album?.tracks.items.map((item) => {
+                    return <TrackListItem id_track={item.id} id_tracklist={id_tracklist} key={item.id} type={type}/>;
                 })}
 
             </table>
@@ -65,8 +65,8 @@ function TrackList(props: Props) {
                       <th>Artists</th>
                       <th>Duration</th>
                   </tr>
-                  {playlist?.tracks.items.map((item, index) => {
-                      return <TrackListItem id_track={item.track.id} id_tracklist={id_tracklist} offset={index} key={item.track.id} type={type}/>;
+                  {playlist?.tracks.items.map((item) => {
+                      return <TrackListItem id_track={item.track.id} id_tracklist={id_tracklist} key={item.track.id} type={type}/>;
                   })}
               </table>
             </div>
@@ -77,11 +77,11 @@ function TrackList(props: Props) {
     //SAVED TRACKS TRACKLIST
     else if(type === "saved") {
       const saved = props.data;
-        
+
       return(
         <>
-          {saved.map((item, index) => {
-              return <TrackListItem id_track={item.track.id} id_tracklist={id_tracklist} offset={index} key={item.track.id} type={type}/>
+          {saved.map((item) => {
+              return <TrackListItem id_track={item.track.id} id_tracklist={id_tracklist} key={item.track.id} type={type}/>
           })}    
         </>
       )

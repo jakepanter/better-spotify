@@ -47,7 +47,6 @@ export default function SavedTracks() {
   };
 
   if (!tracks || !items || !user) return <p>loading...</p>;
-  console.log(user.uri);
   return (
     <>
       <table onScroll={onScroll} style={{display: "block", height: "500px", overflow: "auto" }}>
