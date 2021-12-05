@@ -32,10 +32,11 @@ class Checkbox extends Component<IProps, IState> {
   render() {
     const { label } = this.props;
     const { checked } = this.state;
+
     return (
-      <label className={'Checkbox'}>
+      <label className={`Checkbox ${checked ? 'checked' : ''}`}>
         <input className={'CheckboxElement'} type={'checkbox'} checked={this.props.checked} onChange={(e) => this.onChange(e)} />
-        <span className={'material-icons'}>{checked ? 'check_box' : 'check_box_outline_blank'}</span>
+        <span className={'CheckboxIcon material-icons'}>{checked ? 'check_box' : 'check_box_outline_blank'}</span>
         <span className={'CheckboxLabel'}>{label}</span>
       </label>
     );
