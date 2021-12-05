@@ -5,8 +5,8 @@
 */
 
 // Imports
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap');
-@import "normalize-css";
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 /*
    Variables Setup
@@ -17,22 +17,18 @@ $none: none;
 $transparent: transparent;
 $black: #000 !default;
 $white: #fff !default;
-$green: #1EB972 !default;
-$yellow: #D9BB0B !default;
-$red: #D83010 !default;
-$blue: #0072C5 !default;
-$gray-dark: #3a3c3b !default;
-$gray: #7a7c7b !default;
-$gray-light: #CDCECD !default;
+$gray-dark: #CDCECD !default;
+$gray: #E4E3E2 !default;
+$gray-light: #F2F2F2 !default;
 
 // project base colors
-$color-background: #E4E3E2 !default;
-$color-primary: #121E2A !default;
-$color-secondary: #2F4766 !default;
-$color-default: #263950 !default;
+$color-background: #0C141D !default;
+$color-primary: #008FF7 !default;
+$color-secondary: #18283A !default;
+$color-default: #CDCECD  !default;
 
 // project special colors
-$color-accent-dark: #33A9FE !default;
+$color-accent-dark: #2F4766 !default;
 $color-accent-darker: #008FF7 !default;
 $color-accent-darkest: #0072C5 !default;
 $color-waring-dark: #F47960 !default;
@@ -48,6 +44,9 @@ $breakpoint-sm: 48rem !default; // ~ 768px
 $breakpoint-md: 61rem !default; // ~ 976px
 $breakpoint-lg: 75rem !default; // ~ 1200px
 $breakpoint-xl: 100rem !default; // ~ 1600px
+
+// Panels
+$side-panel-size: 90px;
 
 // padding
 $spacer: 2rem !default;
@@ -65,8 +64,8 @@ $transition-base: all 0.5s ease-in-out !default;
 $transition-fade: opacity .2s linear !default;
 
 // fonts
-$font-default: 'Montserrat' !default;
-$font-special: 'Roboto' !default;
+$font-default: 'Roboto' !default;
+$font-special: 'Roboto Condensed' !default;
 
 $fz-base: 16px !default;
 $lh-base: 1.5rem !default;
@@ -149,7 +148,7 @@ $button-transition-base: $transition-base !default;
   padding: $padding-horizontal $padding-vertical;
   .column {
     width: calc(100% / #{$columns} - #{$margin} / 2);
-    border: $border-width $border-style $border-color;
+    //border: $border-width $border-style $border-color;
     border-radius: $border-radius;
     padding: $box-padding;
     box-sizing: border-box;
