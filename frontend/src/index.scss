@@ -89,6 +89,31 @@ p {
   }
 }
 
+.input-select {
+  padding: $button-padding-horizontal $button-padding-vertical;
+  display: inline-block;
+  font-family: $ff-buttons;
+  line-height: $lh-buttons;
+  letter-spacing: $ls-buttons;
+  font-weight: $fw-buttons;
+  text-transform: $tt-buttons;
+  text-decoration: none;
+  font-style: $fs-base;
+  border-width: $button-border-width;
+  border-style: $button-border-style;
+  border-radius: $button-border-radius;
+  max-width: 100%;
+  transition: $button-transition-base;
+  background: $button-background;
+  color: $button-color;
+  border-color: $button-border-color;
+
+  option {
+    background-color: $white;
+    color: $black;
+  }
+}
+
 // Headlines
 h1,
 h2,

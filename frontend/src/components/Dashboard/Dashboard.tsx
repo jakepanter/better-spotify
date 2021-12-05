@@ -36,6 +36,7 @@ interface IState {
     type: ChartType,
     period: ChartPeriod,
   };
+  width: number;
 }
 
 /**
@@ -113,9 +114,11 @@ const DEFAULT_DASHBOARD_STATE: IState = {
     type: 'top',
     period: 'daily',
   },
+  width: 0,
 };
 
 class Dashboard extends Component<IProps, IState> {
+  private readonly containerRef = React.createRef<HTMLDivElement>();
   constructor(props: IProps) {
     super(props);
 
@@ -238,32 +241,47 @@ class Dashboard extends Component<IProps, IState> {
     );
   }
 
+  updateWidth = () => {
+    const newWidth = this.containerRef.current?.clientWidth ?? 0;
+    this.setState(
+      (state) => ({...state, width: newWidth}),
+      () => this.saveState(),
+    );
+  };
+  componentDidMount() {
+    this.updateWidth();
+    window.addEventListener('resize', this.updateWidth);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWidth);
+  }
+
   // Render
   render() {
-    const { layout, albums, playlists, charts, showFavorites, chartSelection } = this.state;
+    const { layout, albums, playlists, charts, showFavorites, chartSelection, width } = this.state;
     const { editable } = this.props;
 
     return (
-      <>
+      <div className={'DashboardContainer'} ref={this.containerRef}>
         {editable ?
           <div className={'DashboardConfigurator'}>
             <div className={'DashboardChartsForm'}>
               <select
-                className={'DashboardChartsCountryCode'}
+                className={'DashboardChartsCountryCode input-select'}
                 value={chartSelection.countryCode}
                 onChange={(e) => this.updateChartSelection(e, 'countryCode')}
               >
                 {ALL_COUNTRY_CODES.map((code) => <option key={code} value={code}>{code}</option>)}
               </select>
               <select
-                className={'DashboardChartsType'}
+                className={'DashboardChartsType input-select'}
                 value={chartSelection.type}
                 onChange={(e) => this.updateChartSelection(e, 'type')}
               >
                 {ALL_CHART_TYPES.map((code) => <option key={code} value={code}>{code}</option>)}
               </select>
               <select
-                className={'DashboardChartsPeriod'}
+                className={'DashboardChartsPeriod input-select'}
                 value={chartSelection.period}
                 onChange={(e) => this.updateChartSelection(e, 'period')}
               >
@@ -300,7 +318,7 @@ class Dashboard extends Component<IProps, IState> {
           rowHeight={200}
           isResizable={editable}
           isDraggable={editable}
-          width={document.body.clientWidth}
+          width={width}
           onDragStop={(e) => this.saveLayout(e)}
           onResizeStop={(e) => this.saveLayout(e)}
         >
@@ -323,7 +341,7 @@ class Dashboard extends Component<IProps, IState> {
             );
           })}
         </GridLayout>
-      </>
+      </div>
     );
   }
 }

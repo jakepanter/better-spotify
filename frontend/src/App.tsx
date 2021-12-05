@@ -47,7 +47,9 @@ function App() {
                     <Switch>
                         <Route exact path="/">
                             <h1>Home</h1>
-                            <button onClick={toggleEditable}>IsEditable: {editable ? 'true' : 'false'}</button>
+                            <button className={'button'} onClick={toggleEditable}>
+                                <span className={'material-icons'}>{editable ? 'close' : 'edit'}</span>
+                            </button>
                             <Dashboard editable={editable}/>
                         </Route>
                         <Route path="/playlists">

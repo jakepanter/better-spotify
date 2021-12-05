@@ -15,10 +15,11 @@
   }
 
   &.checked .CheckboxIcon {
-    color: $color-accent-dark;
+    color: $checkbox-icon;
   }
 
   .CheckboxLabel {
+    color: $color-default;
     margin-left: 4px;
   }
 }
