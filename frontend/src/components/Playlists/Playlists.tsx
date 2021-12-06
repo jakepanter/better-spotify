@@ -1,63 +1,63 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, {Component} from "react";
+import {Link} from "react-router-dom";
 import {
-  ListOfUsersPlaylistsResponse,
-  PlaylistObjectSimplified,
+    ListOfUsersPlaylistsResponse,
+    PlaylistObjectSimplified,
 } from "spotify-types";
 import "./Playlists.scss";
-import { API_URL } from '../../utils/constants';
+import {API_URL} from '../../utils/constants';
 
-interface IProps {}
+interface IProps {
+}
 
 interface IState {
-  results: PlaylistObjectSimplified[];
+    results: PlaylistObjectSimplified[];
 }
 
 class Playlists extends Component<IProps, IState> {
-  constructor(props: IProps) {
-    super(props);
+    constructor(props: IProps) {
+        super(props);
 
-    this.state = {
-      results: [],
-    };
-  }
+        this.state = {
+            results: [],
+        };
+    }
 
-  async componentDidMount() {
-    // Fetch playlists
-    const data: ListOfUsersPlaylistsResponse = await fetch(
-      `${API_URL}api/spotify/playlists`
-    ).then((res) => res.json());
-    // Save to state
-    this.setState((state) => ({ ...state, results: data.items }));
-  }
+    async componentDidMount() {
+        // Fetch playlists
+        const data: ListOfUsersPlaylistsResponse = await fetch(
+            `${API_URL}api/spotify/playlists`
+        ).then((res) => res.json());
+        // Save to state
+        this.setState((state) => ({...state, results: data.items}));
+    }
 
-  render() {
-    if (this.state.results.length === 0) return <p>loading...</p>;
-    const playlists = this.state.results.map((playlist) => {
-      return (
-        <Link to={`/playlist/${playlist.id}`} key={playlist.id}>
-          <li>
-            <img
-              src={playlist.images[playlist.images.length - 1].url}
-              alt="Playlist Image"
-              width={64}
-              height={64}
-            />
-            <span>{playlist.name}</span>
-          </li>
-        </Link>
-      );
-    });
+    render() {
+        if (this.state.results.length === 0) return <p>loading...</p>;
+        const playlists = this.state.results.map((playlist) => {
+            return (
+                <li className={"column"} key={playlist.id}>
+                    <Link to={`/playlist/${playlist.id}`}>
+                        <img
+                            src={playlist.images[0].url}
+                            alt="Playlist Image"
+                        />
+                        <span className={"Title"}>{playlist.name}</span>
+                        <span className={"Owner"}>by {playlist.owner.display_name}</span>
+                    </Link>
+                </li>
+            );
+        });
 
-    return (
-      <>
-        <h2>My Playlists</h2>
-        <div className={"Playlists"}>
-          <ul className={"Playlist-items"}>{playlists}</ul>
-        </div>
-      </>
-    );
-  }
+        return (
+            <>
+                <h2>My Playlists</h2>
+                <div className={"Playlists"}>
+                    <ul className={"Playlist-items"}>{playlists}</ul>
+                </div>
+            </>
+        );
+    }
 }
 
 export default Playlists;
