@@ -38,10 +38,11 @@ class Playlists extends Component<IProps, IState> {
             return (
                 <li className={"column"} key={playlist.id}>
                     <Link to={`/playlist/${playlist.id}`}>
-                        <img
-                            src={playlist.images[0].url}
-                            alt="Playlist Image"
-                        />
+                        <div className={"Cover"} style={{
+                            backgroundImage: `url(${playlist.images[0].url})`,
+                            //backgroundSize: "auto 100%",
+                        }}>
+                        </div>
                         <span className={"Title"}>{playlist.name}</span>
                         <span className={"Owner"}>by {playlist.owner.display_name}</span>
                     </Link>
