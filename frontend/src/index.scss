@@ -59,6 +59,11 @@ p {
   color: $color-default;
 }
 
+td, th {
+  color: $color-default;
+
+}
+
 // Button
 .button {
   padding: $button-padding-horizontal $button-padding-vertical;
