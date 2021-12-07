@@ -13,6 +13,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1;
+
     @media screen and(min-width: $breakpoint-md) {
       box-sizing: content-box;
       width: $side-panel-size;
@@ -23,8 +25,9 @@
   &--main {
     height: 100vh;
     flex: 1 1 auto;
-    overflow: hidden;
-    padding: $padding-horizontal;
+    overflow: hidden auto;
+    padding: 64px $padding-horizontal;
+    z-index: 0;
   }
 
   @media screen and(max-width: $breakpoint-md) {
@@ -44,7 +47,6 @@
 
     &--main {
       height: calc(100vh - 80px);
-      overflow-y: scroll;
     }
   }
 }

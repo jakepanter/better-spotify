@@ -5,7 +5,6 @@
 $dashboard-item-border-radius: 20px;
 
 .DashboardContainer {
-  height: 100%;
   position: relative;
   overflow: hidden auto;
   width: 100%;
@@ -20,8 +19,6 @@ $dashboard-item-border-radius: 20px;
 }
 
 .Dashboard {
-  width: 100%;
-
   .DashboardItem {
     background-color: $color-secondary;
     border-radius: $dashboard-item-border-radius;

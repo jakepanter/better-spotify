@@ -37,13 +37,9 @@ function App() {
                 <div className="structure--main">
                     <Searchbar/>
                     <Player/>
-                    <ul>
-                        <li>
-                            <button className="button" onClick={authorize}>
-                                Authorize
-                            </button>
-                        </li>
-                    </ul>
+                    <button className="AuthorizeButton button" onClick={authorize}>
+                        Authorize
+                    </button>
                     <Switch>
                         <Route exact path="/">
                             <h1>Home</h1>
