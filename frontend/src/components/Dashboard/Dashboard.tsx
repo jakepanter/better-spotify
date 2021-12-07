@@ -1,11 +1,13 @@
 /* eslint-disable */
 import React, {ChangeEvent, Component} from 'react';
 import './Dashboard.scss';
-import GridLayout, {Layout} from 'react-grid-layout';
+import {Layout, Layouts, Responsive, WidthProvider} from 'react-grid-layout';
 import SavedTracks from "../SavedTracks/SavedTracks";
 import Checkbox from "../Checkbox/Checkbox";
 import Album from "../Album/Album";
 import Playlist from "../Playlist/Playlist";
+
+const ResponsiveGridLayout = WidthProvider(Responsive);
 
 export interface DashboardItem {}
 
@@ -28,7 +30,7 @@ interface IProps {
 }
 
 interface IState {
-  layout: Layout[];
+  layouts: Layouts;
   playlists: IDashboardPlaylist[];
   albums: IDashboardAlbum[];
   charts: IDashboardChart[];
@@ -100,7 +102,7 @@ export class DashboardService {
 }
 
 const DEFAULT_DASHBOARD_STATE: IState = {
-  layout: [],
+  layouts: {},
   albums: [],
   playlists: [],
   charts: [
@@ -200,9 +202,9 @@ class Dashboard extends Component<IProps, IState> {
   }
 
   // Save Layout
-  private saveLayout(newLayout: Layout[]) {
+  private saveLayouts(layout: Layout[], layouts: Layouts) {
     this.setState(
-      (state) => ({...state, layout: newLayout}),
+      (state) => ({...state, layouts: layouts}),
       () => this.saveState(),
     );
   }
@@ -256,7 +258,7 @@ class Dashboard extends Component<IProps, IState> {
 
   // Render
   render() {
-    const { layout, albums, playlists, charts, showFavorites, chartSelection, width } = this.state;
+    const { layouts, albums, playlists, charts, showFavorites, chartSelection, width } = this.state;
     const { editable } = this.props;
 
     return (
@@ -309,16 +311,18 @@ class Dashboard extends Component<IProps, IState> {
           </div>
           : <></>
         }
-        <GridLayout
+        <ResponsiveGridLayout
           className={'Dashboard'}
-          layout={layout}
-          cols={4}
-          rowHeight={200}
+          layouts={layouts}
+          breakpoints={{xl: 1600, md: 768, sm: 0}}
+          cols={{xl: 4, md: 2, sm: 1}}
+          rowHeight={400}
           isResizable={editable}
           isDraggable={editable}
           width={width}
-          onDragStop={(e) => this.saveLayout(e)}
-          onResizeStop={(e) => this.saveLayout(e)}
+          onLayoutChange={(layout, layouts) =>
+            this.saveLayouts(layout, layouts)
+          }
         >
           {showFavorites ?
             <div key={'favorites'} className={'DashboardItem'}>
@@ -340,7 +344,7 @@ class Dashboard extends Component<IProps, IState> {
               </div>
             );
           })}
-        </GridLayout>
+        </ResponsiveGridLayout>
       </div>
     );
   }
