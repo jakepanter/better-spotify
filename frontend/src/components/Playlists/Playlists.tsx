@@ -38,13 +38,12 @@ class Playlists extends Component<IProps, IState> {
             return (
                 <li className={"column"} key={playlist.id}>
                     <Link to={`/playlist/${playlist.id}`}>
-                        <div className={"Cover"} style={{
-                            backgroundImage: `url(${playlist.images[0].url})`,
-                            //backgroundSize: "auto 100%",
+                        <div className={"cover"} style={{
+                            backgroundImage: `url(${playlist.images[0].url})`
                         }}>
                         </div>
-                        <span className={"Title"}>{playlist.name}</span>
-                        <span className={"Owner"}>by {playlist.owner.display_name}</span>
+                        <span className={"title"}>{playlist.name}</span>
+                        <span className={"owner"}>by {playlist.owner.display_name}</span>
                     </Link>
                 </li>
             );
@@ -53,8 +52,8 @@ class Playlists extends Component<IProps, IState> {
         return (
             <>
                 <h2>My Playlists</h2>
-                <div className={"Playlists"}>
-                    <ul className={"Playlist-items"}>{playlists}</ul>
+                <div className={"playlists"}>
+                    <ul className={"playlist-items"}>{playlists}</ul>
                 </div>
             </>
         );
