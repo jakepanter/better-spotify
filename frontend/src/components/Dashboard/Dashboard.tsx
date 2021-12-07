@@ -4,6 +4,8 @@ import './Dashboard.scss';
 import GridLayout, {Layout} from 'react-grid-layout';
 import SavedTracks from "../SavedTracks/SavedTracks";
 import Checkbox from "../Checkbox/Checkbox";
+import Album from "../Album/Album";
+import Playlist from "../Playlist/Playlist";
 
 export interface DashboardItem {}
 
@@ -99,14 +101,10 @@ export class DashboardService {
 
 const DEFAULT_DASHBOARD_STATE: IState = {
   layout: [],
-  albums: [
-    {id: '3Clnd6NGYKXGHfI4SFzdjM'}
-  ],
-  playlists: [
-    {id: '7pCijPDtZHF5jyT1ZIV7Hh'}
-  ],
+  albums: [],
+  playlists: [],
   charts: [
-    {countryCode: 'DE', chartType: 'top', period: 'daily'}
+    {countryCode: 'global', chartType: 'top', period: 'daily'}
   ],
   showFavorites: true,
   chartSelection: {
@@ -328,15 +326,17 @@ class Dashboard extends Component<IProps, IState> {
             </div>
             : <></>
           }
-          {albums.map((a) => <div key={a.id} className={'DashboardItem'}>Album {a.id}</div>)}
-          {playlists.map((p) => <div key={p.id} className={'DashboardItem'}>Playlist {p.id}</div>)}
+          {albums.map((a) => <div key={a.id} className={'DashboardItem'}>
+            <Album id={a.id}/>
+          </div>)}
+          {playlists.map((p) => <div key={p.id} className={'DashboardItem'}>
+            <Playlist id={p.id}/>
+          </div>)}
           {charts.map((c) => {
             const chartCode = `${c.chartType}-${c.period}-${c.countryCode}`;
             return (
               <div key={chartCode} className={'DashboardItem'}>
-                Chart {chartCode}
-                <br />
-                (Playlist: {getChartCode(c.countryCode, c.chartType, c.period)})
+                <Playlist id={getChartCode(c.countryCode, c.chartType, c.period)}/>
               </div>
             );
           })}

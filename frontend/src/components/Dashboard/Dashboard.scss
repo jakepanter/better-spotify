@@ -32,6 +32,7 @@ $dashboard-item-border-radius: 20px;
     
     &>* {
       height: 100%;
+      overflow: hidden auto;
       width: 100%;
     }
   }
