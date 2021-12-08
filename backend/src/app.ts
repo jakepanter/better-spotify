@@ -1,5 +1,6 @@
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
+import bodyParser from 'body-parser';
 import SpotifyService from './connectors/spotifyService';
 import Config from './config/variables';
 
@@ -14,6 +15,8 @@ export default class App {
     // Init express server
     this.server = express();
     this.server.use(cors());
+    this.server.use(bodyParser.json());
+    this.server.use(bodyParser.urlencoded({ extended: true }));
 
     // Routes
     // Spotify authentication
@@ -86,6 +89,12 @@ export default class App {
     this.server.get('/api/spotify/playlists', async (req: Request, res: Response) => {
       const playlists = await this.spotifyService.getMyPlaylists();
       return res.json(playlists);
+    });
+
+    this.server.post('/api/spotify/playlists', async (req: Request, res: Response) => {
+      const { playlistName, options } = req.body;
+      const playlist = await this.spotifyService.createPlaylist(playlistName, options);
+      return res.json(playlist);
     });
 
     this.server.get('/api/spotify/playlist/:playlistId', async (req: Request, res: Response) => {

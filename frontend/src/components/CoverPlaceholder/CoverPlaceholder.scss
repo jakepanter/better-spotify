@@ -1,0 +1,10 @@
+.CoverPlaceholder {
+  height: 64px;
+  width: 64px;
+  display: inline-block;
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
+}
