@@ -8,6 +8,14 @@ type Props = {
   type: String;
 };
 
+interface ReqBody {
+  context_uri: string | undefined,
+  offset?: {
+    uri: string | undefined
+  },
+  position_ms: number | undefined
+}
+
 function TrackListItem(props: Props) {
   const id = props.id_track;
   const id_tracklist= props.id_tracklist;
@@ -23,15 +31,28 @@ function TrackListItem(props: Props) {
       context_uri = "spotify:playlist:" + id_tracklist;
     } else if (type==="saved") {
       context_uri = id_tracklist + ":collection";
-    } 
+    }
+
+    let reqBody : ReqBody;
+    if (type === 'saved') {
+      reqBody = {
+        context_uri: context_uri,
+        position_ms: 0
+      };
+    } else {
+      reqBody = {
+        context_uri: context_uri,
+        offset: {
+          uri: track_uri
+        },
+        position_ms: 0
+      };
+    }
+
     requestOptions = {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        "context_uri": context_uri,
-        "offset": {"uri": track_uri},
-        "position_ms": 0,
-      })
+      body: JSON.stringify(reqBody)
     };
     fetch('http://localhost:5000/api/spotify/me/player/play', requestOptions)
         .then(response => response.json()) 

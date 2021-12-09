@@ -123,4 +123,38 @@ export default class SpotifyService {
   }
 
   getAccessToken = async () => this.spotifyApi.getAccessToken();
+
+  playSavedTrack = async (trackId: string) => {
+    let position = null;
+    let offset = 0;
+    while (position === null) {
+      // eslint-disable-next-line no-await-in-loop
+      const tracks = await this.getMySavedTracks(50, offset);
+      const trackIds = tracks.items.map((item) => item.track.id);
+
+      if (trackIds.indexOf(trackId) > 0) position = trackIds.indexOf(trackId) + offset;
+      if (trackIds.length < 50) position = 0;
+
+      offset += 50;
+    }
+
+    console.log(position);
+    const myDetails = await this.getMe();
+    const savedTracksUri = `${myDetails.uri}:collection`;
+    const reqBody = {
+      context_uri: savedTracksUri,
+      position_ms: 0,
+    };
+
+    await this.spotifyApi.setVolume(0);
+    const response = await this.setTrack(reqBody);
+    const skips = [];
+    for (let i = 0; i < position; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      skips.push(this.spotifyApi.skipToNext());
+    }
+    Promise.all(skips);
+    await this.spotifyApi.setVolume(100);
+    return response;
+  }
 }

@@ -107,6 +107,12 @@ export default class App {
       const answer = await this.spotifyService.getMe();
       return res.json(answer);
     });
+
+    this.server.get('/api/spotify/play-saved/:trackId', async (req: Request, res: Response) => {
+      const { trackId } = req.params;
+      const answer = await this.spotifyService.playSavedTrack(trackId);
+      return res.json(answer);
+    });
     // DB
     // TODO
 
