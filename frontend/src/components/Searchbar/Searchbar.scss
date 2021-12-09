@@ -5,7 +5,7 @@
   color: $white;
 
   .SearchbarInput {
-    min-width: 500px;
+    width: 80%;
     background: $color-secondary;
     padding: 9px 20px 9px 50px;
     border: none;
@@ -22,7 +22,16 @@
     padding: 6px 16px;
   }
 
-  .SearchbarResults {}
+  .SearchbarResults {
+    padding: 10px 20px;
+    list-style-type: none;
+  }
 
-  .SearchbarResultItem {}
+  .SearchbarResultItem {
+    padding: 5px 0;
+
+    img {
+      margin-right: 10px;
+    }
+  }
 }

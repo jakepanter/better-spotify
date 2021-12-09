@@ -3,4 +3,35 @@
 .top-bar {
   background: $color-primary;
   padding: 44px 32px;
+
+  @include grid(
+          $grid: manual, // "auto" or "manual"
+          $grid-template-columns: 3, // 3,4,6,8,12 ...
+          $grid-template-columns-md: 3, // 3,4,6,8,12 ...
+          $grid-unequal: true, // false or true
+          $margin: 2rem,
+          $margin-md: 1rem,
+          $margin-sm: 1rem
+  );
+  // manual - for testing reasons - comment this out if you want to check car and add some container
+  .top-bar-item {
+    &:nth-child(1) {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    &:nth-child(2) {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    &:nth-child(3) {
+      grid-column:3;
+      grid-row: 1;
+    }
+  }
+
+  .volume-slider, .settings {
+    border: 2px solid darkred;
+  }
+
+
 }
