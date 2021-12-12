@@ -10,6 +10,7 @@ import SavedTracks from "./components/SavedTracks/SavedTracks"
 import Player from "./components/Player/Player";
 import {API_URL} from "./utils/constants";
 import Sidebar from "./components/Sidebar/Sidebar";
+import Discover from "./components/Discover/Discover";
 
 
 function authorize() {
@@ -59,6 +60,10 @@ function App() {
                         <Route path="/me/tracks">
                             <h1>Saved Tracks</h1>
                             <SavedTracks/>
+                        </Route>
+                        <Route path="/discover">
+                            <h1>Discover</h1>
+                            <Discover/>
                         </Route>
                     </Switch>
                 </div>

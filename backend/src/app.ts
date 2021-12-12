@@ -94,6 +94,16 @@ export default class App {
       return res.json(playlist);
     });
 
+    this.server.get('/api/spotify/player/recently-played', async (req: Request, res: Response) => {
+      console.log('here2');
+      //if
+      //const after: any = req.query?.after ?? 1638401402000;
+      const before: any = req.query?.before ?? Date.now();
+      const limit: any = req.query?.limit ?? 20;
+      const recentTracks = await this.spotifyService.getMyRecentlyPlayedTracks(limit, before);
+      return res.json(recentTracks);
+    });
+
     // DB
     // TODO
 

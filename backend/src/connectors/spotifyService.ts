@@ -112,5 +112,11 @@ export default class SpotifyService {
     return result.body;
   }
 
+  getMyRecentlyPlayedTracks = async (limit:number, before:number) => {
+    const options: any = {limit, before};
+    const result = await this.spotifyApi.getMyRecentlyPlayedTracks(options);
+    return result.body;
+  }
+
   getAccessToken = async () => this.spotifyApi.getAccessToken();
 }
