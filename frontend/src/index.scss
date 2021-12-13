@@ -86,13 +86,18 @@ td, th {
   color: $button-color;
   border-color: $button-border-color;
 
-  &.active,
-  &:hover {
+  &.active:enabled,
+  &:hover:enabled {
     background: $button-background-active;
     color: $button-color-active;
     border-color: $button-border-color-active;
     cursor: pointer;
     text-decoration: none;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
   }
 }
 

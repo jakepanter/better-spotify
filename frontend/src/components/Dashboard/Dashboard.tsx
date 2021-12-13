@@ -329,6 +329,7 @@ class Dashboard extends Component<IProps, IState> {
                 </button>
                 <button
                   className={'button'}
+                  disabled={!chartExists(chartSelection.countryCode, chartSelection.type, chartSelection.period)}
                   onClick={() => this.removeChart(chartSelection.countryCode, chartSelection.type, chartSelection.period)}
                 >
                   Remove Chart
@@ -410,17 +411,17 @@ export default Dashboard;
 
 
 // Chart types
-type CountryCode =   'global' | 'EG' | 'AR' | 'AU' | 'BE' | 'BO' | 'BR' | 'BG' | 'CL' | 'CR' | 'DK' | 'DE' | 'DO' | 'EC'
-  | 'SV' | 'EE' | 'FI' | 'FR' | 'GR' | 'GT' | 'HN' | 'IN' | 'ID' | 'IE' | 'IS' | 'IL' | 'IT' | 'JP' | 'CA' | 'CO' | 'LV'
-  | 'LT' | 'LU' | 'MY' | 'MA' | 'MX' | 'NZ' | 'NI' | 'NL' | 'NO' | 'AT' | 'PA' | 'PY' | 'PE' | 'PH' | 'PL' | 'PT' | 'RO'
-  | 'RU' | 'SA' | 'SE' | 'CH' | 'SG' | 'SK' | 'HK' | 'ES' | 'ZA' | 'KR' | 'TW' | 'TH' | 'CZ' | 'TR' | 'UA' | 'HU' | 'UY'
-  | 'AE' | 'UK' | 'US' | 'VN';
+type CountryCode =   'global' | 'EG' | 'AD' | 'AR' | 'AU' | 'BE' | 'BO' | 'BR' | 'BG' | 'CL' | 'CR' | 'DK' | 'DE' | 'DO'
+  | 'EC' | 'SV' | 'EE' | 'FI' | 'FR' | 'GR' | 'GT' | 'HN' | 'IN' | 'ID' | 'IE' | 'IS' | 'IL' | 'IT' | 'JP' | 'CA' | 'CO'
+  | 'LV' | 'LT' | 'LU' | 'MY' | 'MA' | 'MX' | 'NZ' | 'NI' | 'NL' | 'NO' | 'AT' | 'PA' | 'PY' | 'PE' | 'PH' | 'PL' | 'PT'
+  | 'RO' | 'RU' | 'SA' | 'SE' | 'CH' | 'SG' | 'SK' | 'HK' | 'ES' | 'ZA' | 'KR' | 'TW' | 'TH' | 'CZ' | 'TR' | 'UA' | 'HU'
+  | 'UY' | 'AE' | 'UK' | 'US' | 'VN' | 'CY';
 
 const ALL_COUNTRY_CODES: ReadonlyArray<CountryCode> = [
-  'global', 'EG', 'AR', 'AU', 'BE', 'BO', 'BR', 'BG', 'CL', 'CR', 'DK', 'DE', 'DO', 'EC', 'SV', 'EE', 'FI', 'FR', 'GR',
-  'GT', 'HN', 'IN', 'ID', 'IE', 'IS', 'IL', 'IT', 'JP', 'CA', 'CO', 'LV', 'LT', 'LU', 'MY', 'MA', 'MX', 'NZ', 'NI',
-  'NL', 'NO', 'AT', 'PA', 'PY', 'PE', 'PH', 'PL', 'PT', 'RO', 'RU', 'SA', 'SE', 'CH', 'SG', 'SK', 'HK', 'ES', 'ZA',
-  'KR', 'TW', 'TH', 'CZ', 'TR', 'UA', 'HU', 'UY', 'AE', 'UK', 'US', 'VN',
+  'global', 'EG', 'AD', 'AR', 'AU', 'BE', 'BO', 'BR', 'BG', 'CL', 'CR', 'DK', 'DE', 'DO', 'EC', 'SV', 'EE', 'FI', 'FR',
+  'GR', 'GT', 'HN', 'IN', 'ID', 'IE', 'IS', 'IL', 'IT', 'JP', 'CA', 'CO', 'LV', 'LT', 'LU', 'MY', 'MA', 'MX', 'NZ',
+  'NI', 'NL', 'NO', 'AT', 'PA', 'PY', 'PE', 'PH', 'PL', 'PT', 'RO', 'RU', 'SA', 'SE', 'CH', 'SG', 'SK', 'HK', 'ES',
+  'ZA', 'KR', 'TW', 'TH', 'CZ', 'TR', 'UA', 'HU', 'UY', 'AE', 'UK', 'US', 'VN', 'CY'
 ];
 
 
@@ -529,8 +530,166 @@ const CHART_CODES: ReadonlyArray<ChartCode> = [
   // Top weekly charts
   ['global', 'top', 'weekly', '37i9dQZEVXbNG2KDcFcKOF'],
 
+  ['EG', 'top', 'weekly', '37i9dQZEVXbMy2EcFg5F9m'],
+  ['AR', 'top', 'weekly', '37i9dQZEVXbKPTKrnFPD0G'],
+  ['AU', 'top', 'weekly', '37i9dQZEVXbK4fwx2r07XW'],
+
+  ['BE', 'top', 'weekly', '37i9dQZEVXbND4ZYa46PaA'],
+  ['BR', 'top', 'weekly', '37i9dQZEVXbKzoK95AbRy9'],
+
+  ['CL', 'top', 'weekly', '37i9dQZEVXbLJ0paT1JkgZ'],
+  ['DK', 'top', 'weekly', '37i9dQZEVXbMw2iUtFR5Eq'],
+  ['DE', 'top', 'weekly', '37i9dQZEVXbK8BKKMArIyl'],
+
+  ['DO', 'top', 'weekly', '37i9dQZEVXbMPoK06pe7d6'],
+  ['EC', 'top', 'weekly', '37i9dQZEVXbJPVQvqZqpcM'],
+
+  ['FI', 'top', 'weekly', '37i9dQZEVXbJQ9kF73GOT2'],
+  ['GT', 'top', 'weekly', '37i9dQZEVXbJHSzlHx2ZJU'],
+
+  ['IN', 'top', 'weekly', '37i9dQZEVXbMWDif5SCBJq'],
+  ['ID', 'top', 'weekly', '37i9dQZEVXbIZK8aUquyx8'],
+  ['IE', 'top', 'weekly', '37i9dQZEVXbJIvhIOxXxdp'],
+
+  ['IL', 'top', 'weekly', '37i9dQZEVXbJ5J1TrbkAF9'],
+  ['IT', 'top', 'weekly', '37i9dQZEVXbJUPkgaWZcWG'],
+  ['JP', 'top', 'weekly', '37i9dQZEVXbKqiTGXuCOsB'],
+
+  ['CA', 'top', 'weekly', '37i9dQZEVXbMda2apknTqH'],
+  ['CO', 'top', 'weekly', '37i9dQZEVXbL1Fl8vdBUba'],
+
+  ['MY', 'top', 'weekly', '37i9dQZEVXbKcS4rq3mEhp'],
+  ['MA', 'top', 'weekly', '37i9dQZEVXbNM8vS9cIqAG'],
+  ['MX', 'top', 'weekly', '37i9dQZEVXbKUoIkUXteF6'],
+
+  ['NZ', 'top', 'weekly', '37i9dQZEVXbIWlLQoMVEFp'],
+  ['NL', 'top', 'weekly', '37i9dQZEVXbK4BFAukDzj3'],
+  ['NO', 'top', 'weekly', '37i9dQZEVXbLWYFZ5CkSvr'],
+
+  ['AT', 'top', 'weekly', '37i9dQZEVXbM1EaZ0igDlz'],
+  ['PA', 'top', 'weekly', '37i9dQZEVXbNSiWnkYnziz'],
+  ['PE', 'top', 'weekly', '37i9dQZEVXbMGcjiWgg253'],
+
+  ['PH', 'top', 'weekly', '37i9dQZEVXbJVKdmjH0pON'],
+  ['PL', 'top', 'weekly', '37i9dQZEVXbMZ5PAcNTDXd'],
+  ['RO', 'top', 'weekly', '37i9dQZEVXbMeCoUmQDLUW'],
+
+  ['RU', 'top', 'weekly', '37i9dQZEVXbNALwC1jxb5m'],
+  ['SA', 'top', 'weekly', '37i9dQZEVXbO839WGRmpu1'],
+  ['SE', 'top', 'weekly', '37i9dQZEVXbKVvfnL1Us06'],
+  ['CH', 'top', 'weekly', '37i9dQZEVXbKx6qX9uN66j'],
+
+  ['SG', 'top', 'weekly', '37i9dQZEVXbN66FupT0MuX'],
+  ['SK', 'top', 'weekly', '37i9dQZEVXbMwW10JmAnzE'],
+  ['HK', 'top', 'weekly', '37i9dQZEVXbMdvweCgpBAe'],
+  ['ES', 'top', 'weekly', '37i9dQZEVXbJwoKy8qKpHG'],
+
+  ['ZA', 'top', 'weekly', '37i9dQZEVXbJV3H3OfCN1z'],
+  ['KR', 'top', 'weekly', '37i9dQZEVXbJZGli0rRP3r'],
+  ['TW', 'top', 'weekly', '37i9dQZEVXbMVY2FDHm6NN'],
+  ['TH', 'top', 'weekly', '37i9dQZEVXbJ7qiJCES5cj'],
+
+  ['CZ', 'top', 'weekly', '37i9dQZEVXbLKI6MPixefZ'],
+  ['TR', 'top', 'weekly', '37i9dQZEVXbJARRcHjHcAr'],
+  ['UA', 'top', 'weekly', '37i9dQZEVXbNcoJZ65xktI'],
+  ['HU', 'top', 'weekly', '37i9dQZEVXbMYsavqzfk6k'],
+
+  ['UA', 'top', 'weekly', '37i9dQZEVXbIZQf3WEYSut'],
+  ['UK', 'top', 'weekly', '37i9dQZEVXbMwmF30ppw50'],
+  ['US', 'top', 'weekly', '37i9dQZEVXbLp5XoPON0wI'],
+
+  ['VN', 'top', 'weekly', '37i9dQZEVXbKZyn1mKjmIl'],
+
   // Viral daily charts
   ['global', 'viral', 'daily', '37i9dQZEVXbLiRSasKsNU9'],
+
+  ['EG', 'viral', 'daily', '37i9dQZEVXbJSvmuZN9Jja'],
+  ['AD', 'viral', 'daily', '37i9dQZEVXbMxjQJh4Um8T'],
+  ['AR', 'viral', 'daily', '37i9dQZEVXbJajpaXyaKll'],
+  ['AU', 'viral', 'daily', '37i9dQZEVXbO5MSE9RdfN2'],
+
+  ['BE', 'viral', 'daily', '37i9dQZEVXbJx9hUtTN0Sj'],
+  ['BO', 'viral', 'daily', '37i9dQZEVXbMTKZuy8ORFV'],
+  ['BR', 'viral', 'daily', '37i9dQZEVXbMOkSwG072hV'],
+  ['BG', 'viral', 'daily', '37i9dQZEVXbJcpVBLdFV7m'],
+
+  ['CL', 'viral', 'daily', '37i9dQZEVXbJs8e2vk15a8'],
+  ['CR', 'viral', 'daily', '37i9dQZEVXbKOefHPXPMyf'],
+  ['DK', 'viral', 'daily', '37i9dQZEVXbMA8BIYDeMkD'],
+  ['DE', 'viral', 'daily', '37i9dQZEVXbNv6cjoMVCyg'],
+
+  ['DO', 'viral', 'daily', '37i9dQZEVXbJWZV7aRNQck'],
+  ['EC', 'viral', 'daily', '37i9dQZEVXbJpRQ294oZ9N'],
+  ['SV', 'viral', 'daily', '37i9dQZEVXbLo3yC8XJf1e'],
+  ['EE', 'viral', 'daily', '37i9dQZEVXbK4KA2JSuft7'],
+
+  ['FI', 'viral', 'daily', '37i9dQZEVXbMBNcyQCfU4w'],
+  ['FR', 'viral', 'daily', '37i9dQZEVXbJmRv5TqJW16'],
+  ['GR', 'viral', 'daily', '37i9dQZEVXbLOov4J0GutU'],
+  ['GT', 'viral', 'daily', '37i9dQZEVXbNF1heNYHDnE'],
+
+  ['HN', 'viral', 'daily', '37i9dQZEVXbNpKdqfZ9Upp'],
+  ['IN', 'viral', 'daily', '37i9dQZEVXbK4NvPi6Sxit'],
+  ['ID', 'viral', 'daily', '37i9dQZEVXbKpV6RVDTWcZ'],
+  ['IE', 'viral', 'daily', '37i9dQZEVXbLzhUVGQUCoe'],
+
+  ['IS', 'viral', 'daily', '37i9dQZEVXbMHnoaLVkVuk'],
+  ['IL', 'viral', 'daily', '37i9dQZEVXbNGlbFNNXxgC'],
+  ['IT', 'viral', 'daily', '37i9dQZEVXbKbvcwe5owJ1'],
+  ['JP', 'viral', 'daily', '37i9dQZEVXbINTEnbFeb8d'],
+
+  ['CA', 'viral', 'daily', '37i9dQZEVXbKfIuOAZrk7G'],
+  ['CO', 'viral', 'daily', '37i9dQZEVXbKrooeK9WSFF'],
+  ['LV', 'viral', 'daily', '37i9dQZEVXbIUY6VUoboP4'],
+  ['LT', 'viral', 'daily', '37i9dQZEVXbLDLOTfCtAUM'],
+
+  ['LU', 'viral', 'daily', '37i9dQZEVXbJ9SRaVj0yDF'],
+  ['MY', 'viral', 'daily', '37i9dQZEVXbLRmg3qDbY1H'],
+  ['MA', 'viral', 'daily', '37i9dQZEVXbIVezQItttaL'],
+  ['MX', 'viral', 'daily', '37i9dQZEVXbLuUZrygauiA'],
+
+  ['NZ', 'viral', 'daily', '37i9dQZEVXbJ7gPAehey5W'],
+  ['NI', 'viral', 'daily', '37i9dQZEVXbKgCVIE0PTOD'],
+  ['NL', 'viral', 'daily', '37i9dQZEVXbMQaPQjt027d'],
+  ['NO', 'viral', 'daily', '37i9dQZEVXbOcsE2WCaJa2'],
+
+  ['AT', 'viral', 'daily', '37i9dQZEVXbKxYYIUIgn7V'],
+  ['PA', 'viral', 'daily', '37i9dQZEVXbMIO7B1pcKUy'],
+  ['PY', 'viral', 'daily', '37i9dQZEVXbNxY4E5g33Gy'],
+  ['PE', 'viral', 'daily', '37i9dQZEVXbN7gfhgaomhA'],
+
+  ['PH', 'viral', 'daily', '37i9dQZEVXbJv2Mvelmc3I'],
+  ['PL', 'viral', 'daily', '37i9dQZEVXbNGGDnE9UFTF'],
+  ['PT', 'viral', 'daily', '37i9dQZEVXbKHoaIcElSSA'],
+  ['RO', 'viral', 'daily', '37i9dQZEVXbNwDVyEEfWV3'],
+
+  ['RU', 'viral', 'daily', '37i9dQZEVXbMNKGj6aCCDm'],
+  ['SA', 'viral', 'daily', '37i9dQZEVXbMq8xkWZE6se'],
+  ['SE', 'viral', 'daily', '37i9dQZEVXbIPOivNiyjjS'],
+  ['CH', 'viral', 'daily', '37i9dQZEVXbNjqq6Tw4Fb0'],
+
+  ['SG', 'viral', 'daily', '37i9dQZEVXbJVi45MafAu0'],
+  ['SK', 'viral', 'daily', '37i9dQZEVXbK3Iy2zvpfp4'],
+  ['HK', 'viral', 'daily', '37i9dQZEVXbKXd6qahcpCg'],
+  ['ES', 'viral', 'daily', '37i9dQZEVXbMfVLvbaC3bj'],
+
+  ['ZA', 'viral', 'daily', '37i9dQZEVXbNaCk6h5bujZ'],
+  ['KR', 'viral', 'daily', '37i9dQZEVXbM1H8L6Tttw9'],
+  ['TW', 'viral', 'daily', '37i9dQZEVXbMGnTCc4Vx7v'],
+  ['TH', 'viral', 'daily', '37i9dQZEVXbMnf7ONzeQWM'],
+
+  ['CZ', 'viral', 'daily', '37i9dQZEVXbMBUm3g7j4Kb'],
+  ['TR', 'viral', 'daily', '37i9dQZEVXbMIJZxwqzod6'],
+  ['UA', 'viral', 'daily', '37i9dQZEVXbLwLH0YjrtGb'],
+  ['HU', 'viral', 'daily', '37i9dQZEVXbLuey1EKVv9I'],
+
+  ['UY', 'viral', 'daily', '37i9dQZEVXbM1qaaFAyPLz'],
+  ['UA', 'viral', 'daily', '37i9dQZEVXbN6kflPvZZn0'],
+  ['UK', 'viral', 'daily', '37i9dQZEVXbL3DLHfQeDmV'],
+  ['US', 'viral', 'daily', '37i9dQZEVXbKuaTI1Z1Afx'],
+
+  ['VN', 'viral', 'daily', '37i9dQZEVXbL1G1MbPav3j'],
+  ['CY', 'viral', 'daily', '37i9dQZEVXbNBxnXSWuAcX'],
 ];
 
 function getChartCode(countryCode: CountryCode, type: ChartType, period: ChartPeriod) {
@@ -538,6 +697,11 @@ function getChartCode(countryCode: CountryCode, type: ChartType, period: ChartPe
 }
 
 function chartExists(countryCode: CountryCode, type: ChartType, period: ChartPeriod) {
-  return CHART_CODES.some((chartCode) => chartCode[0] === countryCode && chartCode[1] === type && chartCode[2] === period);
+  return CHART_CODES.some((chartCode) => {
+    if (chartCode) {
+      return chartCode[0] === countryCode && chartCode[1] === type && chartCode[2] === period
+    }
+    return false;
+  });
 }
 
