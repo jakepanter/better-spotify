@@ -20,7 +20,7 @@ export default function Album() {
 
   async function fetchAlbumData() {
     const data: SingleAlbumResponse = await fetch(
-      `${API_URL}api/spotify/album/${albumId}&limit=${limit}`
+      `${API_URL}api/spotify/album/${albumId}?limit=${limit}`
     ).then((res) => res.json());
 
     // Save album data and first tracks
@@ -53,8 +53,6 @@ export default function Album() {
   if (!album) return <p>loading...</p>;
 
   return (
-    <>
-      <TrackList loadMoreCallback={() => setOffset((currentOffset) => currentOffset + limit)} type={"album"} tracks={tracks} data={album}/>
-    </>
+    <TrackList loadMoreCallback={() => setOffset((currentOffset) => currentOffset + limit)} type={"album"} tracks={tracks} />
   );
 }

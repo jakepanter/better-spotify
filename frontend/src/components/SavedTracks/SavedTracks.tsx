@@ -40,8 +40,6 @@ export default function SavedTracks() {
   if (!tracks) return <p>loading...</p>;
 
   return (
-    <>
-      <TrackList loadMoreCallback={() => setOffset((currentOffset) => currentOffset + limit)} type={"saved"} tracks={tracks} />
-    </>
+    <TrackList loadMoreCallback={() => setOffset((currentOffset) => currentOffset + limit)} type={"saved"} tracks={tracks} />
   );
 }

@@ -54,8 +54,6 @@ export default function Playlist() {
   if (!playlist) return <p>loading...</p>;
 
   return (
-    <>
-      <TrackList loadMoreCallback={() => setOffset((currentOffset) => currentOffset + limit)} type={"playlist"} tracks={tracks} data={playlist}/>
-    </>
+    <TrackList loadMoreCallback={() => setOffset((currentOffset) => currentOffset + limit)} type={"playlist"} tracks={tracks} />
   );
 }

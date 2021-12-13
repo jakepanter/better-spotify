@@ -1,5 +1,6 @@
 import React from "react";
 import {AlbumObjectSimplified, ArtistObjectSimplified, TrackObjectFull, TrackObjectSimplified} from "spotify-types";
+import {formatTimestamp} from "../../utils/functions";
 //import SpotifyWebPlayer from "react-spotify-web-playback";
 
 type Props = {
@@ -13,10 +14,6 @@ type Props = {
 function TrackListItem(props: Props) {
   const track = props;
 
-  const durationMinutes = Math.floor(track.duration_ms / 60 / 1000)
-  const durationSeconds = Math.round(track.duration_ms / 1000 % 60);
-  const duration = `${durationMinutes}:${durationSeconds < 10 ? '0' + durationSeconds : durationSeconds}`;
-
   return (
     <div className={'TableRow'}>
       {track.album !== undefined ?
@@ -28,9 +25,7 @@ function TrackListItem(props: Props) {
       }
       <div className={'TableCell TableCellTitle'}>{track.name}</div>
       <div className={'TableCell TableCellArtist'}>{track.artists.map((artist) => artist.name).join(", ")}</div>
-      <div className={'TableCell TableCellDuration'}>
-        {duration}
-      </div>
+      <div className={'TableCell TableCellDuration'}>{formatTimestamp(track.duration_ms)}</div>
     </div>
   );
 }

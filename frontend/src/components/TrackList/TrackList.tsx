@@ -2,8 +2,6 @@ import React from "react";
 import TrackListItem from "../TrackListItem/TrackListItem";
 import './TrackList.scss';
 import {
-  AlbumObjectFull,
-  PlaylistObjectFull,
   PlaylistTrackObject,
   SavedTrackObject,
   TrackObjectSimplified
@@ -12,15 +10,12 @@ import {
 type Props = {
   type: 'album',
   tracks: TrackObjectSimplified[];
-  data: AlbumObjectFull,
   loadMoreCallback: () => void;
 } | {
   type: 'playlist',
   tracks: PlaylistTrackObject[],
-  data: PlaylistObjectFull,
   loadMoreCallback: () => void;
-} |
-{
+} | {
   type: 'saved'
   tracks: SavedTrackObject[];
   loadMoreCallback: () => void;
