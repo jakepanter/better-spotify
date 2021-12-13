@@ -4,7 +4,7 @@ h2 {
   color: $gray-light;
   background-color: $color-background;
   font-family: $font-special;
-  padding: 2rem 0 0 2rem;
+  //padding: 2rem 0 0 2rem;
 }
 
 .playlists {
@@ -24,7 +24,23 @@ h2 {
             $margin-xs: 1rem
     );
 
+    @media screen and(max-width:$breakpoint-sm){
+      padding: 0;
+      padding-top: 2rem;
+    }
     .column {
+
+      //1 column for phone
+      @media screen and(max-width:$breakpoint-sm){
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0 !important;
+
+        &:not(last-child){
+          margin-bottom: 2rem !important;
+        }
+
+      }
       //3 columns when tablet
       @media screen and(min-width: $breakpoint-sm) and(max-width: $breakpoint-md) {
         width: calc(100% / 3 - 2rem);
@@ -67,7 +83,7 @@ h2 {
       }
 
       margin-bottom: 2rem;
-background: $color-secondary;
+      background: $color-secondary;
       list-style-type: none;
 
       box-shadow: 0 0 ($spacer/2) rgba($black, .3);
@@ -75,7 +91,7 @@ background: $color-secondary;
 
       &:hover {
         color: $color-default;
-background: $color-accent-dark;
+        background: $color-accent-dark;
       }
 
     }
@@ -96,7 +112,7 @@ background: $color-accent-dark;
 
       //phone
       @media screen and(max-width: $breakpoint-sm) {
-        height: 215px;
+        height: 279px;
       }
       //tablet
       @media screen and(min-width: $breakpoint-sm) and(max-width: $breakpoint-md) {
