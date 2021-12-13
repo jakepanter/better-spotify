@@ -112,9 +112,20 @@ export default class SpotifyService {
     return result.body;
   }
 
-  getMyRecentlyPlayedTracks = async (limit:number, before:number) => {
-    const options: any = {limit, before};
+  // TODO
+  // only after or before should be specified
+  getMyRecentlyPlayedTracks = async (
+      //after:number,
+      before:number,
+      limit:number) => {
+    const options: any = {before, limit};
     const result = await this.spotifyApi.getMyRecentlyPlayedTracks(options);
+    return result.body;
+  }
+
+  getNewReleases = async (country: string, limit: number, offset:number) => {
+    const options: any = {country, limit, offset};
+    const result = await this.spotifyApi.getNewReleases(options);
     return result.body;
   }
 

@@ -96,12 +96,23 @@ export default class App {
 
     this.server.get('/api/spotify/player/recently-played', async (req: Request, res: Response) => {
       console.log('here2');
-      //if
+      // TODO
+      //  only after or before should be specified
       //const after: any = req.query?.after ?? 1638401402000;
       const before: any = req.query?.before ?? Date.now();
       const limit: any = req.query?.limit ?? 20;
-      const recentTracks = await this.spotifyService.getMyRecentlyPlayedTracks(limit, before);
+      //const recentTracks = await this.spotifyService.getMyRecentlyPlayedTracks(after, limit, before);
+      const recentTracks = await this.spotifyService.getMyRecentlyPlayedTracks(before, limit);
       return res.json(recentTracks);
+    });
+
+    this.server.get('/api/spotify/browse/new-releases', async (req: Request, res: Response) => {
+      const country: any = req.query?.county ?? "DE";
+      const limit: any = req.query?.limit ?? 20;
+      const offset: any = req.query?.offset ?? 0;
+      const newRealeses = await this.spotifyService.getNewReleases(country,limit,offset);
+      return res.json(newRealeses);
+
     });
 
     // DB

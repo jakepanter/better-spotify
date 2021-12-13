@@ -59,6 +59,7 @@ class Discover extends Component<IProps,IState> {
         return (
             <>
                 <div className={"recentlyPlayedTrackList"}>
+                    <h3>Recently listened to</h3>
                     <ul>{recentlyPlayedList}</ul>
                 </div>
             </>
