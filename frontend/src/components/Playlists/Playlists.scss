@@ -75,7 +75,7 @@ background: $color-secondary;
 
       &:hover {
         color: $color-default;
-        background-color: adjust_color($color-secondary, $lightness: 10);
+background: $color-accent-dark;
       }
 
     }
