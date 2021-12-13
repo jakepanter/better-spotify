@@ -16,6 +16,7 @@ type Props = {
   tracks: String[];
   positionX: number;
   positionY: number;
+  onClose: () => void;
 };
 
 function TrackContextMenuWrapper(props: Props) {
@@ -46,8 +47,7 @@ function TrackContextMenuWrapper(props: Props) {
   }, []);
 
   const addToPlaylist = async (playlistId: String) => {
-    // console.log(playlistId);
-    // console.log(JSON.stringify({ tracks: tracks }));
+    props.onClose();
     await fetch(
       `http://localhost:5000/api/spotify/playlist/${playlistId}/add`,
       {

@@ -75,6 +75,10 @@ function TrackList(props: Props) {
       setSelected([trackUri]);
   };
 
+  const handleContextMenuClose = () => {
+    setContextMenu({ ...contextMenu, show: false });
+  };
+
   const addSelected = (trackUri: String) => {
     setSelected([...selectedTracks, trackUri]);
   };
@@ -97,6 +101,7 @@ function TrackList(props: Props) {
           tracks={selectedTracks}
           positionX={contextMenu.x!}
           positionY={contextMenu.y!}
+          onClose={handleContextMenuClose}
         />
       )}
 
