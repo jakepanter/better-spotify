@@ -29,9 +29,41 @@
     }
   }
 
-  .volume-slider, .settings {
+  .volume, .settings {
     border: 2px solid darkred;
   }
 
+  .volume {
+    color: $gray-light;
+    .settings-button {
+      padding: 4px 7px;
+      background: transparent;
+      border: none;
+      margin-left: 20px;
+      float: right;
+    }
+
+    .volume-slider {
+      display: inline-block;
+      width: 50%;
+      margin-left: 20px;
+      float: right;
+    }
+  }
+
+  .settings {
+    .settings-button {
+      border-radius: 10px;
+      padding: 4px 7px;
+      background: $gray-dark;
+      border: none;
+      float: right;
+      margin-left: 20px;
+
+      .material-icons {
+        color: $gray-light;
+      }
+    }
+  }
 
 }
