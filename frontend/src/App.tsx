@@ -42,8 +42,7 @@ function App() {
                     </button>
                     <Switch>
                         <Route exact path="/">
-                            <h1>Home</h1>
-                            <button className={'button'} onClick={toggleEditable}>
+                            <button className={'button'} onClick={toggleEditable} style={{position: 'fixed', right: '100px', top: 0}}>
                                 <span className={'material-icons'}>{editable ? 'close' : 'edit'}</span>
                             </button>
                             <Dashboard editable={editable}/>

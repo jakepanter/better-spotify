@@ -119,6 +119,15 @@ td, th {
     background-color: $white;
     color: $black;
   }
+
+  &.active,
+  &:hover {
+    background: $button-background-active;
+    color: $button-color-active;
+    border-color: $button-border-color-active;
+    cursor: pointer;
+    text-decoration: none;
+  }
 }
 
 // Headlines

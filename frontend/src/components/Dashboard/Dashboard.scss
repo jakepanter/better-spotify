@@ -2,26 +2,62 @@
 @import "/src/boilerplate";
 //@import "/node_modules/react-resizable/css/styles.css";
 
-$dashboard-item-border-radius: 20px;
-
 .DashboardContainer {
-  position: relative;
+  height: 100%;
   overflow: hidden auto;
+  position: relative;
   width: 100%;
 }
 
 .DashboardConfigurator {
+  align-items: stretch;
+  background-color: $color-background;
+  border-bottom: $border-width $border-style $border-color;
+  display: flex;
+  flex-flow: row wrap;
+  margin-bottom: $spacer;
   padding: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 
-  .DashboardChartsForm {}
+  .DashboardChartsForm {
+    align-items: stretch;
+    display: flex;
+    flex-flow: row wrap;
+    margin-right: $spacer;
 
-  .DashboardSettingsForm {}
+    .DashboardChartsFormSelects {
+      align-items: center;
+      display: flex;
+      flex-flow: row wrap;
+      margin-right: $spacer / 4;
+
+      .input-select {
+        height: 100%;
+      }
+    }
+
+    .DashboardChartsFormButtons {}
+  }
+
+  .DashboardSettingsForm {
+    align-content: center;
+    display: flex;
+    flex-flow: row wrap;
+
+    .Checkbox {
+      margin-right: $spacer;
+    }
+  }
 }
 
 .Dashboard {
+  z-index: 0;
+
   .DashboardItem {
     background-color: $color-secondary;
-    border-radius: $dashboard-item-border-radius;
+    border-radius: $border-radius;
     box-sizing: border-box;
     padding: 16px;
     overflow: hidden;
@@ -29,23 +65,22 @@ $dashboard-item-border-radius: 20px;
     
     &>* {
       height: 100%;
-      overflow: hidden auto;
       width: 100%;
     }
   }
 
   .react-grid-item {
     &.react-grid-placeholder {
-      border-radius: $dashboard-item-border-radius;
+      border-radius: $border-radius;
       background-color: transparentize($color-secondary, 0.5);
       opacity: 1;
       z-index: 0;
     }
 
     & > .react-resizable-handle {
-      border-top-left-radius: $dashboard-item-border-radius;
-      height: $dashboard-item-border-radius;
-      width: $dashboard-item-border-radius;
+      border-top-left-radius: $border-radius * 4;
+      height: $border-radius * 4;
+      width: $border-radius * 4;
 
       &::after {
         height: 0;

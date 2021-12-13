@@ -6,6 +6,8 @@ import SavedTracks from "../SavedTracks/SavedTracks";
 import Checkbox from "../Checkbox/Checkbox";
 import Album from "../Album/Album";
 import Playlist from "../Playlist/Playlist";
+import Albums from "../Albums/Albums";
+import Playlists from "../Playlists/Playlists";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -35,6 +37,8 @@ interface IState {
   albums: IDashboardAlbum[];
   charts: IDashboardChart[];
   showFavorites: boolean;
+  showAlbums: boolean;
+  showPlaylists: boolean;
   chartSelection: {
     countryCode: CountryCode,
     type: ChartType,
@@ -109,6 +113,8 @@ const DEFAULT_DASHBOARD_STATE: IState = {
     {countryCode: 'global', chartType: 'top', period: 'daily'}
   ],
   showFavorites: true,
+  showAlbums: true,
+  showPlaylists: true,
   chartSelection: {
     countryCode: 'global',
     type: 'top',
@@ -241,6 +247,20 @@ class Dashboard extends Component<IProps, IState> {
     );
   }
 
+  private showAlbums(e: ChangeEvent<HTMLInputElement>) {
+    this.setState(
+      (state) => ({...state, showAlbums: e.target.checked}),
+      () => this.saveState(),
+    );
+  }
+
+  private showPlaylists(e: ChangeEvent<HTMLInputElement>) {
+    this.setState(
+      (state) => ({...state, showPlaylists: e.target.checked}),
+      () => this.saveState(),
+    );
+  }
+
   updateWidth = () => {
     const newWidth = this.containerRef.current?.clientWidth ?? 0;
     this.setState(
@@ -258,54 +278,78 @@ class Dashboard extends Component<IProps, IState> {
 
   // Render
   render() {
-    const { layouts, albums, playlists, charts, showFavorites, chartSelection, width } = this.state;
+    const {
+      layouts,
+      albums,
+      playlists,
+      charts,
+      showFavorites,
+      showAlbums,
+      showPlaylists,
+      chartSelection,
+      width
+    } = this.state;
     const { editable } = this.props;
 
     return (
-      <div className={'DashboardContainer'} ref={this.containerRef}>
+      <div className={`DashboardContainer ${editable ? 'editable' : ''}`} ref={this.containerRef}>
         {editable ?
           <div className={'DashboardConfigurator'}>
             <div className={'DashboardChartsForm'}>
-              <select
-                className={'DashboardChartsCountryCode input-select'}
-                value={chartSelection.countryCode}
-                onChange={(e) => this.updateChartSelection(e, 'countryCode')}
-              >
-                {ALL_COUNTRY_CODES.map((code) => <option key={code} value={code}>{code}</option>)}
-              </select>
-              <select
-                className={'DashboardChartsType input-select'}
-                value={chartSelection.type}
-                onChange={(e) => this.updateChartSelection(e, 'type')}
-              >
-                {ALL_CHART_TYPES.map((code) => <option key={code} value={code}>{code}</option>)}
-              </select>
-              <select
-                className={'DashboardChartsPeriod input-select'}
-                value={chartSelection.period}
-                onChange={(e) => this.updateChartSelection(e, 'period')}
-              >
-                {ALL_CHART_PERIODS.map((code) => <option key={code} value={code}>{code}</option>)}
-              </select>
-              <button
-                className={'button'}
-                disabled={!chartExists(chartSelection.countryCode, chartSelection.type, chartSelection.period)}
-                onClick={() => this.addChart(chartSelection.countryCode, chartSelection.type, chartSelection.period)}
-              >
-                Add Chart
-              </button>
-              <button
-                className={'button'}
-                onClick={() => this.removeChart(chartSelection.countryCode, chartSelection.type, chartSelection.period)}
-              >
-                Remove Chart
-              </button>
+              <div className={'DashboardChartsFormSelects'}>
+                <select
+                  className={'DashboardChartsCountryCode input-select'}
+                  value={chartSelection.countryCode}
+                  onChange={(e) => this.updateChartSelection(e, 'countryCode')}
+                >
+                  {ALL_COUNTRY_CODES.map((code) => <option key={code} value={code}>{code}</option>)}
+                </select>
+                <select
+                  className={'DashboardChartsType input-select'}
+                  value={chartSelection.type}
+                  onChange={(e) => this.updateChartSelection(e, 'type')}
+                >
+                  {ALL_CHART_TYPES.map((code) => <option key={code} value={code}>{code}</option>)}
+                </select>
+                <select
+                  className={'DashboardChartsPeriod input-select'}
+                  value={chartSelection.period}
+                  onChange={(e) => this.updateChartSelection(e, 'period')}
+                >
+                  {ALL_CHART_PERIODS.map((code) => <option key={code} value={code}>{code}</option>)}
+                </select>
+              </div>
+              <div className={'DashboardChartsFormButtons'}>
+                <button
+                  className={'button'}
+                  disabled={!chartExists(chartSelection.countryCode, chartSelection.type, chartSelection.period)}
+                  onClick={() => this.addChart(chartSelection.countryCode, chartSelection.type, chartSelection.period)}
+                >
+                  Add Chart
+                </button>
+                <button
+                  className={'button'}
+                  onClick={() => this.removeChart(chartSelection.countryCode, chartSelection.type, chartSelection.period)}
+                >
+                  Remove Chart
+                </button>
+              </div>
             </div>
             <div className={'DashboardSettingsForm'}>
               <Checkbox
                 checked={showFavorites}
                 label={'Show Favorites'}
                 onChange={(e) => this.showFavorites(e)}
+              />
+              <Checkbox
+                checked={showAlbums}
+                label={'Show Albums'}
+                onChange={(e) => this.showAlbums(e)}
+              />
+              <Checkbox
+                checked={showPlaylists}
+                label={'Show Playlists'}
+                onChange={(e) => this.showPlaylists(e)}
               />
             </div>
           </div>
@@ -327,6 +371,18 @@ class Dashboard extends Component<IProps, IState> {
           {showFavorites ?
             <div key={'favorites'} className={'DashboardItem'}>
               <SavedTracks />
+            </div>
+            : <></>
+          }
+          {showAlbums ?
+            <div key={'albums'} className={'DashboardItem'}>
+              <Albums />
+            </div>
+            : <></>
+          }
+          {showPlaylists ?
+            <div key={'playlists'} className={'DashboardItem'}>
+              <Playlists />
             </div>
             : <></>
           }
