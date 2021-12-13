@@ -95,7 +95,6 @@ export default class App {
     });
 
     this.server.get('/api/spotify/player/recently-played', async (req: Request, res: Response) => {
-      console.log('here2');
       // TODO
       //  only after or before should be specified
       //const after: any = req.query?.after ?? 1638401402000;

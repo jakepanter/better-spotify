@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import {
-
     PlayHistoryObject,
     UsersRecentlyPlayedTracksResponse,
-    AlbumObjectSimplified,
-    //ListOfNewReleasesResponse
+    AlbumObjectSimplified, TrackObjectFull,
+    ListOfNewReleasesResponse
 } from "spotify-types";
 import './Discover.scss';
 import {API_URL} from "../../utils/constants";
@@ -32,24 +31,20 @@ class Discover extends Component<IProps, IState> {
 
     async componentDidMount() {
         // Fetch recently played tracks
-        console.log("-------HERE------");
         const recentPlayedTracksData: UsersRecentlyPlayedTracksResponse = await fetch(
             `${API_URL}api/spotify/player/recently-played?limit=5`
         ).then((res) => res.json());
         // Save to state
-        //console.log(data);
         this.setState((state) => ({...state, recentTracks: recentPlayedTracksData.items}));
 
-        //console.log(this.state.recentTracks);
 
         // Fetch new releases
 
-        const newReleasedAlbums: any = await fetch(
-        `${API_URL}api/spotify/browse/new-releases?limit=5`
+        const newReleasedAlbums: ListOfNewReleasesResponse = await fetch(
+            `${API_URL}api/spotify/browse/new-releases?limit=5`
         ).then((res) => res.json());
 
         this.setState((state) => ({...state, newReleases: newReleasedAlbums.albums.items}));
-        console.log(this.state.newReleases);
 
 
     }
@@ -57,18 +52,17 @@ class Discover extends Component<IProps, IState> {
     render() {
         if (this.state.recentTracks.length === 0) return <p>loading...</p>;
         const recentlyPlayedList = this.state.recentTracks.map((recentlyPlayedTrack) => {
-            //console.log(recentlyPlayedTrack);
+            const track = recentlyPlayedTrack.track as TrackObjectFull;
             return (
-                <Link to={`/album/${recentlyPlayedTrack.track.album.id}`} key={recentlyPlayedTrack.played_at}>
-
+                <Link to={`/album/${track.album.id}`} key={recentlyPlayedTrack.played_at}>
                     <li>
                         <img
-                            src={recentlyPlayedTrack.track.album.images[0].url}
+                            src={track.album.images[0].url}
                             alt="Playlist Image"
                             width={64}
                             height={64}
                         />
-                        <span style={{color: "white"}}>{recentlyPlayedTrack.track.name}</span>
+                        <span style={{color: "white"}}>{track.name}</span>
                     </li>
                 </Link>
             );
@@ -80,17 +74,16 @@ class Discover extends Component<IProps, IState> {
                 <Link to={`/album/${newReleasedAlbum.id}`} key={newReleasedAlbum.id}>
                     <li>
                         <img
-                        src={newReleasedAlbum.images[0].url}
-                        alt="Playlist Image"
-                        width={64}
-                        height={64}
+                            src={newReleasedAlbum.images[0].url}
+                            alt="Playlist Image"
+                            width={64}
+                            height={64}
                         />
-                    <span style={{color: "white"}}>{newReleasedAlbum.name}</span>
+                        <span style={{color: "white"}}>{newReleasedAlbum.name}</span>
                     </li>
                 </Link>
             );
         })
-
 
 
         return (
@@ -101,7 +94,7 @@ class Discover extends Component<IProps, IState> {
                     <ul>{recentlyPlayedList}</ul>
                 </div>
 
-                <div className={"newReeleases"}>
+                <div className={"newReleases"}>
                     <h3>New Releases</h3>
                     <ul>{tmp}</ul>
                 </div>

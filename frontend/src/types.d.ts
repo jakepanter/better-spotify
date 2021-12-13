@@ -1566,8 +1566,7 @@ declare module "spotify-types" {
    * [](https://developer.spotify.com/web-api/web-api-personalization-endpoints/get-recently-played/#play-history-object)
    */
   export interface PlayHistoryObject {
-      //changes TrackObjectSimplified to TrackObjectFull
-      track: TrackObjectFull;
+      track: TrackObjectSimplified;
       played_at: string;
       context: ContextObject;
   }
