@@ -1,38 +1,37 @@
-import React, { useEffect, useState } from "react";
-import { TrackObjectFull } from "spotify-types";
+import React from "react";
+import {AlbumObjectSimplified, ArtistObjectSimplified, TrackObjectFull, TrackObjectSimplified} from "spotify-types";
 //import SpotifyWebPlayer from "react-spotify-web-playback";
 
 type Props = {
-  id_track: String;
-  type: String;
+  track: TrackObjectFull | TrackObjectSimplified;
+  name: string;
+  artists: ArtistObjectSimplified[];
+  duration_ms: number;
+  album?: AlbumObjectSimplified;
 };
 
 function TrackListItem(props: Props) {
-  const id = props.id_track;
-  //const type = props.type
+  const track = props;
 
-  const [track, setTrack] = useState<TrackObjectFull>();
-  useEffect(() => {
-    async function fetchData() {
-      const data: TrackObjectFull = await fetch(
-        `http://localhost:5000/api/spotify/track/${id}`
-      ).then((res) => res.json());
-      setTrack(data);
-    }
-    fetchData();
-  }, [id]);
-
-  if (!track) return <p>loading...</p>;
+  const durationMinutes = Math.floor(track.duration_ms / 60 / 1000)
+  const durationSeconds = Math.round(track.duration_ms / 1000 % 60);
+  const duration = `${durationMinutes}:${durationSeconds < 10 ? '0' + durationSeconds : durationSeconds}`;
 
   return (
-    <>
-        <tr>
-            <td><img style={{width: "40px", height: "40px"}} src={track.album.images[2].url} alt=""/></td>
-            <td>{track.name}</td>
-            <td>{track.artists.map((artist) => artist.name).join(", ")}</td>
-            <td>{track.duration_ms/1000}</td>
-        </tr>
-    </>
+    <div className={'TableRow'}>
+      {track.album !== undefined ?
+        <div className={'TableCell TableCellArtwork'}>
+          <img style={{width: "40px", height: "40px"}} src={track.album.images[2].url} alt=""/>
+        </div>
+        :
+        <div className={'TableCell TableCellArtwork'} style={{width: "40px", height: "40px"}}/>
+      }
+      <div className={'TableCell TableCellTitle'}>{track.name}</div>
+      <div className={'TableCell TableCellArtist'}>{track.artists.map((artist) => artist.name).join(", ")}</div>
+      <div className={'TableCell TableCellDuration'}>
+        {duration}
+      </div>
+    </div>
   );
 }
 

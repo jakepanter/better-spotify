@@ -1,54 +1,47 @@
 import React, { useEffect, useState } from "react";
-import { SavedTrackObject, UsersSavedTracksResponse } from "spotify-types";
+import {
+  PlaylistTrackResponse,
+  SavedTrackObject
+} from "spotify-types";
 import { API_URL } from '../../utils/constants';
 import TrackList from "../TrackList/TrackList";
 
+const limit = 50;
+
 export default function SavedTracks() {
-  const [tracks, setTracks] = useState<UsersSavedTracksResponse>();
-  const [items, setItems] = useState<SavedTrackObject[]>([]);
-  const [next, setNext] = useState<string>(
-    `${API_URL}api/spotify/me/tracks`
-  );
+  // The list of tracks of the album
+  const [tracks, setTracks] = useState<SavedTrackObject[]>([]);
+  // The current offset for fetching new tracks
+  const [offset, setOffset] = useState<number>(0);
+  // Total count of tracks
+  const [total, setTotal] = useState<number>(-1);
 
-  useEffect(() => {
-    fetchData(next);
-  }, [next]);
+  async function fetchTrackData(newOffset: number) {
+    // Only fetch if there are tracks left to fetch
+    if (total >= 0 && total <= offset) return;
 
-  async function fetchData(url: string) {
-    const data: UsersSavedTracksResponse = await fetch(url).then((res) =>
-      res.json()
-    );
-    setTracks(data);
-    const arr: SavedTrackObject[] = [...items, ...data.items];
-    setItems(arr);
+    const data: PlaylistTrackResponse = await fetch(
+      `${API_URL}api/spotify/me/tracks?offset=${newOffset}&limit=${limit}`
+    ).then((res) => res.json());
+
+    // Save new tracks
+    setTracks((oldTracks) => [...oldTracks, ...data.items]);
+
+    if (total < 0) {
+      setTotal(data.total);
+    }
   }
 
-  //fetch next track when you reach the bottom of the current list
-  const onScroll = (e: any) => {
-    const bottom =
-      e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-    if (bottom && tracks) {
-      const limit = tracks.limit;
-      const offset = tracks.offset + limit;
-      const url = `${API_URL}api/spotify/me/tracks?offset=${offset}&limit=${limit}`;
-      setNext(url);
-    }
-  };
+  // Fetch more album tracks if necessary
+  useEffect(() => {
+    fetchTrackData(offset);
+  }, [offset]);
 
-  if (!tracks || !items) return <p>loading...</p>;
+  if (!tracks) return <p>loading...</p>;
+
   return (
     <>
-      <table onScroll={onScroll} style={{display: "block", height: "500px", overflow: "auto" }}>
-        <thead>
-          <th></th>
-          <th>Title</th>
-          <th>Artists</th>
-          <th>Duration</th>
-        </thead>
-        <tbody >
-          <TrackList type={"saved"} data={items}/>
-        </tbody>
-      </table>
+      <TrackList loadMoreCallback={() => setOffset((currentOffset) => currentOffset + limit)} type={"saved"} tracks={tracks} />
     </>
   );
 }

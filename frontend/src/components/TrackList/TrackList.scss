@@ -1,4 +1,65 @@
-table, th, td {
-  border: 5px solid white;
-  border-collapse: collapse;
+@import "src/boilerplate";
+
+.Playlist {
+  background-color: $color-secondary;
+  border-radius: $border-radius;
+  color: $white;
+  display: flex;
+  flex-flow: column nowrap;
+  max-height: 100%;
+  overflow: hidden auto;
+  position: relative;
+  width: 100%;
+
+  .TableRow {
+    align-items: center;
+    display: flex;
+    flex-flow: row nowrap;
+    height: 56px;
+    width: 100%;
+
+    &:not(:last-of-type) {
+      border-bottom: $border-width $border-style $color-accent-dark;
+    }
+  }
+
+  .TableHeader {
+    background-color: $color-accent-dark;
+    flex: 0 0 auto;
+    position: sticky;
+    top: 0;
+    width: 100%;
+  }
+
+  .TableBody {
+    display: flex;
+    flex: 1 1 auto;
+    flex-flow: column nowrap;
+  }
+
+  .TableCell {
+    flex: 0 1 0;
+    font-size: 14px;
+
+    &Artwork {
+      flex: 0 0 72px;
+      width: 56px;
+
+      &>img {
+        padding: 8px $spacer / 2;
+      }
+    }
+
+    &Artist, &Title {
+      flex: 1 0 0;
+      justify-content: flex-start;
+      padding: 0 $spacer / 2;
+    }
+
+    &Duration {
+      flex: 0 1 90px;
+      text-align: right;
+      padding: 0 $spacer / 2;
+    }
+  }
 }

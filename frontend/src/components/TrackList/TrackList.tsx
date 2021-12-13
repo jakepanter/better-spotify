@@ -1,95 +1,113 @@
 import React from "react";
 import TrackListItem from "../TrackListItem/TrackListItem";
 import './TrackList.scss';
-import { AlbumObjectFull, PlaylistObjectFull, SavedTrackObject } from "spotify-types";
+import {
+  AlbumObjectFull,
+  PlaylistObjectFull,
+  PlaylistTrackObject,
+  SavedTrackObject,
+  TrackObjectSimplified
+} from "spotify-types";
 
 type Props = {
   type: 'album',
+  tracks: TrackObjectSimplified[];
   data: AlbumObjectFull,
+  loadMoreCallback: () => void;
 } | {
   type: 'playlist',
+  tracks: PlaylistTrackObject[],
   data: PlaylistObjectFull,
+  loadMoreCallback: () => void;
 } |
 {
   type: 'saved'
-  data: SavedTrackObject[],
+  tracks: SavedTrackObject[];
+  loadMoreCallback: () => void;
+}
+
+function scrollHandler(e: React.UIEvent<HTMLDivElement>, loadMoreCallback: () => void) {
+  if (e.currentTarget.scrollTop + e.currentTarget.clientHeight >= e.currentTarget.scrollHeight) {
+    loadMoreCallback();
+  }
 }
 
 function TrackList(props: Props) {
-    const { type } = props;
-    //Hier koennen Unterschiedliche angelegt werden. Dabei muss aber auch TrackListItem angepasst werden!
+  const {type, loadMoreCallback} = props;
+  //Hier koennen Unterschiedliche angelegt werden. Dabei muss aber auch TrackListItem angepasst werden!
 
-    //ALBUM TRACKLIST
-    if(type==="album") {
-      const album = props.data;
+  //ALBUM TRACKLIST
+  if (type === "album") {
+    const tracks = props.tracks;
 
-      return(
-        <>
-          <div className={"Playlist"}>
-            <h2>{album.name}</h2>
-            <h3>{album.artists.map((artist) => artist.name).join(", ")}</h3>
-            <table>
-                <tr>
-                    <th></th>
-                    <th>Title</th>
-                    <th>Artists</th>
-                    <th>Duration</th>
-                </tr>
+    return (
+      <div className={"Playlist"} onScroll={(e: React.UIEvent<HTMLDivElement>) => scrollHandler(e, loadMoreCallback)}>
+        <div className={'TableHeader TableRow'}>
+          <div className={'TableCell TableCellArtwork'}/>
+          <div className={'TableCell TableCellTitle'}>Title</div>
+          <div className={'TableCell TableCellArtist'}>Artist</div>
+          <div className={'TableCell TableCellDuration'}>Duration</div>
+        </div>
+        <div className={'TableBody'}>
+          {tracks.map((item) => {
+            return <TrackListItem track={item} name={item.name} artists={item.artists} duration_ms={item.duration_ms}
+                                  key={item.id}/>;
+          })}
+        </div>
+      </div>
+    )
+  }
 
-                {album?.tracks.items.map((item) => {
-                    return <TrackListItem id_track={item.id} key={item.id} type={type}/>;
-                })}
+  //PLAYLIST TRACKLIST
+  else if (type === "playlist") {
+    const tracks = props.tracks;
 
-            </table>
-          </div>
-        </>
-      )
-    }
+    return (
+      <div className={"Playlist"} onScroll={(e: React.UIEvent<HTMLDivElement>) => scrollHandler(e, loadMoreCallback)}>
+        <div className={'TableHeader TableRow'}>
+          <div className={'TableCell TableCellArtwork'}/>
+          <div className={'TableCell TableCellTitle'}>Title</div>
+          <div className={'TableCell TableCellArtist'}>Artist</div>
+          <div className={'TableCell TableCellDuration'}>Duration</div>
+        </div>
+        <div className={'TableBody'}>
+          {tracks.map((item) => {
+            const {track} = item;
+            return <TrackListItem track={track} name={track.name} artists={track.artists}
+                                  duration_ms={track.duration_ms} album={track.album} key={track.id}/>;
+          })}
+        </div>
+      </div>
+    );
+  }
 
-    //PLAYLIST TRACKLIST
-    else if(type === "playlist") {
-      const playlist = props.data;
+  //SAVED TRACKS TRACKLIST
+  else if (type === "saved") {
+    const saved = props.tracks;
 
-      return (
-          <>
-            <div className={"Playlist"}>
-              <h2>{playlist.name}</h2>
-              <table>
-                  <tr>
-                      <th></th>
-                      <th>Title</th>
-                      <th>Artists</th>
-                      <th>Duration</th>
-                  </tr>
-                  {playlist?.tracks.items.map((item) => {
-                      return <TrackListItem id_track={item.track.id} key={item.track.id} type={type}/>;
-                  })}
-              </table>
-            </div>
-          </>
-      );
-    }
-
-    //SAVED TRACKS TRACKLIST
-    else if(type === "saved") {
-      const saved = props.data;
-        
-      return(
-        <>
+    return (
+      <div className={"Playlist"} onScroll={(e: React.UIEvent<HTMLDivElement>) => scrollHandler(e, loadMoreCallback)}>
+        <div className={'TableHeader TableRow'}>
+          <div className={'TableCell TableCellArtwork'}/>
+          <div className={'TableCell TableCellTitle'}>Title</div>
+          <div className={'TableCell TableCellArtist'}>Artist</div>
+          <div className={'TableCell TableCellDuration'}>Duration</div>
+        </div>
+        <div className={'TableBody'}>
           {saved.map((item) => {
-              return <TrackListItem id_track={item.track.id} key={item.track.id} type={type}/>
-          })}    
-        </>
-      )
-    }
-    else{
-        return(
-            <>
-            </>
-        )
-    }
+            const {track} = item;
+            return <TrackListItem track={track} name={track.name} artists={track.artists}
+                                  duration_ms={track.duration_ms} album={track.album} key={track.id}/>;
+          })}
+        </div>
+      </div>
+    )
+  } else {
+    return (
+      <>
+      </>
+    )
+  }
 }
 
-
-
- export default TrackList;
+export default TrackList;
