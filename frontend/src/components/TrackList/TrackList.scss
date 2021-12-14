@@ -40,6 +40,9 @@
   .TableCell {
     flex: 0 1 0;
     font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
     &Artwork {
       flex: 0 0 72px;
