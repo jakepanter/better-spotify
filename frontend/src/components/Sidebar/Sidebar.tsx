@@ -48,7 +48,7 @@ const Sidebar = () => {
                     </NavLink>
                 </li>
                 <li className="column">
-                    <NavLink activeClassName="active" className="button" to="/" onClick={() => closeMenu()} exact>
+                    <NavLink activeClassName="active" className="button" to="/library" onClick={() => closeMenu()} exact>
                         <span className="material-icons left-side-panel--icon">grid_view</span>
                         <span className="left-side-panel--text">Library</span>
                     </NavLink>
