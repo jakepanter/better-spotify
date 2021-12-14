@@ -101,14 +101,26 @@ export default class SpotifyService {
     return album.body;
   }
 
+  getAlbumTracks = async (id: string, limit: number, offset: number) => {
+    const options: any = { limit, offset };
+    const album = await this.spotifyApi.getAlbumTracks(id, options);
+    return album.body;
+  }
+
   getMySavedAlbums = async (limit: number, offset: number) => {
     const options: any = { limit, offset };
     const albums = await this.spotifyApi.getMySavedAlbums(options);
     return albums.body;
   }
 
-  getMyPlaylists = async () => {
-    const result = await this.spotifyApi.getUserPlaylists();
+  isSaved = async (trackIds: string[]) => {
+    const data = await this.spotifyApi.containsMySavedTracks(trackIds);
+    return data.body;
+  }
+
+  getMyPlaylists = async (limit: number, offset: number) => {
+    const options: any = { limit, offset };
+    const result = await this.spotifyApi.getUserPlaylists(options);
     return result.body;
   }
 
@@ -120,6 +132,12 @@ export default class SpotifyService {
   getPlaylist = async (playlistId: string) => {
     const result = await this.spotifyApi.getPlaylist(playlistId);
     return result.body;
+  }
+
+  getPlaylistTracks = async (id: string, limit: number, offset: number) => {
+    const options: any = { limit, offset };
+    const album = await this.spotifyApi.getPlaylistTracks(id, options);
+    return album.body;
   }
 
   getAccessToken = async () => this.spotifyApi.getAccessToken();

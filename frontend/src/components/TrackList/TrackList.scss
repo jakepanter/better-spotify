@@ -1,18 +1,84 @@
-.TrackList {
-  width: 100%;
-}
+@import "src/boilerplate";
 
-table {
+.Playlist {
+  background: $color-accent-dark;
+  border-radius: $border-radius;
+  color: $color-default;
+  display: flex;
+  flex-flow: column nowrap;
+  max-height: 100%;
+  overflow: hidden auto;
+  position: relative;
   width: 100%;
-}
 
-.table-header th {
-  text-align: left;
-}
-table,
-th,
-td {
-  border: 5px solid white;
-  border-collapse: collapse;
-  border: none;
+  .TableRow {
+    align-items: center;
+    display: flex;
+    flex-flow: row nowrap;
+    height: 56px;
+    width: 100%;
+  }
+
+  .TableHeader {
+    background-color: $color-accent-dark;
+    border-bottom: $border-width $border-style transparentize($gray-dark, 0.89);
+    flex: 0 0 auto;
+    position: sticky;
+    top: 0;
+    width: 100%;
+  }
+
+  .TableBody {
+    display: flex;
+    flex: 1 1 auto;
+    flex-flow: column nowrap;
+  }
+
+  .TableCell {
+    flex: 0 1 0;
+    font-size: 14px;
+    overflow: hidden;
+    padding: 0 $spacer / 2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &Artwork {
+      flex: 0 0 72px;
+      width: 56px;
+      padding: 8px $spacer / 2;
+    }
+
+    &TitleArtist {
+      display: flex;
+      flex: 1 0 0;
+      flex-flow: column nowrap;
+
+      & > span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    &Artist {
+      color: transparentize($color-default, 0.2);
+    }
+
+    &Album {
+      flex: 1 0 0;
+    }
+
+    &Duration {
+      flex: 0 1 90px;
+      text-align: right;
+    }
+
+    &AddedAt {
+      flex: 0.5 0 0;
+    }
+
+    &Liked {
+      flex: 0 0 90px;
+    }
+  }
 }
