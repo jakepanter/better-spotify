@@ -67,27 +67,45 @@ export default class App {
     });
 
     this.server.get('/api/spotify/track/:trackId', async (req: Request, res: Response) => {
-      const { trackId } = req.params;
+      const trackId = req.params.trackId as string;
       const track = await this.spotifyService.getTrack(trackId);
       return res.json(track);
     });
 
+    this.server.get('/api/spotify/me/tracks/contains', async (req: Request, res: Response) => {
+      const trackIds: string[] = (req.query.trackIds as string ?? '').split(',');
+      const data = await this.spotifyService.isSaved(trackIds);
+      return res.json(data);
+    });
+
     this.server.get('/api/spotify/album/:albumId', async (req: Request, res: Response) => {
-      const { albumId } = req.params;
+      const albumId = req.params.albumId as string;
       const album = await this.spotifyService.getAlbum(albumId);
       return res.json(album);
     });
 
+    this.server.get('/api/spotify/album/:albumId/tracks', async (req: Request, res: Response) => {
+      const limit = Number(req.query?.limit ?? 50);
+      const offset = Number(req.query?.offset ?? 0);
+      const albumId = req.params.albumId as string;
+
+      const album = await this.spotifyService.getAlbumTracks(albumId, limit, offset);
+      return res.json(album);
+    });
+
     this.server.get('/api/spotify/collections/albums', async (req: Request, res: Response) => {
-      const limit: any = req.query?.limit ?? 20;
-      const offset: any = req.query?.offset ?? 0;
+      const limit = Number(req.query?.limit ?? 50);
+      const offset = Number(req.query?.offset ?? 0);
 
       const albums = await this.spotifyService.getMySavedAlbums(limit, offset);
       return res.json(albums);
     });
 
     this.server.get('/api/spotify/playlists', async (req: Request, res: Response) => {
-      const playlists = await this.spotifyService.getMyPlaylists();
+      const limit = Number(req.query?.limit ?? 50);
+      const offset = Number(req.query?.offset ?? 0);
+
+      const playlists = await this.spotifyService.getMyPlaylists(limit, offset);
       return res.json(playlists);
     });
 
@@ -98,9 +116,17 @@ export default class App {
     });
 
     this.server.get('/api/spotify/playlist/:playlistId', async (req: Request, res: Response) => {
-      const { playlistId } = req.params;
+      const playlistId = req.params.playlistId as string;
       const playlist = await this.spotifyService.getPlaylist(playlistId);
       return res.json(playlist);
+    });
+
+    this.server.get('/api/spotify/playlist/:playlistId/tracks', async (req: Request, res: Response) => {
+      const limit = Number(req.query?.limit ?? 50);
+      const offset = Number(req.query?.offset ?? 0);
+      const playlistId = req.params.playlistId as string;
+      const album = await this.spotifyService.getPlaylistTracks(playlistId, limit, offset);
+      return res.json(album);
     });
 
     // DB

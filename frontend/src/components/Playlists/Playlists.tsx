@@ -72,13 +72,13 @@ class Playlists extends Component<IProps, IState> {
     });
 
     return (
-      <>
+      <div style={{overflow: 'hidden auto'}}>
         <h2>My Playlists</h2>
         <Button onClick={this.createNewPlaylist}>New Playlist</Button>
         <div className={"Playlists"}>
           <ul>{playlists}</ul>
         </div>
-      </>
+      </div>
     );
   }
 }

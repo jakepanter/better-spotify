@@ -22,13 +22,13 @@ $gray: #E4E3E2 !default;
 $gray-light: #F2F2F2 !default;
 
 // project base colors
-$color-background: #0C141D !default;
+$color-background: #131218 !default;
 $color-primary: #008FF7 !default;
 $color-secondary: #18283A !default;
-$color-default: #CDCECD  !default;
+$color-default: #E0E0E0  !default;
 
 // project special colors
-$color-accent-dark: #2F4766 !default;
+$color-accent-dark: #1C1C23 !default;
 $color-accent-darker: #008FF7 !default;
 $color-accent-darkest: #0072C5 !default;
 $color-waring-dark: #F47960 !default;
@@ -46,7 +46,7 @@ $breakpoint-lg: 75rem !default; // ~ 1200px
 $breakpoint-xl: 100rem !default; // ~ 1600px
 
 // Panels
-$side-panel-size: 90px;
+$side-panel-size: 190px;
 
 // padding
 $spacer: 2rem !default;
@@ -92,7 +92,7 @@ $fw-headlines: $fw-bold !default;
 $ls-headlines: 0px !default;
 $fs-headlines: normal !default;
 $fz-h1: 40px !default;
-$fz-h2: 32px !default;
+$fz-h2: 20px !default;
 $fz-h3: 28px !default;
 $fz-h4: 24px !default;
 $fz-h5: 20px !default;
@@ -124,6 +124,8 @@ $button-border-radius: 0px !default;
 $button-padding-horizontal: 10px !default;
 $button-padding-vertical: 15px !default;
 $button-transition-base: $transition-base !default;
+
+$checkbox-icon: $color-primary;
 
 
 /*
