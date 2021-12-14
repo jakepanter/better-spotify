@@ -167,3 +167,25 @@ h5 {
 h6 {
   font-size: $fz-h6;
 }
+// Scrollbar
+/* Works on Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba($color-default, 0.5) rgba($color-default, 0.1);
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background:  rgba($color-default, 0.1);
+  border-radius: $border-radius;
+
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba($color-default, 0.5);
+  border-radius: $border-radius;
+}
