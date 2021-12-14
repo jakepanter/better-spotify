@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import {AlbumObjectFull, AlbumTracksResponse, SingleAlbumResponse, TrackObjectSimplified} from "spotify-types";
 import { API_URL } from '../../utils/constants';
 import TrackList from "../TrackList/TrackList";
@@ -7,11 +6,13 @@ import TrackList from "../TrackList/TrackList";
 // The fetching limit, can be adjusted by changing this value
 const limit = 50;
 
-export default function Album() {
-  let params = useParams() as { id: string }; // TODO: Move route parameter checking outside the component and introduce an id prop
-  const albumId = params.id;
+// The album object itself
+interface IProps {
+  id: string;
+}
 
-  // The album object itself
+export default function Album(props: IProps) {
+  const { id } = props;
   const [album, setAlbum] = useState<AlbumObjectFull>();
   // The list of tracks of the album
   const [tracks, setTracks] = useState<TrackObjectSimplified[]>([]);
@@ -20,7 +21,7 @@ export default function Album() {
 
   async function fetchAlbumData() {
     const data: SingleAlbumResponse = await fetch(
-      `${API_URL}api/spotify/album/${albumId}?limit=${limit}`
+      `${API_URL}api/spotify/album/${id}?limit=${limit}`
     ).then((res) => res.json());
 
     // Save album data and first tracks
@@ -33,7 +34,7 @@ export default function Album() {
     if (album && album.tracks && album.tracks.total && album.tracks.total <= offset) return;
 
     const data: AlbumTracksResponse = await fetch(
-      `${API_URL}api/spotify/album/${albumId}/tracks?offset=${newOffset}&limit=${limit}`
+      `${API_URL}api/spotify/album/${id}/tracks?offset=${newOffset}&limit=${limit}`
     ).then((res) => res.json());
 
     // Save new tracks
@@ -43,7 +44,7 @@ export default function Album() {
   // Fetch the main album data
   useEffect(() => {
     fetchAlbumData();
-  }, [albumId]);
+  }, [id]);
 
   // Fetch more album tracks if necessary
   useEffect(() => {
