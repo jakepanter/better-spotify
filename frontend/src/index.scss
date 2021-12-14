@@ -7,7 +7,8 @@
   background: $color-background;
 
   &--left-panel {
-    background: $black;
+    background: $color-accent-dark;
+    border-right: 0.5px solid rgba($color-default, 0.1);
     padding: $padding-horizontal $padding-vertical;
     overflow: hidden;
     display: flex;
@@ -28,14 +29,9 @@
   }
 
   @media screen and(max-width: $breakpoint-md) {
-    &--left-panel {
-      width: 85px;
-      padding: 1rem;
-    }
-  }
-  @media screen and(max-width: $breakpoint-sm) {
     flex-direction: column;
     &--left-panel {
+      padding: 0;
       position: fixed;
       bottom: 0;
       width: 100%;
