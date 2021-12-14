@@ -17,14 +17,11 @@
     flex-flow: row nowrap;
     height: 56px;
     width: 100%;
-
-    &:not(:last-of-type) {
-      border-bottom: $border-width $border-style $color-accent-dark;
-    }
   }
 
   .TableHeader {
     background-color: $color-accent-dark;
+    border-bottom: $border-width $border-style transparentize($gray-dark, 0.89);
     flex: 0 0 auto;
     position: sticky;
     top: 0;
@@ -55,11 +52,25 @@
       display: flex;
       flex: 1 0 0;
       flex-flow: column nowrap;
+
+      &>span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    &Artist {
+      color: transparentize($color-default, 0.2);
     }
 
     &Duration {
       flex: 0 1 90px;
       text-align: right;
+    }
+
+    &AddedAt {
+      flex: 0.5 0 0;
     }
 
     &Liked {

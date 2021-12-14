@@ -108,8 +108,14 @@ export default class SpotifyService {
     return albums.body;
   }
 
-  getMyPlaylists = async () => {
-    const result = await this.spotifyApi.getUserPlaylists();
+  isSaved = async (trackIds: string[]) => {
+    const data = await this.spotifyApi.containsMySavedTracks(trackIds);
+    return data.body;
+  }
+
+  getMyPlaylists = async (limit: number, offset: number) => {
+    const options: any = { limit, offset };
+    const result = await this.spotifyApi.getUserPlaylists(options);
     return result.body;
   }
 

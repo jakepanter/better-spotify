@@ -1,6 +1,7 @@
 import React from "react";
 import {AlbumObjectSimplified, ArtistObjectSimplified, TrackObjectFull, TrackObjectSimplified} from "spotify-types";
-import {formatTimestamp} from "../../utils/functions";
+import {formatTimeDiff, formatTimestamp} from "../../utils/functions";
+import Checkbox from "../Checkbox/Checkbox";
 //import SpotifyWebPlayer from "react-spotify-web-playback";
 
 type Props = {
@@ -29,10 +30,12 @@ function TrackListItem(props: Props) {
         <span className={'TableCellTitle'}>{track.name}</span>
         <span className={'TableCellArtist'}>{track.artists.map((artist) => artist.name).join(", ")}</span>
       </div>
-      {track.added_at ? <div className={'TableCell TableCellAddedAt'}>{track.added_at}</div> : <></>}
+      {track.added_at !== undefined ? <div className={'TableCell TableCellAddedAt'}>
+        {formatTimeDiff(new Date(track.added_at).getTime(), Date.now())}
+      </div> : <></>}
       <div className={'TableCell TableCellDuration'}>{formatTimestamp(track.duration_ms)}</div>
-      {track.liked ? <div className={'TableCell TableCellLiked'}>
-        {track.liked ? 'true' : 'false'}
+      {track.liked !== undefined ? <div className={'TableCell TableCellLiked'}>
+        <Checkbox checked={track.liked} iconCodeChecked={'favorite'} iconCodeUnchecked={'favorite_border'}/>
       </div> : <></>}
     </div>
   );

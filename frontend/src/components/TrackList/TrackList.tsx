@@ -1,19 +1,17 @@
 import React from "react";
 import TrackListItem from "../TrackListItem/TrackListItem";
 import './TrackList.scss';
-import {
-  PlaylistTrackObject,
-  SavedTrackObject,
-  TrackObjectSimplified
-} from "spotify-types";
+import { SavedTrackObject } from "spotify-types";
+import {AlbumTrack} from "../Album/Album";
+import {PlaylistTrack} from "../Playlist/Playlist";
 
 type Props = {
   type: 'album',
-  tracks: TrackObjectSimplified[];
+  tracks: AlbumTrack[];
   loadMoreCallback: () => void;
 } | {
   type: 'playlist',
-  tracks: PlaylistTrackObject[],
+  tracks: PlaylistTrack[],
   loadMoreCallback: () => void;
 } | {
   type: 'saved'
@@ -49,7 +47,7 @@ function TrackList(props: Props) {
                                   name={item.name}
                                   artists={item.artists}
                                   duration_ms={item.duration_ms}
-                                  liked={true}
+                                  liked={item.is_saved}
                                   key={item.id}/>;
           })}
         </div>
@@ -66,6 +64,7 @@ function TrackList(props: Props) {
         <div className={'TableHeader TableRow'}>
           <div className={'TableCell TableCellArtwork'}/>
           <div className={'TableCell TableCellTitleArtist'}>Title</div>
+          <div className={'TableCell TableCellAddedAt'}>Added</div>
           <div className={'TableCell TableCellDuration'}>Duration</div>
           <div className={'TableCell TableCellLiked'}>Liked</div>
         </div>
@@ -77,7 +76,8 @@ function TrackList(props: Props) {
                                   artists={track.artists}
                                   duration_ms={track.duration_ms}
                                   album={track.album}
-                                  liked={true}
+                                  added_at={item.added_at}
+                                  liked={item.is_saved}
                                   key={track.id} />;
           })}
         </div>
@@ -94,7 +94,7 @@ function TrackList(props: Props) {
         <div className={'TableHeader TableRow'}>
           <div className={'TableCell TableCellArtwork'}/>
           <div className={'TableCell TableCellTitleArtist'}>Title</div>
-          <div className={'TableCell TableCellAddedAt'}>Artist</div>
+          <div className={'TableCell TableCellAddedAt'}>Added</div>
           <div className={'TableCell TableCellDuration'}>Duration</div>
         </div>
         <div className={'TableBody'}>

@@ -1,14 +1,24 @@
 import React, { useEffect, useState } from "react";
 import "./Playlist.scss";
 import TrackList from "../TrackList/TrackList";
-import { PlaylistObjectFull, PlaylistTrackObject, PlaylistTrackResponse, SinglePlaylistResponse } from "spotify-types";
+import {
+  CheckUsersSavedTracksResponse,
+  PlaylistObjectFull,
+  PlaylistTrackObject,
+  PlaylistTrackResponse,
+  SinglePlaylistResponse
+} from "spotify-types";
 import { API_URL } from '../../utils/constants';
 
 // The fetching limit, can be adjusted by changing this value
-const limit = 50;
+const limit = 20;
 
 interface IProps {
   id: string;
+}
+
+export interface PlaylistTrack extends PlaylistTrackObject {
+  is_saved: boolean;
 }
 
 export default function Playlist(props: IProps) {
@@ -17,7 +27,7 @@ export default function Playlist(props: IProps) {
   // The album object itself
   const [playlist, setPlaylist] = useState<PlaylistObjectFull>();
   // The list of tracks of the album
-  const [tracks, setTracks] = useState<PlaylistTrackObject[]>([]);
+  const [tracks, setTracks] = useState<PlaylistTrack[]>([]);
   // The current offset for fetching new tracks
   const [offset, setOffset] = useState<number>(limit);
 
@@ -28,7 +38,14 @@ export default function Playlist(props: IProps) {
 
     // Save album data and first tracks
     setPlaylist(data);
-    setTracks((oldTracks) => [...oldTracks, ...data.tracks.items]);
+
+    // Save if tracks are saved
+    const saved: CheckUsersSavedTracksResponse = await fetchIsSavedData(data.tracks.items.map((i) => i.track.id));
+    const fetchedTracks = data.tracks.items as PlaylistTrack[];
+    setTracks((oldTracks) => [...oldTracks, ...fetchedTracks.map((t, i) => {
+      t.is_saved = saved[i];
+      return t;
+    })]);
   }
 
   async function fetchPlaylistTrackData(newOffset: number) {
@@ -40,7 +57,21 @@ export default function Playlist(props: IProps) {
     ).then((res) => res.json());
 
     // Save new tracks
-    setTracks((oldTracks) => [...oldTracks, ...data.items]);
+    // Save if tracks are saved
+    const saved: CheckUsersSavedTracksResponse = await fetchIsSavedData(data.items.map((i) => i.track.id));
+    const fetchedTracks = data.items as PlaylistTrack[];
+    setTracks((oldTracks) => [...oldTracks, ...fetchedTracks.map((t, i) => {
+      t.is_saved = saved[i];
+      return t;
+    })]);
+  }
+
+  async function fetchIsSavedData(trackIds: string[]) {
+    const data: CheckUsersSavedTracksResponse = await fetch(
+      `${API_URL}api/spotify/me/tracks/contains?trackIds=${trackIds}`
+    ).then((res) => res.json());
+
+    return data;
   }
 
   // Fetch the main album data
