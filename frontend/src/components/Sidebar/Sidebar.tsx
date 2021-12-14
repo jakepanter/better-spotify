@@ -49,19 +49,19 @@ const Sidebar = () => {
                     </NavLink>
                 </li>
                 <li className="column">
-                    <NavLink activeClassName="active" className="button" to="/" onClick={() => closeMenu()} exact>
+                    <NavLink activeClassName="active" className="button" to="/ " onClick={() => closeMenu()} exact>
                         <span className="material-icons left-side-panel--icon">manage_search</span>
                         <span className="left-side-panel--text">Discover</span>
                     </NavLink>
                 </li>
                 <li className="column">
-                    <NavLink activeClassName="active" className="button" to="/" onClick={() => closeMenu()} exact>
+                    <NavLink activeClassName="active" className="button" to="/ " onClick={() => closeMenu()} exact>
                         <span className="material-icons left-side-panel--icon">record_voice_over</span>
                         <span className="left-side-panel--text">Podcasts</span>
                     </NavLink>
                 </li>
                 <li className="column">
-                    <NavLink activeClassName="active" className="button" to="/" onClick={() => closeMenu()} exact>
+                    <NavLink activeClassName="active" className="button" to="/ " onClick={() => closeMenu()} exact>
                         <span className="material-icons left-side-panel--icon">menu_book</span>
                         <span className="left-side-panel--text">Audiobooks</span>
                     </NavLink>
