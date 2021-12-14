@@ -96,11 +96,11 @@ function TrackList(props: Props) {
 
   return (
     <>
-      {contextMenu.show && (
+      {contextMenu.show && contextMenu.x && contextMenu.y && (
         <TrackContextMenuWrapper
           tracks={selectedTracks}
-          positionX={contextMenu.x!}
-          positionY={contextMenu.y!}
+          positionX={contextMenu.x}
+          positionY={contextMenu.y}
           onClose={handleContextMenuClose}
         />
       )}

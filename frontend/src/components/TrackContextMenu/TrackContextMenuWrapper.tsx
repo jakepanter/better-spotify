@@ -20,31 +20,37 @@ type Props = {
 };
 
 function TrackContextMenuWrapper(props: Props) {
-  const { tracks, positionX, positionY } = props;
-  const [playlists, setPlaylists] = useState<PlaylistObjectSimplified[]>();
-  const [me, setMe] = useState<CurrentUsersProfileResponse>();
+  const [anchorPoint, setAnchorPoint] = useState({
+    x: props.positionX,
+    y: props.positionY,
+  });
+  const [myPlaylists, setMyPlaylists] = useState<PlaylistObjectSimplified[]>();
 
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
 
-  const fetchPlaylists = async () => {
-    fetch(`http://localhost:5000/api/spotify/playlists`).then(async (res) => {
-      const data: ListOfUsersPlaylistsResponse = await res.json();
-      setPlaylists(data.items);
+  const fetchMyPlaylists = async () => {
+    const playlists: ListOfUsersPlaylistsResponse = await fetch(
+      `http://localhost:5000/api/spotify/playlists`
+    ).then(async (res) => {
+      return await res.json();
     });
-  };
-
-  const fetchMe = async () => {
-    fetch(`http://localhost:5000/api/spotify/me`).then(async (res) => {
-      const data: CurrentUsersProfileResponse = await res.json();
-      setMe(data);
+    const me: CurrentUsersProfileResponse = await fetch(
+      `http://localhost:5000/api/spotify/me`
+    ).then(async (res) => {
+      return await res.json();
     });
+    setMyPlaylists(playlists.items.filter((list) => list.owner.id === me.id));
   };
 
   useEffect(() => {
     toggleMenu(true);
-    fetchPlaylists();
-    fetchMe();
+    fetchMyPlaylists();
   }, []);
+
+  useEffect(() => {
+    setAnchorPoint({ x: props.positionX, y: props.positionY });
+    toggleMenu(true);
+  }, [props.positionX, props.positionY]);
 
   const addToPlaylist = async (playlistId: String) => {
     props.onClose();
@@ -53,7 +59,7 @@ function TrackContextMenuWrapper(props: Props) {
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(tracks),
+        body: JSON.stringify(props.tracks),
       }
     );
   };
@@ -61,25 +67,22 @@ function TrackContextMenuWrapper(props: Props) {
   return (
     <ControlledMenu
       {...menuProps}
-      anchorPoint={{ x: positionX, y: positionY }}
+      anchorPoint={anchorPoint}
       onClose={() => toggleMenu(false)}
     >
       <MenuItem>Add to Queue</MenuItem>
       <SubMenu label={"Add to Playlist"}>
-        {playlists &&
-          me &&
-          playlists
-            .filter((list) => list.owner.id === me?.id)
-            .map((list) => (
-              <MenuItem
-                key={list.id}
-                onClick={() => {
-                  addToPlaylist(list.id);
-                }}
-              >
-                {list.name}
-              </MenuItem>
-            ))}
+        {myPlaylists &&
+          myPlaylists.map((list) => (
+            <MenuItem
+              key={list.id}
+              onClick={() => {
+                addToPlaylist(list.id);
+              }}
+            >
+              {list.name}
+            </MenuItem>
+          ))}
       </SubMenu>
       <MenuItem>Like</MenuItem>
     </ControlledMenu>
