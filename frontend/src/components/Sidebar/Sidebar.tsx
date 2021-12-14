@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {NavLink} from "react-router-dom";
+import {NavLink, Link} from "react-router-dom";
 import './Sidebar.scss';
 
 const Sidebar = () => {
@@ -20,6 +20,7 @@ const Sidebar = () => {
             </button>
             {/* Sidebar menu */}
             <ul className={`left-side-panel--list ${navbarOpen ? " showMenu" : ""}`}>
+                <h1><Link to="/">Better<span className="non-colored-headline">Spotify</span></Link></h1>
                 <li className="column">
                     <NavLink activeClassName="active" className="button" to="/" onClick={() => closeMenu()} exact>
                         <span className="material-icons left-side-panel--icon">home</span>
@@ -48,21 +49,21 @@ const Sidebar = () => {
                     </NavLink>
                 </li>
                 <li className="column">
-                    <NavLink activeClassName="active" className="button" to="/" onClick={() => closeMenu()} exact>
-                        <span className="material-icons left-side-panel--icon">grid_view</span>
-                        <span className="left-side-panel--text">Library</span>
-                    </NavLink>
-                </li>
-                <li className="column">
-                    <NavLink activeClassName="active" className="button" to="/" onClick={() => closeMenu()} exact>
+                    <NavLink activeClassName="active" className="button" to="/ " onClick={() => closeMenu()} exact>
                         <span className="material-icons left-side-panel--icon">manage_search</span>
                         <span className="left-side-panel--text">Discover</span>
                     </NavLink>
                 </li>
                 <li className="column">
-                    <NavLink activeClassName="active" className="button" to="/" onClick={() => closeMenu()} exact>
-                        <span className="material-icons left-side-panel--icon">queue</span>
-                        <span className="left-side-panel--text">Queue</span>
+                    <NavLink activeClassName="active" className="button" to="/ " onClick={() => closeMenu()} exact>
+                        <span className="material-icons left-side-panel--icon">record_voice_over</span>
+                        <span className="left-side-panel--text">Podcasts</span>
+                    </NavLink>
+                </li>
+                <li className="column">
+                    <NavLink activeClassName="active" className="button" to="/ " onClick={() => closeMenu()} exact>
+                        <span className="material-icons left-side-panel--icon">menu_book</span>
+                        <span className="left-side-panel--text">Audiobooks</span>
                     </NavLink>
                 </li>
             </ul>
