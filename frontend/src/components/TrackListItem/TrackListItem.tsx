@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+//anyone know how to satisfy eslint and the unused prop function variables????
 import React, { useEffect, useState } from "react";
 import {
   AlbumObjectSimplified,
