@@ -7,12 +7,15 @@
   background: $color-background;
 
   &--left-panel {
-    background: $black;
+    background: $color-accent-dark;
+    border-right: 0.5px solid rgba($color-default, 0.1);
     padding: $padding-horizontal $padding-vertical;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1;
+
     @media screen and(min-width: $breakpoint-md) {
       box-sizing: content-box;
       width: $side-panel-size;
@@ -23,19 +26,15 @@
   &--main {
     height: 100vh;
     flex: 1 1 auto;
-    overflow: hidden;
-    padding: $padding-horizontal;
+    overflow: hidden auto;
+    padding: 64px $padding-horizontal;
+    z-index: 0;
   }
 
   @media screen and(max-width: $breakpoint-md) {
-    &--left-panel {
-      width: 85px;
-      padding: 1rem;
-    }
-  }
-  @media screen and(max-width: $breakpoint-sm) {
     flex-direction: column;
     &--left-panel {
+      padding: 0;
       position: fixed;
       bottom: 0;
       width: 100%;
@@ -44,7 +43,6 @@
 
     &--main {
       height: calc(100vh - 80px);
-      overflow-y: scroll;
     }
   }
 }
@@ -83,6 +81,45 @@ td, th {
   background: $button-background;
   color: $button-color;
   border-color: $button-border-color;
+
+  &.active:enabled,
+  &:hover:enabled {
+    background: $button-background-active;
+    color: $button-color-active;
+    border-color: $button-border-color-active;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.input-select {
+  padding: $button-padding-horizontal $button-padding-vertical;
+  display: inline-block;
+  font-family: $ff-buttons;
+  line-height: $lh-buttons;
+  letter-spacing: $ls-buttons;
+  font-weight: $fw-buttons;
+  text-transform: $tt-buttons;
+  text-decoration: none;
+  font-style: $fs-base;
+  border-width: $button-border-width;
+  border-style: $button-border-style;
+  border-radius: $button-border-radius;
+  max-width: 100%;
+  transition: $button-transition-base;
+  background: $button-background;
+  color: $button-color;
+  border-color: $button-border-color;
+
+  option {
+    background-color: $white;
+    color: $black;
+  }
 
   &.active,
   &:hover {
