@@ -38,9 +38,9 @@ export default function SavedTracks() {
   if (!tracks || !items) return <p>loading...</p>;
   return (
     <>
-      <table onScroll={onScroll} style={{display: "block", height: "500px", overflow: "auto" }}>
+      <table onScroll={onScroll} style={{display: "block", overflow: "auto" }}>
         <thead>
-          <th></th>
+          <th/>
           <th>Title</th>
           <th>Artists</th>
           <th>Duration</th>

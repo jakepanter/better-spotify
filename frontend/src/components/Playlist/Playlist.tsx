@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import "./Playlist.scss";
 import TrackList from "../TrackList/TrackList";
 import { PlaylistObjectFull } from "spotify-types";
 import { API_URL } from '../../utils/constants';
 
-function Playlist() {
+interface IProps {
+  id: string;
+}
+
+function Playlist(props: IProps) {
+  const { id } = props;
   const [playlist, setPlaylist] = useState<PlaylistObjectFull>();
 
-  //get route params (:playlistId)
-  let params = useParams() as { id: string };
   useEffect(() => {
     async function fetchData() {
       const data: PlaylistObjectFull = await fetch(
-        `${API_URL}api/spotify/playlist/${params.id}`
+        `${API_URL}api/spotify/playlist/${id}`
       ).then((res) => res.json());
       setPlaylist(data);
     }
     fetchData();
-  }, [params]);
+  }, [id]);
 
   if (!playlist) return <p>loading...</p>;
 
