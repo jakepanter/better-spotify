@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Player.scss';
 import SpotifyWebPlayer from "react-spotify-web-playback";
+import { API_URL } from '../../utils/constants';
 
 
 interface IProps {}
@@ -24,7 +25,7 @@ class Player extends Component<IProps, IState> {
     }
 
     async fetchToken() {
-        const token  = await fetch(`http://localhost:5000/api/spotify/access-token`).then(res => res.json());
+        const token  = await fetch(`${API_URL}api/spotify/access-token`).then(res => res.json());
         console.log(`token: ${token}`);
         if (token) {
             this.setState({

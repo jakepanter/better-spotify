@@ -31,13 +31,13 @@ export default class App {
 
       const isAuthorized = await this.spotifyService.authorizationCodeGrant(code.toString());
       if (!isAuthorized) {
-        return res.redirect('http://localhost:3000?error');
+        return res.redirect(`${Config.general.frontend_url}?error`);
       }
 
       // eslint-disable-next-line no-console
       console.log('Authorized');
 
-      return res.redirect('http://localhost:3000');
+      return res.redirect(`${Config.general.frontend_url}`);
     });
 
     this.server.get('/api/spotify/access-token', async (req: Request, res: Response) => {

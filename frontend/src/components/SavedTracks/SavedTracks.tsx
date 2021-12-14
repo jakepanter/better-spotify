@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { SavedTrackObject, UsersSavedTracksResponse } from "spotify-types";
+import { API_URL } from "../../utils/constants";
 import TrackList from "../TrackList/TrackList";
 
 export default function SavedTracks() {
   const [tracks, setTracks] = useState<UsersSavedTracksResponse>();
   const [items, setItems] = useState<SavedTrackObject[]>([]);
-  const [next, setNext] = useState<string>(
-    "http://localhost:5000/api/spotify/me/tracks"
-  );
+  const [next, setNext] = useState<string>(`${API_URL}api/spotify/me/tracks`);
 
   useEffect(() => {
     fetchData(next);
@@ -29,7 +28,7 @@ export default function SavedTracks() {
     if (bottom && tracks) {
       const limit = tracks.limit;
       const offset = tracks.offset + limit;
-      const url = `http://localhost:5000/api/spotify/me/tracks?offset=${offset}&limit=${limit}`;
+      const url = `${API_URL}api/spotify/me/tracks?offset=${offset}&limit=${limit}`;
       setNext(url);
     }
   };
@@ -37,12 +36,17 @@ export default function SavedTracks() {
   if (!tracks || !items) return <p>loading...</p>;
   return (
     <>
-      <div
-        onScroll={onScroll}
-        style={{ display: "block", height: "500px", overflow: "auto" }}
-      >
-        <TrackList type={"saved"} data={items} />
-      </div>
+      <table onScroll={onScroll} style={{ display: "block", overflow: "auto" }}>
+        <thead>
+          <th />
+          <th>Title</th>
+          <th>Artists</th>
+          <th>Duration</th>
+        </thead>
+        <tbody>
+          <TrackList type={"saved"} data={items} />
+        </tbody>
+      </table>
     </>
   );
 }

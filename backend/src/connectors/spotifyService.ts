@@ -35,7 +35,7 @@ export default class SpotifyService {
 
   // Routes
   // Get the url to start the authorization
-  getAuthorizationUrl = () => this.spotifyApi.createAuthorizeURL(SpotifyService.scopes, '')
+  getAuthorizationUrl = () => this.spotifyApi.createAuthorizeURL(SpotifyService.scopes, '', true)
 
   // Finish the authorization
   authorizationCodeGrant = async (code: string) => {
