@@ -1,35 +1,36 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, {Component} from "react";
+import {Link} from "react-router-dom";
 import {
-  ListOfUsersPlaylistsResponse,
-  PlaylistObjectSimplified,
+    ListOfUsersPlaylistsResponse,
+    PlaylistObjectSimplified,
 } from "spotify-types";
-import "./Playlists.scss";
-import { API_URL } from '../../utils/constants';
+import "../../cards.scss";
+import {API_URL} from '../../utils/constants';
 
-interface IProps {}
+interface IProps {
+}
 
 interface IState {
-  results: PlaylistObjectSimplified[];
+    results: PlaylistObjectSimplified[];
 }
 
 class Playlists extends Component<IProps, IState> {
-  constructor(props: IProps) {
-    super(props);
+    constructor(props: IProps) {
+        super(props);
 
-    this.state = {
-      results: [],
-    };
-  }
+        this.state = {
+            results: [],
+        };
+    }
 
-  async componentDidMount() {
-    // Fetch playlists
-    const data: ListOfUsersPlaylistsResponse = await fetch(
-      `${API_URL}api/spotify/playlists`
-    ).then((res) => res.json());
-    // Save to state
-    this.setState((state) => ({ ...state, results: data.items }));
-  }
+    async componentDidMount() {
+        // Fetch playlists
+        const data: ListOfUsersPlaylistsResponse = await fetch(
+            `${API_URL}api/spotify/playlists`
+        ).then((res) => res.json());
+        // Save to state
+        this.setState((state) => ({...state, results: data.items}));
+    }
 
     render() {
         if (this.state.results.length === 0) return <p>loading...</p>;
@@ -42,17 +43,17 @@ class Playlists extends Component<IProps, IState> {
                         }}>
                         </div>
                         <span className={"title"}>{playlist.name}</span>
-                        <span className={"owner"}>by {playlist.owner.display_name}</span>
+                        <span className={"artists-name"}>by {playlist.owner.display_name}</span>
                     </Link>
                 </li>
             );
         });
 
         return (
-                <div style={{overflow: 'hidden auto'}}>
+            <div style={{overflow: 'hidden auto'}}>
                 <h2>My Playlists</h2>
-                <div className={"playlists"}>
-                    <ul className={"playlist-items"}>{playlists}</ul>
+                <div className={"overview"}>
+                    <ul className={"overview-items"}>{playlists}</ul>
                 </div>
             </div>
         );
