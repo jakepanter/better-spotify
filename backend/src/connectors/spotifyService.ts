@@ -112,5 +112,25 @@ export default class SpotifyService {
     return result.body;
   }
 
+  getSavedShows = async () => {
+    const result = await this.spotifyApi.getMySavedShows();
+    return result.body;
+  }
+
+  getShowEpisodes = async (showId: string) => {
+    const result = await this.spotifyApi.getShowEpisodes(showId);
+    return result.body;
+  }
+
+  getShow = async(showId: string) => {
+    const result = await this.spotifyApi.getShow(showId);
+    return result.body;
+  }
+
+  getEpisode = async(episodeId: string) => {
+    const result = await this.spotifyApi.getEpisode(episodeId);
+    return result.body;
+  }
+
   getAccessToken = async () => this.spotifyApi.getAccessToken();
 }

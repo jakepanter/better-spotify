@@ -94,6 +94,28 @@ export default class App {
       return res.json(playlist);
     });
 
+    this.server.get('/api/spotify/me/shows', async (req: Request, res: Response) => {
+      const shows = await this.spotifyService.getSavedShows();
+      return res.json(shows);
+    })
+
+    this.server.get('/api/spotify/shows/:showId/episodes', async (req: Request, res: Response) => {
+      const { showId } = req.params;
+      const episodes = await this.spotifyService.getShowEpisodes(showId);
+      return res.json(episodes);
+    })
+
+    this.server.get('api/spotify/shows/:showId', async (req: Request, res: Response) => {
+      const { showId } = req.params;
+      const show = await this.spotifyService.getShow(showId);
+      return res.json(show);
+    })
+
+    this.server.get('api/spotify/episodes/:episodeId', async (req: Request, res: Response) => {
+      const { episodeId } = req.params;
+      const episode = await this.spotifyService.getEpisode(episodeId);
+      return res.json(episode);
+    })
     // DB
     // TODO
 
