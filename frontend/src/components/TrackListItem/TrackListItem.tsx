@@ -8,6 +8,7 @@ import {
 } from "spotify-types";
 import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
 import Checkbox from "../Checkbox/Checkbox";
+import "./TrackListItem.scss";
 
 type Props = {
   track: TrackObjectFull | TrackObjectSimplified;

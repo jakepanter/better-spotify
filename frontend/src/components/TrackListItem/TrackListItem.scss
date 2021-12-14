@@ -1,11 +1,11 @@
 @import "./src/boilerplate.scss";
 
-.TrackListItem {
+.TableRow {
   user-select: none;
-  &:hover:not(.selected) {
+  &:hover:not(.Selected) {
     background-color: $color-secondary;
   }
 }
-.selected {
+.Selected {
   background-color: $color-primary;
 }
