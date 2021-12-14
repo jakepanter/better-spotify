@@ -129,7 +129,7 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellLiked"}>Liked</div>
           </div>
           <div className={"TableBody"}>
-            {props.tracks.map((item) => {
+            {props.tracks.map((item, index) => {
               const track = item;
               return (
                 <TrackListItem
@@ -138,7 +138,7 @@ function TrackList(props: Props) {
                   artists={track.artists}
                   duration_ms={track.duration_ms}
                   liked={track.is_saved}
-                  key={track.id}
+                  key={type + "-track-" + track.id + "-" + index}
                   selected={selectedTracks.some((t) => t === track.uri)}
                   onSelectionChange={handleSelectionChange}
                   onContextMenuOpen={handleContextMenuOpen}
@@ -165,7 +165,7 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellLiked"}>Liked</div>
           </div>
           <div className={"TableBody"}>
-            {props.tracks.map((item) => {
+            {props.tracks.map((item, index) => {
               const { track } = item;
               return (
                 <TrackListItem
@@ -176,7 +176,7 @@ function TrackList(props: Props) {
                   album={track.album}
                   added_at={item.added_at}
                   liked={item.is_saved}
-                  key={track.id}
+                  key={type + "-track-" + track.id + "-" + index}
                   selected={selectedTracks.some((t) => t === track.uri)}
                   onSelectionChange={handleSelectionChange}
                   onContextMenuOpen={handleContextMenuOpen}
@@ -202,7 +202,7 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellDuration"}>Duration</div>
           </div>
           <div className={"TableBody"}>
-            {props.tracks.map((item) => {
+            {props.tracks.map((item, index) => {
               const { track } = item;
               return (
                 <TrackListItem
@@ -212,7 +212,7 @@ function TrackList(props: Props) {
                   duration_ms={track.duration_ms}
                   album={track.album}
                   added_at={item.added_at}
-                  key={track.id}
+                  key={type + "-track-" + track.id + "-" + index}
                   selected={selectedTracks.some((t) => t === track.uri)}
                   onSelectionChange={handleSelectionChange}
                   onContextMenuOpen={handleContextMenuOpen}
