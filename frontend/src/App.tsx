@@ -5,6 +5,7 @@ import Album from "./components/Album/Album";
 import Albums from "./components/Albums/Albums";
 import Playlist from "./components/Playlist/Playlist";
 import Playlists from "./components/Playlists/Playlists";
+import Podcasts from "./components/Podcasts/Podcasts"
 import Searchbar from "./components/Searchbar/Searchbar";
 import SavedTracks from "./components/SavedTracks/SavedTracks"
 import Player from "./components/Player/Player";
@@ -55,6 +56,10 @@ function App() {
                         <Route path="/collections/albums">
                             <h1>Albums</h1>
                             <Albums/>
+                        </Route>
+                        <Route path="/podcasts">
+                            <h1>Podcasts</h1>
+                            <Podcasts/>
                         </Route>
                         <Route path="/me/tracks">
                             <h1>Saved Tracks</h1>
