@@ -12,6 +12,7 @@
   width: 100%;
 
   .TableRow {
+    padding-top: 1rem;
     align-items: center;
     display: flex;
     flex-flow: row nowrap;
@@ -20,8 +21,8 @@
   }
 
   .TableHeader {
+    color: rgba($color-default, .35);
     background-color: $color-accent-dark;
-    border-bottom: $border-width $border-style transparentize($gray-dark, 0.89);
     flex: 0 0 auto;
     position: sticky;
     top: 0;
@@ -29,6 +30,7 @@
   }
 
   .TableBody {
+    border-top: $border-width $border-style transparentize($gray-dark, 0.89);
     display: flex;
     flex: 1 1 auto;
     flex-flow: column nowrap;
@@ -46,6 +48,9 @@
       flex: 0 0 72px;
       width: 56px;
       padding: 8px $spacer / 2;
+      img{
+        border-radius: 5px;
+      }
     }
 
     &TitleArtist {
