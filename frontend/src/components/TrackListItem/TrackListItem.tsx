@@ -8,6 +8,8 @@ type Props = {
   name: string;
   artists: ArtistObjectSimplified[];
   duration_ms: number;
+  added_at?: string;
+  liked?: boolean;
   album?: AlbumObjectSimplified;
 };
 
@@ -23,9 +25,15 @@ function TrackListItem(props: Props) {
         :
         <div className={'TableCell TableCellArtwork'} style={{width: "40px", height: "40px"}}/>
       }
-      <div className={'TableCell TableCellTitle'}>{track.name}</div>
-      <div className={'TableCell TableCellArtist'}>{track.artists.map((artist) => artist.name).join(", ")}</div>
+      <div className={'TableCell TableCellTitleArtist'}>
+        <span className={'TableCellTitle'}>{track.name}</span>
+        <span className={'TableCellArtist'}>{track.artists.map((artist) => artist.name).join(", ")}</span>
+      </div>
+      {track.added_at ? <div className={'TableCell TableCellAddedAt'}>{track.added_at}</div> : <></>}
       <div className={'TableCell TableCellDuration'}>{formatTimestamp(track.duration_ms)}</div>
+      {track.liked ? <div className={'TableCell TableCellLiked'}>
+        {track.liked ? 'true' : 'false'}
+      </div> : <></>}
     </div>
   );
 }

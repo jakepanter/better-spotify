@@ -41,28 +41,29 @@
     flex: 0 1 0;
     font-size: 14px;
     overflow: hidden;
+    padding: 0 $spacer / 2;
     text-overflow: ellipsis;
     white-space: nowrap;
 
     &Artwork {
       flex: 0 0 72px;
       width: 56px;
-
-      &>img {
-        padding: 8px $spacer / 2;
-      }
+      padding: 8px $spacer / 2;
     }
 
-    &Artist, &Title {
+    &TitleArtist {
+      display: flex;
       flex: 1 0 0;
-      justify-content: flex-start;
-      padding: 0 $spacer / 2;
+      flex-flow: column nowrap;
     }
 
     &Duration {
       flex: 0 1 90px;
       text-align: right;
-      padding: 0 $spacer / 2;
+    }
+
+    &Liked {
+      flex: 0 0 90px;
     }
   }
 }

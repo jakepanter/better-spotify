@@ -39,13 +39,17 @@ function TrackList(props: Props) {
       <div className={"Playlist"} onScroll={(e: React.UIEvent<HTMLDivElement>) => scrollHandler(e, loadMoreCallback)}>
         <div className={'TableHeader TableRow'}>
           <div className={'TableCell TableCellArtwork'}/>
-          <div className={'TableCell TableCellTitle'}>Title</div>
-          <div className={'TableCell TableCellArtist'}>Artist</div>
+          <div className={'TableCell TableCellTitleArtist'}>Title</div>
           <div className={'TableCell TableCellDuration'}>Duration</div>
+          <div className={'TableCell TableCellLiked'}>Liked</div>
         </div>
         <div className={'TableBody'}>
           {tracks.map((item) => {
-            return <TrackListItem track={item} name={item.name} artists={item.artists} duration_ms={item.duration_ms}
+            return <TrackListItem track={item}
+                                  name={item.name}
+                                  artists={item.artists}
+                                  duration_ms={item.duration_ms}
+                                  liked={true}
                                   key={item.id}/>;
           })}
         </div>
@@ -61,15 +65,20 @@ function TrackList(props: Props) {
       <div className={"Playlist"} onScroll={(e: React.UIEvent<HTMLDivElement>) => scrollHandler(e, loadMoreCallback)}>
         <div className={'TableHeader TableRow'}>
           <div className={'TableCell TableCellArtwork'}/>
-          <div className={'TableCell TableCellTitle'}>Title</div>
-          <div className={'TableCell TableCellArtist'}>Artist</div>
+          <div className={'TableCell TableCellTitleArtist'}>Title</div>
           <div className={'TableCell TableCellDuration'}>Duration</div>
+          <div className={'TableCell TableCellLiked'}>Liked</div>
         </div>
         <div className={'TableBody'}>
           {tracks.map((item) => {
             const {track} = item;
-            return <TrackListItem track={track} name={track.name} artists={track.artists}
-                                  duration_ms={track.duration_ms} album={track.album} key={track.id}/>;
+            return <TrackListItem track={track}
+                                  name={track.name}
+                                  artists={track.artists}
+                                  duration_ms={track.duration_ms}
+                                  album={track.album}
+                                  liked={true}
+                                  key={track.id} />;
           })}
         </div>
       </div>
@@ -84,15 +93,20 @@ function TrackList(props: Props) {
       <div className={"Playlist"} onScroll={(e: React.UIEvent<HTMLDivElement>) => scrollHandler(e, loadMoreCallback)}>
         <div className={'TableHeader TableRow'}>
           <div className={'TableCell TableCellArtwork'}/>
-          <div className={'TableCell TableCellTitle'}>Title</div>
-          <div className={'TableCell TableCellArtist'}>Artist</div>
+          <div className={'TableCell TableCellTitleArtist'}>Title</div>
+          <div className={'TableCell TableCellAddedAt'}>Artist</div>
           <div className={'TableCell TableCellDuration'}>Duration</div>
         </div>
         <div className={'TableBody'}>
           {saved.map((item) => {
             const {track} = item;
-            return <TrackListItem track={track} name={track.name} artists={track.artists}
-                                  duration_ms={track.duration_ms} album={track.album} key={track.id}/>;
+            return <TrackListItem track={track}
+                                  name={track.name}
+                                  artists={track.artists}
+                                  duration_ms={track.duration_ms}
+                                  album={track.album}
+                                  added_at={item.added_at}
+                                  key={track.id} />;
           })}
         </div>
       </div>
