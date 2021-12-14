@@ -31,6 +31,7 @@
   @media screen and(max-width: $breakpoint-md) {
     flex-direction: column;
     &--left-panel {
+      padding: 0;
       position: fixed;
       bottom: 0;
       width: 100%;
