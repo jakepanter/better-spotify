@@ -1,6 +1,6 @@
+import "./App.scss";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import "./App.scss";
 import Albums from "./components/Albums/Albums";
 import Playlists from "./components/Playlists/Playlists";
 import Searchbar from "./components/Searchbar/Searchbar";

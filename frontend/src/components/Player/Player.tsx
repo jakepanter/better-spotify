@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import './Player.scss';
-import SpotifyWebPlayer from "react-spotify-web-playback";
 import { API_URL } from '../../utils/constants';
-
+import SpotifyWebPlayer from "./SpotifyWebPlayer";
 
 interface IProps {}
 
@@ -26,7 +24,6 @@ class Player extends Component<IProps, IState> {
 
     async fetchToken() {
         const token  = await fetch(`${API_URL}api/spotify/access-token`).then(res => res.json());
-        console.log(`token: ${token}`);
         if (token) {
             this.setState({
                 token: token
@@ -38,21 +35,11 @@ class Player extends Component<IProps, IState> {
         return (
             <div className={'Player'}>
             {this.state.token &&
-                    <SpotifyWebPlayer
-                        name={'Better Spotify'}
-                        token={this.state.token}
-                        uris={['spotify:artist:53XhwfbYqKCa1cC15pYq2q']}
-                        styles={{
-                            activeColor: '#000',
-                            bgColor: '#fff',
-                            color: '#000',
-                            loaderColor: '#fff',
-                            sliderColor: '#333',
-                            trackArtistColor: '#333',
-                            trackNameColor: '#333',
-                        }}
-                        syncExternalDevice={true}
-                    />
+                <SpotifyWebPlayer
+                    token={this.state.token}
+                    uris={['spotify:track:2aibwv5hGXSgw7Yru8IYTO']}
+                    name={'Better Spotify 🚀'}
+                />
             }
             </div>
         )
