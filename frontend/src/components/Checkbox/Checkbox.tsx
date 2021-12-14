@@ -5,6 +5,8 @@ interface IProps {
   checked?: boolean;
   label?: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
+  iconCodeChecked?: string;
+  iconCodeUnchecked?: string;
 }
 
 interface IState {
@@ -30,13 +32,15 @@ class Checkbox extends Component<IProps, IState> {
   }
 
   render() {
-    const { label } = this.props;
+    const { label, iconCodeChecked, iconCodeUnchecked } = this.props;
     const { checked } = this.state;
 
     return (
       <label className={`Checkbox ${checked ? 'checked' : ''}`}>
         <input className={'CheckboxElement'} type={'checkbox'} checked={this.props.checked} onChange={(e) => this.onChange(e)} />
-        <span className={'CheckboxIcon material-icons'}>{checked ? 'check_box' : 'check_box_outline_blank'}</span>
+        <span className={'CheckboxIcon material-icons'}>
+          {checked ? iconCodeChecked ? iconCodeChecked : 'check_box' : iconCodeUnchecked ? iconCodeUnchecked : 'check_box_outline_blank'}
+        </span>
         <span className={'CheckboxLabel'}>{label}</span>
       </label>
     );
