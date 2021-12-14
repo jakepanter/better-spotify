@@ -64,6 +64,10 @@
       color: transparentize($color-default, 0.2);
     }
 
+    &Album {
+      flex: 1 0 0;
+    }
+
     &Duration {
       flex: 0 1 90px;
       text-align: right;

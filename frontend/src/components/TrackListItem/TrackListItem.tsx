@@ -30,6 +30,9 @@ function TrackListItem(props: Props) {
         <span className={'TableCellTitle'}>{track.name}</span>
         <span className={'TableCellArtist'}>{track.artists.map((artist) => artist.name).join(", ")}</span>
       </div>
+      {track.album !== undefined ?
+        <div className={'TableCell TableCellAlbum'}>{track.album.name}</div>
+        : <></>}
       {track.added_at !== undefined ? <div className={'TableCell TableCellAddedAt'}>
         {formatTimeDiff(new Date(track.added_at).getTime(), Date.now())}
       </div> : <></>}
