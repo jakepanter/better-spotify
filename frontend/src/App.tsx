@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.scss";
 import Albums from "./components/Albums/Albums";
 import Playlists from "./components/Playlists/Playlists";
@@ -24,9 +24,9 @@ function authorize() {
 function App() {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [editable, setEditable] = useState(false);
-  
+
   const toggleEditable = () => setEditable(!editable);
-  
+
   useEffect(() => {
     async function getAccessToken() {
       const res = await fetch(
@@ -37,54 +37,63 @@ function App() {
     getAccessToken();
   }, []);
 
-  if (!isAuthorized)
+  if (!isAuthorized) {
+    //possible TODO: Login Page
     return (
       <button className="button" onClick={authorize}>
         Log in with Spotify
       </button>
-  
+    );
+  }
+
   return (
-        <Router>
-            <div className="structure">
-                <div className="structure--left-panel">
-                    <Sidebar/>
-                </div>
-                <div className="structure--main">
-                    <Searchbar/>
-                    <Player/>
-                    <button className="AuthorizeButton button" onClick={authorize}>
-                        Authorize
-                    </button>
-                    <Switch>
-                        <Route exact path="/">
-                            <button className={'button'} onClick={toggleEditable} style={{position: 'fixed', right: '100px', top: 0}}>
-                                <span className={'material-icons'}>{editable ? 'close' : 'edit'}</span>
-                            </button>
-                            <Dashboard editable={editable}/>
-                        </Route>
-                        <Route path="/playlists">
-                            <Playlists/>
-                        </Route>
-                        <Route path="/playlist/:id">
-                            <PlaylistPage/>
-                        </Route>
-                        <Route path="/album/:id">
-                            <h1>Album</h1>
-                            <AlbumPage/>
-                        </Route>
-                        <Route path="/collections/albums">
-                            <h1>Albums</h1>
-                            <Albums/>
-                        </Route>
-                        <Route path="/me/tracks">
-                            <h1>Saved Tracks</h1>
-                            <SavedTracks/>
-                        </Route>
-                    </Switch>
-                </div>
-            </div>
-        </Router>
-      )
+    <Router>
+      <div className="structure">
+        <div className="structure--left-panel">
+          <Sidebar />
+        </div>
+        <div className="structure--main">
+          <Searchbar />
+          <Player />
+          <button className="AuthorizeButton button" onClick={authorize}>
+            Authorize
+          </button>
+          <Switch>
+            <Route exact path="/">
+              <button
+                className={"button"}
+                onClick={toggleEditable}
+                style={{ position: "fixed", right: "100px", top: 0 }}
+              >
+                <span className={"material-icons"}>
+                  {editable ? "close" : "edit"}
+                </span>
+              </button>
+              <Dashboard editable={editable} />
+            </Route>
+            <Route path="/playlists">
+              <Playlists />
+            </Route>
+            <Route path="/playlist/:id">
+              <PlaylistPage />
+            </Route>
+            <Route path="/album/:id">
+              <h1>Album</h1>
+              <AlbumPage />
+            </Route>
+            <Route path="/collections/albums">
+              <h1>Albums</h1>
+              <Albums />
+            </Route>
+            <Route path="/me/tracks">
+              <h1>Saved Tracks</h1>
+              <SavedTracks />
+            </Route>
+          </Switch>
+        </div>
+      </div>
+    </Router>
+  );
 }
 
 export default App;
