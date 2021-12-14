@@ -7,7 +7,7 @@ import Volume from "./Volume";
 const Topbar = () => {
   return (
       <div className={'top-bar'}>
-          <div className={'top-bar-item'}>
+          <div className={'top-bar-item search'}>
               <Searchbar />
           </div>
           <div className={'top-bar-item volume'}>

@@ -90,7 +90,7 @@ export default class SpotifyService {
     const track = await this.spotifyApi.getTrack(id);
     return track.body;
   }
-  
+
   getAlbum = async (id: string) => {
     const album = await this.spotifyApi.getAlbum(id);
     return album.body;
@@ -110,6 +110,11 @@ export default class SpotifyService {
   getPlaylist = async (playlistId: string) => {
     const result = await this.spotifyApi.getPlaylist(playlistId);
     return result.body;
+  }
+
+  setVolume = async (volume: number) => {
+    const result = await this.spotifyApi.setVolume(volume);
+    return result;
   }
 
   getAccessToken = async () => this.spotifyApi.getAccessToken();

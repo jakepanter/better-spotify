@@ -5,16 +5,18 @@
   padding: 44px 32px;
 
   @include grid(
-          $grid: manual, // "auto" or "manual"
-          $grid-template-columns: 3, // 3,4,6,8,12 ...
-          $grid-template-columns-md: 3, // 3,4,6,8,12 ...
-          $grid-unequal: true, // false or true
+          $grid: manual,
+          $grid-template-columns: 3,
+          $grid-template-columns-md: 3,
+          $grid-unequal: true,
           $margin: 2rem,
           $margin-md: 1rem,
           $margin-sm: 1rem
   );
-  // manual - for testing reasons - comment this out if you want to check car and add some container
+
   .top-bar-item {
+    display: flex;
+
     &:nth-child(1) {
       grid-column: 1;
       grid-row: 1;
@@ -29,29 +31,46 @@
     }
   }
 
+  .search {
+    align-items: center;
+    justify-content: flex-start;
+
+    :first-child {
+      flex-grow: 1;
+    }
+  }
+
   .volume, .settings {
     border: 2px solid darkred;
   }
 
   .volume {
     color: $gray-light;
+    align-items: center;
+    justify-content: flex-end;
+
     .settings-button {
       padding: 4px 7px;
       background: transparent;
       border: none;
-      margin-left: 20px;
-      float: right;
     }
 
     .volume-slider {
       display: inline-block;
       width: 50%;
-      margin-left: 20px;
-      float: right;
+      margin-left: 10px;
+
+      .rc-slider-track, .rc-slider-handle {
+        background-color: $gray-light;
+        border-color: $gray-light;
+      }
     }
   }
 
   .settings {
+    align-items: center;
+    justify-content: flex-end;
+
     .settings-button {
       border-radius: 10px;
       padding: 4px 7px;

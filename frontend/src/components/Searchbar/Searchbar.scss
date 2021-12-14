@@ -23,8 +23,10 @@
   }
 
   .SearchbarResults {
+    position: absolute;
     padding: 10px 20px;
     list-style-type: none;
+    background: $color-secondary;
   }
 
   .SearchbarResultItem {

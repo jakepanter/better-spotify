@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 // import { API_URL } from '../../utils/constants';
 import Slider from "rc-slider";
+import {API_URL} from "../../utils/constants";
 
 interface IProps {}
 
@@ -22,20 +23,27 @@ class Volume extends Component<IProps, IState> {
     }
 
     handleChange = (value: number) => {
+        this.setVolume(value);
         this.setState({ volume: value })
     }
 
     handleMute = () => {
         if (this.state.volume > 0) {
+            this.setVolume(0);
             this.setState({
                 volumeBeforeMuted: this.state.volume,
                 volume: 0,
             })
         } else {
+            this.setVolume(this.state.volumeBeforeMuted);
             this.setState({
                 volume: this.state.volumeBeforeMuted
             })
         }
+    }
+
+    setVolume = (value: number) => {
+        fetch(`${API_URL}api/spotify/volume?volume=${value}`).then(res => res.json());
     }
 
     render() {
@@ -46,10 +54,16 @@ class Volume extends Component<IProps, IState> {
 
         return (
             <>
-                <Slider className={'volume-slider'} min={0} max={100} step={1} value={this.state.volume} onChange={this.handleChange} />
                 <button className={'settings-button'} onClick={this.handleMute}>
                     {volumeIcon}
                 </button>
+                <Slider className={'volume-slider'}
+                        min={0}
+                        max={100}
+                        step={2}
+                        value={this.state.volume}
+                        onChange={this.handleChange}
+                />
             </>
         );
     }
