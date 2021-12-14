@@ -2,9 +2,8 @@
 
 h2 {
   color: $gray-light;
-  background-color: $color-background;
+  background: $color-background;
   font-family: $font-special;
-  //padding: 2rem 0 0 2rem;
 }
 
 .playlists {
@@ -16,6 +15,10 @@ h2 {
     list-style: none;
     overflow-y: scroll;
     height: 75vh;
+    justify-content: space-between !important;
+    padding: 0 !important;
+    min-width: 100%;
+    margin-top: 2rem !important;
 
     @include columns(
             $columns: 4,
@@ -45,8 +48,8 @@ h2 {
       @media screen and(min-width: $breakpoint-sm) and(max-width: $breakpoint-md) {
         width: calc(100% / 3 - 2rem);
 
-        &:not(:last-child) {
-          margin-bottom: 2rem !important;
+        &:last-child{
+          margin-right: 1rem !important;
         }
       }
 
@@ -83,7 +86,7 @@ h2 {
       }
 
       margin-bottom: 2rem;
-      background: $color-secondary;
+      background: $color-accent-dark;
       list-style-type: none;
 
       box-shadow: 0 0 ($spacer/2) rgba($black, .3);
@@ -91,7 +94,7 @@ h2 {
 
       &:hover {
         color: $color-default;
-        background: $color-accent-dark;
+        background: lighten($color-accent-dark, 5%);
       }
 
     }
@@ -116,7 +119,7 @@ h2 {
       }
       //tablet
       @media screen and(min-width: $breakpoint-sm) and(max-width: $breakpoint-md) {
-        height: 160px;
+        height: 180px;
       }
 
       //widescreen
