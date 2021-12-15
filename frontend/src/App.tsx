@@ -1,92 +1,78 @@
-import React from "react";
-import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.scss";
-import Album from "./components/Album/Album";
 import Albums from "./components/Albums/Albums";
-import Playlist from "./components/Playlist/Playlist";
 import Playlists from "./components/Playlists/Playlists";
-import SavedTracks from "./components/SavedTracks/SavedTracks"
+import Searchbar from "./components/Searchbar/Searchbar";
+import SavedTracks from "./components/SavedTracks/SavedTracks";
 import Player from "./components/Player/Player";
 import { API_URL } from "./utils/constants";
+import Sidebar from "./components/Sidebar/Sidebar";
+import Dashboard from "./components/Dashboard/Dashboard";
+import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
+import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import Topbar from "./components/Topbar/Topbar";
 
 function authorize() {
   fetch(`${API_URL}api/spotify/get-auth-url`)
-    .then((res) => res.text())
-    .then((url) => {
-      console.log(url);
-      window.location.href = url;
-    });
+      .then((res) => res.text())
+      .then((url) => {
+        console.log(url);
+        window.location.href = url;
+      });
 }
 
 function App() {
+  const [editable, setEditable] = useState(false);
+  const toggleEditable = () => setEditable(!editable);
+
   return (
-    <Router>
-      <div>
-        <Topbar />
-        <Player/>
-        <ul>
-          <li>
-            <Link className="button" to="/">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link className="button" to="/collections/albums">
-              Saved Albums
-            </Link>
-          </li>
-          <li>
-            <Link className="button" to="/playlists">
-              My Playlists
-            </Link>
-          </li>
-          <li>
-            <button className="button" onClick={authorize}>
+      <Router>
+        <div className="structure">
+          <Topbar />
+          <div className="structure--left-panel">
+            <Sidebar />
+          </div>
+          <div className="structure--main">
+            <Searchbar />
+            <Player />
+            <button className="AuthorizeButton button" onClick={authorize}>
               Authorize
             </button>
-          </li>
-          <li>
-            <Link className="button" to="/me/tracks">Saved Tracks</Link>
-          </li>
-        </ul>
-        
-        <Switch>
-          <Route exact path="/">
-            <h1>Home</h1>
-          </Route>
-          <Route path="/playlists">
-            <Playlists />
-          </Route>
-          <Route path="/playlist/:id">
-            <Playlist />
-          </Route>
-          <Route path="/album/:id">
-            <h1>Album</h1>
-            <Album />
-          </Route>
-          <Route path="/collections/albums">
-            <h1>Albums</h1>
-            <Albums />
-          </Route>
-          <Route path="/me/tracks">
-            <h1>Saved Tracks</h1>
-            <SavedTracks/>
-          </Route>
-        </Switch>
-      </div>
-      <div className="columns-test">
-          <div className="column">Test</div>
-          <div className="column">Test</div>
-      </div>
-      <div className="grid-test">
-        <div className="grid-box">1</div>
-        <div className="grid-box">2</div>
-        <div className="grid-box">3</div>
-        <div className="grid-box">4</div>
-
-      </div>
-    </Router>
+            <Switch>
+              <Route exact path="/">
+                <button
+                    className={"button"}
+                    onClick={toggleEditable}
+                    style={{ position: "fixed", right: "100px", top: 0 }}
+                >
+                <span className={"material-icons"}>
+                  {editable ? "close" : "edit"}
+                </span>
+                </button>
+                <Dashboard editable={editable} />
+              </Route>
+              <Route path="/playlists">
+                <Playlists />
+              </Route>
+              <Route path="/playlist/:id">
+                <PlaylistPage />
+              </Route>
+              <Route path="/album/:id">
+                <h1>Album</h1>
+                <AlbumPage />
+              </Route>
+              <Route path="/collections/albums">
+                <Albums />
+              </Route>
+              <Route path="/me/tracks">
+                <h1>Saved Tracks</h1>
+                <SavedTracks />
+              </Route>
+            </Switch>
+          </div>
+        </div>
+      </Router>
   );
 }
 

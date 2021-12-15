@@ -1,0 +1,131 @@
+@import './src/boilerplate.scss';
+
+.left-side-panel {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+
+  h1 {
+    margin-bottom: 2rem;
+    text-align: center;
+
+    a {
+      text-transform: uppercase;
+      font-weight: 300;
+      font-size: 25px;
+      color: $color-primary;
+      text-decoration: none;
+
+      &:hover {
+        background: none;
+        color: $color-primary;
+
+      }
+    }
+
+    .non-colored-headline, {
+      color: $color-default;
+
+    }
+  }
+
+  &--list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0px;
+
+    li {
+      list-style: none;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 100%;
+      margin-bottom: 2rem;
+      transition: $transition-base;
+      display: flex;
+    }
+
+    .left-side-panel--icon {
+      font-size: 20px;
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+
+    a {
+      width: 100%;
+      border-radius: 10px;
+      font-size: 14px;
+      border: $none;
+      background: $color-accent-dark;
+      color: $color-default;
+    }
+
+    a:hover, a.active {
+      background: $color-primary;
+      color: $color-default;
+    }
+  }
+
+  // Mobile CSS
+  .mobileToggle {
+    display: none;
+  }
+
+  @media screen and(max-width: $breakpoint-md) {
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    position: relative;
+    overflow: visible;
+    align-items: center;
+    .mobileToggle {
+      display: flex;
+      background: $none;
+      border: none;
+      padding: 0;
+
+      p {
+        color: $color-primary;
+        font-size: 40px;
+        line-height: unset;
+      }
+    }
+    h1 {
+      margin-top: 2rem;
+      display: flex;
+      align-content: center;
+      align-items: center;
+
+      a {
+        background: none;
+      }
+    }
+
+    &--list {
+      position: fixed;
+      background: $color-background;
+      overflow-y: auto;
+      top: 0;
+      z-index: 4;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate3d(100%, 0, 0);
+      transition: all .1s cubic-bezier(0.16, 0, 0.28, 0.99);
+      height: calc(100vh - 80px);
+
+      li a {
+        margin: 0 2rem;
+        font-size: 16px;
+        width: calc(100% - 2rem);
+      }
+
+      &.showMenu {
+        transform: translate3d(0, 0, 0);
+        pointer-events: auto;
+        opacity: 1;
+        width: 100%;
+      }
+    }
+  }
+}
