@@ -3,48 +3,28 @@
 .top-bar {
   background: $color-primary;
   padding: 44px 32px;
-
-  @include grid(
-          $grid: manual,
-          $grid-template-columns: 3,
-          $grid-template-columns-md: 3,
-          $grid-unequal: true,
-          $margin: 2rem,
-          $margin-md: 1rem,
-          $margin-sm: 1rem
-  );
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 
   .top-bar-item {
     display: flex;
-
-    &:nth-child(1) {
-      grid-column: 1;
-      grid-row: 1;
-    }
-    &:nth-child(2) {
-      grid-column: 2;
-      grid-row: 1;
-    }
-    &:nth-child(3) {
-      grid-column:3;
-      grid-row: 1;
-    }
   }
 
   .search {
     align-items: center;
     justify-content: flex-start;
+    flex-grow: 1;
+    flex-basis: 400px;
 
     :first-child {
       flex-grow: 1;
     }
   }
 
-  .volume, .settings {
-    border: 2px solid darkred;
-  }
-
   .volume {
+    flex-grow: 1;
+    flex-basis: 300px;
     color: $gray-light;
     align-items: center;
     justify-content: flex-end;
@@ -68,6 +48,8 @@
   }
 
   .settings {
+    flex-grow: 1;
+    flex-basis: 200px;
     align-items: center;
     justify-content: flex-end;
 
