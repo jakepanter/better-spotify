@@ -8,7 +8,10 @@
   &HeaderCompact {
     h2 {
       margin-bottom: 0;
+      overflow: hidden;
       padding-bottom: 0;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 

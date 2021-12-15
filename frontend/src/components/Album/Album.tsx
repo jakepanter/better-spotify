@@ -89,7 +89,7 @@ export default function Album(props: IProps) {
       {headerStyle !== 'none' ?
         headerStyle === 'compact' ?
           <div className={'PlaylistHeader PlaylistHeaderCompact'}>
-            <h2>{album.name}</h2>
+            <h2>{album.artists.map((a) => a.name)[0]} — {album.name}</h2>
           </div>
           :
           <div className={'PlaylistHeader PlaylistHeaderFull'}>
