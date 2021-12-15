@@ -61,7 +61,6 @@ function App() {
               <AlbumPage />
             </Route>
             <Route path="/collections/albums">
-              <h1>Albums</h1>
               <Albums />
             </Route>
             <Route path="/me/tracks">
