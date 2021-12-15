@@ -1,0 +1,7 @@
+@import "src/boilerplate";
+
+.TrackListRow :hover{
+    transition: $transition-base;
+    color: $color-default;
+    background-color: lighten($color-accent-dark, 5%);
+}

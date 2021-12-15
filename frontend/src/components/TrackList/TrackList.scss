@@ -12,12 +12,13 @@
   width: 100%;
 
   .TableRow {
-    padding-top: 1rem;
+    padding: 0.5rem 0rem;
     align-items: center;
     display: flex;
     flex-flow: row nowrap;
     height: 56px;
     width: 100%;
+
   }
 
   .TableHeader {
