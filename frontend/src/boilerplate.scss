@@ -154,6 +154,7 @@ $checkbox-icon: $color-primary;
     box-sizing: border-box;
     overflow: hidden;
 
+    // Columns calculation for breakpoints
     @media screen and(min-width: $breakpoint-xl) {
       width: calc(100% / #{$columns-xl} - #{$margin-xl} * ((#{$columns-xl} - 1) / #{$columns-xl}));
       padding: $box-padding-xl;
@@ -182,12 +183,12 @@ $checkbox-icon: $color-primary;
     }
     // breakpoint phone
     @media screen and(max-width: $breakpoint-sm) {
-      width: calc(100% / #{$columns-xs} - #{$margin-xs} * 2);
+      width: 100%;
       padding: $box-padding-xs;
-      margin-left: $margin-xs;
-      margin-right: $margin-xs !important; // important necessary, because we have to overwrite values from desktop
+      margin-left: 0;
+      margin-right: 0;
 
-      &:not(:nth-child(#{$columns-xs}n)) {
+      &:not(:last-child) {
         margin-bottom: $margin-xs;
       }
     }
