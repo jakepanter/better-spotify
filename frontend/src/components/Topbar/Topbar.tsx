@@ -37,7 +37,7 @@ const Topbar = (props: IProps) => {
                   <span className={'material-icons'}>{props.editable ? "close" : "edit"}</span>
               </button>
               <button className={'settings-button'} onClick={authorize}>
-                  <span className={'material-icons'}>lock</span>
+                  <span className={'material-icons'}>login</span>
               </button>
               <button className={'settings-button'}>
                   <span className={'material-icons'}>account_circle</span>
