@@ -1,0 +1,6 @@
+@import "src/boilerplate";
+
+.CoverPlaceholder {
+  display: inline-block;
+  background: linear-gradient(0deg, $color-primary 0%, rgb(0, 0, 0) 100%);
+}
