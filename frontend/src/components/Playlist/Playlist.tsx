@@ -6,9 +6,9 @@ import {
   PlaylistObjectFull,
   PlaylistTrackObject,
   PlaylistTrackResponse,
-  SinglePlaylistResponse
+  SinglePlaylistResponse,
 } from "spotify-types";
-import { API_URL } from '../../utils/constants';
+import { API_URL } from "../../utils/constants";
 
 // The fetching limit, can be adjusted by changing this value
 const limit = 50;
@@ -29,28 +29,27 @@ export default function Playlist(props: IProps) {
   // The list of tracks of the album
   const [tracks, setTracks] = useState<PlaylistTrack[]>([]);
   // The current offset for fetching new tracks
-  const [offset, setOffset] = useState<number>(limit);
+  const [offset, setOffset] = useState<number>(0);
 
   async function fetchPlaylistData() {
+    //this only fetches the total number of tracks in the playlist, not the actual tracks
     const data: SinglePlaylistResponse = await fetch(
-      `${API_URL}api/spotify/playlist/${id}?limit=${limit}`
+      `${API_URL}api/spotify/playlist/${id}?fields=tracks(total)`
     ).then((res) => res.json());
 
-    // Save album data and first tracks
+    // Save album data
     setPlaylist(data);
-
-    // Save if tracks are saved
-    const saved: CheckUsersSavedTracksResponse = await fetchIsSavedData(data.tracks.items.map((i) => i.track.id));
-    const fetchedTracks = data.tracks.items as PlaylistTrack[];
-    setTracks((oldTracks) => [...oldTracks, ...fetchedTracks.map((t, i) => {
-      t.is_saved = saved[i];
-      return t;
-    })]);
   }
 
   async function fetchPlaylistTrackData(newOffset: number) {
     // Only fetch if there are tracks left to fetch
-    if (playlist && playlist.tracks && playlist.tracks.total && playlist.tracks.total <= offset) return;
+    if (
+      playlist &&
+      playlist.tracks &&
+      playlist.tracks.total &&
+      playlist.tracks.total <= offset
+    )
+      return;
 
     const data: PlaylistTrackResponse = await fetch(
       `${API_URL}api/spotify/playlist/${id}/tracks?offset=${newOffset}&limit=${limit}`
@@ -58,12 +57,17 @@ export default function Playlist(props: IProps) {
 
     // Save new tracks
     // Save if tracks are saved
-    const saved: CheckUsersSavedTracksResponse = await fetchIsSavedData(data.items.map((i) => i.track.id));
+    const saved: CheckUsersSavedTracksResponse = await fetchIsSavedData(
+      data.items.map((i) => i.track.id)
+    );
     const fetchedTracks = data.items as PlaylistTrack[];
-    setTracks((oldTracks) => [...oldTracks, ...fetchedTracks.map((t, i) => {
-      t.is_saved = saved[i];
-      return t;
-    })]);
+    setTracks((oldTracks) => [
+      ...oldTracks,
+      ...fetchedTracks.map((t, i) => {
+        t.is_saved = saved[i];
+        return t;
+      }),
+    ]);
   }
 
   async function fetchIsSavedData(trackIds: string[]) {
@@ -87,6 +91,12 @@ export default function Playlist(props: IProps) {
   if (!playlist) return <p>loading...</p>;
 
   return (
-    <TrackList loadMoreCallback={() => setOffset((currentOffset) => currentOffset + limit)} type={"playlist"} tracks={tracks} />
+    <TrackList
+      loadMoreCallback={() =>
+        setOffset((currentOffset) => currentOffset + limit)
+      }
+      type={"playlist"}
+      tracks={tracks}
+    />
   );
 }
