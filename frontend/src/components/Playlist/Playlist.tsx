@@ -11,7 +11,7 @@ import {
 import { API_URL } from '../../utils/constants';
 
 // The fetching limit, can be adjusted by changing this value
-const limit = 20;
+const limit = 50;
 
 interface IProps {
   id: string;
