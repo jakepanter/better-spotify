@@ -22,13 +22,13 @@ $gray: #E4E3E2 !default;
 $gray-light: #F2F2F2 !default;
 
 // project base colors
-$color-background: #0C141D !default;
+$color-background: #131218 !default;
 $color-primary: #008FF7 !default;
 $color-secondary: #18283A !default;
-$color-default: #CDCECD  !default;
+$color-default: #E0E0E0 !default;
 
 // project special colors
-$color-accent-dark: #2F4766 !default;
+$color-accent-dark: #1C1C23 !default;
 $color-accent-darker: #008FF7 !default;
 $color-accent-darkest: #0072C5 !default;
 $color-waring-dark: #F47960 !default;
@@ -46,7 +46,7 @@ $breakpoint-lg: 75rem !default; // ~ 1200px
 $breakpoint-xl: 100rem !default; // ~ 1600px
 
 // Panels
-$side-panel-size: 90px;
+$side-panel-size: 190px;
 
 // padding
 $spacer: 2rem !default;
@@ -92,7 +92,7 @@ $fw-headlines: $fw-bold !default;
 $ls-headlines: 0px !default;
 $fs-headlines: normal !default;
 $fz-h1: 40px !default;
-$fz-h2: 32px !default;
+$fz-h2: 20px !default;
 $fz-h3: 28px !default;
 $fz-h4: 24px !default;
 $fz-h5: 20px !default;
@@ -125,17 +125,22 @@ $button-padding-horizontal: 10px !default;
 $button-padding-vertical: 15px !default;
 $button-transition-base: $transition-base !default;
 
+$checkbox-icon: $color-primary;
+
 
 /*
    STANDARD MIXINS
 */
 @mixin columns(
+  $columns-xl: 5,
   $columns: 3,
-  $columns-md: $columns,
+  $columns-md: 3,
   $columns-xs: 1,
+  $margin-xl: 2rem,
   $margin: 2rem,
   $margin-md: $margin,
   $margin-xs: 1rem,
+  $box-padding-xl: 1rem,
   $box-padding: 1rem,
   $box-padding-md: $box-padding,
   $box-padding-xs: 1rem
@@ -143,48 +148,54 @@ $button-transition-base: $transition-base !default;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: $padding-horizontal $padding-vertical;
+
   .column {
-    width: calc(100% / #{$columns} - #{$margin} / 2);
-    //border: $border-width $border-style $border-color;
     border-radius: $border-radius;
-    padding: $box-padding;
     box-sizing: border-box;
     overflow: hidden;
 
-    &:not(:last-child) {
-      margin-right: $margin;
-    }
-  }
+    // Columns calculation for breakpoints
+    @media screen and(min-width: $breakpoint-xl) {
+      width: calc(100% / #{$columns-xl} - #{$margin-xl} * ((#{$columns-xl} - 1) / #{$columns-xl}));
+      padding: $box-padding-xl;
 
-  // breakpoint tablet
-  @media screen and(max-width: $breakpoint-md) {
-    .column {
-      width: calc(100% / #{$columns-md} - #{$margin-md} / 2);
-      padding: $box-padding-md;
-
-      &:not(:last-child) {
-        margin-right: $margin-md;
+      &:not(:nth-child(#{$columns-xl}n)) {
+        margin-right: $margin-xl;
       }
     }
-  }
+    @media screen and(max-width: $breakpoint-xl) and (min-width: $breakpoint-md) {
+      width: calc(100% / #{$columns} - #{$margin} * ((#{$columns} - 1) / #{$columns}));
+      padding: $box-padding;
 
-  // breakpoint phone
-  @media screen and(max-width: $breakpoint-sm) {
-    .column {
-      width: calc(100% / #{$columns-xs} - #{$margin-xs} * 2);
+      &:not(:nth-child(#{$columns}n)) {
+        margin-right: $margin;
+      }
+    }
+    // breakpoint tablet
+    @media screen and(max-width: $breakpoint-md) and (min-width: $breakpoint-sm) {
+      width: calc(100% / #{$columns-md} - #{$margin-md} * ((#{$columns-md} - 1) / #{$columns-md}));
+      padding: $box-padding-md;
+
+      &:not(:nth-child(#{$columns-md}n)) {
+        margin-right: $margin-md;
+      }
+
+    }
+    // breakpoint phone
+    @media screen and(max-width: $breakpoint-sm) {
+      width: 100%;
       padding: $box-padding-xs;
-      margin-left: $margin-xs;
-      margin-right: $margin-xs !important; // important necessary, because we have to overwrite values from desktop
+      margin-left: 0;
+      margin-right: 0;
 
       &:not(:last-child) {
         margin-bottom: $margin-xs;
       }
     }
   }
-};
+}
+
+;
 
 /*
   Make sure, you used "grid-box"-class for all child container
@@ -293,4 +304,6 @@ $button-transition-base: $transition-base !default;
       }
     }
   }
-};
+}
+
+;

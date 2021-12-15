@@ -1,17 +1,16 @@
-import React, {Component} from "react";
-import {Link} from "react-router-dom";
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import {
-    ListOfUsersPlaylistsResponse,
-    PlaylistObjectSimplified,
+  ListOfUsersPlaylistsResponse,
+  PlaylistObjectSimplified,
 } from "spotify-types";
-import "./Playlists.scss";
+import "../../cards.scss";
 import {API_URL} from '../../utils/constants';
 
-interface IProps {
-}
+interface IProps {}
 
 interface IState {
-    results: PlaylistObjectSimplified[];
+  results: PlaylistObjectSimplified[];
 }
 
 class Playlists extends Component<IProps, IState> {
@@ -36,27 +35,26 @@ class Playlists extends Component<IProps, IState> {
         if (this.state.results.length === 0) return <p>loading...</p>;
         const playlists = this.state.results.map((playlist) => {
             return (
-                <Link to={`/playlist/${playlist.id}`} key={playlist.id}>
-                    <li>
-                        <img
-                            src={playlist.images[playlist.images.length - 1].url}
-                            alt="Playlist Image"
-                            width={64}
-                            height={64}
-                        />
-                        <span>{playlist.name}</span>
-                    </li>
-                </Link>
+                <li className={"column"} key={playlist.id}>
+                    <Link to={`/playlist/${playlist.id}`}>
+                        <div className={"cover"} style={{
+                            backgroundImage: `url(${playlist.images[0].url})`
+                        }}>
+                        </div>
+                        <span className={"title"}>{playlist.name}</span>
+                        <span className={"artists-name"}>by {playlist.owner.display_name}</span>
+                    </Link>
+                </li>
             );
         });
 
         return (
-            <>
+            <div style={{overflow: 'hidden auto'}}>
                 <h2>My Playlists</h2>
-                <div className={"Playlists"}>
-                    <ul>{playlists}</ul>
+                <div className={"overview"}>
+                    <ul className={"overview-items"}>{playlists}</ul>
                 </div>
-            </>
+            </div>
         );
     }
 }
