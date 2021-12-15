@@ -3,8 +3,27 @@ import "./Topbar.scss";
 import Searchbar from "../Searchbar/Searchbar";
 import 'rc-slider/assets/index.css';
 import Volume from "./Volume";
+import {API_URL} from "../../utils/constants";
 
-const Topbar = () => {
+function authorize() {
+    fetch(`${API_URL}api/spotify/get-auth-url`)
+        .then((res) => res.text())
+        .then((url) => {
+            console.log(url);
+            window.location.href = url;
+        });
+}
+
+interface IProps {
+    onChangeEditable: () => void,
+    editable: boolean
+}
+
+const Topbar = (props: IProps) => {
+    const toggleEditable = () => {
+        props.onChangeEditable();
+    }
+
   return (
       <div className={'top-bar'}>
           <div className={'top-bar-item search'}>
@@ -14,6 +33,12 @@ const Topbar = () => {
             <Volume />
           </div>
           <div className={'top-bar-item settings'}>
+              <button className={'settings-button'} onClick={toggleEditable}>
+                  <span className={'material-icons'}>{props.editable ? "close" : "edit"}</span>
+              </button>
+              <button className={'settings-button'} onClick={authorize}>
+                  <span className={'material-icons'}>lock</span>
+              </button>
               <button className={'settings-button'}>
                   <span className={'material-icons'}>account_circle</span>
               </button>
