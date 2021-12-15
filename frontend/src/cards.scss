@@ -2,16 +2,14 @@
 
 .overview {
   height: 100%;
-  background: $color-background;
 
   .overview-items {
     list-style: none;
     overflow-y: scroll;
     height: 75vh;
-    justify-content: space-between !important;
     padding: 0 !important;
     min-width: 100%;
-    margin-top: 2rem !important;
+    margin-top: 2rem;
 
     @include columns(
             $columns: 4,
