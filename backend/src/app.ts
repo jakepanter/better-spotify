@@ -119,7 +119,10 @@ export default class App {
 
     this.server.get('/api/spotify/playlist/:playlistId', async (req: Request, res: Response) => {
       const playlistId = req.params.playlistId as string;
-      const playlist = await this.spotifyService.getPlaylist(playlistId);
+      // define what specific fields to get,
+      // for example: tracks(total) will result in {tracks: { total: x }}
+      const fields = String(req.query?.fields ?? '');
+      const playlist = await this.spotifyService.getPlaylist(playlistId, fields);
       return res.json(playlist);
     });
 
