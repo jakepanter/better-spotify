@@ -51,7 +51,7 @@ export default function Albums() {
   })
 
   return (
-      <div>
+      <div style={{overflow: 'hidden auto'}}>
         <h2>Albums</h2>
         <div className={"overview"} onScroll={onScroll}>
           <ul className={"overview-items"}>{savedAlbums}</ul>
