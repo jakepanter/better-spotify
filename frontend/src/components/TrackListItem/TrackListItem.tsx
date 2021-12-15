@@ -19,9 +19,10 @@ type Props = {
   added_at?: string;
   liked?: boolean;
   album?: AlbumObjectSimplified;
+  listIndex: number;
   selected: boolean;
   onSelectionChange: (
-    trackUri: String,
+    trackUniqueId: String,
     isSelected: boolean,
     specialKey: String | null
   ) => void;
@@ -30,11 +31,12 @@ type Props = {
 
 function TrackListItem(props: Props) {
   const track = props;
+  const trackUniqueId = props.track.uri + "-" + props.listIndex;
   const [selected, setSelected] = useState<boolean>(props.selected);
   const [specialKey, setSpecialKey] = useState<String | null>(null);
 
   useEffect(() => {
-    props.onSelectionChange(props.track.uri, selected, specialKey);
+    props.onSelectionChange(trackUniqueId, selected, specialKey);
   }, [selected]);
 
   useEffect(() => {
@@ -54,7 +56,7 @@ function TrackListItem(props: Props) {
 
   const handleRightClick = (e: any) => {
     e.preventDefault();
-    props.onContextMenuOpen(props.track.uri, e.pageX, e.pageY);
+    props.onContextMenuOpen(trackUniqueId, e.pageX, e.pageY);
   };
 
   return (

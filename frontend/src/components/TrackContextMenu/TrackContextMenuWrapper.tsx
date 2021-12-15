@@ -56,12 +56,14 @@ function TrackContextMenuWrapper(props: Props) {
 
   const addToPlaylist = async (playlistId: String) => {
     props.onClose();
+    //HACKY: because props.tracks contains the trackUniqueId[] we have to remove the -id at the end from each track
+    const tracks = props.tracks.map((track) => track.split("-")[0]);
     await fetch(
       `http://localhost:5000/api/spotify/playlist/${playlistId}/add`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(props.tracks),
+        body: JSON.stringify(tracks),
       }
     );
   };
