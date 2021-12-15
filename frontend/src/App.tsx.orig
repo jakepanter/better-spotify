@@ -27,6 +27,53 @@ function App() {
   const toggleEditable = () => setEditable(!editable);
 
   return (
+<<<<<<< HEAD
+        <Router>
+            <div className="structure">
+                <div className="structure--left-panel">
+                    <Sidebar/>
+                </div>
+                <div className="structure--main">
+                    <Searchbar/>
+                    <Player/>
+                    <button className="AuthorizeButton button" onClick={authorize}>
+                        Authorize
+                    </button>
+                    <Switch>
+                        <Route exact path="/">
+                            <button className={'button'} onClick={toggleEditable} style={{position: 'fixed', right: '100px', top: 0}}>
+                                <span className={'material-icons'}>{editable ? 'close' : 'edit'}</span>
+                            </button>
+                            <Dashboard editable={editable}/>
+                        </Route>
+                        <Route path="/playlists">
+                            <Playlists/>
+                        </Route>
+                        <Route path="/playlist/:id">
+                            <PlaylistPage/>
+                        </Route>
+                        <Route path="/album/:id">
+                            <h1>Album</h1>
+                            <AlbumPage/>
+                        </Route>
+                        <Route path="/collections/albums">
+                            <h1>Albums</h1>
+                            <Albums/>
+                        </Route>
+                        <Route path="/collections/podcasts">
+                            <h1>Podcasts</h1>
+                            <Podcasts/>
+                        </Route>
+                        <Route path="/me/tracks">
+                            <h1>Saved Tracks</h1>
+                            <SavedTracks/>
+                        </Route>
+                    </Switch>
+                </div>
+            </div>
+        </Router>
+    );
+=======
     <Router>
       <div className="structure">
         <div className="structure--left-panel">
@@ -73,6 +120,7 @@ function App() {
       </div>
     </Router>
   );
+>>>>>>> 4e4180d3e66c41a9af673796953a9f61edac8401
 }
 
 export default App;

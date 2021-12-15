@@ -55,7 +55,11 @@ const Sidebar = () => {
                     </NavLink>
                 </li>
                 <li className="column">
+<<<<<<< HEAD
                     <NavLink activeClassName="active" className="button" to="/collections/podcasts" onClick={() => closeMenu()} exact>
+=======
+                    <NavLink activeClassName="active" className="button" to="/ " onClick={() => closeMenu()} exact>
+>>>>>>> 4e4180d3e66c41a9af673796953a9f61edac8401
                         <span className="material-icons left-side-panel--icon">record_voice_over</span>
                         <span className="left-side-panel--text">Podcasts</span>
                     </NavLink>
