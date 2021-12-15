@@ -7,7 +7,6 @@ import {
 import "./Playlists.scss";
 import { API_URL } from "../../utils/constants";
 import Button from "../Button/Button";
-import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 
 interface IProps {}
 
@@ -55,16 +54,12 @@ class Playlists extends Component<IProps, IState> {
       return (
         <Link to={`/playlist/${playlist.id}`} key={playlist.id}>
           <li>
-            {playlist.images.length > 0 ? (
-              <img
-                src={playlist.images[playlist.images.length - 1].url}
-                alt="Playlist Image"
-                width={64}
-                height={64}
-              />
-            ) : (
-              <CoverPlaceholder />
-            )}
+            <img
+              src={playlist.images[playlist.images.length - 1].url}
+              alt="Playlist Image"
+              width={64}
+              height={64}
+            />
             <span>{playlist.name}</span>
           </li>
         </Link>
@@ -72,7 +67,7 @@ class Playlists extends Component<IProps, IState> {
     });
 
     return (
-      <div style={{overflow: 'hidden auto'}}>
+      <div style={{ overflow: "hidden auto" }}>
         <h2>My Playlists</h2>
         <Button onClick={this.createNewPlaylist}>New Playlist</Button>
         <div className={"Playlists"}>
