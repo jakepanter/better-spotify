@@ -64,6 +64,9 @@ function App() {
             <Route path="/collections/albums">
               <Albums />
             </Route>
+            <Route path="/collections/podcasts">
+              <Podcasts/>
+            </Route>
             <Route path="/me/tracks">
               <h1>Saved Tracks</h1>
               <SavedTracks />

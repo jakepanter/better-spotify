@@ -6,6 +6,7 @@
   .overview-items {
     list-style: none;
     overflow-y: scroll;
+    align-items: flex-start;
     height: 75vh;
     padding: 0;
     min-width: 100%;
