@@ -68,6 +68,10 @@ function App() {
               <h1>Saved Tracks</h1>
               <SavedTracks />
             </Route>
+            <Route path="/discover">
+              <h1>Discover</h1>
+              <Discover/>
+            </Route>
           </Switch>
         </div>
       </div>
