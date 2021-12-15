@@ -39,8 +39,9 @@ function TrackContextMenuWrapper(props: Props) {
     ).then(async (res) => {
       return await res.json();
     });
-    const [playlists, me] = await Promise.all([playlistsRequest, meRequest]);
-    setMyPlaylists(playlists.items.filter((list) => list.owner.id === me.id));
+    Promise.all([playlistsRequest, meRequest]).then(([playlists, me]) => {
+      setMyPlaylists(playlists.items.filter((list) => list.owner.id === me.id));
+    });
   };
 
   useEffect(() => {
@@ -73,7 +74,7 @@ function TrackContextMenuWrapper(props: Props) {
     >
       <MenuItem>Add to Queue</MenuItem>
       <SubMenu label={"Add to Playlist"}>
-        {myPlaylists &&
+        {myPlaylists ? (
           myPlaylists.map((list) => (
             <MenuItem
               key={list.id}
@@ -83,7 +84,10 @@ function TrackContextMenuWrapper(props: Props) {
             >
               {list.name}
             </MenuItem>
-          ))}
+          ))
+        ) : (
+          <MenuItem>Fetching Playlists...</MenuItem>
+        )}
       </SubMenu>
       <MenuItem>Like</MenuItem>
     </ControlledMenu>
