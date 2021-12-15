@@ -2,7 +2,7 @@
 
 .TableRow {
   user-select: none;
-  &:hover:not(.Selected) {
+  &:hover:not(.Selected):not(.TableHeader) {
     background-color: $color-secondary;
   }
 }

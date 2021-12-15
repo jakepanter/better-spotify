@@ -29,16 +29,17 @@ function TrackContextMenuWrapper(props: Props) {
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
 
   const fetchMyPlaylists = async () => {
-    const playlists: ListOfUsersPlaylistsResponse = await fetch(
+    const playlistsRequest: Promise<ListOfUsersPlaylistsResponse> = fetch(
       `http://localhost:5000/api/spotify/playlists`
     ).then(async (res) => {
       return await res.json();
     });
-    const me: CurrentUsersProfileResponse = await fetch(
+    const meRequest: Promise<CurrentUsersProfileResponse> = fetch(
       `http://localhost:5000/api/spotify/me`
     ).then(async (res) => {
       return await res.json();
     });
+    const [playlists, me] = await Promise.all([playlistsRequest, meRequest]);
     setMyPlaylists(playlists.items.filter((list) => list.owner.id === me.id));
   };
 

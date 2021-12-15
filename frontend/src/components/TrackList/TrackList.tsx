@@ -187,7 +187,7 @@ function TrackList(props: Props) {
         </div>
       )}
 
-      {props.type === "saved" && (
+      {type === "saved" && (
         <div
           className={"Playlist"}
           onScroll={(e: React.UIEvent<HTMLDivElement>) =>
