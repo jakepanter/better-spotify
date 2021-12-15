@@ -1,10 +1,7 @@
 import React from "react";
-import LibraryAlbum from "./LibraryAlbums/LibraryAlbums";
-//import { Link } from "react-router-dom";
-//import { API_URL } from '../../utils/constants';
-import "./Library.scss";
+import "./Podcasts.scss";
 
-export default function Library() {
+export default function Podcasts() {
 
     return (
         <article className="c-card">
@@ -13,7 +10,6 @@ export default function Library() {
                 Card
             </h2>   
             </div>
-            <LibraryAlbum/>
         </article>
     );
 }

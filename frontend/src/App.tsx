@@ -62,7 +62,7 @@ function App() {
                             <h1>Albums</h1>
                             <Albums/>
                         </Route>
-                        <Route path="/podcasts">
+                        <Route path="/collections/podcasts">
                             <h1>Podcasts</h1>
                             <Podcasts/>
                         </Route>
