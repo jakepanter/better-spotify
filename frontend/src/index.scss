@@ -90,7 +90,7 @@ td, th {
     cursor: pointer;
     text-decoration: none;
   }
-  
+
   &:disabled {
     opacity: 0.5;
     cursor: default;
@@ -139,8 +139,9 @@ h4,
 h5,
 h6 {
   font-family: $ff-headlines;
-  font-weight: $fw-bold;
-  color: $color-primary;
+  font-weight: 300;
+  text-transform: uppercase;
+  color: $color-default;
   margin-top: 0;
 }
 
@@ -149,6 +150,10 @@ h1 {
 }
 
 h2 {
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  border-bottom: 1px solid rgba($color-default, 0.1);
   font-size: $fz-h2;
 }
 
@@ -166,4 +171,26 @@ h5 {
 
 h6 {
   font-size: $fz-h6;
+}
+// Scrollbar
+/* Works on Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba($color-default, 0.5) rgba($color-default, 0.1);
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background:  rgba($color-default, 0.1);
+  border-radius: $border-radius;
+
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba($color-default, 0.5);
+  border-radius: $border-radius;
 }

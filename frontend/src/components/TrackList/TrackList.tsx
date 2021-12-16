@@ -11,16 +11,19 @@ type Props =
       type: "album";
       tracks: AlbumTrack[];
       loadMoreCallback: () => void;
+      fullyLoaded: boolean;
     }
   | {
       type: "playlist";
       tracks: PlaylistTrack[];
       loadMoreCallback: () => void;
+      fullyLoaded: boolean;
     }
   | {
       type: "saved";
       tracks: SavedTrackObject[];
       loadMoreCallback: () => void;
+      fullyLoaded: boolean;
     };
 
 type ContextMenuType = {
@@ -43,7 +46,7 @@ function scrollHandler(
 }
 
 function TrackList(props: Props) {
-  const { type, loadMoreCallback } = props;
+  const { type, loadMoreCallback, fullyLoaded } = props;
   // stores currently selected track uris with their list index: (uri-listIndex, e.g spotify:track:HJG6FHmf7HG-3)
   // selectedTracks must have unique IDs to avoid weird behaviour when the same song is in a playlist multiple times
   const [selectedTracks, setSelected] = useState<String[]>([]);
@@ -131,7 +134,7 @@ function TrackList(props: Props) {
 
       {type === "album" && (
         <div
-          className={"Playlist"}
+          className={"Tracklist"}
           onScroll={(e: React.UIEvent<HTMLDivElement>) =>
             scrollHandler(e, loadMoreCallback)
           }
@@ -160,13 +163,20 @@ function TrackList(props: Props) {
                 />
               );
             })}
+            {!fullyLoaded ? (
+              <div className={"PlaylistLoader"}>
+                <div className={"loader"} />
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       )}
 
       {type === "playlist" && (
         <div
-          className={"Playlist"}
+          className={"Tracklist"}
           onScroll={(e: React.UIEvent<HTMLDivElement>) =>
             scrollHandler(e, loadMoreCallback)
           }
@@ -199,13 +209,20 @@ function TrackList(props: Props) {
                 />
               );
             })}
+            {!fullyLoaded ? (
+              <div className={"PlaylistLoader"}>
+                <div className={"loader"} />
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       )}
 
       {type === "saved" && (
         <div
-          className={"Playlist"}
+          className={"Tracklist"}
           onScroll={(e: React.UIEvent<HTMLDivElement>) =>
             scrollHandler(e, loadMoreCallback)
           }
@@ -236,6 +253,13 @@ function TrackList(props: Props) {
                 />
               );
             })}
+            {!fullyLoaded ? (
+              <div className={"PlaylistLoader"}>
+                <div className={"loader"} />
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       )}

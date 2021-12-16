@@ -7,7 +7,7 @@
   flex-direction: column;
 
   h1 {
-    height: 125px;
+    margin-bottom: 2rem;
     text-align: center;
 
     a {
@@ -92,7 +92,7 @@
       }
     }
     h1 {
-      height: 120px;
+      margin-top: 2rem;
       display: flex;
       align-content: center;
       align-items: center;
@@ -112,7 +112,7 @@
       opacity: 0;
       transform: translate3d(100%, 0, 0);
       transition: all .1s cubic-bezier(0.16, 0, 0.28, 0.99);
-      height: calc(100vh - 80px - 2rem);
+      height: calc(100vh - 80px);
 
       li a {
         margin: 0 2rem;

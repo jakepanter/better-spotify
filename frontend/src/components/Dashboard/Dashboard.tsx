@@ -371,7 +371,7 @@ class Dashboard extends Component<IProps, IState> {
         >
           {showFavorites ?
             <div key={'favorites'} className={'DashboardItem'}>
-              <SavedTracks />
+              <SavedTracks headerStyle={'compact'}/>
             </div>
             : <></>
           }
@@ -388,16 +388,16 @@ class Dashboard extends Component<IProps, IState> {
             : <></>
           }
           {albums.map((a) => <div key={a.id} className={'DashboardItem'}>
-            <Album id={a.id}/>
+            <Album id={a.id} headerStyle={'compact'}/>
           </div>)}
           {playlists.map((p) => <div key={p.id} className={'DashboardItem'}>
-            <Playlist id={p.id}/>
+            <Playlist id={p.id} headerStyle={'compact'}/>
           </div>)}
           {charts.map((c) => {
             const chartCode = `${c.chartType}-${c.period}-${c.countryCode}`;
             return (
               <div key={chartCode} className={'DashboardItem'}>
-                <Playlist id={getChartCode(c.countryCode, c.chartType, c.period)}/>
+                <Playlist id={getChartCode(c.countryCode, c.chartType, c.period)} headerStyle={'compact'}/>
               </div>
             );
           })}

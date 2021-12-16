@@ -6,7 +6,7 @@ function PlaylistPage() {
   //get route params (:playlistId)
   let params = useParams() as { id: string };
 
-  return <Playlist id={params.id} />
+  return <Playlist id={params.id} headerStyle={'full'}/>
 }
 
 export default PlaylistPage;
