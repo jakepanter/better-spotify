@@ -33,9 +33,9 @@ export default function Playlist(props: IProps) {
   const [offset, setOffset] = useState<number>(0);
 
   async function fetchPlaylistData() {
-    //this only fetches the total number of tracks in the playlist, not the actual tracks
+    //this only fetches the total number of tracks, cover image and owner of the playlist, not the actual tracks
     const data: SinglePlaylistResponse = await fetch(
-      `${API_URL}api/spotify/playlist/${id}?fields=tracks(total)`
+      `${API_URL}api/spotify/playlist/${id}?fields=tracks(total)&fields=images&fields=owner`
     ).then((res) => res.json());
 
     // Save album data
@@ -101,7 +101,11 @@ export default function Playlist(props: IProps) {
         ) : (
           <div className={"PlaylistHeader PlaylistHeaderFull"}>
             <div className={"PlaylistHeaderCover"}>
-              <img src={playlist.images[0].url} alt={"Playlist Cover"} />
+              {playlist.images.length > 0 ? (
+                <img src={playlist.images[0].url} alt={"Playlist Cover"} />
+              ) : (
+                <></>
+              )}
             </div>
             <div className={"PlaylistHeaderMeta"}>
               <h4>Playlist</h4>
