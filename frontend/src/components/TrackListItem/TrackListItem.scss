@@ -1,0 +1,11 @@
+@import "./src/boilerplate.scss";
+
+.TableRow {
+  user-select: none;
+  &:hover:not(.Selected):not(.TableHeader) {
+    background-color: $color-secondary;
+  }
+}
+.Selected {
+  background-color: $color-primary;
+}
