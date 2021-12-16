@@ -1,6 +1,6 @@
 @import "src/boilerplate";
 
-.Playlist {
+.Tracklist {
   background: $color-accent-dark;
   border-radius: $border-radius;
   color: $color-default;
@@ -12,7 +12,7 @@
   width: 100%;
 
   .TableRow {
-    padding: 0.5rem 0rem;
+    padding: 0.5rem;
     align-items: center;
     display: flex;
     flex-flow: row nowrap;
@@ -22,8 +22,9 @@
   }
 
   .TableHeader {
-    color: rgba($color-default, .35);
     background-color: $color-accent-dark;
+    border-bottom: $border-width $border-style transparentize($gray-dark, 0.89);
+    color: rgba($color-default, 0.35);
     flex: 0 0 auto;
     position: sticky;
     top: 0;
@@ -31,7 +32,6 @@
   }
 
   .TableBody {
-    border-top: $border-width $border-style transparentize($gray-dark, 0.89);
     display: flex;
     flex: 1 1 auto;
     flex-flow: column nowrap;
@@ -48,8 +48,9 @@
     &Artwork {
       flex: 0 0 72px;
       width: 56px;
+      height: 56px;
       padding: 8px $spacer / 2;
-      img{
+      img {
         border-radius: 5px;
       }
     }
@@ -59,7 +60,7 @@
       flex: 1 0 0;
       flex-flow: column nowrap;
 
-      &>span {
+      & > span {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

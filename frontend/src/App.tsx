@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.scss";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Albums from "./components/Albums/Albums";
 import Playlists from "./components/Playlists/Playlists";
 import Searchbar from "./components/Searchbar/Searchbar";
@@ -22,8 +22,29 @@ function authorize() {
 }
 
 function App() {
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const [editable, setEditable] = useState(false);
+
   const toggleEditable = () => setEditable(!editable);
+
+  useEffect(() => {
+    async function getAccessToken() {
+      const res = await fetch(
+        `http://localhost:5000/api/spotify/access-token`
+      ).then((res) => res.json());
+      setIsAuthorized(res !== undefined);
+    }
+    getAccessToken();
+  }, []);
+
+  if (!isAuthorized) {
+    //possible TODO: Login Page
+    return (
+      <button className="button" onClick={authorize}>
+        Log in with Spotify
+      </button>
+    );
+  }
 
   return (
     <Router>
@@ -57,15 +78,13 @@ function App() {
               <PlaylistPage />
             </Route>
             <Route path="/album/:id">
-              <h1>Album</h1>
               <AlbumPage />
             </Route>
             <Route path="/collections/albums">
               <Albums />
             </Route>
             <Route path="/me/tracks">
-              <h1>Saved Tracks</h1>
-              <SavedTracks />
+              <SavedTracks headerStyle={'full'}/>
             </Route>
           </Switch>
         </div>
