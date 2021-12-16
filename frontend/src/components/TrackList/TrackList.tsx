@@ -9,14 +9,17 @@ type Props = {
   type: 'album',
   tracks: AlbumTrack[];
   loadMoreCallback: () => void;
+  fullyLoaded: boolean;
 } | {
   type: 'playlist',
   tracks: PlaylistTrack[],
   loadMoreCallback: () => void;
+  fullyLoaded: boolean;
 } | {
   type: 'saved'
   tracks: SavedTrackObject[];
   loadMoreCallback: () => void;
+  fullyLoaded: boolean;
 }
 
 function scrollHandler(e: React.UIEvent<HTMLDivElement>, loadMoreCallback: () => void) {
@@ -26,7 +29,7 @@ function scrollHandler(e: React.UIEvent<HTMLDivElement>, loadMoreCallback: () =>
 }
 
 function TrackList(props: Props) {
-  const {type, loadMoreCallback} = props;
+  const {type, loadMoreCallback, fullyLoaded } = props;
   //Hier koennen Unterschiedliche angelegt werden. Dabei muss aber auch TrackListItem angepasst werden!
 
   //ALBUM TRACKLIST
@@ -34,9 +37,8 @@ function TrackList(props: Props) {
     const tracks = props.tracks;
 
     return (
-      <div className={"Playlist"} onScroll={(e: React.UIEvent<HTMLDivElement>) => scrollHandler(e, loadMoreCallback)}>
+      <div className={"Tracklist"} onScroll={(e: React.UIEvent<HTMLDivElement>) => scrollHandler(e, loadMoreCallback)}>
         <div className={'TableHeader TableRow'}>
-          <div className={'TableCell TableCellArtwork'}/>
           <div className={'TableCell TableCellTitleArtist'}>Title</div>
           <div className={'TableCell TableCellDuration'}>Duration</div>
           <div className={'TableCell TableCellLiked'}>Liked</div>
@@ -50,6 +52,7 @@ function TrackList(props: Props) {
                                   liked={item.is_saved}
                                   key={item.id}/>;
           })}
+          {!fullyLoaded ? <div className={'PlaylistLoader'}><div className={'loader'}/></div> :<></>}
         </div>
       </div>
     )
@@ -60,7 +63,7 @@ function TrackList(props: Props) {
     const tracks = props.tracks;
 
     return (
-      <div className={"Playlist"} onScroll={(e: React.UIEvent<HTMLDivElement>) => scrollHandler(e, loadMoreCallback)}>
+      <div className={"Tracklist"} onScroll={(e: React.UIEvent<HTMLDivElement>) => scrollHandler(e, loadMoreCallback)}>
         <div className={'TableHeader TableRow'}>
           <div className={'TableCell TableCellArtwork'}/>
           <div className={'TableCell TableCellTitleArtist'}>Title</div>
@@ -81,6 +84,7 @@ function TrackList(props: Props) {
                                   liked={item.is_saved}
                                   key={track.id} />;
           })}
+          {!fullyLoaded ? <div className={'PlaylistLoader'}><div className={'loader'}/></div> :<></>}
         </div>
       </div>
     );
@@ -91,7 +95,7 @@ function TrackList(props: Props) {
     const saved = props.tracks;
 
     return (
-      <div className={"Playlist"} onScroll={(e: React.UIEvent<HTMLDivElement>) => scrollHandler(e, loadMoreCallback)}>
+      <div className={"Tracklist"} onScroll={(e: React.UIEvent<HTMLDivElement>) => scrollHandler(e, loadMoreCallback)}>
         <div className={'TableHeader TableRow'}>
           <div className={'TableCell TableCellArtwork'}/>
           <div className={'TableCell TableCellTitleArtist'}>Title</div>
@@ -110,6 +114,7 @@ function TrackList(props: Props) {
                                   added_at={item.added_at}
                                   key={track.id} />;
           })}
+          {!fullyLoaded ? <div className={'PlaylistLoader'}><div className={'loader'}/></div> :<></>}
         </div>
       </div>
     )
