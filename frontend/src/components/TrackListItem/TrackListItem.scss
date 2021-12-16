@@ -9,3 +9,9 @@
 .Selected {
   background-color: $color-primary;
 }
+
+.TrackListRow:hover {
+    transition: $transition-base;
+    color: $color-default;
+    background-color: lighten($color-accent-dark, 5%);
+}

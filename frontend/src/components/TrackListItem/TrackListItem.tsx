@@ -1,3 +1,4 @@
+
 /* eslint-disable no-unused-vars */
 //anyone know how to satisfy eslint and the unused prop function variables????
 import React, { useEffect, useState } from "react";
@@ -60,6 +61,7 @@ function TrackListItem(props: Props) {
   };
 
   return (
+        <div className={'TrackListRow'}>
     <div
       className={`TableRow ${selected ? "Selected" : ""}`}
       onClick={(e) => handleClick(e)}
@@ -111,6 +113,7 @@ function TrackListItem(props: Props) {
       ) : (
         <></>
       )}
+    </div>
     </div>
   );
 }
