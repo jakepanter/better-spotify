@@ -8,7 +8,13 @@ import TrackList from "../TrackList/TrackList";
 
 const limit = 50;
 
-export default function SavedTracks() {
+interface IProps {
+  headerStyle: 'none' | 'compact' | 'full';
+}
+
+export default function SavedTracks(props: IProps) {
+  const { headerStyle } = props;
+
   // The list of tracks of the album
   const [tracks, setTracks] = useState<SavedTrackObject[]>([]);
   // The current offset for fetching new tracks
@@ -40,6 +46,31 @@ export default function SavedTracks() {
   if (!tracks) return <p>loading...</p>;
 
   return (
-    <TrackList loadMoreCallback={() => setOffset((currentOffset) => currentOffset + limit)} type={"saved"} tracks={tracks} />
+    <div className={'Playlist'}>
+      {headerStyle !== 'none' ?
+        headerStyle === 'compact' ?
+          <div className={'PlaylistHeader PlaylistHeaderCompact'}>
+            <h2>Saved Tracks</h2>
+          </div>
+          :
+          <div className={'PlaylistHeader PlaylistHeaderFull'}>
+            <div className={'PlaylistHeaderCover'}>
+              <img src={'https://t.scdn.co/images/3099b3803ad9496896c43f22fe9be8c4.png'} alt={'Saved Tracks'}/>
+            </div>
+            <div className={'PlaylistHeaderMeta'}>
+              <h1>Saved Tracks</h1>
+              <p>{total} Song{total === 1 ? '' : 's'}</p>
+            </div>
+            <div className={'PlaylistHeaderFilter'}>
+              {/* Filter */}
+            </div>
+          </div>
+        :
+        <></>}
+      <TrackList fullyLoaded={total <= tracks.length}
+                 loadMoreCallback={() => setOffset((currentOffset) => currentOffset + limit)}
+                 type={"saved"}
+                 tracks={tracks}/>
+    </div>
   );
 }

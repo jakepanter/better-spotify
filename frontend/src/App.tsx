@@ -57,15 +57,13 @@ function App() {
               <PlaylistPage />
             </Route>
             <Route path="/album/:id">
-              <h1>Album</h1>
               <AlbumPage />
             </Route>
             <Route path="/collections/albums">
               <Albums />
             </Route>
             <Route path="/me/tracks">
-              <h1>Saved Tracks</h1>
-              <SavedTracks />
+              <SavedTracks headerStyle={'full'}/>
             </Route>
           </Switch>
         </div>

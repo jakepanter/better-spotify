@@ -24,7 +24,7 @@ function TrackListItem(props: Props) {
           <img style={{width: "40px", height: "40px"}} src={track.album.images[2].url} alt=""/>
         </div>
         :
-        <div className={'TableCell TableCellArtwork'} style={{width: "40px", height: "40px"}}/>
+        <></>
       }
       <div className={'TableCell TableCellTitleArtist'}>
         <span className={'TableCellTitle'}>{track.name}</span>
