@@ -15,6 +15,7 @@ const limit = 20;
 // The album object itself
 interface IProps {
   id: string;
+  headerStyle: 'none' | 'compact' | 'full';
 }
 
 export interface AlbumTrack extends TrackObjectSimplified {
@@ -22,7 +23,7 @@ export interface AlbumTrack extends TrackObjectSimplified {
 }
 
 export default function Album(props: IProps) {
-  const { id } = props;
+  const { id, headerStyle } = props;
   const [album, setAlbum] = useState<AlbumObjectFull>();
   // The list of tracks of the album
   const [tracks, setTracks] = useState<AlbumTrack[]>([]);
@@ -84,6 +85,33 @@ export default function Album(props: IProps) {
   if (!album) return <p>loading...</p>;
 
   return (
-    <TrackList loadMoreCallback={() => setOffset((currentOffset) => currentOffset + limit)} type={"album"} tracks={tracks} />
+    <div className={'Playlist'}>
+      {headerStyle !== 'none' ?
+        headerStyle === 'compact' ?
+          <div className={'PlaylistHeader PlaylistHeaderCompact'}>
+            <h2>{album.artists.map((a) => a.name)[0]} — {album.name}</h2>
+          </div>
+          :
+          <div className={'PlaylistHeader PlaylistHeaderFull'}>
+            <div className={'PlaylistHeaderCover'}>
+              <img src={album.images[1].url} alt={'Album Cover'}/>
+            </div>
+            <div className={'PlaylistHeaderMeta'}>
+              <h1>{album.name}</h1>
+              <p>
+                by {album.artists.map((a) => a.name).join(', ')} — {album.tracks.total} Song{album.tracks.total === 1 ? '' : 's'}
+              </p>
+            </div>
+            <div className={'PlaylistHeaderFilter'}>
+              {/* Filter */}
+            </div>
+          </div>
+        :
+        <></>}
+      <TrackList fullyLoaded={album.tracks.total <= tracks.length}
+                 loadMoreCallback={() => setOffset((currentOffset) => currentOffset + limit)}
+                 type={'album'}
+                 tracks={tracks}/>
+    </div>
   );
 }
