@@ -9,7 +9,7 @@
     "start": "npx concurrently \"npm:start:frontend\" \"npm:start:backend\"",
     "start:frontend": "cd frontend && npm start",
     "start:backend": "cd backend && npm start",
-    "heroku-postbuild": "cd frontend && npm install && npm run build && cd ../backend && tsc"
+    "heroku-postbuild": "cd frontend && npm install && npm run build && cd ../backend && npm install && tsc"
   },
   "repository": {
     "type": "git",
