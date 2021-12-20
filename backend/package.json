@@ -11,7 +11,15 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-
+    "@typescript-eslint/eslint-plugin": "^5.1.0",
+    "@typescript-eslint/parser": "^5.1.0",
+    "dotenv": "^10.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.25.2",
+    "nodemon": "^2.0.14",
+    "typescript": "^4.4.4",
+    "ts-node": "^10.4.0"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -22,15 +30,6 @@
     "@types/spotify-web-api-node": "^5.0.3",
     "mongoose": "^6.0.12",
     "spotify-web-api-node": "^5.0.2",
-    "body-parser": "^1.19.0",
-    "@typescript-eslint/eslint-plugin": "^5.1.0",
-    "@typescript-eslint/parser": "^5.1.0",
-    "dotenv": "^10.0.0",
-    "eslint": "^7.32.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.25.2",
-    "nodemon": "^2.0.14",
-    "typescript": "^4.4.4",
-    "ts-node": "^10.4.0"
+    "body-parser": "^1.19.0"
   }
 }
