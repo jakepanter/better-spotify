@@ -1,1 +1,1 @@
-web: cd backend && tsc && node dist/index.js
+web: npm install && cd backend && tsc && node dist/index.js
