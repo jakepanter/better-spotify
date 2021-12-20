@@ -149,7 +149,7 @@ export default class App {
       return res.json(result);
     });
 
-    this.server.get('*', (req: Request, res: Response) => res.sendFile(path.join(`${__dirname}/../../frontend/build/index.html`)));
+    this.server.get('*', (req: Request, res: Response) => res.sendFile(path.join(`${__dirname}/../../frontend/build`)));
 
     // DB
     // TODO
