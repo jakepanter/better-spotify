@@ -140,5 +140,10 @@ export default class SpotifyService {
     return album.body;
   }
 
+  setVolume = async (volume: number) => {
+    const result = await this.spotifyApi.setVolume(volume);
+    return result;
+  }
+
   getAccessToken = async () => this.spotifyApi.getAccessToken();
 }
