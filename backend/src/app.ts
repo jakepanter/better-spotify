@@ -18,7 +18,7 @@ export default class App {
     this.server.use(cors());
     this.server.use(bodyParser.json());
     this.server.use(bodyParser.urlencoded({ extended: true }));
-    this.server.use(express.static(path.join(__dirname, '../frontend/build')));
+    this.server.use(express.static(path.join(__dirname, '../../frontend/build')));
 
     // Routes
     // Spotify authentication
