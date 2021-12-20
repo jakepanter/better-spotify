@@ -30,12 +30,12 @@ function TrackContextMenuWrapper(props: Props) {
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
 
   const fetchMyPlaylists = async () => {
-    const playlistsRequest: Promise<ListOfUsersPlaylistsResponse> = fetch(`${API_URL}/api/spotify/playlists`)
+    const playlistsRequest: Promise<ListOfUsersPlaylistsResponse> = fetch(`${API_URL}api/spotify/playlists`)
         .then(async (res) => {
       return await res.json();
     });
     const meRequest: Promise<CurrentUsersProfileResponse> = fetch(
-      `http://localhost:5000/api/spotify/me`
+        `${API_URL}api/spotify/me`
     ).then(async (res) => {
       return await res.json();
     });
@@ -59,7 +59,7 @@ function TrackContextMenuWrapper(props: Props) {
     //HACKY: because props.tracks contains the trackUniqueId[] we have to remove the -id at the end from each track
     const tracks = props.tracks.map((track) => track.split("-")[0]);
     await fetch(
-        `${API_URL}/api/spotify/playlist/${playlistId}/add`,
+        `${API_URL}api/spotify/playlist/${playlistId}/add`,
         { method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(tracks)

@@ -29,7 +29,7 @@ function App() {
 
   useEffect(() => {
     async function getAccessToken() {
-      const res = await fetch(`${API_URL}/api/spotify/access-token`)
+      const res = await fetch(`${API_URL}api/spotify/access-token`)
           .then((res) => res.json());
       setIsAuthorized(res !== undefined);
     }
