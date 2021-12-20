@@ -1,1 +1,1 @@
-web: cd backend && tsc && node dist/index.js
+web: cd backend && node dist/index.js
