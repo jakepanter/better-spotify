@@ -86,6 +86,26 @@ export default class App {
       return res.json(data);
     });
 
+    /**
+     * Add multiple tracks to saved tracks
+     * Accepts a list of track ids
+     */
+    this.server.get('/api/spotify/me/tracks/add', async (req: Request, res: Response) => {
+      const trackIds: string[] = (req.query.trackIds as string ?? '').split(',');
+      const data = await this.spotifyService.addToSavedTracks(trackIds);
+      return res.json(data);
+    });
+
+    /**
+     * Remove multiple tracks from saved tracks
+     * Accepts a list of track ids
+     */
+    this.server.get('/api/spotify/me/tracks/remove', async (req: Request, res: Response) => {
+      const trackIds: string[] = (req.query.trackIds as string ?? '').split(',');
+      const data = await this.spotifyService.removeFromSavedTracks(trackIds);
+      return res.json(data);
+    });
+
     this.server.get('/api/spotify/album/:albumId', async (req: Request, res: Response) => {
       const albumId = req.params.albumId as string;
       const album = await this.spotifyService.getAlbum(albumId);

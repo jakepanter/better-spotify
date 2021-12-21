@@ -8,8 +8,8 @@ import {
   TrackObjectSimplified,
 } from "spotify-types";
 import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
-import Checkbox from "../Checkbox/Checkbox";
 import "./TrackListItem.scss";
+import {API_URL} from "../../utils/constants";
 
 type Props = {
   track: TrackObjectFull | TrackObjectSimplified;
@@ -34,6 +34,7 @@ function TrackListItem(props: Props) {
   const trackUniqueId = props.track.uri + "-" + props.listIndex;
   const [selected, setSelected] = useState<boolean>(props.selected);
   const [specialKey, setSpecialKey] = useState<String | null>(null);
+  const [liked, setLiked] = useState<boolean>(!!props.liked);
 
   useEffect(() => {
     props.onSelectionChange(trackUniqueId, selected, specialKey);
@@ -57,6 +58,20 @@ function TrackListItem(props: Props) {
   const handleRightClick = (e: any) => {
     e.preventDefault();
     props.onContextMenuOpen(trackUniqueId, e.pageX, e.pageY);
+  };
+
+  const handleLikeButton = async () => {
+    if (!liked) {
+      // add
+      await fetch(`${API_URL}api/spotify/me/tracks/add?trackIds=${track.track.id}`)
+        .then((res) => res.json());
+      setLiked(true);
+    } else {
+      // remove
+      await fetch(`${API_URL}api/spotify/me/tracks/remove?trackIds=${track.track.id}`)
+        .then((res) => res.json());
+      setLiked(false);
+    }
   };
 
   return (
@@ -102,11 +117,9 @@ function TrackListItem(props: Props) {
       </div>
       {track.liked !== undefined ? (
         <div className={"TableCell TableCellLiked"}>
-          <Checkbox
-            checked={track.liked}
-            iconCodeChecked={"favorite"}
-            iconCodeUnchecked={"favorite_border"}
-          />
+          <button className={`checkbox ${liked ? 'checked' : ''}`} onClick={handleLikeButton}>
+            <span className={'material-icons'}>{liked ? 'favorite' : 'favorite_border'}</span>
+          </button>
         </div>
       ) : (
         <></>

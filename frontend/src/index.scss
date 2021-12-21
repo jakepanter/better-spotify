@@ -131,6 +131,23 @@ td, th {
   }
 }
 
+// Checkbox (re-styled button)
+.checkbox {
+  background: none;
+  border: none;
+  border-radius: 50%;
+  display: inline-block;
+  padding: $button-padding-vertical;
+
+  &:enabled {
+    cursor: pointer;
+  }
+
+  &.checked {
+    color: $color-primary;
+  }
+}
+
 // Headlines
 h1,
 h2,
