@@ -30,6 +30,7 @@
   ._InfoRSWP {
     display: flex;
     align-items: flex-end;
+    border: none;
 
     p:first-child a {
       font-size: 16px;
@@ -68,6 +69,7 @@
   @media screen and (max-width: $breakpoint-md) {
     z-index: 1;
     bottom: 80px;
+    padding: 1rem 2rem;
     .PlayerRSWP {
       width: 100%;
       max-width: 100%;
@@ -77,18 +79,53 @@
       flex-direction: row;
       justify-content: stretch;
 
+      > div {
+        flex: 1 1 auto;
+        justify-content: flex-end;
+        align-items: center;
+
+      }
+
       > * {
         width: auto;
-        flex-basis: auto;
+        flex: 0 0 auto;
       }
     }
+
     ._SliderRSWP {
-      margin: 0rem auto;
+      margin: 0rem;
       max-width: 100%;
       min-width: 100%;
+      padding: 1rem 0;
     }
   }
 
   @media screen and (max-width: $breakpoint-sm) {
+    padding: 1rem;
+    ._ContentRSWP > div:not(:first-child) {
+      max-width: 40%;
+
+      svg {
+        font-size: 20px !important;
+      }
+    }
+    ._InfoRSWP {
+      img {
+        height: 50px !important;
+        width: 50px !important;
+      }
+
+      p {
+        font-size: 11px;
+
+        &:first-child {
+          font-size: 12px;
+        }
+      }
+    }
+    .__17dhbib > div {
+      min-width: 40px;
+    }
+
   }
 }
