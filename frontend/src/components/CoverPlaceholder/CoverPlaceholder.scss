@@ -2,5 +2,5 @@
 
 .CoverPlaceholder {
   display: inline-block;
-  background: linear-gradient(0deg, $color-primary 0%, rgb(0, 0, 0) 100%);
+  background: radial-gradient(circle, #008ff7 0%, black 75%);
 }

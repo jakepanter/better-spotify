@@ -7,6 +7,7 @@ import {
   TrackObjectSimplified
 } from "spotify-types";
 import { API_URL } from '../../utils/constants';
+import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import TrackList from "../TrackList/TrackList";
 
 // The fetching limit, can be adjusted by changing this value
@@ -94,7 +95,10 @@ export default function Album(props: IProps) {
           :
           <div className={'PlaylistHeader PlaylistHeaderFull'}>
             <div className={'PlaylistHeaderCover'}>
-              <img src={album.images[1].url} alt={'Album Cover'}/>
+            {album.images !== undefined 
+              ? <img src={album.images[1].url} alt={'Album Cover'}/>
+              : <CoverPlaceholder/>
+            }
             </div>
             <div className={'PlaylistHeaderMeta'}>
               <h1>{album.name}</h1>

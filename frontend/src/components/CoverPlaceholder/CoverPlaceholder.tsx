@@ -1,8 +1,10 @@
 import React from "react";
 import "./CoverPlaceholder.scss";
 
-function CoverPlaceholder() {
-  return <div className="CoverPlaceholder cover"></div>;
+type Props = React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+
+function CoverPlaceholder(props: Props) {
+  return <div className={`CoverPlaceholder ${props.className}`}></div>;
 }
 
 export default CoverPlaceholder;

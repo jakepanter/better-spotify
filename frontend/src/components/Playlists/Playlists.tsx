@@ -44,7 +44,7 @@ class Playlists extends Component<IProps, IState> {
                 style={{ backgroundImage: `url(${playlist.images[0].url})` }}
               />
             ) : (
-              <CoverPlaceholder />
+              <CoverPlaceholder className="cover"/>
             )}
             <span className={"title"}>{playlist.name}</span>
             <span className={"artists-name"}>
