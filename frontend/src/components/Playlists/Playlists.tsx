@@ -23,6 +23,8 @@ class Playlists extends Component<IProps, IState> {
     this.state = {
       results: [],
     };
+
+    this.createNewPlaylist = this.createNewPlaylist.bind(this);
   }
 
   async componentDidMount() {
@@ -48,6 +50,7 @@ class Playlists extends Component<IProps, IState> {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         });
+        await this.componentDidMount()
     }
 
     render() {
