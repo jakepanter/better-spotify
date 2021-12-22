@@ -19,10 +19,8 @@ class Checkbox extends Component<IProps, IState> {
     super(props);
 
     if (props.checked !== undefined) {
-      console.log('defined');
       this.state = { checked: props.checked };
     } else {
-      console.log('undefined');
       this.state = { checked: false };
     }
   }
