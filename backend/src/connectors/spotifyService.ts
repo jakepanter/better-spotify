@@ -142,7 +142,7 @@ export default class SpotifyService {
 
   createPlaylist = async (
     playlistName: string,
-    options: { description: string, collaborative: boolean, public: boolean },
+    options: { description?: string, collaborative: boolean, public: boolean },
   ) => {
     const result = await this.spotifyApi.createPlaylist(playlistName, options);
     return result.body;

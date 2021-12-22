@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import {
+  CreatePlaylistResponse,
   CurrentUsersProfileResponse,
   ListOfUsersPlaylistsResponse,
   PlaylistObjectSimplified,
 } from "spotify-types";
 import {
   ControlledMenu,
+  MenuDivider,
   MenuItem,
   SubMenu,
   useMenuState,
@@ -67,6 +69,26 @@ function TrackContextMenuWrapper(props: Props) {
     );
   };
 
+  const addToNewPlaylist = async () => {
+    props.onClose();
+    //create new playlist
+    const number = myPlaylists ? myPlaylists.length + 1 : '-1';
+    const data = {
+      playlistName: "coole neue playlist #" + number,
+      options: {
+        collaborative: false,
+        public: false,
+      },
+    };
+    const newPlaylist: CreatePlaylistResponse = await fetch(`${API_URL}api/spotify/playlists`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    }).then(res => res.json());
+    //add tracks to new playlist
+    addToPlaylist(newPlaylist.id);
+  }
+
   return (
     <ControlledMenu
       {...menuProps}
@@ -75,6 +97,8 @@ function TrackContextMenuWrapper(props: Props) {
     >
       <MenuItem>Add to Queue</MenuItem>
       <SubMenu label={"Add to Playlist"}>
+        <MenuItem onClick={addToNewPlaylist}>Add to new Playlist</MenuItem>
+        <MenuDivider />
         {myPlaylists ? (
           myPlaylists.map((list) => (
             <MenuItem
