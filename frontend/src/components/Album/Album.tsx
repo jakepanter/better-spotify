@@ -94,9 +94,10 @@ export default function Album(props: IProps) {
           :
           <div className={'PlaylistHeader PlaylistHeaderFull'}>
             <div className={'PlaylistHeaderCover'}>
-              <img src={album.images[1].url} alt={'Album Cover'}/>
+              <img src={album.images[0].url} alt={'Album Cover'}/>
             </div>
             <div className={'PlaylistHeaderMeta'}>
+              <h4>Album</h4>
               <h1>{album.name}</h1>
               <p>
                 by {album.artists.map((a) => a.name).join(', ')} — {album.tracks.total} Song{album.tracks.total === 1 ? '' : 's'}
