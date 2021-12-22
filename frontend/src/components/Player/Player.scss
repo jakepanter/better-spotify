@@ -26,13 +26,45 @@
     min-width: 500px;
     margin: -1.5rem auto 0 auto;
   }
-  ._InfoRSWP{
+
+  ._InfoRSWP {
     display: flex;
     align-items: flex-end;
+
+    p:first-child a {
+      font-size: 16px;
+    }
   }
-  ._ControlsRSWP, ._ActionsRSWP{
+
+  ._ControlsRSWP, ._ActionsRSWP {
     display: flex;
     align-items: flex-start;
+  }
+
+  // Volume bar popup
+  .__3cv2gi > div {
+    box-shadow: none;
+    height: 150px;
+  }
+
+  // Volume bar background
+  .rrs__track {
+    background-color: rgba($color-default, .5) !important;
+  }
+
+  // Device popup
+  .__vr0lc5 > div {
+    box-shadow: none;
+  }
+  // Choose device section
+  .__vr0lc5 > div button{
+    font-size: 14px;
+    font-weight: $fw-base;
+    text-align: left;
+    color: $color-default
+    &_active{
+      color: green;
+    }
   }
 
   @media screen and (max-width: $breakpoint-md) {
