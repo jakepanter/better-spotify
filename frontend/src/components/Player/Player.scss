@@ -1,0 +1,22 @@
+@import './src/boilerplate.scss';
+
+.Player {
+  position: fixed;
+  bottom: 0;
+  left: 0px;
+  z-index: 2;
+  width: 100%;
+
+  @media screen and (max-width: $breakpoint-md) {
+    & {
+      left: 85px;
+    }
+  }
+
+  @media screen and (max-width: $breakpoint-sm) {
+    & {
+      left: 0;
+      bottom: 80px;
+    }
+  }
+}

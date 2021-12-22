@@ -48,13 +48,13 @@ function App() {
 
   return (
       <Router>
+        <Player />
         <div className="structure">
           <div className="structure--left-panel">
             <Sidebar />
           </div>
           <div className="structure--main">
             <Topbar editable={editable} onChangeEditable={toggleEditable} />
-            <Player />
             <Switch>
               <Route exact path="/">
                 <Dashboard editable={editable} />
