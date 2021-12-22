@@ -3,7 +3,7 @@
 .Player {
   position: fixed;
   bottom: 0;
-  left: 0px;
+  left: 0;
   z-index: 2;
   width: 100%;
   padding: 1rem;
@@ -56,27 +56,39 @@
   .__vr0lc5 > div {
     box-shadow: none;
   }
+
   // Choose device section
-  .__vr0lc5 > div button{
+  .__vr0lc5 > div button {
     font-size: 14px;
     font-weight: $fw-base;
     text-align: left;
-    color: $color-default
-    &_active{
-      color: green;
-    }
+    color: $color-default;
   }
 
   @media screen and (max-width: $breakpoint-md) {
-    & {
-      left: 85px;
+    z-index: 1;
+    bottom: 80px;
+    .PlayerRSWP {
+      width: 100%;
+      max-width: 100%;
+    }
+    ._ContentRSWP {
+      display: flex;
+      flex-direction: row;
+      justify-content: stretch;
+
+      > * {
+        width: auto;
+        flex-basis: auto;
+      }
+    }
+    ._SliderRSWP {
+      margin: 0rem auto;
+      max-width: 100%;
+      min-width: 100%;
     }
   }
 
   @media screen and (max-width: $breakpoint-sm) {
-    & {
-      left: 0;
-      bottom: 80px;
-    }
   }
 }
