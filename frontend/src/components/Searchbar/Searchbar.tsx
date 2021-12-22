@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Searchbar.scss';
 import { API_URL } from '../../utils/constants';
+import CoverPlaceholder from '../CoverPlaceholder/CoverPlaceholder';
 
 interface IProps {}
 
@@ -56,7 +57,10 @@ class Searchbar extends Component<IProps, IState> {
   render() {
     const autofill = this.state.results.map((track) =>
       <li key={track.uri} className={'SearchbarResultItem'}>
-        <img height={32} width={32} src={track.album.images[2].url} alt={'Album Cover'} />
+      {track.album !== undefined 
+        ? <img height={32} width={32} src={track.album.images[2].url} alt={'Album Cover'} />
+        : <CoverPlaceholder />
+      }
         <span>{`${track.name} by ${track.artists[0].name}`}</span>
       </li>
     );

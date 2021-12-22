@@ -9,6 +9,7 @@ import {
   SinglePlaylistResponse,
 } from "spotify-types";
 import { API_URL } from "../../utils/constants";
+import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 
 // The fetching limit, can be adjusted by changing this value
 const limit = 50;
@@ -104,7 +105,7 @@ export default function Playlist(props: IProps) {
               {playlist.images.length > 0 ? (
                 <img src={playlist.images[0].url} alt={"Playlist Cover"} />
               ) : (
-                <></>
+                <CoverPlaceholder />
               )}
             </div>
             <div className={"PlaylistHeaderMeta"}>
