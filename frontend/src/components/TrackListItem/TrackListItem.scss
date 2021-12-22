@@ -1,0 +1,17 @@
+@import "./src/boilerplate.scss";
+
+.TableRow {
+  user-select: none;
+  &:hover:not(.Selected):not(.TableHeader) {
+    background-color: $color-secondary;
+  }
+}
+.Selected {
+  background-color: $color-primary;
+}
+
+.TrackListRow:hover {
+    transition: $transition-base;
+    color: $color-default;
+    background-color: lighten($color-accent-dark, 5%);
+}

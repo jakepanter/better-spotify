@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from 'express';
-import cors from 'cors';
 import bodyParser from 'body-parser';
+import cors from 'cors';
+import path from 'path';
 import SpotifyService from './connectors/spotifyService';
 import Config from './config/variables';
 
@@ -17,6 +18,7 @@ export default class App {
     this.server.use(cors());
     this.server.use(bodyParser.json());
     this.server.use(bodyParser.urlencoded({ extended: true }));
+    this.server.use(express.static(path.join(__dirname, '../../frontend/build')));
 
     // Routes
     // Spotify authentication
@@ -53,6 +55,14 @@ export default class App {
       if (query === undefined || query === '') return res.sendStatus(400);
       const tracks = await this.spotifyService.searchTracks(query.toString());
       return res.json(tracks);
+    });
+
+    /**
+     * Get me
+     */
+    this.server.get('/api/spotify/me', async (req: Request, res: Response) => {
+      const me = await this.spotifyService.getMe();
+      return res.json(me);
     });
 
     /**
@@ -117,8 +127,18 @@ export default class App {
 
     this.server.get('/api/spotify/playlist/:playlistId', async (req: Request, res: Response) => {
       const playlistId = req.params.playlistId as string;
-      const playlist = await this.spotifyService.getPlaylist(playlistId);
+      // define what specific fields to get,
+      // for example: tracks(total) will result in {tracks: { total: x }}
+      const fields = String(req.query?.fields ?? '');
+      const playlist = await this.spotifyService.getPlaylist(playlistId, fields);
       return res.json(playlist);
+    });
+
+    this.server.post('/api/spotify/playlist/:playlistId/add', async (req: Request, res: Response) => {
+      const { playlistId } = req.params;
+      const tracks = req.body;
+      await this.spotifyService.addTracksToPlaylist(playlistId, tracks);
+      return res.status(200);
     });
 
     this.server.get('/api/spotify/playlist/:playlistId/tracks', async (req: Request, res: Response) => {
@@ -128,6 +148,14 @@ export default class App {
       const album = await this.spotifyService.getPlaylistTracks(playlistId, limit, offset);
       return res.json(album);
     });
+
+    this.server.get('/api/spotify/volume', async (req: Request, res: Response) => {
+      const volume: any = req.query?.volume ?? 100;
+      const result = await this.spotifyService.setVolume(volume);
+      return res.json(result);
+    });
+
+    this.server.get('*', (req: Request, res: Response) => res.sendFile(path.join(`${__dirname}/../../frontend/build`)));
 
     // DB
     // TODO

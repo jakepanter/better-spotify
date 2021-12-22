@@ -30,3 +30,7 @@ To deploy the application to the staging server inside HTW VPN follow these step
 * You will be prompted the servers password for user `local` twice in the process
 * Next go to [https://s-potify.fun](https://s-potify.fun/) _(from within HTW VPN)_ to check the application
 * You will most probably be warned about an unsecure connection, you need to allow this in order to view the site
+
+
+
+Credits to @gilbarbara for building a [TS Spotify Playback SDK Wrapper for React](https://github.com/gilbarbara/react-spotify-web-playback)
