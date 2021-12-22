@@ -13,7 +13,8 @@ import {
   useMenuState,
 } from "@szhsin/react-menu";
 import "@szhsin/react-menu/dist/index.css";
-import {API_URL} from "../../utils/constants";
+import { API_URL } from "../../utils/constants";
+import { createNewPlaylist } from "../../helpers/api-helpers";
 
 type Props = {
   tracks: String[];
@@ -32,12 +33,13 @@ function TrackContextMenuWrapper(props: Props) {
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
 
   const fetchMyPlaylists = async () => {
-    const playlistsRequest: Promise<ListOfUsersPlaylistsResponse> = fetch(`${API_URL}api/spotify/playlists`)
-        .then(async (res) => {
+    const playlistsRequest: Promise<ListOfUsersPlaylistsResponse> = fetch(
+      `${API_URL}api/spotify/playlists`
+    ).then(async (res) => {
       return await res.json();
     });
     const meRequest: Promise<CurrentUsersProfileResponse> = fetch(
-        `${API_URL}api/spotify/me`
+      `${API_URL}api/spotify/me`
     ).then(async (res) => {
       return await res.json();
     });
@@ -60,34 +62,28 @@ function TrackContextMenuWrapper(props: Props) {
     props.onClose();
     //HACKY: because props.tracks contains the trackUniqueId[] we have to remove the -id at the end from each track
     const tracks = props.tracks.map((track) => track.split("-")[0]);
-    await fetch(
-        `${API_URL}api/spotify/playlist/${playlistId}/add`,
-        { method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(tracks)
-        }
-    );
+    await fetch(`${API_URL}api/spotify/playlist/${playlistId}/add`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(tracks),
+    });
   };
 
   const addToNewPlaylist = async () => {
     props.onClose();
     //create new playlist
-    const number = myPlaylists ? myPlaylists.length + 1 : '-1';
-    const data = {
-      playlistName: "coole neue playlist #" + number,
-      options: {
-        collaborative: false,
-        public: false,
-      },
+    const number = myPlaylists ? myPlaylists.length + 1 : "-1";
+    const options = {
+      collaborative: false,
+      public: false,
     };
-    const newPlaylist: CreatePlaylistResponse = await fetch(`${API_URL}api/spotify/playlists`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    }).then(res => res.json());
+    const newPlaylist: CreatePlaylistResponse = await createNewPlaylist(
+      "coole neue playlist #" + number,
+      options
+    );
     //add tracks to new playlist
     addToPlaylist(newPlaylist.id);
-  }
+  };
 
   return (
     <ControlledMenu
