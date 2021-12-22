@@ -6,6 +6,34 @@
   left: 0px;
   z-index: 2;
   width: 100%;
+  padding: 1rem;
+  background: $color-background;
+
+  .PlayerRSWP {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  ._ContentRSWP {
+    order: -1;
+  }
+
+  ._SliderRSWP {
+    order: 1;
+    padding: 1rem;
+    max-width: 500px;
+    min-width: 500px;
+    margin: -1.5rem auto 0 auto;
+  }
+  ._InfoRSWP{
+    display: flex;
+    align-items: flex-end;
+  }
+  ._ControlsRSWP, ._ActionsRSWP{
+    display: flex;
+    align-items: flex-start;
+  }
 
   @media screen and (max-width: $breakpoint-md) {
     & {
