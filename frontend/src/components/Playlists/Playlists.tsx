@@ -35,10 +35,10 @@ class Playlists extends Component<IProps, IState> {
     }
 
     async createNewPlaylist() {
+      const number = this.state.results ? this.state.results.length + 1 : '-1';
       const data = {
-        playlistName: "coole neue playlist",
+        playlistName: "coole neue playlist #" + number,
         options: {
-          description: "ne",
           collaborative: false,
           public: false,
         },
