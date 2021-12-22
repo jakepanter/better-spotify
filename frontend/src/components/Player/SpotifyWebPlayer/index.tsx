@@ -576,6 +576,8 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
       }
     }
 
+    await setDevice(id, false);
+
     return { currentDeviceId, devices };
   }
 

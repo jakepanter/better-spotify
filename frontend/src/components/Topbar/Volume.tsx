@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import { API_URL } from '../../utils/constants';
 import Slider from "rc-slider";
 import {API_URL} from "../../utils/constants";
 
@@ -43,7 +42,7 @@ class Volume extends Component<IProps, IState> {
     }
 
     setVolume = (value: number) => {
-        fetch(`${API_URL}api/spotify/volume?volume=${value}`).then(res => res.json());
+        return fetch(`${API_URL}api/spotify/volume?volume=${value}`, {method: 'PUT'});
     }
 
     render() {

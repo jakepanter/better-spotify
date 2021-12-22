@@ -6,14 +6,12 @@ export async function checkTracksStatus(tracks: string | string[]) {
   const trackIds = Array.isArray(tracks) ? tracks : [tracks];
 
   return fetch(`${API_URL}api/spotify/me/tracks/contains?trackIds=${trackIds}`)
-      .then((res) => res.json());
+      .then(res => res.json()).then(data => data.body);
 }
 
 export async function getDevices() {
-  const result = await fetch(`${API_URL}api/spotify/me/player/devices`);
-  let r = result.json();
-  console.log(r);
-  return r;
+  return fetch(`${API_URL}api/spotify/me/player/devices`)
+      .then(res => res.json()).then(data => data.body);
 }
 
 export async function getPlaybackState() {
@@ -21,13 +19,12 @@ export async function getPlaybackState() {
       .then(d => {
         if (d.status === 204) return null;
         return d.json();
-      });
+      }).then(data => data.body);
 }
 
 export async function pause() {
-  return fetch(`${API_URL}api/spotify/me/player/pause`, {
-    method: 'PUT'
-  }).then((res) => res.json());
+  return fetch(`${API_URL}api/spotify/me/player/pause`, { method: 'PUT' })
+      .then(res => res.json()).then(data => data.body);
 }
 
 export async function play(
@@ -52,19 +49,17 @@ export async function play(
   return fetch(`${API_URL}api/spotify/me/player/play`, {
     body,
     method: 'PUT'
-  }).then((res) => res.json());
+  }).then((res) => res.json()).then(data => data.body);
 }
 
 export async function previous() {
-  return fetch(`${API_URL}api/spotify/me/player/previous`, {
-    method: 'POST'
-  }).then((res) => res.json());
+  return fetch(`${API_URL}api/spotify/me/player/previous`, { method: 'POST' })
+      .then(res => res.json()).then(data => data.body);
 }
 
 export async function next() {
-  return fetch(`${API_URL}api/spotify/me/player/next`, {
-    method: 'POST'
-  }).then((res) => res.json());
+  return fetch(`${API_URL}api/spotify/me/player/next`, { method: 'POST' })
+      .then((res) => res.json()).then(data => data.body);
 }
 
 export async function removeTracks(tracks: string | string[]) {
@@ -92,8 +87,12 @@ export async function seek(position: number) {
 }
 
 export async function setDevice(deviceId: string, shouldPlay?: boolean | undefined) {
+  const body = JSON.stringify({ device_ids: [deviceId], play: shouldPlay })
   return fetch(`${API_URL}api/spotify/me/player`, {
-    body: JSON.stringify({ device_ids: [deviceId], play: shouldPlay }),
+    body,
+    headers: {
+      'Content-Type': 'application/json'
+    },
     method: 'PUT',
   });
 }

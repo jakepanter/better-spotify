@@ -25,7 +25,6 @@ class Player extends Component<IProps, IState> {
     async fetchToken() {
         const token  = await fetch(`${API_URL}api/spotify/access-token`).then(res => res.json());
         if (token) {
-            console.log(token)
             this.setState({
                 token: token
             })
@@ -38,7 +37,7 @@ class Player extends Component<IProps, IState> {
             {this.state.token &&
                 <SpotifyWebPlayer
                     token={this.state.token}
-                    uris={['spotify:track:2aibwv5hGXSgw7Yru8IYTO']}
+                    uris={['spotify:playlist:37i9dQZF1EOedu9gJ5DTVp']}
                     name={'Better Spotify 🚀'}
                 />
             }
