@@ -8,6 +8,7 @@ import {
   TrackObjectSimplified,
 } from "spotify-types";
 import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
+import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import "./TrackListItem.scss";
 import {API_URL} from "../../utils/constants";
 
@@ -80,7 +81,8 @@ function TrackListItem(props: Props) {
       onClick={(e) => handleClick(e)}
       onContextMenu={(e) => handleRightClick(e)}
     >
-      {track.album !== undefined ? (
+      {track.album !== undefined &&
+      track.album.available_markets !== undefined ? (
         <div className={"TableCell TableCellArtwork"}>
           <img
             src={track.album.images[2].url}
@@ -89,11 +91,9 @@ function TrackListItem(props: Props) {
           />
         </div>
       ) : (
-        <div
-          className={"TableCell TableCellArtwork"}
-          style={{ width: "40px", height: "40px" }}
-        />
+        <CoverPlaceholder />
       )}
+
       <div className={"TableCell TableCellTitleArtist"}>
         <span className={"TableCellTitle"}>{track.name}</span>
         <span className={"TableCellArtist"}>
