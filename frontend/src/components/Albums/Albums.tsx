@@ -1,14 +1,15 @@
-import React, {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
-import {UsersSavedAlbumsResponse, SavedAlbumObject} from "spotify-types";
-import {API_URL} from '../../utils/constants';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { UsersSavedAlbumsResponse, SavedAlbumObject } from "spotify-types";
+import { API_URL } from "../../utils/constants";
 import "../../cards.scss";
+import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 
 export default function Albums() {
   const [albums, setAlbums] = useState<UsersSavedAlbumsResponse>();
   const [items, setItems] = useState<SavedAlbumObject[]>([]);
   const [next, setNext] = useState<string>(
-      `${API_URL}api/spotify/collections/albums`
+    `${API_URL}api/spotify/collections/albums`
   );
 
   useEffect(() => {
@@ -17,7 +18,7 @@ export default function Albums() {
 
   async function fetchData(url: string) {
     const data: UsersSavedAlbumsResponse = await fetch(url).then((res) =>
-        res.json()
+      res.json()
     );
     setAlbums(data);
     const arr: SavedAlbumObject[] = [...items, ...data.items];
@@ -27,7 +28,7 @@ export default function Albums() {
   //fetch next albums when you reach the bottom of the current list
   const onScroll = (e: any) => {
     const bottom =
-        e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+      e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
     if (bottom && albums) {
       const limit = albums.limit;
       const offset = albums.offset + limit;
@@ -39,23 +40,29 @@ export default function Albums() {
   if (!albums || !items) return <p>loading...</p>;
   const savedAlbums = items.map((item) => {
     return (
-        <li className={"column"} key={item.album.id}>
-          <Link to={`/album/${item.album.id}`}>
-            <div className={"cover"} style={{backgroundImage: `url(${item.album.images[0].url}`}}>
-            </div>
-            <span className={"title"}>{item.album.name}</span>
-            <span className={"artists-name"}>{item.album.artists[0].name}</span>
-          </Link>
-        </li>
+      <li className={"column"} key={item.album.id}>
+        <Link to={`/album/${item.album.id}`}>
+          {item.album.images.length > 0 ? (
+            <div
+              className={"cover"}
+              style={{ backgroundImage: `url(${item.album.images[0].url}` }}
+            />
+          ) : (
+            <CoverPlaceholder />
+          )}
+          <span className={"title"}>{item.album.name}</span>
+          <span className={"artists-name"}>{item.album.artists[0].name}</span>
+        </Link>
+      </li>
     );
-  })
+  });
 
   return (
-      <div style={{overflow: 'hidden auto'}}>
-        <h2>Albums</h2>
-        <div className={"overview"} onScroll={onScroll}>
-          <ul className={"overview-items"}>{savedAlbums}</ul>
-        </div>
+    <div style={{ overflow: "hidden auto" }}>
+      <h2>Albums</h2>
+      <div className={"overview"} onScroll={onScroll}>
+        <ul className={"overview-items"}>{savedAlbums}</ul>
       </div>
+    </div>
   );
 }
