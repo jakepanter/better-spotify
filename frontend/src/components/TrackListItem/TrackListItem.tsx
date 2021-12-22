@@ -1,4 +1,6 @@
-import React from "react";
+/* eslint-disable no-unused-vars */
+//anyone know how to satisfy eslint and the unused prop function variables????
+import React, { useEffect, useState } from "react";
 import {
   AlbumObjectSimplified,
   ArtistObjectSimplified,
@@ -8,7 +10,7 @@ import {
 import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
 import Checkbox from "../Checkbox/Checkbox";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
-//import SpotifyWebPlayer from "react-spotify-web-playback";
+import "./TrackListItem.scss";
 
 type Props = {
   track: TrackObjectFull | TrackObjectSimplified;
@@ -18,24 +20,65 @@ type Props = {
   added_at?: string;
   liked?: boolean;
   album?: AlbumObjectSimplified;
+  listIndex: number;
+  selected: boolean;
+  onSelectionChange: (
+    trackUniqueId: String,
+    isSelected: boolean,
+    specialKey: String | null
+  ) => void;
+  onContextMenuOpen: (trackUri: String, x: number, y: number) => void;
 };
 
 function TrackListItem(props: Props) {
   const track = props;
+  const trackUniqueId = props.track.uri + "-" + props.listIndex;
+  const [selected, setSelected] = useState<boolean>(props.selected);
+  const [specialKey, setSpecialKey] = useState<String | null>(null);
+
+  useEffect(() => {
+    props.onSelectionChange(trackUniqueId, selected, specialKey);
+  }, [selected]);
+
+  useEffect(() => {
+    setSelected(props.selected);
+  }, [props.selected]);
+
+  const handleClick = (e: any) => {
+    if (e.shiftKey) {
+      setSpecialKey("shift");
+    } else if (e.ctrlKey) {
+      setSpecialKey("ctrl");
+    } else {
+      setSpecialKey(null);
+    }
+    setSelected(!selected);
+  };
+
+  const handleRightClick = (e: any) => {
+    e.preventDefault();
+    props.onContextMenuOpen(trackUniqueId, e.pageX, e.pageY);
+  };
 
   return (
-    <div className={"TableRow"}>
-      <div className={"TableCell TableCellArtwork"}>
-        {track.album !== undefined ? (
+    <div
+      className={`TableRow ${selected ? "Selected" : ""}`}
+      onClick={(e) => handleClick(e)}
+      onContextMenu={(e) => handleRightClick(e)}
+    >
+      {track.album !== undefined &&
+      track.album.available_markets !== undefined ? (
+        <div className={"TableCell TableCellArtwork"}>
           <img
-            style={{ width: "40px", height: "40px" }}
             src={track.album.images[2].url}
             alt=""
+            style={{ width: "40px", height: "40px" }}
           />
-        ) : (
-          <CoverPlaceholder />
-        )}
-      </div>
+        </div>
+      ) : (
+        <CoverPlaceholder />
+      )}
+
       <div className={"TableCell TableCellTitleArtist"}>
         <span className={"TableCellTitle"}>{track.name}</span>
         <span className={"TableCellArtist"}>
