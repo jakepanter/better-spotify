@@ -7,7 +7,9 @@ import {
   TrackObjectFull,
   TrackObjectSimplified,
 } from "spotify-types";
+import { addToPlaylist } from "../../helpers/api-helpers";
 import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
+import Button from "../Button/Button";
 import Checkbox from "../Checkbox/Checkbox";
 import "./TrackListItem.scss";
 
@@ -57,6 +59,12 @@ function TrackListItem(props: Props) {
   const handleRightClick = (e: any) => {
     e.preventDefault();
     props.onContextMenuOpen(trackUniqueId, e.pageX, e.pageY);
+  };
+
+  const handleAddToPlaylist = (e: any) => {
+    console.log(e);
+    e.stopPropagation();
+    props.onContextMenuOpen(trackUniqueId, e.clientX, e.clientY);
   };
 
   return (
@@ -111,6 +119,14 @@ function TrackListItem(props: Props) {
       ) : (
         <></>
       )}
+      <div className="TableCell TableCellActions">
+        <Button
+          simple
+          icon="playlist_add"
+          className="material-icons"
+          onClick={handleAddToPlaylist}
+        />
+      </div>
     </div>
   );
 }

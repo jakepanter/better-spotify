@@ -144,6 +144,7 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
             <div className={"TableCell TableCellLiked"}>Liked</div>
+            <div className={"TableCell TableCellActions"}></div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
@@ -188,6 +189,7 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellAddedAt"}>Added</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
             <div className={"TableCell TableCellLiked"}>Liked</div>
+            <div className={"TableCell TableCellActions"}></div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
@@ -233,6 +235,7 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellAlbum"}>Album</div>
             <div className={"TableCell TableCellAddedAt"}>Added</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
+            <div className={"TableCell TableCellActions"}></div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {

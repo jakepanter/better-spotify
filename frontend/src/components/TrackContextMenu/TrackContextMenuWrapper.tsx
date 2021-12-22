@@ -11,7 +11,8 @@ import {
   useMenuState,
 } from "@szhsin/react-menu";
 import "@szhsin/react-menu/dist/index.css";
-import {API_URL} from "../../utils/constants";
+import { API_URL } from "../../utils/constants";
+import { addToPlaylist } from "../../helpers/api-helpers";
 
 type Props = {
   tracks: String[];
@@ -30,12 +31,13 @@ function TrackContextMenuWrapper(props: Props) {
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
 
   const fetchMyPlaylists = async () => {
-    const playlistsRequest: Promise<ListOfUsersPlaylistsResponse> = fetch(`${API_URL}api/spotify/playlists`)
-        .then(async (res) => {
+    const playlistsRequest: Promise<ListOfUsersPlaylistsResponse> = fetch(
+      `${API_URL}api/spotify/playlists`
+    ).then(async (res) => {
       return await res.json();
     });
     const meRequest: Promise<CurrentUsersProfileResponse> = fetch(
-        `${API_URL}api/spotify/me`
+      `${API_URL}api/spotify/me`
     ).then(async (res) => {
       return await res.json();
     });
@@ -54,17 +56,11 @@ function TrackContextMenuWrapper(props: Props) {
     toggleMenu(true);
   }, [props.positionX, props.positionY]);
 
-  const addToPlaylist = async (playlistId: String) => {
+  const handleAddToPlaylist = async (playlistId: string) => {
     props.onClose();
     //HACKY: because props.tracks contains the trackUniqueId[] we have to remove the -id at the end from each track
     const tracks = props.tracks.map((track) => track.split("-")[0]);
-    await fetch(
-        `${API_URL}api/spotify/playlist/${playlistId}/add`,
-        { method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(tracks)
-        }
-    );
+    await addToPlaylist(playlistId, tracks);
   };
 
   return (
@@ -80,7 +76,7 @@ function TrackContextMenuWrapper(props: Props) {
             <MenuItem
               key={list.id}
               onClick={() => {
-                addToPlaylist(list.id);
+                handleAddToPlaylist(list.id);
               }}
             >
               {list.name}
