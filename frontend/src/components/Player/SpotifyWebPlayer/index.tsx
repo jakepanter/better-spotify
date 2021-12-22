@@ -189,7 +189,7 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
     const shouldPlay = (changedURIs && isPlaying) || !!(isReady && (autoPlay || playProp));
 
     if (canPlay && shouldPlay) {
-      await play(token, { deviceId: currentDeviceId, offset, ...playOptions });
+      await play({ deviceId: currentDeviceId, offset, ...playOptions });
 
       /* istanbul ignore else */
       if (!isPlaying) {
@@ -270,7 +270,7 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
       }
 
       if (syncExternalDevice && !uris) {
-        const player: SpotifyPlayerStatus = await getPlaybackState(token);
+        const player: SpotifyPlayerStatus = await getPlaybackState();
 
         /* istanbul ignore else */
         if (player && player.is_playing && player.device.id !== deviceId) {
@@ -301,7 +301,7 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
 
   private handleChangeRange = async (position: number) => {
     const { track } = this.state;
-    const { callback, token } = this.props;
+    const { callback } = this.props;
     let progress = 0;
 
     try {
@@ -309,7 +309,7 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
 
       if (this.isExternalPlayer) {
         progress = Math.round(track.durationMs * percentage);
-        await seek(token, progress);
+        await seek(progress);
 
         this.updateState({
           position,
@@ -358,9 +358,8 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
     try {
       /* istanbul ignore else */
       if (this.isExternalPlayer) {
-        const { token } = this.props;
 
-        await previous(token);
+        await previous();
         this.syncTimeout = window.setTimeout(() => {
           this.syncDevice();
         }, 300);
@@ -377,9 +376,8 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
     try {
       /* istanbul ignore else */
       if (this.isExternalPlayer) {
-        const { token } = this.props;
 
-        await next(token);
+        await next();
         this.syncTimeout = window.setTimeout(() => {
           this.syncDevice();
         }, 300);
@@ -394,12 +392,12 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
 
   private handleClickDevice = async (deviceId: string) => {
     const { isUnsupported } = this.state;
-    const { autoPlay, persistDeviceSelection, token } = this.props;
+    const { autoPlay, persistDeviceSelection } = this.props;
 
     this.updateState({ currentDeviceId: deviceId });
 
     try {
-      await setDevice(token, deviceId);
+      await setDevice(deviceId);
 
       /* istanbul ignore else */
       if (persistDeviceSelection) {
@@ -410,7 +408,7 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
       if (isUnsupported) {
         await this.syncDevice();
 
-        const player: SpotifyPlayerStatus = await getPlaybackState(token);
+        const player: SpotifyPlayerStatus = await getPlaybackState();
 
         if (player && !player.is_playing && autoPlay) {
           await this.togglePlay(true);
@@ -454,9 +452,7 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
     if (isInitializationError) {
       nextStatus = STATUS.UNSUPPORTED;
 
-      const { token } = this.props;
-
-      ({ devices = [] } = await getDevices(token));
+      ({ devices = [] } = await getDevices());
     }
 
     if (!isInitializationError && !isPlaybackError) {
@@ -565,8 +561,8 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
   };
 
   private async initializeDevices(id: string) {
-    const { persistDeviceSelection, token } = this.props;
-    const { devices } = await getDevices(token);
+    const { persistDeviceSelection } = this.props;
+    const { devices } = await getDevices();
     let currentDeviceId = id;
 
     if (persistDeviceSelection) {
@@ -630,11 +626,10 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
   };
 
   private setVolume = async (volume: number) => {
-    const { token } = this.props;
 
     /* istanbul ignore else */
     if (this.isExternalPlayer) {
-      await setVolume(token, Math.round(volume * 100));
+      await setVolume(Math.round(volume * 100));
       await this.syncDevice();
     } else if (this.player) {
       await this.player.setVolume(volume);
@@ -649,10 +644,9 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
     }
 
     const { deviceId } = this.state;
-    const { token } = this.props;
 
     try {
-      const player: SpotifyPlayerStatus = await getPlaybackState(token);
+      const player: SpotifyPlayerStatus = await getPlaybackState();
       let track = this.emptyTrack;
 
       if (!player) {
@@ -753,16 +747,16 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
 
   private toggleOffset = async () => {
     const { currentDeviceId, isPlaying } = this.state;
-    const { offset, token, uris } = this.props;
+    const { offset, uris } = this.props;
 
     if (isPlaying && typeof offset === 'number' && Array.isArray(uris)) {
-      await play(token, { deviceId: currentDeviceId, offset, uris });
+      await play({ deviceId: currentDeviceId, offset, uris });
     }
   };
 
   private togglePlay = async (init = false) => {
     const { currentDeviceId, isPlaying, needsUpdate } = this.state;
-    const { offset, token, uris } = this.props;
+    const { offset, uris } = this.props;
     const shouldInitialize = init || needsUpdate;
     const playOptions = this.getPlayOptions(uris);
 
@@ -770,13 +764,13 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
       /* istanbul ignore else */
       if (this.isExternalPlayer) {
         if (!isPlaying) {
-          await play(token, {
+          await play({
             deviceId: currentDeviceId,
             offset,
             ...(shouldInitialize ? playOptions : undefined),
           });
         } else {
-          await pause(token);
+          await pause();
 
           this.updateState({ isPlaying: false });
         }
@@ -793,7 +787,7 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
           (!playerState && !!(playOptions.context_uri || playOptions.uris)) ||
           (shouldInitialize && playerState && playerState.paused)
         ) {
-          await play(token, {
+          await play({
             deviceId: currentDeviceId,
             offset,
             ...(shouldInitialize ? playOptions : undefined),

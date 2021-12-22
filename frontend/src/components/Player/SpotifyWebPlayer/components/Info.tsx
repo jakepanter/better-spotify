@@ -153,13 +153,13 @@ export default class Info extends React.PureComponent<Props, State> {
 
   private handleClickIcon = async () => {
     const { isSaved } = this.state;
-    const { onFavoriteStatusChange, token, track } = this.props;
+    const { onFavoriteStatusChange, track } = this.props;
 
     if (isSaved) {
-      await removeTracks(token, track.id);
+      await removeTracks(track.id);
       this.updateState({ isSaved: false });
     } else {
-      await saveTracks(token, track.id);
+      await saveTracks(track.id);
       this.updateState({ isSaved: true });
     }
 
@@ -171,7 +171,7 @@ export default class Info extends React.PureComponent<Props, State> {
       return;
     }
 
-    const { onFavoriteStatusChange, token, track, updateSavedStatus } = this.props;
+    const { onFavoriteStatusChange, track, updateSavedStatus } = this.props;
 
     if (updateSavedStatus && track.id) {
       updateSavedStatus((newStatus: boolean) => {
@@ -179,7 +179,7 @@ export default class Info extends React.PureComponent<Props, State> {
       });
     }
 
-    const status = await checkTracksStatus(token, track.id);
+    const status = await checkTracksStatus(track.id);
     const [isSaved] = status || [false];
 
     this.updateState({ isSaved });

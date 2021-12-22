@@ -25,6 +25,7 @@ class Player extends Component<IProps, IState> {
     async fetchToken() {
         const token  = await fetch(`${API_URL}api/spotify/access-token`).then(res => res.json());
         if (token) {
+            console.log(token)
             this.setState({
                 token: token
             })
