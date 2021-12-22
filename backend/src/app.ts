@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import path from 'path';
 import SpotifyService from './connectors/spotifyService';
 import Config from './config/variables';
 
@@ -17,6 +18,7 @@ export default class App {
     this.server.use(cors());
     this.server.use(bodyParser.json());
     this.server.use(bodyParser.urlencoded({ extended: true }));
+    this.server.use(express.static(path.join(__dirname, '../../frontend/build')));
 
     // Routes
     // Spotify authentication
@@ -200,6 +202,9 @@ export default class App {
       const result = await this.spotifyService.setDevice(device_ids, { play });
       return res.json(result);
     });
+
+    // Serve static frontend files
+    this.server.get('*', (req: Request, res: Response) => res.sendFile(path.join(`${__dirname}/../../frontend/build`)));
 
     // Start
     this.server.listen(Config.general.port, () => {

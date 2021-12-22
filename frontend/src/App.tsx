@@ -29,9 +29,8 @@ function App() {
 
   useEffect(() => {
     async function getAccessToken() {
-      const res = await fetch(
-        `http://localhost:5000/api/spotify/access-token`
-      ).then((res) => res.json());
+      const res = await fetch(`${API_URL}api/spotify/access-token`)
+          .then((res) => res.json());
       setIsAuthorized(res !== undefined);
     }
     getAccessToken();
@@ -66,14 +65,12 @@ function App() {
                 <PlaylistPage />
               </Route>
               <Route path="/album/:id">
-                <h1>Album</h1>
                 <AlbumPage />
               </Route>
               <Route path="/collections/albums">
                 <Albums />
               </Route>
               <Route path="/me/tracks">
-                <h1>Saved Tracks</h1>
                 <SavedTracks headerStyle={'full'}/>
               </Route>
             </Switch>
