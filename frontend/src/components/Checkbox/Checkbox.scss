@@ -1,0 +1,25 @@
+@import './src/boilerplate';
+
+.Checkbox {
+  align-items: center;
+  cursor: pointer;
+  display: inline-flex;
+  user-select: none;
+
+  .CheckboxElement {
+    display: none;
+  }
+
+  .CheckboxIcon {
+    color: $gray-dark;
+  }
+
+  &.checked .CheckboxIcon {
+    color: $checkbox-icon;
+  }
+
+  .CheckboxLabel {
+    color: $color-default;
+    margin-left: 4px;
+  }
+}

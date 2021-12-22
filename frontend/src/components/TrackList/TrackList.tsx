@@ -1,99 +1,270 @@
-import React from "react";
+import "./TrackList.scss";
+import { SavedTrackObject, TrackObjectFull } from "spotify-types";
+import { AlbumTrack } from "../Album/Album";
+import { PlaylistTrack } from "../Playlist/Playlist";
+import TrackContextMenuWrapper from "../TrackContextMenu/TrackContextMenuWrapper";
+import React, { useEffect, useState } from "react";
 import TrackListItem from "../TrackListItem/TrackListItem";
-import './TrackList.scss';
-import { AlbumObjectFull, PlaylistObjectFull, SavedTrackObject } from "spotify-types";
 
-type Props = {
-  type: 'album',
-  id_tracklist: String,
-  data: AlbumObjectFull,
-} | {
-  type: 'playlist',
-  id_tracklist: String,
-  data: PlaylistObjectFull,
-} |
-{
-  type: 'saved',
-  id_tracklist: String,
-  data: SavedTrackObject[],
+type Props =
+  | {
+      type: "album";
+      tracks: AlbumTrack[];
+      loadMoreCallback: () => void;
+      fullyLoaded: boolean;
+    }
+  | {
+      type: "playlist";
+      tracks: PlaylistTrack[];
+      loadMoreCallback: () => void;
+      fullyLoaded: boolean;
+    }
+  | {
+      type: "saved";
+      tracks: SavedTrackObject[];
+      loadMoreCallback: () => void;
+      fullyLoaded: boolean;
+    };
+
+type ContextMenuType = {
+  show: boolean;
+  x: number | null;
+  y: number | null;
+  clickedTrackUri: String;
+};
+
+function scrollHandler(
+  e: React.UIEvent<HTMLDivElement>,
+  loadMoreCallback: () => void
+) {
+  if (
+    e.currentTarget.scrollTop + e.currentTarget.clientHeight >=
+    e.currentTarget.scrollHeight
+  ) {
+    loadMoreCallback();
+  }
 }
 
 function TrackList(props: Props) {
-    const { type } = props;
-    const { id_tracklist } = props;
-    //Hier koennen Unterschiedliche angelegt werden. Dabei muss aber auch TrackListItem angepasst werden!
+  const { type, loadMoreCallback, fullyLoaded } = props;
+  // stores currently selected track uris with their list index: (uri-listIndex, e.g spotify:track:HJG6FHmf7HG-3)
+  // selectedTracks must have unique IDs to avoid weird behaviour when the same song is in a playlist multiple times
+  const [selectedTracks, setSelected] = useState<String[]>([]);
+  const [contextMenu, setContextMenu] = useState<ContextMenuType>({
+    show: false,
+    x: null,
+    y: null,
+    clickedTrackUri: "",
+  });
 
-    //ALBUM TRACKLIST
-    if(type==="album") {
-      const album = props.data;
+  useEffect(() => {
+    // close context menu when a new track is selected
+    if (
+      selectedTracks.length === 0 ||
+      (selectedTracks.length === 1 &&
+        selectedTracks[0] !== contextMenu.clickedTrackUri)
+    ) {
+      setContextMenu({ show: false, x: null, y: null, clickedTrackUri: "" });
+    }
+  }, [selectedTracks]);
 
-      return(
-        <>
-          <div className={"Playlist"}>
-            <h2>{album.name}</h2>
-            <h3>{album.artists.map((artist) => artist.name).join(", ")}</h3>
-            <table>
-                <tr>
-                    <th></th>
-                    <th>Title</th>
-                    <th>Artists</th>
-                    <th>Duration</th>
-                </tr>
+  const handleSelectionChange = (
+    trackUniqueId: String,
+    selected: boolean,
+    specialKey: String | null
+  ) => {
+    if (selected) {
+      if (!specialKey) setSelected([trackUniqueId]);
+      if (specialKey === "shift") addSelected(trackUniqueId);
+    } else removeSelected(trackUniqueId);
+  };
 
-                {album?.tracks.items.map((item) => {
-                    return <TrackListItem id_track={item.id} id_tracklist={id_tracklist} key={item.id} type={type}/>;
-                })}
+  const handleContextMenuOpen = (
+    trackUniqueId: String,
+    x: number,
+    y: number
+  ) => {
+    setContextMenu({
+      show: true,
+      x: x,
+      y: y,
+      clickedTrackUri: trackUniqueId,
+    });
+    if (!selectedTracks.some((track) => track === trackUniqueId))
+      setSelected([trackUniqueId]);
+  };
 
-            </table>
+  const handleContextMenuClose = () => {
+    setContextMenu({ ...contextMenu, show: false });
+  };
+
+  const addSelected = (trackUniqueId: String) => {
+    setSelected([...selectedTracks, trackUniqueId]);
+  };
+  const removeSelected = (trackUniqueId: String) => {
+    const arr: String[] = selectedTracks.filter(
+      (track) => track !== trackUniqueId
+    );
+    setSelected(arr);
+  };
+  /*
+  const resetSelected = () => {
+    setSelected([]);
+  };
+  */
+
+  const isTrackSelected = (
+    track: TrackObjectFull | AlbumTrack,
+    index: number
+  ) => {
+    const trackUniqueId = `${track.uri}-${index}`;
+    return selectedTracks.some((track) => track === trackUniqueId);
+  };
+
+  return (
+    <>
+      {contextMenu.show && contextMenu.x && contextMenu.y && (
+        <TrackContextMenuWrapper
+          tracks={selectedTracks}
+          positionX={contextMenu.x}
+          positionY={contextMenu.y}
+          onClose={handleContextMenuClose}
+        />
+      )}
+
+      {type === "album" && (
+        <div
+          className={"Tracklist"}
+          onScroll={(e: React.UIEvent<HTMLDivElement>) =>
+            scrollHandler(e, loadMoreCallback)
+          }
+        >
+          <div className={"TableHeader TableRow"}>
+            <div className={"TableCell TableCellArtwork"} />
+            <div className={"TableCell TableCellTitleArtist"}>Title</div>
+            <div className={"TableCell TableCellDuration"}>Duration</div>
+            <div className={"TableCell TableCellLiked"}>Liked</div>
           </div>
-        </>
-      )
-    }
+          <div className={"TableBody"}>
+            {props.tracks.map((item, index) => {
+              const track = item;
+              return (
+                <TrackListItem
+                  track={track}
+                  name={track.name}
+                  artists={track.artists}
+                  duration_ms={track.duration_ms}
+                  liked={track.is_saved}
+                  key={type + "-track-" + track.id + "-" + index}
+                  listIndex={index}
+                  selected={isTrackSelected(track, index)}
+                  onSelectionChange={handleSelectionChange}
+                  onContextMenuOpen={handleContextMenuOpen}
+                />
+              );
+            })}
+            {!fullyLoaded ? (
+              <div className={"PlaylistLoader"}>
+                <div className={"loader"} />
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+      )}
 
-    //PLAYLIST TRACKLIST
-    else if(type === "playlist") {
-      const playlist = props.data;
+      {type === "playlist" && (
+        <div
+          className={"Tracklist"}
+          onScroll={(e: React.UIEvent<HTMLDivElement>) =>
+            scrollHandler(e, loadMoreCallback)
+          }
+        >
+          <div className={"TableHeader TableRow"}>
+            <div className={"TableCell TableCellArtwork"} />
+            <div className={"TableCell TableCellTitleArtist"}>Title</div>
+            <div className={"TableCell TableCellAlbum"}>Album</div>
+            <div className={"TableCell TableCellAddedAt"}>Added</div>
+            <div className={"TableCell TableCellDuration"}>Duration</div>
+            <div className={"TableCell TableCellLiked"}>Liked</div>
+          </div>
+          <div className={"TableBody"}>
+            {props.tracks.map((item, index) => {
+              const { track } = item;
+              return (
+                <TrackListItem
+                  track={track}
+                  name={track.name}
+                  artists={track.artists}
+                  duration_ms={track.duration_ms}
+                  album={track.album}
+                  added_at={item.added_at}
+                  liked={item.is_saved}
+                  key={type + "-track-" + track.id + "-" + index}
+                  listIndex={index}
+                  selected={isTrackSelected(track, index)}
+                  onSelectionChange={handleSelectionChange}
+                  onContextMenuOpen={handleContextMenuOpen}
+                />
+              );
+            })}
+            {!fullyLoaded ? (
+              <div className={"PlaylistLoader"}>
+                <div className={"loader"} />
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+      )}
 
-      return (
-          <>
-            <div className={"Playlist"}>
-              <h2>{playlist.name}</h2>
-              <table>
-                  <tr>
-                      <th></th>
-                      <th>Title</th>
-                      <th>Artists</th>
-                      <th>Duration</th>
-                  </tr>
-                  {playlist?.tracks.items.map((item) => {
-                      return <TrackListItem id_track={item.track.id} id_tracklist={id_tracklist} key={item.track.id} type={type}/>;
-                  })}
-              </table>
-            </div>
-          </>
-      );
-    }
-
-    //SAVED TRACKS TRACKLIST
-    else if(type === "saved") {
-      const saved = props.data;
-
-      return(
-        <>
-          {saved.map((item) => {
-              return <TrackListItem id_track={item.track.id} id_tracklist={id_tracklist} key={item.track.id} type={type}/>
-          })}    
-        </>
-      )
-    }
-    else{
-        return(
-            <>
-            </>
-        )
-    }
+      {type === "saved" && (
+        <div
+          className={"Tracklist"}
+          onScroll={(e: React.UIEvent<HTMLDivElement>) =>
+            scrollHandler(e, loadMoreCallback)
+          }
+        >
+          <div className={"TableHeader TableRow"}>
+            <div className={"TableCell TableCellArtwork"} />
+            <div className={"TableCell TableCellTitleArtist"}>Title</div>
+            <div className={"TableCell TableCellAlbum"}>Album</div>
+            <div className={"TableCell TableCellAddedAt"}>Added</div>
+            <div className={"TableCell TableCellDuration"}>Duration</div>
+          </div>
+          <div className={"TableBody"}>
+            {props.tracks.map((item, index) => {
+              const { track } = item;
+              return (
+                <TrackListItem
+                  track={track}
+                  name={track.name}
+                  artists={track.artists}
+                  duration_ms={track.duration_ms}
+                  album={track.album}
+                  added_at={item.added_at}
+                  key={type + "-track-" + track.id + "-" + index}
+                  listIndex={index}
+                  selected={isTrackSelected(track, index)}
+                  onSelectionChange={handleSelectionChange}
+                  onContextMenuOpen={handleContextMenuOpen}
+                />
+              );
+            })}
+            {!fullyLoaded ? (
+              <div className={"PlaylistLoader"}>
+                <div className={"loader"} />
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
 }
 
-
-
- export default TrackList;
+export default TrackList;

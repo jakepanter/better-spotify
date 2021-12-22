@@ -1,0 +1,29 @@
+@import "boilerplate";
+
+.AuthorizeButton {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.Player {
+  position: fixed;
+  bottom: 0;
+  left: 90px;
+  right: 0;
+  z-index: 1;
+
+  @media screen and (max-width: $breakpoint-md) {
+    & {
+      left: 85px;
+    }
+  }
+
+  @media screen and (max-width: $breakpoint-sm) {
+    & {
+      left: 0;
+      bottom: 80px;
+    }
+  }
+}

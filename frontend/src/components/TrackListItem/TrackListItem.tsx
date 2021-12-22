@@ -1,87 +1,118 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { TrackObjectFull } from "spotify-types";
-//import SpotifyWebPlayer from "react-spotify-web-playback";
+/* eslint-disable no-unused-vars */
+//anyone know how to satisfy eslint and the unused prop function variables????
+import React, { useEffect, useState } from "react";
+import {
+  AlbumObjectSimplified,
+  ArtistObjectSimplified,
+  TrackObjectFull,
+  TrackObjectSimplified,
+} from "spotify-types";
+import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
+import Checkbox from "../Checkbox/Checkbox";
+import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
+import "./TrackListItem.scss";
 
 type Props = {
-  id_track: String;
-  id_tracklist: String;
-  type: String;
+  track: TrackObjectFull | TrackObjectSimplified;
+  name: string;
+  artists: ArtistObjectSimplified[];
+  duration_ms: number;
+  added_at?: string;
+  liked?: boolean;
+  album?: AlbumObjectSimplified;
+  listIndex: number;
+  selected: boolean;
+  onSelectionChange: (
+    trackUniqueId: String,
+    isSelected: boolean,
+    specialKey: String | null
+  ) => void;
+  onContextMenuOpen: (trackUri: String, x: number, y: number) => void;
 };
 
-interface ReqBody {
-  context_uri: string | undefined,
-  offset?: {
-    uri: string | undefined
-  },
-  position_ms: number | undefined
-}
-
 function TrackListItem(props: Props) {
-  const id = props.id_track;
-  const id_tracklist= props.id_tracklist;
-  const type = props.type;
-  const track_uri = "spotify:track:" + id;
-  var requestOptions;
-  const sendRequest = useCallback(async () => {
-    // POST request using fetch inside useEffect React hook
-    var context_uri;
-    if(type==="album"){
-      context_uri = "spotify:album:" + id_tracklist;
-    } else if (type==="playlist") {
-      context_uri = "spotify:playlist:" + id_tracklist;
-    } else if (type==="saved") {
-      context_uri = id_tracklist + ":collection";
-    }
+  const track = props;
+  const trackUniqueId = props.track.uri + "-" + props.listIndex;
+  const [selected, setSelected] = useState<boolean>(props.selected);
+  const [specialKey, setSpecialKey] = useState<String | null>(null);
 
-    let reqBody : ReqBody;
-    if (type === 'saved') {
-      reqBody = {
-        context_uri: context_uri,
-        position_ms: 0
-      };
-    } else {
-      reqBody = {
-        context_uri: context_uri,
-        offset: {
-          uri: track_uri
-        },
-        position_ms: 0
-      };
-    }
-
-    requestOptions = {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(reqBody)
-    };
-    fetch('http://localhost:5000/api/spotify/me/player/play', requestOptions)
-        .then(response => response.json()) 
-  }, []);
-
-  const [track, setTrack] = useState<TrackObjectFull>();
   useEffect(() => {
-    async function fetchData() {
-      const data: TrackObjectFull = await fetch(
-        `http://localhost:5000/api/spotify/track/${id}`
-      ).then((res) => res.json());
-      setTrack(data);
-    }
-    fetchData();
-  }, [id]);
+    props.onSelectionChange(trackUniqueId, selected, specialKey);
+  }, [selected]);
 
-  if (!track) return <p>loading...</p>;
+  useEffect(() => {
+    setSelected(props.selected);
+  }, [props.selected]);
+
+  const handleClick = (e: any) => {
+    if (e.shiftKey) {
+      setSpecialKey("shift");
+    } else if (e.ctrlKey) {
+      setSpecialKey("ctrl");
+    } else {
+      setSpecialKey(null);
+    }
+    setSelected(!selected);
+  };
+
+  const handleRightClick = (e: any) => {
+    e.preventDefault();
+    props.onContextMenuOpen(trackUniqueId, e.pageX, e.pageY);
+  };
 
   return (
-    <>
-        <tr>
-            <td><img onClick={sendRequest} style={{width: "40px", height: "40px"}} src={track.album.images[2].url} alt=""/></td>
-            <td>{track.name}</td>
-            <td>{track.artists.map((artist) => artist.name).join(", ")}</td>
-            <td>{track.duration_ms/1000}</td>
-        </tr>
-    </>
+    <div
+      className={`TableRow ${selected ? "Selected" : ""}`}
+      onClick={(e) => handleClick(e)}
+      onContextMenu={(e) => handleRightClick(e)}
+    >
+      {track.album !== undefined &&
+      track.album.available_markets !== undefined ? (
+        <div className={"TableCell TableCellArtwork"}>
+          <img
+            src={track.album.images[2].url}
+            alt=""
+            style={{ width: "40px", height: "40px" }}
+          />
+        </div>
+      ) : (
+        <CoverPlaceholder />
+      )}
+
+      <div className={"TableCell TableCellTitleArtist"}>
+        <span className={"TableCellTitle"}>{track.name}</span>
+        <span className={"TableCellArtist"}>
+          {track.artists.map((artist) => artist.name).join(", ")}
+        </span>
+      </div>
+      {track.album !== undefined ? (
+        <div className={"TableCell TableCellAlbum"}>{track.album.name}</div>
+      ) : (
+        <></>
+      )}
+      {track.added_at !== undefined ? (
+        <div className={"TableCell TableCellAddedAt"}>
+          {formatTimeDiff(new Date(track.added_at).getTime(), Date.now())}
+        </div>
+      ) : (
+        <></>
+      )}
+      <div className={"TableCell TableCellDuration"}>
+        {formatTimestamp(track.duration_ms)}
+      </div>
+      {track.liked !== undefined ? (
+        <div className={"TableCell TableCellLiked"}>
+          <Checkbox
+            checked={track.liked}
+            iconCodeChecked={"favorite"}
+            iconCodeUnchecked={"favorite_border"}
+          />
+        </div>
+      ) : (
+        <></>
+      )}
+    </div>
   );
 }
-
 
 export default TrackListItem;

@@ -35,7 +35,7 @@ export default class SpotifyService {
 
   // Routes
   // Get the url to start the authorization
-  getAuthorizationUrl = () => this.spotifyApi.createAuthorizeURL(SpotifyService.scopes, '')
+  getAuthorizationUrl = () => this.spotifyApi.createAuthorizeURL(SpotifyService.scopes, '', true)
 
   // Finish the authorization
   authorizationCodeGrant = async (code: string) => {
@@ -86,6 +86,11 @@ export default class SpotifyService {
     return tracks.body;
   }
 
+  getMe = async () => {
+    const me = await this.spotifyApi.getMe();
+    return me.body;
+  }
+
   getTrack = async (id: string) => {
     const track = await this.spotifyApi.getTrack(id);
     return track.body;
@@ -96,65 +101,49 @@ export default class SpotifyService {
     return album.body;
   }
 
+  getAlbumTracks = async (id: string, limit: number, offset: number) => {
+    const options: any = { limit, offset };
+    const album = await this.spotifyApi.getAlbumTracks(id, options);
+    return album.body;
+  }
+
   getMySavedAlbums = async (limit: number, offset: number) => {
     const options: any = { limit, offset };
     const albums = await this.spotifyApi.getMySavedAlbums(options);
     return albums.body;
   }
 
-  getMyPlaylists = async () => {
-    const result = await this.spotifyApi.getUserPlaylists();
+  isSaved = async (trackIds: string[]) => {
+    const data = await this.spotifyApi.containsMySavedTracks(trackIds);
+    return data.body;
+  }
+
+  getMyPlaylists = async (limit: number, offset: number) => {
+    const options: any = { limit, offset };
+    const result = await this.spotifyApi.getUserPlaylists(options);
     return result.body;
   }
 
-  getPlaylist = async (playlistId: string) => {
-    const result = await this.spotifyApi.getPlaylist(playlistId);
+  addTracksToPlaylist = async (playlistId: string, tracks: string[]) => {
+    // TODO: error handling
+    await this.spotifyApi.addTracksToPlaylist(playlistId, tracks);
+  }
+
+  getPlaylist = async (playlistId: string, fields: string) => {
+    const result = await this.spotifyApi.getPlaylist(playlistId, { fields });
     return result.body;
   }
 
-  setTrack = async (options: Object) => {
-    const result = await this.spotifyApi.play(options);
-    return result.body;
+  getPlaylistTracks = async (id: string, limit: number, offset: number) => {
+    const options: any = { limit, offset };
+    const album = await this.spotifyApi.getPlaylistTracks(id, options);
+    return album.body;
   }
 
-  getMe = async () => {
-    const result = await this.spotifyApi.getMe();
-    return result.body;
+  setVolume = async (volume: number) => {
+    const result = await this.spotifyApi.setVolume(volume);
+    return result;
   }
 
   getAccessToken = async () => this.spotifyApi.getAccessToken();
-
-  playSavedTrack = async (trackId: string) => {
-    let position = null;
-    let offset = 0;
-    while (position === null) {
-      // eslint-disable-next-line no-await-in-loop
-      const tracks = await this.getMySavedTracks(50, offset);
-      const trackIds = tracks.items.map((item) => item.track.id);
-
-      if (trackIds.indexOf(trackId) > 0) position = trackIds.indexOf(trackId) + offset;
-      if (trackIds.length < 50) position = 0;
-
-      offset += 50;
-    }
-
-    console.log(position);
-    const myDetails = await this.getMe();
-    const savedTracksUri = `${myDetails.uri}:collection`;
-    const reqBody = {
-      context_uri: savedTracksUri,
-      position_ms: 0,
-    };
-
-    await this.spotifyApi.setVolume(0);
-    const response = await this.setTrack(reqBody);
-    const skips = [];
-    for (let i = 0; i < position; i += 1) {
-      // eslint-disable-next-line no-await-in-loop
-      skips.push(this.spotifyApi.skipToNext());
-    }
-    Promise.all(skips);
-    await this.spotifyApi.setVolume(100);
-    return response;
-  }
 }

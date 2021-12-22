@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { UsersSavedAlbumsResponse, SavedAlbumObject } from "spotify-types";
-import { API_URL } from '../../utils/constants';
+import { API_URL } from "../../utils/constants";
+import "../../cards.scss";
+import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 
 export default function Albums() {
   const [albums, setAlbums] = useState<UsersSavedAlbumsResponse>();
@@ -36,18 +38,31 @@ export default function Albums() {
   };
 
   if (!albums || !items) return <p>loading...</p>;
+  const savedAlbums = items.map((item) => {
+    return (
+      <li className={"column"} key={item.album.id}>
+        <Link to={`/album/${item.album.id}`}>
+          {item.album.images.length > 0 ? (
+            <div
+              className={"cover"}
+              style={{ backgroundImage: `url(${item.album.images[0].url}` }}
+            />
+          ) : (
+            <CoverPlaceholder />
+          )}
+          <span className={"title"}>{item.album.name}</span>
+          <span className={"artists-name"}>{item.album.artists[0].name}</span>
+        </Link>
+      </li>
+    );
+  });
+
   return (
-    <div onScroll={onScroll} style={{ height: "500px", overflowY: "scroll" }}>
-      {items.map((item) => {
-        return (
-          <div key={item.album.id}>
-            <Link to={`/album/${item.album.id}`}>
-              <img src={item.album.images[2].url} alt="" />
-              <p>{item.album.name}</p>
-            </Link>
-          </div>
-        );
-      })}
+    <div style={{ overflow: "hidden auto" }}>
+      <h2>Albums</h2>
+      <div className={"overview"} onScroll={onScroll}>
+        <ul className={"overview-items"}>{savedAlbums}</ul>
+      </div>
     </div>
   );
 }

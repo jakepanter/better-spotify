@@ -4,8 +4,9 @@ import {
   ListOfUsersPlaylistsResponse,
   PlaylistObjectSimplified,
 } from "spotify-types";
-import "./Playlists.scss";
-import { API_URL } from '../../utils/constants';
+import "../../cards.scss";
+import { API_URL } from "../../utils/constants";
+import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 
 interface IProps {}
 
@@ -35,27 +36,32 @@ class Playlists extends Component<IProps, IState> {
     if (this.state.results.length === 0) return <p>loading...</p>;
     const playlists = this.state.results.map((playlist) => {
       return (
-        <Link to={`/playlist/${playlist.id}`} key={playlist.id}>
-          <li>
-            <img
-              src={playlist.images[playlist.images.length - 1].url}
-              alt="Playlist Image"
-              width={64}
-              height={64}
-            />
-            <span>{playlist.name}</span>
-          </li>
-        </Link>
+        <li className={"column"} key={playlist.id}>
+          <Link to={`/playlist/${playlist.id}`}>
+            {playlist.images.length > 0 ? (
+              <div
+                className={"cover"}
+                style={{ backgroundImage: `url(${playlist.images[0].url})` }}
+              />
+            ) : (
+              <CoverPlaceholder className="cover"/>
+            )}
+            <span className={"title"}>{playlist.name}</span>
+            <span className={"artists-name"}>
+              by {playlist.owner.display_name}
+            </span>
+          </Link>
+        </li>
       );
     });
 
     return (
-      <>
+      <div style={{ overflow: "hidden auto" }}>
         <h2>My Playlists</h2>
-        <div className={"Playlists"}>
-          <ul>{playlists}</ul>
+        <div className={"overview"}>
+          <ul className={"overview-items"}>{playlists}</ul>
         </div>
-      </>
+      </div>
     );
   }
 }
