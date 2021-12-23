@@ -47,13 +47,13 @@ function App() {
 
   return (
       <Router>
+        <Player />
         <div className="structure">
           <div className="structure--left-panel">
             <Sidebar />
           </div>
           <div className="structure--main">
             <Topbar editable={editable} onChangeEditable={toggleEditable} />
-            <Player />
             <Switch>
               <Route exact path="/">
                 <Dashboard editable={editable} />
@@ -65,14 +65,12 @@ function App() {
                 <PlaylistPage />
               </Route>
               <Route path="/album/:id">
-                <h1>Album</h1>
                 <AlbumPage />
               </Route>
               <Route path="/collections/albums">
                 <Albums />
               </Route>
               <Route path="/me/tracks">
-                <h1>Saved Tracks</h1>
                 <SavedTracks headerStyle={'full'}/>
               </Route>
             </Switch>
