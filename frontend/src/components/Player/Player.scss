@@ -78,7 +78,6 @@
       display: flex;
       flex-direction: row;
       justify-content: stretch;
-      margin-right: 40px;
 
       > div {
         flex: 1 1 auto;
@@ -90,6 +89,10 @@
       > * {
         width: auto;
         flex: 0 0 auto;
+      }
+
+      ._ControlsRSWP {
+        margin-right: 40px;
       }
     }
 
