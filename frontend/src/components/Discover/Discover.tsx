@@ -7,7 +7,7 @@ import {
 } from "spotify-types";
 import './Discover.scss';
 import {API_URL} from "../../utils/constants";
-import {Link} from "react-router-dom";
+import {NavLink, Link} from "react-router-dom";
 
 interface IProps {
 }
@@ -34,6 +34,7 @@ class Discover extends Component<IProps, IState> {
         const recentPlayedTracksData: UsersRecentlyPlayedTracksResponse = await fetch(
             `${API_URL}api/spotify/player/recently-played?limit=5`
         ).then((res) => res.json());
+        console.log(recentPlayedTracksData);
         // Save to state
         this.setState((state) => ({...state, recentTracks: recentPlayedTracksData.items}));
 
@@ -90,7 +91,10 @@ class Discover extends Component<IProps, IState> {
             <>
                 <div className={"recentlyPlayedTrackList"}>
                     <h3>Recently listened to</h3>
-                    <button style={{float: "right"}}>View More</button>
+                    <button>
+                    <NavLink to="/song-history">View More</NavLink>
+                    </button>
+
                     <ul>{recentlyPlayedList}</ul>
                 </div>
 

@@ -1,7 +1,7 @@
 import React from "react";
 import TrackListItem from "../TrackListItem/TrackListItem";
 import './TrackList.scss';
-import { SavedTrackObject } from "spotify-types";
+import {PlayHistoryObject, SavedTrackObject, TrackObjectFull} from "spotify-types";
 import {AlbumTrack} from "../Album/Album";
 import {PlaylistTrack} from "../Playlist/Playlist";
 
@@ -16,6 +16,10 @@ type Props = {
 } | {
   type: 'saved'
   tracks: SavedTrackObject[];
+  loadMoreCallback: () => void;
+} | {
+  type: 'songhistory'
+  tracks: PlayHistoryObject[];
   loadMoreCallback: () => void;
 }
 
@@ -113,7 +117,33 @@ function TrackList(props: Props) {
         </div>
       </div>
     )
-  } else {
+  }
+  else if(type==="songhistory"){
+    const recentPlayedTracks = props.tracks;
+
+    return (
+        <div className={"Playlist"} onScroll={(e: React.UIEvent<HTMLDivElement>) => scrollHandler(e, loadMoreCallback)}>
+          <div className={'TableHeader TableRow'}>
+            <div className={'TableCell TableCellArtwork'}/>
+            <div className={'TableCell TableCellTitleArtist'}>Title</div>
+            <div className={'TableCell TableCellAlbum'}>Album</div>
+            <div className={'TableCell TableCellDuration'}>Duration</div>
+          </div>
+          <div className={'TableBody'}>
+            {recentPlayedTracks.map((item) => {
+                const track = item.track as TrackObjectFull;
+              return <TrackListItem track={track}
+                                    name={track.name}
+                                    artists={track.artists}
+                                    duration_ms={track.duration_ms}
+                                    album={track.album}
+                                    key={item.played_at} />;
+            })}
+          </div>
+        </div>
+    )
+  }
+  else {
     return (
       <>
       </>

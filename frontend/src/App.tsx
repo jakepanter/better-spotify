@@ -12,6 +12,7 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import Discover from "./components/Discover/Discover";
+import SongHistory from "./components/SongHistory/SongHistory";
 
 
 function authorize() {
@@ -71,6 +72,10 @@ function App() {
             <Route path="/discover">
               <h1>Discover</h1>
               <Discover/>
+            </Route>
+            <Route path="/song-history">
+              <h1>Song History</h1>
+              <SongHistory/>
             </Route>
           </Switch>
         </div>
