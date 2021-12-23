@@ -20,6 +20,7 @@ class Searchbar extends Component<IProps, IState> {
     };
 
     this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.playSong = this.playSong.bind(this);
   }
 
   async handleKeyUp(e: any) {
@@ -50,9 +51,7 @@ class Searchbar extends Component<IProps, IState> {
   }
 
   async playSong(e: React.MouseEvent<HTMLElement>) {
-    // POST request using fetch inside useEffect React hook
     const { dataset } = e.currentTarget;
-    console.log('uri: ', dataset.id);
     const body = {
       uris: [dataset.id],
       position_ms: 0
@@ -62,7 +61,9 @@ class Searchbar extends Component<IProps, IState> {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
-    }).then(response => response.json())
+    }).then(response => response.json());
+
+    this.setState({value: '', results: []});
   }
 
   search() {
@@ -72,7 +73,7 @@ class Searchbar extends Component<IProps, IState> {
 
   render() {
     const autofill = this.state.results.map((track) =>
-      <li key={track.uri} className={'SearchbarResultItem'} onClick={this.playSong}>
+      <li key={track.uri} data-id={track.uri} className={'SearchbarResultItem'} onClick={this.playSong}>
       {track.album !== undefined 
         ? <img height={32} width={32} src={track.album.images[2].url} alt={'Album Cover'} />
         : <CoverPlaceholder />
