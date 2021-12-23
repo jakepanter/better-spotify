@@ -109,7 +109,7 @@ function TrackListItem(props: Props) {
 
   return (
     <div
-      className={`TableRow ${selected ? "Selected" : ""}`}
+      className={`Pointer TableRow ${selected ? "Selected" : ""}`}
       onClick={(e) => handleClick(e)}
       onContextMenu={(e) => handleRightClick(e)}
     >

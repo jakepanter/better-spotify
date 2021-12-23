@@ -1,5 +1,9 @@
 @import "./src/boilerplate.scss";
 
+.Pointer {
+  cursor: pointer;
+}
+
 .TableRow {
   user-select: none;
   &:hover:not(.Selected):not(.TableHeader) {
