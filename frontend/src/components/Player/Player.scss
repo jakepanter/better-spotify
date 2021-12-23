@@ -1,0 +1,135 @@
+@import './src/boilerplate.scss';
+
+.Player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  padding: 1rem;
+  background: $color-background;
+
+  .PlayerRSWP {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  ._ContentRSWP {
+    order: -1;
+  }
+
+  ._SliderRSWP {
+    order: 1;
+    padding: 1rem;
+    max-width: 500px;
+    min-width: 500px;
+    margin: -1.5rem auto 0 auto;
+  }
+
+  ._InfoRSWP {
+    display: flex;
+    align-items: flex-end;
+    border: none;
+
+    p:first-child a {
+      font-size: 16px;
+    }
+  }
+
+  ._ControlsRSWP, ._ActionsRSWP {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  // Volume bar popup
+  .__3cv2gi > div {
+    box-shadow: none;
+    height: 150px;
+  }
+
+  // Volume bar background
+  .rrs__track {
+    background-color: rgba($color-default, .5) !important;
+  }
+
+  // Device popup
+  .__vr0lc5 > div {
+    box-shadow: none;
+  }
+
+  // Choose device section
+  .__vr0lc5 > div button {
+    font-size: 14px;
+    font-weight: $fw-base;
+    text-align: left;
+    color: $color-default;
+  }
+
+  @media screen and (max-width: $breakpoint-md) {
+    z-index: 1;
+    bottom: 80px;
+    padding: 1rem 2rem;
+    .PlayerRSWP {
+      width: 100%;
+      max-width: 100%;
+    }
+    ._ContentRSWP {
+      display: flex;
+      flex-direction: row;
+      justify-content: stretch;
+
+      > div {
+        flex: 1 1 auto;
+        justify-content: flex-end;
+        align-items: center;
+
+      }
+
+      > * {
+        width: auto;
+        flex: 0 0 auto;
+      }
+
+      ._ControlsRSWP {
+        margin-right: 40px;
+      }
+    }
+
+    ._SliderRSWP {
+      margin: 0rem;
+      max-width: 100%;
+      min-width: 100%;
+      padding: 1rem 0;
+    }
+  }
+
+  @media screen and (max-width: $breakpoint-sm) {
+    padding: 1rem;
+    ._ContentRSWP > div:not(:first-child) {
+      max-width: 40%;
+
+      svg {
+        font-size: 20px !important;
+      }
+    }
+    ._InfoRSWP {
+      img {
+        height: 50px !important;
+        width: 50px !important;
+      }
+
+      p {
+        font-size: 11px;
+
+        &:first-child {
+          font-size: 12px;
+        }
+      }
+    }
+    .__17dhbib > div {
+      min-width: 40px;
+    }
+
+  }
+}
