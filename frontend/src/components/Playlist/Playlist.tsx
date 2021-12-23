@@ -9,6 +9,7 @@ import {
   SinglePlaylistResponse,
 } from "spotify-types";
 import { API_URL } from "../../utils/constants";
+import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 
 // The fetching limit, can be adjusted by changing this value
 const limit = 50;
@@ -35,7 +36,7 @@ export default function Playlist(props: IProps) {
   async function fetchPlaylistData() {
     //this only fetches the total number of tracks, cover image and owner of the playlist, not the actual tracks
     const data: SinglePlaylistResponse = await fetch(
-      `${API_URL}api/spotify/playlist/${id}?fields=tracks(total)&fields=images&fields=owner`
+      `${API_URL}api/spotify/playlist/${id}?fields=tracks(total)&fields=images&fields=owner&fields=name`
     ).then((res) => res.json());
 
     // Save album data
@@ -104,7 +105,7 @@ export default function Playlist(props: IProps) {
               {playlist.images.length > 0 ? (
                 <img src={playlist.images[0].url} alt={"Playlist Cover"} />
               ) : (
-                <></>
+                <CoverPlaceholder />
               )}
             </div>
             <div className={"PlaylistHeaderMeta"}>
