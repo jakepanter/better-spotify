@@ -61,7 +61,8 @@ function TrackListItem(props: Props) {
     props.onContextMenuOpen(trackUniqueId, e.pageX, e.pageY);
   };
 
-  const handleLikeButton = async () => {
+  const handleLikeButton = async (e: any) => {
+    e.stopPropagation();
     if (!liked) {
       // add
       await fetch(`${API_URL}api/spotify/me/tracks/add?trackIds=${track.track.id}`)
