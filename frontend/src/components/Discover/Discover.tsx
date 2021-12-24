@@ -9,6 +9,9 @@ import './Discover.scss';
 import {API_URL} from "../../utils/constants";
 import {NavLink, Link} from "react-router-dom";
 
+//TODO
+// Filter vor available country? for new releases
+
 interface IProps {
 }
 
@@ -34,7 +37,6 @@ class Discover extends Component<IProps, IState> {
         const recentPlayedTracksData: UsersRecentlyPlayedTracksResponse = await fetch(
             `${API_URL}api/spotify/player/recently-played?limit=5`
         ).then((res) => res.json());
-        console.log(recentPlayedTracksData);
         // Save to state
         this.setState((state) => ({...state, recentTracks: recentPlayedTracksData.items}));
 
@@ -44,7 +46,7 @@ class Discover extends Component<IProps, IState> {
         const newReleasedAlbums: ListOfNewReleasesResponse = await fetch(
             `${API_URL}api/spotify/browse/new-releases?limit=5`
         ).then((res) => res.json());
-
+        console.log(newReleasedAlbums);
         this.setState((state) => ({...state, newReleases: newReleasedAlbums.albums.items}));
 
 
@@ -55,52 +57,54 @@ class Discover extends Component<IProps, IState> {
         const recentlyPlayedList = this.state.recentTracks.map((recentlyPlayedTrack) => {
             const track = recentlyPlayedTrack.track as TrackObjectFull;
             return (
-                <Link to={`/album/${track.album.id}`} key={recentlyPlayedTrack.played_at}>
-                    <li>
-                        <img
-                            src={track.album.images[0].url}
-                            alt="Playlist Image"
-                            width={64}
-                            height={64}
-                        />
-                        <span style={{color: "white"}}>{track.name}</span>
-                    </li>
-                </Link>
+                <li className={"column"} key={recentlyPlayedTrack.played_at}>
+                    <Link to={`/album/${track.album.id}`}>
+                        <div className={"cover"} style={{
+                            backgroundImage: `url(${track.album.images[0].url})`
+                        }}>
+                        </div>
+                        <span className={"title"}>{track.name}</span>
+                    </Link>
+                </li>
             );
         });
 
         if (this.state.newReleases.length === 0) return <p>loading...</p>;
-        const tmp = this.state.newReleases.map((newReleasedAlbum) => {
+        const releases = this.state.newReleases.map((newReleasedAlbum) => {
             return (
-                <Link to={`/album/${newReleasedAlbum.id}`} key={newReleasedAlbum.id}>
-                    <li>
-                        <img
-                            src={newReleasedAlbum.images[0].url}
-                            alt="Playlist Image"
-                            width={64}
-                            height={64}
-                        />
-                        <span style={{color: "white"}}>{newReleasedAlbum.name}</span>
-                    </li>
-                </Link>
+                <li className="column" key={newReleasedAlbum.id}>
+                    <Link to={`/album/${newReleasedAlbum.id}`}>
+                        <div className={"cover"} style={{
+                            backgroundImage: `url(${newReleasedAlbum.images[0].url})`
+                        }}>
+                        </div>
+                        <span className="title">{newReleasedAlbum.name}</span>
+                    </Link>
+                </li>
             );
-        })
+        });
 
 
         return (
             <>
+                {/*Recently Played Tracks*/}
                 <div className={"recentlyPlayedTrackList"}>
                     <h3>Recently listened to</h3>
-                    <button>
                     <NavLink to="/song-history">View More</NavLink>
-                    </button>
+                    <div className={"overview"}>
+                        <ul className={"overview-items"}
+                            style={{height: '40vh', overflow: 'hidden'}}>{recentlyPlayedList}</ul>
+                    </div>
 
-                    <ul>{recentlyPlayedList}</ul>
                 </div>
 
+                {/*New Releases*/}
                 <div className={"newReleases"}>
                     <h3>New Releases</h3>
-                    <ul>{tmp}</ul>
+                    <NavLink to="/new-releases">View More</NavLink>
+                    <div className={"overview"}>
+                        <ul className={"overview-items"} style={{height: '40vh', overflow: 'hidden'}}>{releases}</ul>
+                    </div>
                 </div>
             </>
         );

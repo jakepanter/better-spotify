@@ -13,10 +13,10 @@ export default function SongHistory() {
 // The album object itself
     const [recentTracks, setRecentTracks] = useState<PlayHistoryObject[]>([]);
     const [limitNumber, setLimitNumber] = useState<number>(0);
-    const [beforeTimestamp, setBeforeTimestamp] = useState<Number>(1640132271077);
+    const [beforeTimestamp, setBeforeTimestamp] = useState<Number>(Date.now());
 
     async function fetchRecentTracksData(before: Number) {
-        if (limitNumber > 2) return;
+        if (limitNumber > 10) return;
         const recentPlayedTracksData: UsersRecentlyPlayedTracksResponse = await fetch(
             `${API_URL}api/spotify/player/recently-played?before=${before}&limit=${defaultLimit}`
         ).then((res) => res.json());
