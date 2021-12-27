@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import Devices from './Devices';
 import Volume from './Volume';
+import Shuffle from './Shuffle';
 
 import { px, styled } from '../styles';
 import { Locale, StyledProps, StylesOptions } from '../types/common';
@@ -62,6 +63,15 @@ function Actions(props: Props) {
 
   return (
     <Wrapper style={{ h: styles.height }}>
+        <Shuffle
+            currentDeviceId={currentDeviceId}
+            deviceId={deviceId}
+            onClickDevice={onClickDevice}
+            active={false}
+            playerPosition={playerPosition}
+            styles={styles}
+            title={'Shuffle'}
+        />
       {currentDeviceId && (
         <Volume
           playerPosition={playerPosition}
