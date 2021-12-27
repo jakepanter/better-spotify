@@ -47,7 +47,6 @@ function App() {
 
   return (
       <Router>
-        <Player />
         <div className="structure">
           <div className="structure--left-panel">
             <Sidebar />
@@ -74,6 +73,7 @@ function App() {
                 <SavedTracks headerStyle={'full'}/>
               </Route>
             </Switch>
+            <Player />
           </div>
         </div>
       </Router>
