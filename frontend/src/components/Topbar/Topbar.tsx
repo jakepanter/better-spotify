@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import "./Topbar.scss";
 import Searchbar from "../Searchbar/Searchbar";
 import 'rc-slider/assets/index.css';
@@ -24,6 +24,18 @@ const Topbar = (props: IProps) => {
         props.onChangeEditable();
     }
 
+    const [image, setImage] = useState<string>('');
+
+    useEffect(() => {
+        async function getProfilePicture() {
+            const res = await fetch(`${API_URL}api/spotify/me`)
+                .then((res) => res.json());
+            if (res.images && res.images.length > 0) setImage(res.images[0].url)
+            console.log(image)
+        }
+        getProfilePicture();
+    }, []);
+
   return (
       <div className={'top-bar'}>
           <div className={'top-bar-item search'}>
@@ -39,9 +51,14 @@ const Topbar = (props: IProps) => {
               <button className={'settings-button'} onClick={authorize}>
                   <span className={'material-icons'}>login</span>
               </button>
-              <button className={'settings-button'}>
-                  <span className={'material-icons'}>account_circle</span>
-              </button>
+              {image != ''
+                  ? <button className={'settings-button profile-image'}>
+                      <img src={image} alt={'profile'} />
+                  </button>
+                  : <button className={'settings-button'}>
+                      <span className={'material-icons'}>account_circle</span>
+                  </button>
+              }
               <button className={'settings-button'}>
                   <span className={'material-icons'}>notifications</span>
               </button>
