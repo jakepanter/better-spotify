@@ -50,7 +50,7 @@ export function getMergedStyles(styles: StylesProps | undefined): StylesOptions 
     bgColor: '#131218',
     color: '#E0E0E0',
     errorColor: '#D83010',
-    height: 80,
+    height: 70,
     loaderColor: '#E0E0E0',
     loaderSize: 32,
     sliderColor: '#008FF7',
