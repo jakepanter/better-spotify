@@ -156,4 +156,9 @@ export default class SpotifyService {
   }
 
   getAccessToken = async () => this.spotifyApi.getAccessToken();
+
+  setTrack = async (options: Object) => {
+    const result = await this.spotifyApi.play(options);
+    return result.body;
+  }
 }
