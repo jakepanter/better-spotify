@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Searchbar.scss';
 import { API_URL } from '../../utils/constants';
+import CoverPlaceholder from '../CoverPlaceholder/CoverPlaceholder';
 
 interface IProps {}
 
@@ -56,18 +57,24 @@ class Searchbar extends Component<IProps, IState> {
   render() {
     const autofill = this.state.results.map((track) =>
       <li key={track.uri} className={'SearchbarResultItem'}>
-        <img height={32} width={32} src={track.album.images[2].url} alt={'Album Cover'} />
+      {track.album !== undefined 
+        ? <img height={32} width={32} src={track.album.images[2].url} alt={'Album Cover'} />
+        : <CoverPlaceholder />
+      }
         <span>{`${track.name} by ${track.artists[0].name}`}</span>
       </li>
     );
 
     return (
       <div className={'Searchbar'}>
-        <input className={'SearchbarInput'} type={'search'} placeholder={'Search...'} onKeyUp={this.handleKeyUp} />
-        <button className={'SearchbarButton'} onClick={this.search}>Search</button>
-        <ul className={'SearchbarResults'}>
-          {autofill}
-        </ul>
+        <span className={'material-icons search-icon'}>search</span>
+        <input className={'SearchbarInput'} type={'search'} placeholder={'Artist, Albums, Songs ...'} onKeyUp={this.handleKeyUp} />
+        {this.state.results.length > 0
+        ? <ul className={'SearchbarResults'}>
+              {autofill}
+            </ul>
+        : ''}
+
       </div>
     );
   }

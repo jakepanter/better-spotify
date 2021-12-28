@@ -3,13 +3,14 @@
 
 .structure {
   display: flex;
+  height: 100vh;
   width: 100%;
   background: $color-background;
 
   &--left-panel {
     background: $color-accent-dark;
     border-right: 0.5px solid rgba($color-default, 0.1);
-    padding: $padding-horizontal $padding-vertical;
+    padding: 1rem $padding-vertical $padding-horizontal $padding-vertical;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -27,8 +28,9 @@
     height: 100vh;
     flex: 1 1 auto;
     overflow: hidden auto;
-    padding: 64px $padding-horizontal;
+    padding: 0 $padding-horizontal;
     z-index: 0;
+    scrollbar-width: none;
   }
 
   @media screen and(max-width: $breakpoint-md) {
@@ -131,6 +133,24 @@ td, th {
   }
 }
 
+// Checkbox (re-styled button)
+.checkbox {
+  background: none;
+  border: none;
+  border-radius: 50%;
+  color: $color-default;
+  display: inline-block;
+  padding: $button-padding-vertical;
+
+  &:enabled {
+    cursor: pointer;
+  }
+
+  &.checked {
+    color: $color-primary;
+  }
+}
+
 // Headlines
 h1,
 h2,
@@ -171,4 +191,26 @@ h5 {
 
 h6 {
   font-size: $fz-h6;
+}
+// Scrollbar
+/* Works on Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba($color-default, 0.5) rgba($color-default, 0.1);
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background:  rgba($color-default, 0.1);
+  border-radius: $border-radius;
+
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba($color-default, 0.5);
+  border-radius: $border-radius;
 }

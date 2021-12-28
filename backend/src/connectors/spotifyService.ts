@@ -86,6 +86,11 @@ export default class SpotifyService {
     return tracks.body;
   }
 
+  getMe = async () => {
+    const me = await this.spotifyApi.getMe();
+    return me.body;
+  }
+
   getTrack = async (id: string) => {
     const track = await this.spotifyApi.getTrack(id);
     return track.body;
@@ -113,14 +118,29 @@ export default class SpotifyService {
     return data.body;
   }
 
+  addToSavedTracks = async (trackIds: string[]) => {
+    const data = await this.spotifyApi.addToMySavedTracks(trackIds);
+    return data.body;
+  };
+
+  removeFromSavedTracks = async (trackIds: string[]) => {
+    const data = await this.spotifyApi.removeFromMySavedTracks(trackIds);
+    return data.body;
+  };
+
   getMyPlaylists = async (limit: number, offset: number) => {
     const options: any = { limit, offset };
     const result = await this.spotifyApi.getUserPlaylists(options);
     return result.body;
   }
 
-  getPlaylist = async (playlistId: string) => {
-    const result = await this.spotifyApi.getPlaylist(playlistId);
+  addTracksToPlaylist = async (playlistId: string, tracks: string[]) => {
+    // TODO: error handling
+    await this.spotifyApi.addTracksToPlaylist(playlistId, tracks);
+  }
+
+  getPlaylist = async (playlistId: string, fields: string) => {
+    const result = await this.spotifyApi.getPlaylist(playlistId, { fields });
     return result.body;
   }
 
@@ -148,6 +168,11 @@ export default class SpotifyService {
   getEpisode = async(episodeId: string) => {
     const result = await this.spotifyApi.getEpisode(episodeId);
     return result.body;
+  }
+
+  setVolume = async (volume: number) => {
+    const result = await this.spotifyApi.setVolume(volume);
+    return result;
   }
 
   getAccessToken = async () => this.spotifyApi.getAccessToken();
