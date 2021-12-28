@@ -1,0 +1,16 @@
+@import "./src/boilerplate.scss";
+
+.Settings {
+  display: flex;
+  flex-flow: column nowrap;
+  height: 100%;
+
+  &Section {
+    display: flex;
+    flex-flow: column nowrap;
+
+    &Heading {}
+
+    &Row {}
+  }
+}
