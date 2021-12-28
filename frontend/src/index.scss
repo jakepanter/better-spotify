@@ -8,7 +8,6 @@
   background: $color-background;
 
   &--left-panel {
-    height: calc(100vh - 120px);
     background: $color-accent-dark;
     border-right: 0.5px solid rgba($color-default, 0.1);
     padding: 1rem $padding-vertical $padding-horizontal $padding-vertical;
@@ -26,7 +25,7 @@
   }
 
   &--main {
-    height: calc(100vh - 120px);
+    height: 100vh;
     flex: 1 1 auto;
     overflow: hidden auto;
     padding: 0 $padding-horizontal;
