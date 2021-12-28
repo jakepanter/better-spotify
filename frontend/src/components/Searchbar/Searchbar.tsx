@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import './Searchbar.scss';
 import { API_URL } from '../../utils/constants';
 import CoverPlaceholder from '../CoverPlaceholder/CoverPlaceholder';
+import {Redirect} from 'react-router-dom';
 
 interface IProps {}
 
 interface IState {
+  redirect: boolean;
   value: string;
   results: any[];
 }
@@ -15,6 +17,7 @@ class Searchbar extends Component<IProps, IState> {
     super(props);
 
     this.state = {
+      redirect: false,
       value: '',
       results: [],
     };
@@ -29,9 +32,10 @@ class Searchbar extends Component<IProps, IState> {
     this.setState((state) => ({...state, value: value}));
 
     if (key === 13) {
-      // Perform proper search
-      // TODO
-      alert(this.state.value);
+      this.setState((state) => ({...state, value: value, redirect: true}));
+    }
+    else {
+      this.setState((state) => ({...state, value: value, redirect: false}));
     }
 
     // Don't search if same input or no value
@@ -55,6 +59,8 @@ class Searchbar extends Component<IProps, IState> {
   }
 
   render() {
+    const { redirect } = this.state;
+
     const autofill = this.state.results.map((track) =>
       <li key={track.uri} className={'SearchbarResultItem'}>
       {track.album !== undefined 
@@ -65,18 +71,28 @@ class Searchbar extends Component<IProps, IState> {
       </li>
     );
 
-    return (
-      <div className={'Searchbar'}>
-        <span className={'material-icons search-icon'}>search</span>
-        <input className={'SearchbarInput'} type={'search'} placeholder={'Artist, Albums, Songs ...'} onKeyUp={this.handleKeyUp} />
-        {this.state.results.length > 0
-        ? <ul className={'SearchbarResults'}>
-              {autofill}
-            </ul>
-        : ''}
-
-      </div>
-    );
+    if(redirect == true) {
+      return (
+        <div className={'Searchbar'}>
+          <span className={'material-icons search-icon'}>search</span>
+          <input className={'SearchbarInput'} type={'search'} placeholder={'Artist, Albums, Songs ...'} onKeyUp={this.handleKeyUp} />
+        <Redirect to={`/search/${this.state.value}`}/>
+        </div>
+      );
+    } 
+    else {
+      return (
+        <div className={'Searchbar'}>
+          <span className={'material-icons search-icon'}>search</span>
+          <input className={'SearchbarInput'} type={'search'} placeholder={'Artist, Albums, Songs ...'} onKeyUp={this.handleKeyUp} />
+          {this.state.results.length > 0
+          ? <ul className={'SearchbarResults'}>
+                {autofill}
+              </ul>
+          : ''}
+        </div>
+      )   
+    }
   }
 }
 

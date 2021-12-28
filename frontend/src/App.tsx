@@ -11,6 +11,7 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import Topbar from "./components/Topbar/Topbar";
+import SearchPage from "./components/SearchPage/SearchPage";
 
 function authorize() {
   fetch(`${API_URL}api/spotify/get-auth-url`)
@@ -71,6 +72,9 @@ function App() {
               </Route>
               <Route path="/me/tracks">
                 <SavedTracks headerStyle={'full'}/>
+              </Route>
+              <Route path="/search/:serach">
+                <SearchPage/>
               </Route>
             </Switch>
             <Player />
