@@ -12,18 +12,21 @@ type Props =
       tracks: AlbumTrack[];
       loadMoreCallback: () => void;
       fullyLoaded: boolean;
+      id_tracklist: string;
     }
   | {
       type: "playlist";
       tracks: PlaylistTrack[];
       loadMoreCallback: () => void;
       fullyLoaded: boolean;
+      id_tracklist: string;
     }
   | {
       type: "saved";
       tracks: SavedTrackObject[];
       loadMoreCallback: () => void;
       fullyLoaded: boolean;
+      id_tracklist: string;
     };
 
 type ContextMenuType = {
@@ -46,7 +49,7 @@ function scrollHandler(
 }
 
 function TrackList(props: Props) {
-  const { type, loadMoreCallback, fullyLoaded } = props;
+  const { type, loadMoreCallback, fullyLoaded, id_tracklist } = props;
   // stores currently selected track uris with their list index: (uri-listIndex, e.g spotify:track:HJG6FHmf7HG-3)
   // selectedTracks must have unique IDs to avoid weird behaviour when the same song is in a playlist multiple times
   const [selectedTracks, setSelected] = useState<String[]>([]);
@@ -160,6 +163,8 @@ function TrackList(props: Props) {
                   selected={isTrackSelected(track, index)}
                   onSelectionChange={handleSelectionChange}
                   onContextMenuOpen={handleContextMenuOpen}
+                  id_tracklist={id_tracklist}
+                  type={type}
                 />
               );
             })}
@@ -206,6 +211,8 @@ function TrackList(props: Props) {
                   selected={isTrackSelected(track, index)}
                   onSelectionChange={handleSelectionChange}
                   onContextMenuOpen={handleContextMenuOpen}
+                  id_tracklist={id_tracklist}
+                  type={type}
                 />
               );
             })}
@@ -250,6 +257,8 @@ function TrackList(props: Props) {
                   selected={isTrackSelected(track, index)}
                   onSelectionChange={handleSelectionChange}
                   onContextMenuOpen={handleContextMenuOpen}
+                  id_tracklist={''}
+                  type={type}
                 />
               );
             })}

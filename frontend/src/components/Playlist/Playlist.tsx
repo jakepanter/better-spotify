@@ -129,6 +129,7 @@ export default function Playlist(props: IProps) {
         }
         type={"playlist"}
         tracks={tracks}
+        id_tracklist={id}
       />
     </div>
   );
