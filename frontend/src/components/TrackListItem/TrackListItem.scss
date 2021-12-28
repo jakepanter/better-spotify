@@ -8,6 +8,10 @@
 }
 .Selected {
   background-color: $color-primary;
+
+  .checkbox.checked {
+    color: $color-default;
+  }
 }
 
 .TrackListRow:hover {
