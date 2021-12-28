@@ -38,7 +38,7 @@ class Podcasts extends Component<IProps, IState> {
         const shows = this.state.results.map(savedShow => {
             return (
                 <li className={"column"} key={savedShow.show.id}>
-                    <Link to={`/playlist/${savedShow.show.id}`}>
+                    <Link to={`/podcast/${savedShow.show.id}`}>
                         <div className={"cover"} style={{
                             backgroundImage: `url(${savedShow.show.images[0].url})`
                         }}>
