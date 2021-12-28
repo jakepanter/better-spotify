@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 //anyone know how to satisfy eslint and the unused prop function variables????
-import React, {useCallback, useEffect, useState} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   AlbumObjectSimplified,
   ArtistObjectSimplified,
@@ -8,7 +8,6 @@ import {
   TrackObjectSimplified,
 } from "spotify-types";
 import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
-import Checkbox from "../Checkbox/Checkbox";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import "./TrackListItem.scss";
 import {API_URL} from "../../utils/constants";
@@ -46,6 +45,8 @@ function TrackListItem(props: Props) {
   const trackUniqueId = props.track.uri + "-" + props.listIndex;
   const [selected, setSelected] = useState<boolean>(props.selected);
   const [specialKey, setSpecialKey] = useState<String | null>(null);
+  const [liked, setLiked] = useState<boolean>(!!props.liked);
+
   const id_tracklist= props.id_tracklist;
   const type = props.type;
   const track_uri = "spotify:track:" + props.track.id;
@@ -107,6 +108,21 @@ function TrackListItem(props: Props) {
   const fetchUserId = async () => {
     return await fetch(`${API_URL}api/spotify/me`).then(res => res.json()).then(data => data.uri)};
 
+  const handleLikeButton = async (e: any) => {
+    e.stopPropagation();
+    if (!liked) {
+      // add
+      await fetch(`${API_URL}api/spotify/me/tracks/add?trackIds=${track.track.id}`)
+          .then((res) => res.json());
+      setLiked(true);
+    } else {
+      // remove
+      await fetch(`${API_URL}api/spotify/me/tracks/remove?trackIds=${track.track.id}`)
+          .then((res) => res.json());
+      setLiked(false);
+    }
+  };
+
   return (
     <div
       className={`Pointer TableRow ${selected ? "Selected" : ""}`}
@@ -149,11 +165,9 @@ function TrackListItem(props: Props) {
       </div>
       {track.liked !== undefined ? (
         <div className={"TableCell TableCellLiked"}>
-          <Checkbox
-            checked={track.liked}
-            iconCodeChecked={"favorite"}
-            iconCodeUnchecked={"favorite_border"}
-          />
+          <button className={`checkbox ${liked ? 'checked' : ''}`} onClick={handleLikeButton}>
+            <span className={'material-icons'}>{liked ? 'favorite' : 'favorite_border'}</span>
+          </button>
         </div>
       ) : (
         <></>
