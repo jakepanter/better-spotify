@@ -5,6 +5,7 @@ interface IProps {
   checked?: boolean;
   label?: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
+  onClick?: React.MouseEventHandler<HTMLInputElement> | undefined;
   iconCodeChecked?: string;
   iconCodeUnchecked?: string;
 }
@@ -31,13 +32,24 @@ class Checkbox extends Component<IProps, IState> {
     }
   }
 
+  onClick(e: any) {
+    if (this.props.onClick !== undefined) {
+      e.preventDefault();
+      this.props.onClick(e);
+    }
+  }
+
   render() {
     const { label, iconCodeChecked, iconCodeUnchecked } = this.props;
     const { checked } = this.state;
 
     return (
       <label className={`Checkbox ${checked ? 'checked' : ''}`}>
-        <input className={'CheckboxElement'} type={'checkbox'} checked={this.props.checked} onChange={(e) => this.onChange(e)} />
+        <input className={'CheckboxElement'}
+               type={'checkbox'}
+               onChange={(e) => this.onChange(e)}
+               onClick={(e) => this.onClick(e)}
+        />
         <span className={'CheckboxIcon material-icons'}>
           {checked ? iconCodeChecked ? iconCodeChecked : 'check_box' : iconCodeUnchecked ? iconCodeUnchecked : 'check_box_outline_blank'}
         </span>

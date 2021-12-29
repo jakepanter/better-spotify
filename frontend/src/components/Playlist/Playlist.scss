@@ -1,0 +1,64 @@
+@import "src/boilerplate";
+
+.Playlist {
+  display: flex;
+  flex-flow: column nowrap;
+  height: 100%;
+
+  &HeaderCompact {
+    h2 {
+      margin-bottom: 0;
+      overflow: hidden;
+      padding-bottom: 0;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  &HeaderFull {
+    align-items: flex-end;
+    display: flex;
+    flex-flow: row nowrap;
+    margin-bottom: $spacer;
+
+    h4 {
+      text-transform: none;
+      opacity: 0.8;
+    }
+  }
+
+  &Header {
+    flex: 0 0 auto;
+
+    h1,
+    h2 {
+      margin-bottom: 0;
+      border-bottom: none;
+    }
+
+    &Cover {
+      width: 123px;
+      height: 123px;
+
+      & > * {
+        border-radius: $border-radius;
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    &Meta {
+      flex: 1 1 auto;
+      padding: 0 ($spacer / 2);
+    }
+
+    &Filter {
+      padding: $spacer / 2;
+      width: 30%;
+    }
+  }
+
+  .Tracklist {
+    flex: 1 1 auto;
+  }
+}

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Searchbar.scss';
 import { API_URL } from '../../utils/constants';
+import CoverPlaceholder from '../CoverPlaceholder/CoverPlaceholder';
 
 interface IProps {}
 
@@ -19,6 +20,7 @@ class Searchbar extends Component<IProps, IState> {
     };
 
     this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.playSong = this.playSong.bind(this);
   }
 
   async handleKeyUp(e: any) {
@@ -48,6 +50,22 @@ class Searchbar extends Component<IProps, IState> {
     this.setState((state) => ({...state, results: data.items}));
   }
 
+  async playSong(e: React.MouseEvent<HTMLElement>) {
+    const { dataset } = e.currentTarget;
+    const body = {
+      uris: [dataset.id],
+      position_ms: 0
+    }
+
+    fetch(`${API_URL}api/spotify/me/player/play`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    }).then(response => response.json());
+
+    this.setState({value: '', results: []});
+  }
+
   search() {
     // TODO
     alert(this.state.value);
@@ -55,19 +73,25 @@ class Searchbar extends Component<IProps, IState> {
 
   render() {
     const autofill = this.state.results.map((track) =>
-      <li key={track.uri} className={'SearchbarResultItem'}>
-        <img height={32} width={32} src={track.album.images[2].url} alt={'Album Cover'} />
+      <li key={track.uri} data-id={track.uri} className={'SearchbarResultItem'} onClick={this.playSong}>
+      {track.album !== undefined 
+        ? <img height={32} width={32} src={track.album.images[2].url} alt={'Album Cover'} />
+        : <CoverPlaceholder />
+      }
         <span>{`${track.name} by ${track.artists[0].name}`}</span>
       </li>
     );
 
     return (
       <div className={'Searchbar'}>
-        <input className={'SearchbarInput'} type={'search'} placeholder={'Search...'} onKeyUp={this.handleKeyUp} />
-        <button className={'SearchbarButton'} onClick={this.search}>Search</button>
-        <ul className={'SearchbarResults'}>
-          {autofill}
-        </ul>
+        <span className={'material-icons search-icon'}>search</span>
+        <input className={'SearchbarInput'} type={'search'} placeholder={'Artist, Albums, Songs ...'} onKeyUp={this.handleKeyUp} />
+        {this.state.results.length > 0
+        ? <ul className={'SearchbarResults'}>
+              {autofill}
+            </ul>
+        : ''}
+
       </div>
     );
   }
