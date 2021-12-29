@@ -14,7 +14,7 @@ import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import Discover from "./components/Discover/Discover";
 import SongHistory from "./components/SongHistory/SongHistory";
 import Releases from "./components/Releases/Releases";
-
+import RelatedArtistsPage from "./pages/RelatedArtistsPage/RelatedArtistsPage";
 
 function authorize() {
   fetch(`${API_URL}api/spotify/get-auth-url`)
@@ -71,7 +71,6 @@ function App() {
               <SavedTracks />
             </Route>
             <Route path="/discover">
-              <h1>Discover</h1>
               <Discover/>
             </Route>
             <Route path="/song-history">
@@ -81,6 +80,9 @@ function App() {
             <Route path="/new-releases">
               <h1>New Releases</h1>
               <Releases/>
+            </Route>
+            <Route path="/related-artists/:id">
+              <RelatedArtistsPage />
             </Route>
           </Switch>
         </div>

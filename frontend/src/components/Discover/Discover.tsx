@@ -17,8 +17,7 @@ import {NavLink, Link} from "react-router-dom";
 //TODO
 // Filter vor available country? for new releases
 
-interface IProps {
-}
+interface IProps {}
 
 interface IState {
     recentTracks: PlayHistoryObject[];
@@ -27,7 +26,7 @@ interface IState {
     artistsList: ArtistObjectFull[][];
     topArtistsName: string[];
 }
-//let before:number =  Date.now();
+
 class Discover extends Component<IProps, IState> {
 
 
@@ -63,12 +62,11 @@ class Discover extends Component<IProps, IState> {
         ).then((res) => res.json());
         this.setState((state) => ({...state, topArtists: myTopArtists.items}));
 
-        //get top three artists
+        // Get top three artists
         const topThreeArtists = this.state.topArtists.sort(() => 0.5 - Math.random()).slice(0, 3);
-        console.log(topThreeArtists);
-        //fetch related artists for each top artist
+
+        // Fetch related artists for each top artist
         topThreeArtists.map(async (artist) => {
-            console.log(artist);
             const relatedArtists: ArtistsRelatedArtistsResponse = await fetch(
                 `${API_URL}api/spotify/artists/${artist.id}/related-artists`
             ).then((res) => res.json());
@@ -134,10 +132,11 @@ class Discover extends Component<IProps, IState> {
         return (
             <>
                 <h2>Discover</h2>
+                <div style={{overflow: 'hidden auto'}}>
                 {/*Recently Played Tracks*/}
                 <div className={"recentlyPlayedTrackList"} key = "recentlyPlayed">
                     <h3>Recently listened to</h3>
-                    <NavLink to="/song-history">View More</NavLink>
+                    <NavLink to={"/song-history"} className="button">View More</NavLink>
                     <div className={"overview"}>
                         <ul className={"overview-items"}
                             style={{height: '40vh', overflow: 'hidden'}}>{recentlyPlayedList}</ul>
@@ -149,7 +148,7 @@ class Discover extends Component<IProps, IState> {
                     {relatedArtists.map((artists, index) =>
                         <div className={"overview"} key={this.state.topArtistsName[index]}>
                             <h3>More like &quot;{this.state.topArtistsName[index]}&quot;</h3>
-                            <NavLink to={`/artist-recommendation/${this.state.topArtists[index]}`}>View More</NavLink>
+                            <NavLink to={`/related-artists/${this.state.topArtists[index].id}` } className="button">View More</NavLink>
                             <ul className={"overview-items"}
                                 style={{height: '40vh', overflow: 'hidden'}}>{artists}</ul>
                         </div>
@@ -159,10 +158,11 @@ class Discover extends Component<IProps, IState> {
                 {/*New Releases*/}
                 <div className={"newReleases"} key = "newReleases2">
                     <h3>New Releases</h3>
-                    <NavLink to="/new-releases">View More</NavLink>
+                    <NavLink to={"/new-releases"} className="button" id="viewMoreButton">View More</NavLink>
                     <div className={"overview"}>
                         <ul className={"overview-items"} style={{height: '40vh', overflow: 'hidden'}}>{releases}</ul>
                     </div>
+                </div>
                 </div>
             </>
         );
