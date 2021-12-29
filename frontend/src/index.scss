@@ -3,13 +3,14 @@
 
 .structure {
   display: flex;
+  height: 100vh;
   width: 100%;
   background: $color-background;
 
   &--left-panel {
     background: $color-accent-dark;
     border-right: 0.5px solid rgba($color-default, 0.1);
-    padding: $padding-horizontal $padding-vertical;
+    padding: 1rem $padding-vertical $padding-horizontal $padding-vertical;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -27,8 +28,9 @@
     height: 100vh;
     flex: 1 1 auto;
     overflow: hidden auto;
-    padding: 32px $padding-horizontal;
+    padding: 0 $padding-horizontal;
     z-index: 0;
+    scrollbar-width: none;
   }
 
   @media screen and(max-width: $breakpoint-md) {
@@ -97,6 +99,19 @@ td, th {
   }
 }
 
+.input {
+  border: none;
+  border-bottom: $border-width*2 $border-style rgba(224, 224, 224, 0.1);
+  background-color: transparent;
+  color: $color-default;
+  display: inline-block;
+
+  &:focus {
+    outline: none;
+    border-bottom-color: $color-primary;
+  }
+}
+
 .input-select {
   padding: $button-padding-horizontal $button-padding-vertical;
   display: inline-block;
@@ -128,6 +143,24 @@ td, th {
     border-color: $button-border-color-active;
     cursor: pointer;
     text-decoration: none;
+  }
+}
+
+// Checkbox (re-styled button)
+.checkbox {
+  background: none;
+  border: none;
+  border-radius: 50%;
+  color: $color-default;
+  display: inline-block;
+  padding: $button-padding-vertical;
+
+  &:enabled {
+    cursor: pointer;
+  }
+
+  &.checked {
+    color: $color-primary;
   }
 }
 

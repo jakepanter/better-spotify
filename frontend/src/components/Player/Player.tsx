@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { API_URL } from '../../utils/constants';
 import SpotifyWebPlayer from "./SpotifyWebPlayer";
+import "./Player.scss";
 
 interface IProps {}
 

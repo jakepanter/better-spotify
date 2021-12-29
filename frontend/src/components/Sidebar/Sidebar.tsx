@@ -66,6 +66,12 @@ const Sidebar = () => {
                         <span className="left-side-panel--text">Audiobooks</span>
                     </NavLink>
                 </li>
+                <li className="column">
+                    <NavLink activeClassName="active" className="button" to="/settings" onClick={() => closeMenu()} exact>
+                        <span className="material-icons left-side-panel--icon">settings</span>
+                        <span className="left-side-panel--text">Settings</span>
+                    </NavLink>
+                </li>
             </ul>
         </div>
     )

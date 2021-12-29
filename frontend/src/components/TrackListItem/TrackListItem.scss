@@ -1,5 +1,9 @@
 @import "./src/boilerplate.scss";
 
+.Pointer {
+  cursor: pointer;
+}
+
 .TableRow {
   user-select: none;
   &:hover:not(.Selected):not(.TableHeader) {
@@ -8,6 +12,10 @@
 }
 .Selected {
   background-color: $color-primary;
+
+  .checkbox.checked {
+    color: $color-default;
+  }
 }
 
 .TrackListRow:hover {

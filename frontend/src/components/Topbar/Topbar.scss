@@ -5,13 +5,27 @@
   top: 0;
   z-index: 3;
   background: $color-background;
-  padding: 32px;
+  padding: 32px 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 
   .top-bar-item {
     display: flex;
+  }
+
+  .settings-button {
+    &.profile-image {
+      padding: 0 !important;
+      background: rgba(0,0,0,0);
+
+      img {
+        width: 38px;
+        height: 38px;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+    }
   }
 
   .search {
@@ -57,7 +71,7 @@
     justify-content: flex-end;
 
     .settings-button {
-      border-radius: 10px;
+      border-radius: $border-radius;
       padding: 4px 7px;
       background: $color-accent-dark;
       border: none;

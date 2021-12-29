@@ -11,6 +11,7 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import Topbar from "./components/Topbar/Topbar";
+import SettingsPage from "./pages/SettingsPage/SettingsPage";
 
 function authorize() {
   fetch(`${API_URL}api/spotify/get-auth-url`)
@@ -53,7 +54,6 @@ function App() {
           </div>
           <div className="structure--main">
             <Topbar editable={editable} onChangeEditable={toggleEditable} />
-            <Player />
             <Switch>
               <Route exact path="/">
                 <Dashboard editable={editable} />
@@ -73,7 +73,11 @@ function App() {
               <Route path="/me/tracks">
                 <SavedTracks headerStyle={'full'}/>
               </Route>
+              <Route path="/settings">
+                <SettingsPage/>
+              </Route>
             </Switch>
+            <Player />
           </div>
         </div>
       </Router>
