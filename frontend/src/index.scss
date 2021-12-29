@@ -99,6 +99,19 @@ td, th {
   }
 }
 
+.input {
+  border: none;
+  border-bottom: $border-width*2 $border-style rgba(224, 224, 224, 0.1);
+  background-color: transparent;
+  color: $color-default;
+  display: inline-block;
+
+  &:focus {
+    outline: none;
+    border-bottom-color: $color-primary;
+  }
+}
+
 .input-select {
   padding: $button-padding-horizontal $button-padding-vertical;
   display: inline-block;
