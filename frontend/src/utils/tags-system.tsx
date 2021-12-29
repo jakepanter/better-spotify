@@ -39,6 +39,8 @@ export default class TagsSystem {
 
     tags.availableTags[newTagId] = { title, color };
 
+    TagsSystem.saveTags(tags);
+
     return newTagId;
   }
 

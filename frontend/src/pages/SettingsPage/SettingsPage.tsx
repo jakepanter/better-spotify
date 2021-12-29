@@ -1,52 +1,53 @@
 import React, {useRef, useState} from "react";
 import "./SettingsPage.scss";
 import Dialog from "../../components/Dialog/Dialog";
+import TagsSystem, {TagData} from "../../utils/tags-system";
 
 function SettingsPage() {
   // TODO: will be implemented by TagSystem
-  const { availableTags }: {availableTags: {[key: string]: {title: string, color: number} }} = {
-    availableTags: {
-      someTagId: {title: 'Tag Title', color: 0},
-      anotherTagId: {title: 'Another Tag Title', color: 3},
-    }
-  };
+  const [tags, setTags] = useState<TagData>(TagsSystem.getTags());
 
   const [showDialogAddTag, setShowDialogAddTag] = useState<boolean>(false);
   const [showDialogEditTag, setShowDialogEditTag] = useState<boolean>(false);
   const [selectedTag, setSelectedTag] = useState<string>('');
 
   const addTagTitle: React.RefObject<HTMLInputElement> = useRef(null);
-  const addTagColor = useRef(null);
+  const addTagColor: React.RefObject<HTMLSelectElement> = useRef(null);
   const editTagTitle: React.RefObject<HTMLInputElement> = useRef(null);
   const [editTagTitleValue, setEditTagTitleValue] = useState<string>('');
-  const editTagColor = useRef(null);
+  const editTagColor: React.RefObject<HTMLSelectElement> = useRef(null);
   const [editTagColorValue, setEditTagColorValue] = useState<number>(0);
 
   const addTag = () => {
-    // TODO: Call TagSystem function
-    // TagSystem.addTag(addTagTitle.current.value, addTagColor.current.value);
-
-    setShowDialogAddTag(false);
+    if (addTagTitle.current !== null && addTagColor.current !== null) {
+      TagsSystem.createTag(addTagTitle.current.value, Number(addTagColor.current.value));
+      setTags(TagsSystem.getTags());
+      setShowDialogAddTag(false);
+    }
   }
 
   const openEditTag = () => {
-    console.log(selectedTag);
-    setEditTagTitleValue(availableTags[selectedTag].title);
-    setEditTagColorValue(availableTags[selectedTag].color)
-
-    setShowDialogEditTag(true);
+    if (selectedTag !== '') {
+      setEditTagTitleValue(tags.availableTags[selectedTag].title);
+      setEditTagColorValue(tags.availableTags[selectedTag].color);
+      setShowDialogEditTag(true);
+    }
   }
 
-  const saveEditTag = () => {
-    // TODO: Call TagSystem function
+  const saveEditTag = (title: string, color: number) => {
+    TagsSystem.editTag(selectedTag, {
+      title,
+      color,
+    });
 
+    setTags(TagsSystem.getTags());
     setShowDialogEditTag(false);
   };
 
   const deleteTag = () => {
-    // TODO: Call TagSystem function
-    // TagSystem.deleteTag(selectedTag);
-    console.log(selectedTag);
+    TagsSystem.deleteTag(selectedTag);
+
+    setTags(TagsSystem.getTags());
   }
 
   return <div className={'Settings'}>
@@ -57,9 +58,9 @@ function SettingsPage() {
           <div className={'SettingsSection'}>
             <select className={'TagList'}
                     size={5}
-                    onChange={(e) => setSelectedTag(e.currentTarget.value)}
+                    onChange={(e) => setSelectedTag(e.target.value)}
             >
-              {Object.entries(availableTags).map((tag) => (
+              {Object.entries(tags.availableTags).map((tag) => (
                 <option key={tag[0]}
                         className={`TagColor TagColor${tag[1].color}`}
                         value={tag[0]}
@@ -78,12 +79,14 @@ function SettingsPage() {
               <button className={'button'}
                       onClick={() => openEditTag()}
                       title={'Edit Selected Tag'}
+                      disabled={selectedTag === ''}
               >
                 <span className={'material-icons'}>edit</span>
               </button>
               <button className={'button'}
                       onClick={() => deleteTag()}
                       title={'Delete Selected Tag'}
+                      disabled={selectedTag === ''}
               >
                 <span className={'material-icons'}>delete</span>
               </button>
@@ -101,7 +104,10 @@ function SettingsPage() {
             </label>
             <label className={'Label'}>
               Color
-              <select className={'input-select'} ref={addTagColor}>
+              <select className={'TagList'}
+                      ref={addTagColor}
+                      size={6}
+              >
                 <option className={'TagColor TagColor0'} value={0}/>
                 <option className={'TagColor TagColor1'} value={1}/>
                 <option className={'TagColor TagColor2'} value={2}/>
@@ -123,13 +129,16 @@ function SettingsPage() {
                      className={'input'}
                      ref={editTagTitle}
                      value={editTagTitleValue}
+                     onChange={(e) => setEditTagTitleValue(e.target.value)}
               />
             </label>
             <label className={'Label'}>
               Color
-              <select className={'input-select'}
+              <select className={'TagList'}
                       ref={editTagColor}
                       value={editTagColorValue}
+                      size={6}
+                      onChange={(e) => setEditTagColorValue(Number(e.target.value))}
               >
                 <option className={'TagColor TagColor0'} value={0}/>
                 <option className={'TagColor TagColor1'} value={1}/>
@@ -139,7 +148,7 @@ function SettingsPage() {
                 <option className={'TagColor TagColor5'} value={5}/>
               </select>
             </label>
-            <button className={'button'} onClick={() => saveEditTag()}>
+            <button className={'button'} onClick={() => saveEditTag(editTagTitleValue, editTagColorValue)}>
               <span className={'material-icons'}>save</span>
               Save
             </button>
