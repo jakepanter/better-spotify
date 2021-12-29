@@ -7,8 +7,7 @@ import React, { useEffect, useState } from "react";
 import TrackListItem from "../TrackListItem/TrackListItem";
 import TagsSystem from "../../utils/tags-system";
 
-type Props =
-  | {
+type Props = {
       type: "album";
       tracks: AlbumTrack[];
       loadMoreCallback: () => void;
@@ -205,6 +204,7 @@ function TrackList(props: Props) {
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
               const { track } = item;
+              const tagList = tags.spotifyElements[track.id]?.map((id) => tags.availableTags[id]) ?? [];
               return (
                 <TrackListItem
                   track={track}
