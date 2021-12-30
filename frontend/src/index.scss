@@ -7,6 +7,31 @@
   width: 100%;
   background: $color-background;
 
+  .minimizeMenuButton {
+    position: absolute;
+    left: 205px;
+    z-index: 2;
+    margin-top: 10px;
+    background: $color-accent-dark;
+    border-radius: $border-radius;
+    border: 0.5px solid rgba($color-default, 0.1);
+    padding: 0;
+
+    &.positionMenuButton {
+      left: 65px;
+    }
+
+    p {
+      transition: $transition-base;
+      padding: 3px;
+    }
+
+    .turned {
+      transform: rotate(-180deg);
+    }
+  }
+
+
   &--left-panel {
     background: $color-accent-dark;
     border-right: 0.5px solid rgba($color-default, 0.1);
@@ -21,6 +46,32 @@
       box-sizing: content-box;
       width: $side-panel-size;
       min-width: $side-panel-size;
+      &.minimizeMenu {
+        width:45px;
+        min-width: 45px;
+
+        a {
+          padding: $button-padding-horizontal;
+          width: auto;
+        }
+
+        .left-side-panel--text {
+          display: none;
+        }
+
+        .left-side-panel--icon {
+          margin-right: 0;
+          font-size: 25px;
+        }
+
+        .logo {
+          display: none;
+        }
+
+        .logoImg {
+          display: block;
+        }
+      }
     }
   }
 
@@ -205,6 +256,7 @@ h5 {
 h6 {
   font-size: $fz-h6;
 }
+
 // Scrollbar
 /* Works on Firefox */
 * {
@@ -218,7 +270,7 @@ h6 {
 }
 
 *::-webkit-scrollbar-track {
-  background:  rgba($color-default, 0.1);
+  background: rgba($color-default, 0.1);
   border-radius: $border-radius;
 
 }
