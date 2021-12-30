@@ -74,18 +74,23 @@ class Discover extends Component<IProps, IState> {
         this.fetchTopArtists().then((topArtists) => {
             console.log(topArtists);
             //slice top three artists
-            const bts = topArtists.items[0];
-            this.fetchRelatedArtists(bts.id).then((relatedArtists) => {
-                    console.log(bts.name);
-                    console.log(relatedArtists);
-                    const list = {
-                        "artist": bts,
-                        "relatedArtists": relatedArtists.artists
-                    };
-                    this.setState({test: [...this.state.test, list]});
-                    console.log(this.state.test[0]);
-                }
-            )
+            const topThreeArtists: ArtistObjectFull[] = topArtists.items.sort(()=> 0.5-Math.random()).slice(0,3);
+            topThreeArtists.map ((topArtist) =>{
+                this.fetchRelatedArtists(topArtist.id).then((relatedArtists) => {
+                        console.log(topArtist.name);
+                        // TODO
+                        // shuffle??????
+                        const fiveRelatedArtists = relatedArtists.artists.slice(0,5);
+                        console.log(fiveRelatedArtists);
+                        const list = {
+                            "artist": topArtist,
+                            "relatedArtists": fiveRelatedArtists
+                        };
+                        this.setState({test: [...this.state.test, list]});
+                        console.log(this.state.test);
+                    }
+                )
+            });
         });
 
         /*//slice 3 top artists
@@ -130,7 +135,47 @@ class Discover extends Component<IProps, IState> {
 
     render() {
 
+        /*if (this.state.artistsList.length === 0) return <p>loading...</p>;
+        const relatedArtists = this.state.artistsList.map((artists) => {
+            const fiveArtists = artists.slice(0, 5);
+            const elements = fiveArtists.map((artist) => {
+                    return (
+                        <li className="column" key={artist.id}>
+                            <Link to={`/artist/${artist.id}`}>
+                                <div className={"cover"} style={{
+                                    backgroundImage: `url(${artist.images[0].url})`
+                                }}>
+                                </div>
+                                <span className="title">{artist.name}</span>
+                            </Link>
+                        </li>
+                    );
+                }
+            );
+            return (elements);
+        });*/
+
         if (this.state.test.length === 0) return <p>loading...</p>;
+        //[[],[],[]]
+        const relatedArtists = this.state.test.map((testObject) => {
+            console.log(testObject);
+            const relatedArtistsForOneArtist = testObject.relatedArtists.map((relatedArtist) => {
+                return (
+                    <li className="column" key={relatedArtist.id}>
+                        <Link to={`/artist/${relatedArtist.id}`}>
+                            <div className={"cover"} style={{
+                                backgroundImage: `url(${relatedArtist.images[0].url})`
+                            }}>
+                            </div>
+                            <span className="title">{relatedArtist.name}</span>
+                        </Link>
+                    </li>
+                );
+            })
+            return relatedArtistsForOneArtist;
+        });
+
+        /*if (this.state.test.length === 0) return <p>loading...</p>;
         const relatedArtists = this.state.test[0].relatedArtists.map((relatedArtist) => {
             return (
                 <li className="column" key={relatedArtist.id}>
@@ -144,7 +189,7 @@ class Discover extends Component<IProps, IState> {
                 </li>
             );
         });
-
+*/
         // for recently played tracks
         if (this.state.recentlyPlayedTracks.length === 0) return <p>loading...</p>;
         const recentlyPlayedList = this.state.recentlyPlayedTracks.map((recentlyPlayedTrack) => {
@@ -207,19 +252,19 @@ class Discover extends Component<IProps, IState> {
                     </div>
 
                     {/*More like "artist"*/}
-                   <div className={"section"} key="relatedArtists">
-
-                            <div className={"overview"} key={this.state.test[0].artist.id}>
+                    {relatedArtists.map((tmp,index)=>
+                   <div className={"section"} key={this.state.test[index].artist.id}>
+                            <div className={"overview"} key={this.state.test[index].artist.id}>
                                 <div className={'header'}>
-                                    <h3>More like &quot;{this.state.test[0].artist.name}&quot;</h3>
-                                    <NavLink to={`/related-artists/${this.state.test[0].artist.id}`}>View
+                                    <h3>More like &quot;{this.state.test[index].artist.name}&quot;</h3>
+                                    <NavLink to={`/related-artists/${this.state.test[index].artist.id}`}>View
                                         More</NavLink>
                                 </div>
                                 <ul className={"overview-items"}
-                                    style={{height: '40vh', overflow: 'hidden'}}>{relatedArtists}</ul>
+                                    style={{height: '40vh', overflow: 'hidden'}}>{tmp}</ul>
                             </div>
-
                     </div>
+                    )}
                 </div>
             </>
         );
