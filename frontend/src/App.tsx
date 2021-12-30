@@ -26,7 +26,7 @@ function App() {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [editable, setEditable] = useState(false);
   const [miniMenu, setMiniMenu] = useState(false);
-  const menuToggle = () => { setMiniMenu(!miniMenu) };
+  const menuToggle = () => { setMiniMenu(!miniMenu)};
 
   const toggleEditable = () => setEditable(!editable);
 
