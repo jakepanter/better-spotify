@@ -25,6 +25,8 @@ function authorize() {
 function App() {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [editable, setEditable] = useState(false);
+  const [miniMenu, setMiniMenu] = useState(false);
+  const menuToggle = () => { setMiniMenu(!miniMenu)};
 
   const toggleEditable = () => setEditable(!editable);
 
@@ -49,7 +51,12 @@ function App() {
   return (
       <Router>
         <div className="structure">
-          <div className="structure--left-panel">
+          {/* Minimize menu */}
+          <button className={`minimizeMenuButton ${miniMenu ? "positionMenuButton" : ""}`} onClick={menuToggle}>{miniMenu ?
+              <p className="material-icons minimize-icon turned" title={"Maximize menu"} >chevron_left</p> :
+              <p className="material-icons minimize-icon" title={"Minimize menu"} >chevron_left</p>}
+          </button>
+          <div className={`structure--left-panel ${miniMenu ? "minimizeMenu" : ""}`}>
             <Sidebar />
           </div>
           <div className="structure--main">
