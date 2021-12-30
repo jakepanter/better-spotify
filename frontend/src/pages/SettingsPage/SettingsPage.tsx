@@ -12,15 +12,23 @@ function SettingsPage() {
   const [selectedTag, setSelectedTag] = useState<string>('');
 
   const addTagTitle: React.RefObject<HTMLInputElement> = useRef(null);
+  const [addTagTitleValue, setAddTagTitleValue] = useState<string>('');
   const addTagColor: React.RefObject<HTMLSelectElement> = useRef(null);
+  const [addTagColorValue, setAddTagColorValue] = useState<number>(0);
   const editTagTitle: React.RefObject<HTMLInputElement> = useRef(null);
   const [editTagTitleValue, setEditTagTitleValue] = useState<string>('');
   const editTagColor: React.RefObject<HTMLSelectElement> = useRef(null);
   const [editTagColorValue, setEditTagColorValue] = useState<number>(0);
 
-  const addTag = () => {
+  const openAddTag = () => {
+    setAddTagTitleValue('');
+    setAddTagColorValue(0);
+    setShowDialogAddTag(true);
+  }
+
+  const addTag = (title: string, color: number) => {
     if (addTagTitle.current !== null && addTagColor.current !== null) {
-      TagsSystem.createTag(addTagTitle.current.value, Number(addTagColor.current.value));
+      TagsSystem.createTag(title, color);
       setTags(TagsSystem.getTags());
       setShowDialogAddTag(false);
     }
@@ -71,7 +79,7 @@ function SettingsPage() {
             </select>
             <div className={'SpacingTop'}>
               <button className={'button'}
-                      onClick={() => setShowDialogAddTag(true)}
+                      onClick={() => openAddTag()}
                       title={'Add New Tag'}
               >
                 <span className={'material-icons'}>add</span>
@@ -100,6 +108,8 @@ function SettingsPage() {
               <input type={'text'}
                      className={'input'}
                      ref={addTagTitle}
+                     value={addTagTitleValue}
+                     onChange={(e) => setAddTagTitleValue(e.target.value)}
               />
             </label>
             <label className={'Label'}>
@@ -107,6 +117,8 @@ function SettingsPage() {
               <select className={'TagList'}
                       ref={addTagColor}
                       size={6}
+                      value={addTagColorValue}
+                      onChange={(e) => setAddTagColorValue(Number(e.target.value))}
               >
                 <option className={'TagColor TagColor0'} value={0}/>
                 <option className={'TagColor TagColor1'} value={1}/>
@@ -116,7 +128,7 @@ function SettingsPage() {
                 <option className={'TagColor TagColor5'} value={5}/>
               </select>
             </label>
-            <button className={'button'} onClick={() => addTag()}>
+            <button className={'button'} onClick={() => addTag(addTagTitleValue, addTagColorValue)}>
               <span className={'material-icons'}>add</span>
               Add
             </button>

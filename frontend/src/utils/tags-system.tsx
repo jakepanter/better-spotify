@@ -73,9 +73,38 @@ export default class TagsSystem {
     TagsSystem.saveTags(tags);
   }
 
+  static getTagsOfElement(elementId: string) {
+    const tags = TagsSystem.getTags();
+    return tags.spotifyElements[elementId] ?? [];
+  }
+
   static setTagsOfElement(elementId: string, tagIds: string[]) {
     const tags = TagsSystem.getTags();
     tags.spotifyElements[elementId] = tagIds;
+
+    TagsSystem.saveTags(tags);
+  }
+
+  static addTagToElement(elementId: string, tagId: string) {
+    const tags = TagsSystem.getTags();
+    const currentTags = TagsSystem.getTagsOfElement(elementId);
+
+    if (!currentTags.includes(tagId)) {
+      if (currentTags.length === 0) { // possibly not defined
+        tags.spotifyElements[elementId] = [];
+      }
+      tags.spotifyElements[elementId].push(tagId);
+      TagsSystem.saveTags(tags);
+    }
+  }
+
+  static removeTagFromElement(elementId: string, tagId: string) {
+    const tags = TagsSystem.getTags();
+    const currentTags = TagsSystem.getTagsOfElement(elementId);
+
+    tags.spotifyElements[elementId] = currentTags.filter((tag) => tag !== tagId);
+
+    TagsSystem.saveTags(tags);
   }
 }
 
