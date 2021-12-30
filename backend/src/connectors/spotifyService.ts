@@ -155,13 +155,8 @@ export default class SpotifyService {
     return result;
   }
 
-  // TODO
-  // only after or before should be specified
-  getMyRecentlyPlayedTracks = async (
 
-      //after?:number,
-      before:number,
-      limit:number) => {
+  getMyRecentlyPlayedTracks = async (before:number, limit:number) => {
     const options: any = {limit, before};
     const result = await this.spotifyApi.getMyRecentlyPlayedTracks(options);
     return result.body;
@@ -176,6 +171,11 @@ export default class SpotifyService {
   getMyTopArtists = async (limit: number, offset:number, time_range: string) => {
     const options: any = {limit, offset, time_range};
     const result = await this.spotifyApi.getMyTopArtists(options);
+    return result.body;
+  }
+
+  getArtist = async (artistId: string) => {
+    const result = await this.spotifyApi.getArtist(artistId);
     return result.body;
   }
 

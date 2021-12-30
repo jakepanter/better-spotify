@@ -1,7 +1,25 @@
 @import './src/boilerplate.scss';
 
+.section {
+  margin-bottom: 2rem;
+}
+
+.header{
+  display: block !important;
+
+  a{
+    margin-right: 2rem;
+    float: right;
+    color: $gray-dark;
+    text-decoration: none;
+  }
+}
 .overview {
   .overview-items {
+    @media screen and(min-width: $breakpoint-sm) and(max-width: $breakpoint-md) {
+      height: 25vh !important;
+    }
+
     .column {
       //3 columns when tablet
       @media screen and(min-width: $breakpoint-sm) and(max-width: $breakpoint-md) {

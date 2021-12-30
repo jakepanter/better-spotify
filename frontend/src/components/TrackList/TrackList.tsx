@@ -129,7 +129,7 @@ function TrackList(props: Props) {
   */
 
   const isTrackSelected = (
-    track: TrackObjectFull | AlbumTrack,
+    track: TrackObjectFull | AlbumTrack | AlbumObjectSimplified,
     index: number
   ) => {
     const trackUniqueId = `${track.uri}-${index}`;
@@ -284,6 +284,91 @@ function TrackList(props: Props) {
           </div>
         </div>
       )}
+
+        {type === "songhistory" && (
+            <div
+                className={"Tracklist"}
+                onScroll={(e: React.UIEvent<HTMLDivElement>) =>
+                    scrollHandler(e, loadMoreCallback)
+                }
+            >
+                <div className={"TableHeader TableRow"}>
+                    <div className={"TableCell TableCellArtwork"} />
+                    <div className={"TableCell TableCellTitleArtist"}>Title</div>
+                    <div className={"TableCell TableCellAlbum"}>Album</div>
+                    <div className={"TableCell TableCellDuration"}>Duration</div>
+                </div>
+                <div className={"TableBody"}>
+                    {props.tracks.map((item, index) => {
+                        const  track  = item.track as TrackObjectFull;
+                        return (
+                            <TrackListItem
+                                track={track}
+                                name={track.name}
+                                artists={track.artists}
+                                duration_ms={track.duration_ms}
+                                album={track.album}
+                                key={type + "-track-" + track.id + "-" + index}
+                                listIndex={index}
+                                selected={isTrackSelected(track, index)}
+                                onSelectionChange={handleSelectionChange}
+                                onContextMenuOpen={handleContextMenuOpen}
+                                id_tracklist={''}
+                                type={type}
+                            />
+                        );
+                    })}
+                    {!fullyLoaded ? (
+                        <div className={"PlaylistLoader"}>
+                            <div className={"loader"} />
+                        </div>
+                    ) : (
+                        <></>
+                    )}
+                </div>
+            </div>
+        )}
+
+        {type === "releases" && (
+            <div
+                className={"Tracklist"}
+                onScroll={(e: React.UIEvent<HTMLDivElement>) =>
+                    scrollHandler(e, loadMoreCallback)
+                }
+            >
+                <div className={"TableHeader TableRow"}>
+                    <div className={"TableCell TableCellArtwork"} />
+                    <div className={"TableCell TableCellTitleArtist"}>Title</div>
+                </div>
+                <div className={"TableBody"}>
+                    {props.tracks.map((item, index) => {
+                        const  track  = item;
+                        return (
+                            <TrackListItem
+                                track={track}
+                                name={track.name}
+                                artists={track.artists}
+                                album = {track}
+                                key={type + "-track-" + track.id + "-" + index}
+                                listIndex={index}
+                                selected={isTrackSelected(track, index)}
+                                onSelectionChange={handleSelectionChange}
+                                onContextMenuOpen={handleContextMenuOpen}
+                                id_tracklist={''}
+                                type={type}
+                            />
+                        );
+                    })}
+                    {!fullyLoaded ? (
+                        <div className={"PlaylistLoader"}>
+                            <div className={"loader"} />
+                        </div>
+                    ) : (
+                        <></>
+                    )}
+                </div>
+            </div>
+        )}
     </>
   );
 }

@@ -175,15 +175,13 @@ export default class App {
       const answer = await this.spotifyService.setTrack(req.body);
       return res.json(answer);
     });
+
     this.server.get('/api/spotify/player/recently-played', async (req: Request, res: Response) => {
       // TODO
       //  only after or before should be specified
-      //const after: any = req.query?.after ?? 1638401402000;
-      //check if before exists or after exists
-
+      // add comment why after is not considered
       const before: any = req.query?.before ?? Date.now();
       const limit: any = req.query?.limit ?? 20;
-      //const recentTracks = await this.spotifyService.getMyRecentlyPlayedTracks(after, limit, before);
       const recentTracks = await this.spotifyService.getMyRecentlyPlayedTracks(before, limit);
       return res.json(recentTracks);
     });
@@ -205,8 +203,16 @@ export default class App {
       return res.json(topArtists);
     });
 
+    // TODO
+    // fetch artist
+    this.server.get('/api/spotify/artists/:artistId', async (req: Request, res: Response) => {
+      const artistId: string = req.params.artistId as string;
+      const artists = await this.spotifyService.getArtist(artistId);
+      return res.json(artists);
+    });
+
     this.server.get('/api/spotify/artists/:artistId/related-artists', async (req: Request, res: Response) => {
-      const artistId: string = req.params.artistId as string
+      const artistId: string = req.params.artistId as string;
       const artists = await this.spotifyService.getArtistRelatedArtists(artistId);
       return res.json(artists);
     });

@@ -6,8 +6,7 @@ import {
     TrackObjectFull,
     ArtistObjectFull,
     ListOfNewReleasesResponse,
-    UsersTopArtistsResponse,
-    ArtistsRelatedArtistsResponse
+    UsersTopArtistsResponse
 } from "spotify-types";
 import './Discover.scss';
 import "../../cards.scss";
@@ -20,11 +19,18 @@ import {NavLink, Link} from "react-router-dom";
 interface IProps {}
 
 interface IState {
-    recentTracks: PlayHistoryObject[];
+    // for recently played tracks
+    recentlyPlayedTracks: PlayHistoryObject[];
+    //for new releases
     newReleases: AlbumObjectSimplified[];
+    // for storing users 20 top artists
     topArtists: ArtistObjectFull[];
-    artistsList: ArtistObjectFull[][];
+
+    //for storing all related artists for each top artist
+    relatedArtistsList: ArtistObjectFull[][];
+
     topArtistsName: string[];
+    topThreeArtists: ArtistObjectFull[];
 }
 
 class Discover extends Component<IProps, IState> {
@@ -34,11 +40,12 @@ class Discover extends Component<IProps, IState> {
         super(props);
 
         this.state = {
-            recentTracks: [],
+            recentlyPlayedTracks: [],
             newReleases: [],
             topArtists: [],
-            artistsList: [],
-            topArtistsName: []
+            relatedArtistsList: [],
+            topArtistsName: [],
+            topThreeArtists: []
         };
     }
 
@@ -47,8 +54,9 @@ class Discover extends Component<IProps, IState> {
         const recentPlayedTracksData: UsersRecentlyPlayedTracksResponse = await fetch(
             `${API_URL}api/spotify/player/recently-played?limit=5`
         ).then((res) => res.json());
+
         // Save to state
-        this.setState((state) => ({...state, recentTracks: recentPlayedTracksData.items}));
+        this.setState((state) => ({...state, recentlyPlayedTracks: recentPlayedTracksData.items}));
 
         // Fetch new releases
         const newReleasedAlbums: ListOfNewReleasesResponse = await fetch(
@@ -61,25 +69,64 @@ class Discover extends Component<IProps, IState> {
             `${API_URL}api/spotify/me/top/artists`
         ).then((res) => res.json());
         this.setState((state) => ({...state, topArtists: myTopArtists.items}));
+        console.log("-----------------");
+        console.log(this.state.topArtists);
 
         // Get top three artists
-        const topThreeArtists = this.state.topArtists.sort(() => 0.5 - Math.random()).slice(0, 3);
+        this.setState({topThreeArtists: this.state.topArtists.sort(() => 0.5 - Math.random()).slice(0, 3)});
 
         // Fetch related artists for each top artist
-        topThreeArtists.map(async (artist) => {
-            const relatedArtists: ArtistsRelatedArtistsResponse = await fetch(
+        this.state.topThreeArtists.map(async (artist) => {
+            const relatedArtists = await fetch(
                 `${API_URL}api/spotify/artists/${artist.id}/related-artists`
             ).then((res) => res.json());
-            this.setState({artistsList: [...this.state.artistsList, relatedArtists.artists]});
+            //store related artist in artistsList
+            await this.setState({relatedArtistsList: [...this.state.relatedArtistsList, relatedArtists.artists]});
+            await this.setState({topArtistsName: [...this.state.topArtistsName, artist.name]});
             //store name
-            this.setState({topArtistsName: [...this.state.topArtistsName, artist.name]});
+            console.log(this.state.topThreeArtists)
         });
     }
 
     render() {
-        if (this.state.artistsList.length === 0) return <p>loading...</p>;
-        const relatedArtists = this.state.artistsList.map((artists) => {
+        // for recently played tracks
+        if (this.state.recentlyPlayedTracks.length === 0) return <p>loading...</p>;
+        const recentlyPlayedList = this.state.recentlyPlayedTracks.map((recentlyPlayedTrack) => {
+            const track = recentlyPlayedTrack.track as TrackObjectFull;
+            return (
+                <li className={"column"} key={recentlyPlayedTrack.played_at}>
+                    <Link to={`/album/${track.album.id}`}>
+                        <div className={"cover"} style={{
+                            backgroundImage: `url(${track.album.images[0].url})`
+                        }}>
+                        </div>
+                        <span className={"title"}>{track.name}</span>
+                    </Link>
+                </li>
+            );
+        });
+
+        // for new releases
+        if (this.state.newReleases.length === 0) return <p>loading...</p>;
+        const releases = this.state.newReleases.map((newReleasedAlbum) => {
+            return (
+                <li className="column" key={newReleasedAlbum.id}>
+                    <Link to={`/album/${newReleasedAlbum.id}`}>
+                        <div className={"cover"} style={{
+                            backgroundImage: `url(${newReleasedAlbum.images[0].url})`
+                        }}>
+                        </div>
+                        <span className="title">{newReleasedAlbum.name}</span>
+                    </Link>
+                </li>
+            );
+        });
+
+        // for more like 'artist'
+        if (this.state.relatedArtistsList.length === 0) return <p>loading...</p>;
+        const relatedArtists = this.state.relatedArtistsList.map((artists) => {
             const fiveArtists = artists.slice(0, 5);
+            // for each top artist, the five related artists are stored in elements
             const elements = fiveArtists.map((artist) => {
                     return (
                         <li className="column" key={artist.id}>
@@ -97,72 +144,47 @@ class Discover extends Component<IProps, IState> {
             return (elements);
         });
 
-        if (this.state.newReleases.length === 0) return <p>loading...</p>;
-        const releases = this.state.newReleases.map((newReleasedAlbum) => {
-            return (
-                <li className="column" key={newReleasedAlbum.id}>
-                    <Link to={`/album/${newReleasedAlbum.id}`}>
-                        <div className={"cover"} style={{
-                            backgroundImage: `url(${newReleasedAlbum.images[0].url})`
-                        }}>
-                        </div>
-                        <span className="title">{newReleasedAlbum.name}</span>
-                    </Link>
-                </li>
-            );
-        });
-
-        if (this.state.recentTracks.length === 0) return <p>loading...</p>;
-        const recentlyPlayedList = this.state.recentTracks.map((recentlyPlayedTrack) => {
-            const track = recentlyPlayedTrack.track as TrackObjectFull;
-            return (
-                <li className={"column"} key={recentlyPlayedTrack.played_at}>
-                    <Link to={`/album/${track.album.id}`}>
-                        <div className={"cover"} style={{
-                            backgroundImage: `url(${track.album.images[0].url})`
-                        }}>
-                        </div>
-                        <span className={"title"}>{track.name}</span>
-                    </Link>
-                </li>
-            );
-        });
-
-
         return (
             <>
                 <h2>Discover</h2>
                 <div style={{overflow: 'hidden auto'}}>
-                {/*Recently Played Tracks*/}
-                <div className={"recentlyPlayedTrackList"} key = "recentlyPlayed">
-                    <h3>Recently listened to</h3>
-                    <NavLink to={"/song-history"} className="button">View More</NavLink>
-                    <div className={"overview"}>
-                        <ul className={"overview-items"}
-                            style={{height: '40vh', overflow: 'hidden'}}>{recentlyPlayedList}</ul>
-                    </div>
-                </div>
-
-                {/*More like "artist"*/}
-                <div className={"relatedArtists"} key = "relatedArtists">
-                    {relatedArtists.map((artists, index) =>
-                        <div className={"overview"} key={this.state.topArtistsName[index]}>
-                            <h3>More like &quot;{this.state.topArtistsName[index]}&quot;</h3>
-                            <NavLink to={`/related-artists/${this.state.topArtists[index].id}` } className="button">View More</NavLink>
-                            <ul className={"overview-items"}
-                                style={{height: '40vh', overflow: 'hidden'}}>{artists}</ul>
+                    {/*Recently Played Tracks*/}
+                    <div className={"section"} key="recentlyPlayed">
+                        <div className={'header'}>
+                            <h3>Recently listened to</h3>
+                            <NavLink to={"/song-history"}>View More</NavLink>
                         </div>
-                    )}
-                </div>
-
-                {/*New Releases*/}
-                <div className={"newReleases"} key = "newReleases2">
-                    <h3>New Releases</h3>
-                    <NavLink to={"/new-releases"} className="button" id="viewMoreButton">View More</NavLink>
-                    <div className={"overview"}>
-                        <ul className={"overview-items"} style={{height: '40vh', overflow: 'hidden'}}>{releases}</ul>
+                        <div className={"overview"}>
+                            <ul className={"overview-items"}
+                                style={{height: '40vh', overflow: 'hidden'}}>{recentlyPlayedList}</ul>
+                        </div>
                     </div>
-                </div>
+
+                    {/*New Releases*/}
+                    <div className={"section"} key="newReleases">
+                        <div className={'header'}>
+                        <h3>New Releases</h3>
+                        <NavLink to={"/new-releases"}>View More</NavLink>
+                        </div>
+                        <div className={"overview"}>
+                            <ul className={"overview-items"}
+                                style={{height: '40vh', overflow: 'hidden'}}>{releases}</ul>
+                        </div>
+                    </div>
+
+                    {/*More like "artist"*/}
+                    <div className={"section"} key="relatedArtists">
+                        {relatedArtists.map((artists, index) =>
+                            <div className={"overview"} key={this.state.topArtistsName[index]}>
+                                <div className={'header'}>
+                                <h3>More like &quot;{this.state.topArtistsName[index]}&quot;</h3>
+                                <NavLink to={`/related-artists/${this.state.topThreeArtists[index].id}`}>View More</NavLink>
+                                </div>
+                                <ul className={"overview-items"}
+                                    style={{height: '40vh', overflow: 'hidden'}}>{artists}</ul>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </>
         );

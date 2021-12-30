@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {
-    ArtistObjectFull, ArtistsRelatedArtistsResponse
+    ArtistObjectFull, ArtistsRelatedArtistsResponse, SingleArtistResponse
 } from "spotify-types";
 import {API_URL} from '../../utils/constants';
 import {Link} from "react-router-dom";
@@ -12,6 +12,7 @@ interface IProps {
 }
 
 interface IState {
+    artistName: string;
     relatedArtistsList: ArtistObjectFull[];
 }
 
@@ -20,6 +21,7 @@ class RelatedArtists extends Component<IProps, IState> {
         super(props);
         this.state = {
             relatedArtistsList: [],
+            artistName: "",
         };
     }
 
@@ -30,6 +32,14 @@ class RelatedArtists extends Component<IProps, IState> {
         ).then((res) => res.json());
         // Save to state
         this.setState((state) => ({...state, relatedArtistsList: relatedArtists.artists}));
+
+
+        const artist: SingleArtistResponse = await fetch(
+            `${API_URL}api/spotify/artists/${this.props.id}`
+        ).then((res) => res.json());
+        // Save to state
+        this.setState((state) => ({...state, artistName: artist.name}));
+
     }
 
     render() {
@@ -50,7 +60,7 @@ class RelatedArtists extends Component<IProps, IState> {
 
         return (
             <div style={{overflow: 'hidden auto'}}>
-                <h2>More Like &quot; &quot;</h2>
+                <h2>More Like &quot;{this.state.artistName}&quot;</h2>
                 <div className={"overview"}>
                     <ul className={"overview-items"}>{relatedArtists}</ul>
                 </div>
