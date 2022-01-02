@@ -1,5 +1,6 @@
 import "./TrackList.scss";
 import { SavedTrackObject, TrackObjectFull } from "spotify-types";
+import { Link } from "react-router-dom";
 import { AlbumTrack } from "../Album/Album";
 import { PlaylistTrack } from "../Playlist/Playlist";
 import TrackContextMenuWrapper from "../TrackContextMenu/TrackContextMenuWrapper";
@@ -246,20 +247,24 @@ function TrackList(props: Props) {
             <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
               return (
-                <TrackListItem
-                  track={item}
-                  name={item.name}
-                  artists={item.artists}
-                  duration_ms={item.duration_ms}
-                  album={item.album}
-                  key={type + "-track-" + item.id + "-" + index}
-                  listIndex={index}
-                  selected={isTrackSelected(item, index)}
-                  onSelectionChange={handleSelectionChange}
-                  onContextMenuOpen={handleContextMenuOpen}
-                  id_tracklist={''}
-                  type={type}
-                />
+                <div key="TrackList">
+                  <Link to={`/album/${item.album.id}`} className={"Link"}>
+                    <TrackListItem
+                      track={item}
+                      name={item.name}
+                      artists={item.artists}
+                      duration_ms={item.duration_ms}
+                      album={item.album}
+                      key={type + "-track-" + item.id + "-" + index}
+                      listIndex={index}
+                      selected={isTrackSelected(item, index)}
+                      onSelectionChange={handleSelectionChange}
+                      onContextMenuOpen={handleContextMenuOpen}
+                      id_tracklist={''}
+                      type={type}
+                    />
+                  </Link> 
+                </div>
               );
             })}
             {!fullyLoaded ? (

@@ -4,6 +4,14 @@ import { API_URL } from '../../utils/constants';
 import CoverPlaceholder from '../CoverPlaceholder/CoverPlaceholder';
 import {Redirect} from 'react-router-dom';
 
+type Body = {
+  context_uri: string | undefined,
+  position_ms: number | undefined,
+  offset?: {
+    uri: string | undefined
+  }
+};
+
 interface IProps {}
 
 interface IState {
@@ -54,11 +62,14 @@ class Searchbar extends Component<IProps, IState> {
     this.setState((state) => ({...state, results: data.items}));
   }
 
-  async playSong(e: React.MouseEvent<HTMLElement>) {
-    const { dataset } = e.currentTarget;
-    const body = {
-      uris: [dataset.id],
+  async playSong(id: string, context: string) {
+    console.log(id, context);
+    const body: Body = {
+      context_uri: "spotify:album:" + context,
       position_ms: 0
+    }
+    body.offset = {
+      uri: id
     }
 
     fetch(`${API_URL}api/spotify/me/player/play`, {
@@ -66,15 +77,13 @@ class Searchbar extends Component<IProps, IState> {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     }).then(response => response.json());
-
-    this.setState({value: '', results: []});
   }
 
   render() {
     const { redirect } = this.state;
 
     const autofill = this.state.results.map((track) =>
-      <li key={track.uri} data-id={track.uri} className={'SearchbarResultItem'} onClick={this.playSong}>
+      <li key={track.uri} data-id={track.uri} className={'SearchbarResultItem'} onClick={() => this.playSong(track.uri, track.album?.id)}>
       {track.album !== undefined 
         ? <img height={32} width={32} src={track.album.images[2].url} alt={'Album Cover'} />
         : <CoverPlaceholder />
