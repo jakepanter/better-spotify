@@ -50,10 +50,17 @@ export default class App {
     /**
      * Perform a user's search with a given query
      */
-    this.server.get('/api/spotify/search', async (req: Request, res: Response) => {
+    this.server.get('/api/spotify/searchtracks', async (req: Request, res: Response) => {
       const { query } = req.query;
       if (query === undefined || query === '') return res.sendStatus(400);
       const tracks = await this.spotifyService.searchTracks(query.toString());
+      return res.json(tracks);
+    });
+
+    this.server.get('/api/spotify/search', async (req: Request, res: Response) => {
+      const { query } = req.query;
+      if (query === undefined || query === '') return res.sendStatus(400);
+      const tracks = await this.spotifyService.search(query.toString());
       return res.json(tracks);
     });
 

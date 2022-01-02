@@ -79,6 +79,19 @@ export default class SpotifyService {
     return searchRes.body.tracks;
   }
 
+  //search in every Category
+  search = async (query: string) => {
+    const searchRes = await this.spotifyApi.search(query, ['album', 'artist', 'playlist', 'track', 'show', 'episode']);
+
+    if (searchRes.statusCode !== 200) {
+      // Authorization did not work
+      // TODO: Error handling
+      return [];
+    }
+
+    return searchRes.body;
+  }
+
   getMySavedTracks = async (limit: number, offset: number) => {
     const options: any = { limit, offset };
     const tracks = await this.spotifyApi.getMySavedTracks(options);

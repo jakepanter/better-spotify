@@ -73,7 +73,7 @@ function App() {
               <Route path="/me/tracks">
                 <SavedTracks headerStyle={'full'}/>
               </Route>
-              <Route path="/search/:serach">
+              <Route path="/search/:search">
                 <SearchPage/>
               </Route>
             </Switch>

@@ -48,7 +48,7 @@ class Searchbar extends Component<IProps, IState> {
     }
 
     // Fetch results
-    const data = await fetch(`${API_URL}api/spotify/search?query=${value}`).then(res => res.json());
+    const data = await fetch(`${API_URL}api/spotify/searchtracks?query=${value}`).then(res => res.json());
 
     // Save to state
     this.setState((state) => ({...state, results: data.items}));
@@ -68,11 +68,6 @@ class Searchbar extends Component<IProps, IState> {
     }).then(response => response.json());
 
     this.setState({value: '', results: []});
-  }
-
-  search() {
-    // TODO
-    alert(this.state.value);
   }
 
   render() {
