@@ -193,8 +193,10 @@ export default class App {
 
     this.server.get('*', (req: Request, res: Response) => res.sendFile(path.join(`${__dirname}/../../frontend/build`)));
 
-    // DB
-    // TODO
+    this.server.put('/api/spotify/me/player/play', async (req: Request, res: Response) => {
+      const answer = await this.spotifyService.setTrack(req.body);
+      return res.json(answer);
+    });
 
     // Start
     this.server.listen(Config.general.port, () => {

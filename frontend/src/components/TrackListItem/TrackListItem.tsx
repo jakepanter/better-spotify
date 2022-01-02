@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 //anyone know how to satisfy eslint and the unused prop function variables????
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   AlbumObjectSimplified,
   ArtistObjectSimplified,
@@ -11,6 +11,14 @@ import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import "./TrackListItem.scss";
 import {API_URL} from "../../utils/constants";
+
+type Body = {
+  context_uri: string | undefined,
+  position_ms: number | undefined,
+  offset?: {
+    uri: string | undefined
+  }
+};
 
 type Props = {
   track: TrackObjectFull | TrackObjectSimplified;
@@ -28,6 +36,8 @@ type Props = {
     specialKey: String | null
   ) => void;
   onContextMenuOpen: (trackUri: String, x: number, y: number) => void;
+  id_tracklist: string;
+  type: string;
 };
 
 function TrackListItem(props: Props) {
@@ -36,6 +46,38 @@ function TrackListItem(props: Props) {
   const [selected, setSelected] = useState<boolean>(props.selected);
   const [specialKey, setSpecialKey] = useState<String | null>(null);
   const [liked, setLiked] = useState<boolean>(!!props.liked);
+
+  const id_tracklist= props.id_tracklist;
+  const type = props.type;
+  const track_uri = "spotify:track:" + props.track.id;
+
+  const sendRequest = useCallback(async () => {
+    // POST request using fetch inside useEffect React hook
+    let context_uri;
+    if (type === "album"){
+      context_uri = "spotify:album:" + id_tracklist;
+    } else if (type=="playlist") {
+      context_uri = "spotify:playlist:" + id_tracklist;
+    } else if (type === 'saved') {
+      const userId = await fetchUserId();
+      context_uri = userId + ':collection:'
+    }
+    const body: Body = {
+      context_uri: context_uri,
+      position_ms: 0
+    }
+    if (type !== 'saved') {
+      body.offset = {
+        uri: track_uri
+      }
+    }
+    fetch(`${API_URL}api/spotify/me/player/play`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    })
+        .then(response => response.json())
+  }, []);
 
   useEffect(() => {
     props.onSelectionChange(trackUniqueId, selected, specialKey);
@@ -54,6 +96,8 @@ function TrackListItem(props: Props) {
       setSpecialKey(null);
     }
     setSelected(!selected);
+
+    if (e.detail === 2) sendRequest()
   };
 
   const handleRightClick = (e: any) => {
@@ -61,24 +105,27 @@ function TrackListItem(props: Props) {
     props.onContextMenuOpen(trackUniqueId, e.pageX, e.pageY);
   };
 
+  const fetchUserId = async () => {
+    return await fetch(`${API_URL}api/spotify/me`).then(res => res.json()).then(data => data.uri)};
+
   const handleLikeButton = async (e: any) => {
     e.stopPropagation();
     if (!liked) {
       // add
       await fetch(`${API_URL}api/spotify/me/tracks/add?trackIds=${track.track.id}`)
-        .then((res) => res.json());
+          .then((res) => res.json());
       setLiked(true);
     } else {
       // remove
       await fetch(`${API_URL}api/spotify/me/tracks/remove?trackIds=${track.track.id}`)
-        .then((res) => res.json());
+          .then((res) => res.json());
       setLiked(false);
     }
   };
 
   return (
     <div
-      className={`TableRow ${selected ? "Selected" : ""}`}
+      className={`Pointer TableRow ${selected ? "Selected" : ""}`}
       onClick={(e) => handleClick(e)}
       onContextMenu={(e) => handleRightClick(e)}
     >

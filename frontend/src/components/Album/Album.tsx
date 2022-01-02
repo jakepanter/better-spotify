@@ -140,6 +140,7 @@ export default function Album(props: IProps) {
         }
         type={"album"}
         tracks={tracks}
+        id_tracklist={album.id}
       />
     </div>
   );
