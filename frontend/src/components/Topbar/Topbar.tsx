@@ -38,30 +38,30 @@ const Topbar = (props: IProps) => {
 
   return (
       <div className={'top-bar'}>
-          <div className={'top-bar-item search'}>
+          <div className={'top-bar-item search'} title={"Search for music, podcasts, albums ..."}>
               <Searchbar />
           </div>
           <div className={'top-bar-item volume'}>
             <Volume />
           </div>
           <div className={'top-bar-item settings'}>
-              <button className={'settings-button'} onClick={toggleEditable}>
+              <button className={'settings-button'} onClick={toggleEditable} title={"Customize start page"}>
                   <span className={'material-icons'}>{props.editable ? "close" : "edit"}</span>
               </button>
-              <button className={'settings-button'} onClick={authorize}>
+              <button className={'settings-button'} title={"Notifications"}>
+                  <span className={'material-icons'}>notifications</span>
+              </button>
+              <button className={'settings-button'} onClick={authorize}  title={"Log out"}>
                   <span className={'material-icons'}>login</span>
               </button>
               {image != ''
-                  ? <button className={'settings-button profile-image'}>
+                  ? <button className={'settings-button profile-image'} title={"Profile"}>
                       <img src={image} alt={'profile'} />
                   </button>
                   : <button className={'settings-button'}>
                       <span className={'material-icons'}>account_circle</span>
                   </button>
               }
-              <button className={'settings-button'}>
-                  <span className={'material-icons'}>notifications</span>
-              </button>
           </div>
       </div>
   );
