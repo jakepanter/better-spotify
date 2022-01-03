@@ -26,7 +26,7 @@ export default function SearchPage() {
         fetchSearchResult();
     }, [search]);
 
-    if (!result) return <p>loading...</p>;
+    if (!result) return <p></p>;
     
     let Artists, searchArtists;
     if(result.artists?.items && result.artists.items.length > 0) {
@@ -52,7 +52,7 @@ export default function SearchPage() {
         <div className={"section"}>
           <div className={'header'}>
               <h3>Artists</h3>
-              <Link to={"/"}>View More</Link>
+              <Link to={`/customsearch/artists/${search}`}>View More</Link>
           </div>
           <div className={"overview"}>
               <ul className={"overview-items"}
@@ -90,7 +90,7 @@ export default function SearchPage() {
       <div className={"section"}>
         <div className={'header'}>
             <h3>Albums</h3>
-            <Link to={"/"}>View More</Link>
+            <Link to={`/customsearch/albums/${search}`}>View More</Link>
         </div>
         <div className={"overview"}>
             <ul className={"overview-items"}
@@ -108,7 +108,7 @@ export default function SearchPage() {
       Playlists = result.playlists?.items.map((item) => {
         return(
           <li className="column" key={item.id}>
-            <Link to={`/album/${item.id}`}>
+            <Link to={`/playlist/${item.id}`}>
                 {item.images.length > 0 ? (
                   <div
                     className={"cover"}
@@ -128,7 +128,7 @@ export default function SearchPage() {
       <div className={"section"}>
         <div className={'header'}>
             <h3>Playlists</h3>
-            <Link to={"/"}>View More</Link>
+            <Link to={`/customsearch/playlists/${search}`}>View More</Link>
         </div>
         <div className={"overview"}>
             <ul className={"overview-items"}
@@ -166,7 +166,7 @@ export default function SearchPage() {
       <div className={"section"}>
         <div className={'header'}>
             <h3>Podcasts</h3>
-            <Link to={"/"}>View More</Link>
+            <Link to={`/customsearch/shows/${search}`}>View More</Link>
         </div>
         <div className={"overview"}>
             <ul className={"overview-items"}
@@ -202,7 +202,7 @@ export default function SearchPage() {
       <div className={"section"}>
           <div className={'header'}>
               <h3>Podcast Episodes</h3>
-              <Link to={"/"}>View More</Link>
+              <Link to={`/customsearch/episodes/${search}`}>View More</Link>
           </div>
           <div className={"overview"}>
               <ul className={"overview-items"}
@@ -232,7 +232,7 @@ export default function SearchPage() {
       <div className={'section'}>  
         <div className={'header'}>
             <h3>Tracks</h3>
-            <Link to={"/"}>View More</Link>
+            <Link to={`/customsearch/${"tracks"}/${search}`}>View More</Link>
         </div>
         <div className={"overview"} style={{marginTop: '3vh'}}>
           {Tracks}

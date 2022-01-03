@@ -1,6 +1,5 @@
 import "./TrackList.scss";
 import { SavedTrackObject, TrackObjectFull } from "spotify-types";
-import { Link } from "react-router-dom";
 import { AlbumTrack } from "../Album/Album";
 import { PlaylistTrack } from "../Playlist/Playlist";
 import TrackContextMenuWrapper from "../TrackContextMenu/TrackContextMenuWrapper";
@@ -248,7 +247,6 @@ function TrackList(props: Props) {
             {props.tracks.map((item, index) => {
               return (
                 <div key="TrackList">
-                  <Link to={`/album/${item.album.id}`} className={"Link"}>
                     <TrackListItem
                       track={item}
                       name={item.name}
@@ -263,7 +261,6 @@ function TrackList(props: Props) {
                       id_tracklist={''}
                       type={type}
                     />
-                  </Link> 
                 </div>
               );
             })}

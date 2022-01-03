@@ -67,6 +67,42 @@ export default class SpotifyService {
     return true;
   }
 
+  searchCustom = async (type: string, search: string) => {
+    let searchRes = null;
+
+    if (type === 'tracks') {
+      searchRes = await this.spotifyApi.searchTracks(search);
+    } 
+    else if (type === 'albums') {
+      searchRes = await this.spotifyApi.searchAlbums(search);
+    } 
+    else if (type === 'artists') {
+      searchRes = await this.spotifyApi.searchArtists(search);
+    } 
+    else if (type === 'playlists') {
+      searchRes = await this.spotifyApi.searchPlaylists(search);
+    } 
+    else if (type === 'shows') {
+      searchRes = await this.spotifyApi.searchShows(search);
+    } 
+    else if (type === 'episodes') {
+      searchRes = await this.spotifyApi.searchEpisodes(search);
+    } 
+    
+    if(searchRes == null) {
+      // TODO: Error handling
+      return [];
+    }
+
+    if (searchRes.statusCode !== 200) {
+      // Authorization did not work
+      // TODO: Error handling
+      return [];
+    }
+    
+    return searchRes.body;
+  }
+
   searchTracks = async (query: string) => {
     const searchRes = await this.spotifyApi.search(query, ['track']);
 

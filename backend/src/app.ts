@@ -50,6 +50,14 @@ export default class App {
     /**
      * Perform a user's search with a given query
      */
+     this.server.get('/api/spotify/customsearch', async (req: Request, res: Response) => {
+      const type = req.query?.type;
+      const search = req.query?.search;
+      if (type === undefined || type === '' || search=== undefined || search === '') return res.sendStatus(400);
+      const result = await this.spotifyService.searchCustom(type.toString(), search.toString());
+      return res.json(result);
+    });
+
     this.server.get('/api/spotify/searchtracks', async (req: Request, res: Response) => {
       const { query } = req.query;
       if (query === undefined || query === '') return res.sendStatus(400);
@@ -63,6 +71,7 @@ export default class App {
       const tracks = await this.spotifyService.search(query.toString());
       return res.json(tracks);
     });
+    /**
 
     /**
      * Get me

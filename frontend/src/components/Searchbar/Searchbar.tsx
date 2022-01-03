@@ -81,7 +81,6 @@ class Searchbar extends Component<IProps, IState> {
 
   render() {
     const { redirect } = this.state;
-
     const autofill = this.state.results.map((track) =>
       <li key={track.uri} data-id={track.uri} className={'SearchbarResultItem'} onClick={() => this.playSong(track.uri, track.album?.id)}>
       {track.album !== undefined 
