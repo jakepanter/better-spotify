@@ -1,10 +1,10 @@
 import "./TrackList.scss";
+import React, { useContext, useEffect, useState } from "react";
 import { SavedTrackObject, TrackObjectFull } from "spotify-types";
 import { AlbumTrack } from "../Album/Album";
 import { PlaylistTrack } from "../Playlist/Playlist";
-import TrackContextMenuWrapper from "../TrackContextMenu/TrackContextMenuWrapper";
-import React, { useEffect, useState } from "react";
 import TrackListItem from "../TrackListItem/TrackListItem";
+import AppContext from "../../AppContext";
 
 type Props =
   | {
@@ -29,13 +29,6 @@ type Props =
       id_tracklist: string;
     };
 
-type ContextMenuType = {
-  show: boolean;
-  x: number | null;
-  y: number | null;
-  clickedTrackUri: String;
-};
-
 function scrollHandler(
   e: React.UIEvent<HTMLDivElement>,
   loadMoreCallback: () => void
@@ -53,21 +46,26 @@ function TrackList(props: Props) {
   // stores currently selected track uris with their list index: (uri-listIndex, e.g spotify:track:HJG6FHmf7HG-3)
   // selectedTracks must have unique IDs to avoid weird behaviour when the same song is in a playlist multiple times
   const [selectedTracks, setSelected] = useState<String[]>([]);
-  const [contextMenu, setContextMenu] = useState<ContextMenuType>({
-    show: false,
-    x: null,
-    y: null,
-    clickedTrackUri: "",
-  });
+  const state = useContext(AppContext)
 
   useEffect(() => {
-    // close context menu when a new track is selected
-    if (
-      selectedTracks.length === 0 ||
-      (selectedTracks.length === 1 &&
-        selectedTracks[0] !== contextMenu.clickedTrackUri)
-    ) {
-      setContextMenu({ show: false, x: null, y: null, clickedTrackUri: "" });
+    if (selectedTracks.length === 0) state.setContextMenu({ ...state.contextMenu, isOpen: false, data: [], x: null, y: null })
+    else if (selectedTracks.length === 1) {
+      if (selectedTracks[0] !== state.contextMenu.data[0]) {
+        state.setContextMenu({
+          ...state.contextMenu,
+          type: "tracks",
+          isOpen: false,
+          data: selectedTracks,
+        });
+      }
+    } else {
+      state.setContextMenu({
+        ...state.contextMenu,
+        type: "tracks",
+        isOpen: false,
+        data: selectedTracks,
+      });
     }
   }, [selectedTracks]);
 
@@ -87,18 +85,12 @@ function TrackList(props: Props) {
     x: number,
     y: number
   ) => {
-    setContextMenu({
-      show: true,
-      x: x,
-      y: y,
-      clickedTrackUri: trackUniqueId,
-    });
-    if (!selectedTracks.some((track) => track === trackUniqueId))
+    if (!selectedTracks.some((track) => track === trackUniqueId)) {
+      state.setContextMenu({ ...state.contextMenu, isOpen: true, x: x, y: y, data: [trackUniqueId] })
       setSelected([trackUniqueId]);
-  };
-
-  const handleContextMenuClose = () => {
-    setContextMenu({ ...contextMenu, show: false });
+    } else {
+      state.setContextMenu({ ...state.contextMenu, isOpen: true, x: x, y: y, data: selectedTracks })
+    }
   };
 
   const addSelected = (trackUniqueId: String) => {
@@ -126,15 +118,6 @@ function TrackList(props: Props) {
 
   return (
     <>
-      {contextMenu.show && contextMenu.x && contextMenu.y && (
-        <TrackContextMenuWrapper
-          tracks={selectedTracks}
-          positionX={contextMenu.x}
-          positionY={contextMenu.y}
-          onClose={handleContextMenuClose}
-        />
-      )}
-
       {type === "album" && (
         <div
           className={"Tracklist"}

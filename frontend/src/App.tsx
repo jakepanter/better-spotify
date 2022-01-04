@@ -12,6 +12,8 @@ import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import Topbar from "./components/Topbar/Topbar";
 import SettingsPage from "./pages/SettingsPage/SettingsPage";
+import AppContext, { ContextMenu } from './AppContext';
+import ContextMenuWrapper from "./components/ContextMenu/ContextMenuWrapper";
 
 function authorize() {
   fetch(`${API_URL}api/spotify/get-auth-url`)
@@ -25,10 +27,22 @@ function authorize() {
 function App() {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [editable, setEditable] = useState(false);
+  const toggleEditable = () => setEditable(!editable);
   const [miniMenu, setMiniMenu] = useState(false);
   const menuToggle = () => { setMiniMenu(!miniMenu)};
+  const [contextMenu, setContextMenu] = useState<ContextMenu>({
+    isOpen: false,
+    type: "tracks",
+    x: null,
+    y: null,
+    data: [],
+  });
+  console.log(contextMenu)
 
-  const toggleEditable = () => setEditable(!editable);
+  const state = {
+    contextMenu: contextMenu,
+    setContextMenu,
+  };
 
   useEffect(() => {
     async function getAccessToken() {
@@ -49,8 +63,17 @@ function App() {
   }
 
   return (
+    <AppContext.Provider value={state}>
       <Router>
         <div className="structure">
+          {contextMenu.isOpen && contextMenu.x && contextMenu.y && (
+            <ContextMenuWrapper
+              type={contextMenu.type}
+              data={contextMenu.data}
+              positionX={contextMenu.x}
+              positionY={contextMenu.y}
+            />
+          )}
           {/* Minimize menu */}
           <button className={`minimizeMenuButton ${miniMenu ? "positionMenuButton" : ""}`} onClick={menuToggle}>{miniMenu ?
               <p className="material-icons minimize-icon turned" title={"Maximize menu"} >chevron_left</p> :
@@ -88,6 +111,7 @@ function App() {
           </div>
         </div>
       </Router>
+    </AppContext.Provider>
   );
 }
 

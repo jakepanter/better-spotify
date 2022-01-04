@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 //anyone know how to satisfy eslint and the unused prop function variables????
+import "./TrackListItem.scss";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   AlbumObjectSimplified,
@@ -8,9 +9,8 @@ import {
   TrackObjectSimplified,
 } from "spotify-types";
 import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
-import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
-import "./TrackListItem.scss";
 import {API_URL} from "../../utils/constants";
+import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 
 type Body = {
   context_uri: string | undefined,
