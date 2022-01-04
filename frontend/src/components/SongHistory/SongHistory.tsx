@@ -45,8 +45,7 @@ export default function SongHistory() {
 
     if (!recentTracks) return <p>loading...</p>;
 
-    //TODO
-    // fullyLoaded
+
     return (
         <TrackList fullyLoaded={beforeTimestamp === -1} loadMoreCallback={() => setLimitNumber(limitNumber + 1)} type={"songhistory"} tracks={recentTracks} id_tracklist={''}/>
     );

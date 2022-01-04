@@ -12,9 +12,6 @@ import "../../cards.scss";
 import {API_URL} from "../../utils/constants";
 import {NavLink, Link} from "react-router-dom";
 
-//TODO
-// Filter vor available country? for new releases
-
 interface IProps {
 }
 
