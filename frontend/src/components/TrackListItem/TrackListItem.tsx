@@ -10,6 +10,7 @@ import {
 } from "spotify-types";
 import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
 import {API_URL} from "../../utils/constants";
+import Button from "../Button/Button";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 
 type Body = {
@@ -106,7 +107,8 @@ function TrackListItem(props: Props) {
   };
 
   const fetchUserId = async () => {
-    return await fetch(`${API_URL}api/spotify/me`).then(res => res.json()).then(data => data.uri)};
+    return await fetch(`${API_URL}api/spotify/me`).then(res => res.json()).then(data => data.uri)
+  };
 
   const handleLikeButton = async (e: any) => {
     e.stopPropagation();
@@ -121,6 +123,11 @@ function TrackListItem(props: Props) {
           .then((res) => res.json());
       setLiked(false);
     }
+  }
+  const handleAddToPlaylist = (e: any) => {
+    console.log(e);
+    e.stopPropagation();
+    props.onContextMenuOpen(trackUniqueId, e.clientX, e.clientY);
   };
 
   return (
@@ -172,6 +179,14 @@ function TrackListItem(props: Props) {
       ) : (
         <></>
       )}
+      <div className="TableCell TableCellActions">
+        <Button
+          simple
+          icon="playlist_add"
+          className="material-icons"
+          onClick={handleAddToPlaylist}
+        />
+      </div>
     </div>
   );
 }
