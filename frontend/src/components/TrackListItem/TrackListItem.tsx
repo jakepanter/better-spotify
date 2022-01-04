@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 //anyone know how to satisfy eslint and the unused prop function variables????
 import "./TrackListItem.scss";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   AlbumObjectSimplified,
   ArtistObjectSimplified,
@@ -12,6 +12,7 @@ import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
 import {API_URL} from "../../utils/constants";
 import Button from "../Button/Button";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
+import AppContext from "../../AppContext";
 
 type Body = {
   context_uri: string | undefined,
@@ -47,6 +48,7 @@ function TrackListItem(props: Props) {
   const [selected, setSelected] = useState<boolean>(props.selected);
   const [specialKey, setSpecialKey] = useState<String | null>(null);
   const [liked, setLiked] = useState<boolean>(!!props.liked);
+  const state = useContext(AppContext)
 
   const id_tracklist= props.id_tracklist;
   const type = props.type;
@@ -125,9 +127,8 @@ function TrackListItem(props: Props) {
     }
   }
   const handleAddToPlaylist = (e: any) => {
-    console.log(e);
     e.stopPropagation();
-    props.onContextMenuOpen(trackUniqueId, e.clientX, e.clientY);
+    state.setContextMenu({ isOpen: true, data: [trackUniqueId], x: e.clientX, y: e.clientY, type: "addToPlaylist" })
   };
 
   return (
