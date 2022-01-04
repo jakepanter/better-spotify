@@ -37,7 +37,6 @@ function App() {
     y: null,
     data: [],
   });
-  console.log(contextMenu)
 
   const state = {
     contextMenu: contextMenu,

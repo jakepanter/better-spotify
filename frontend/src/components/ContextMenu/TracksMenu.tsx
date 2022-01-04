@@ -1,42 +1,31 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { API_URL } from "../../utils/constants";
 import { ControlledMenu, MenuItem, SubMenu, useMenuState } from "@szhsin/react-menu";
-import { CurrentUsersProfileResponse, ListOfUsersPlaylistsResponse, PlaylistObjectSimplified } from "spotify-types";
+import { CurrentUsersProfileResponse, ListOfUsersPlaylistsResponse } from "spotify-types";
 import AppContext from "../../AppContext";
+import useSWR from "swr";
 
 type Props = {
     data: String[];
     anchorPoint: { x: number, y: number };
-  }
+}
+
+const fetcher = (url: any) => fetch(url).then(r => r.json())
 
 function TracksMenu(props: Props) {
-    const [myPlaylists, setMyPlaylists] = useState<PlaylistObjectSimplified[]>();
     const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
     const state = useContext(AppContext)
 
+    const { data: playlists , error: playlistsError } = useSWR<ListOfUsersPlaylistsResponse>(`${API_URL}api/spotify/playlists`, fetcher);
+    const { data: me , error: meError } = useSWR<CurrentUsersProfileResponse>(`${API_URL}api/spotify/me`, fetcher);
+
     useEffect(() => {
         toggleMenu(true);
-        fetchMyPlaylists();
     }, []);
 
     useEffect(() => {
         toggleMenu(true);
     }, [props.anchorPoint]);
-
-    const fetchMyPlaylists = async () => {
-        const playlistsRequest: Promise<ListOfUsersPlaylistsResponse> = fetch(`${API_URL}api/spotify/playlists`)
-            .then(async (res) => {
-        return await res.json();
-        });
-        const meRequest: Promise<CurrentUsersProfileResponse> = fetch(
-            `${API_URL}api/spotify/me`
-        ).then(async (res) => {
-        return await res.json();
-        });
-        Promise.all([playlistsRequest, meRequest]).then(([playlists, me]) => {
-        setMyPlaylists(playlists.items.filter((list) => list.owner.id === me.id));
-        });
-    };
 
     const addToPlaylist = async (playlistId: String) => {
         state.setContextMenu({ ...state.contextMenu, isOpen: false })
@@ -52,6 +41,8 @@ function TracksMenu(props: Props) {
             }
         );
     };
+
+    if(playlistsError || meError) return <p>error</p>
   
     return (
         <ControlledMenu
@@ -61,8 +52,10 @@ function TracksMenu(props: Props) {
             >
             <MenuItem>Add to Queue</MenuItem>
             <SubMenu label={"Add to Playlist"}>
-                {myPlaylists ? (
-                myPlaylists.map((list) => (
+                {playlists && me ? (
+                playlists.items
+                .filter((list) => list.owner.id === me.id)
+                .map((list) => (
                     <MenuItem
                     key={list.id}
                     onClick={() => {

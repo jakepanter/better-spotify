@@ -86,10 +86,10 @@ function TrackList(props: Props) {
     y: number
   ) => {
     if (!selectedTracks.some((track) => track === trackUniqueId)) {
-      state.setContextMenu({ ...state.contextMenu, isOpen: true, x: x, y: y, data: [trackUniqueId] })
+      state.setContextMenu({ ...state.contextMenu, type: "tracks", isOpen: true, x: x, y: y, data: [trackUniqueId] })
       setSelected([trackUniqueId]);
     } else {
-      state.setContextMenu({ ...state.contextMenu, isOpen: true, x: x, y: y, data: selectedTracks })
+      state.setContextMenu({ ...state.contextMenu, type: "tracks", isOpen: true, x: x, y: y, data: selectedTracks })
     }
   };
 
