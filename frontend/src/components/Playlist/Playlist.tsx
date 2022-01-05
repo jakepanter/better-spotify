@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./Playlist.scss";
 import TrackList from "../TrackList/TrackList";
 import {
@@ -10,6 +10,7 @@ import {
 } from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
+import AppContext from "../../AppContext";
 
 // The fetching limit, can be adjusted by changing this value
 const limit = 50;
@@ -32,6 +33,7 @@ export default function Playlist(props: IProps) {
   const [tracks, setTracks] = useState<PlaylistTrack[]>([]);
   // The current offset for fetching new tracks
   const [offset, setOffset] = useState<number>(0);
+  const state = useContext(AppContext)
 
   async function fetchPlaylistData() {
     //this only fetches the total number of tracks, cover image and owner of the playlist, not the actual tracks
@@ -80,6 +82,10 @@ export default function Playlist(props: IProps) {
     return data;
   }
 
+  const openMenu = (e: any) => {
+    state.setContextMenu({ isOpen: true, x: e.clientX, y: e.clientY, type: "playlist", data: [] })
+  }
+
   // Fetch the main album data
   useEffect(() => {
     fetchPlaylistData();
@@ -116,7 +122,10 @@ export default function Playlist(props: IProps) {
                 {playlist.tracks.total === 1 ? "" : "s"}
               </p>
             </div>
-            <div className={"PlaylistHeaderFilter"}>{/* Filter */}</div>
+            <div className={"PlaylistHeaderFilter"}>
+              {/* Filter */}
+            </div>
+            <p className="material-icons minimize-icon" title={"More"} onClick={openMenu}>more_horiz</p>
           </div>
         )
       ) : (
