@@ -53,7 +53,7 @@ function App() {
 
     // close contextMenu on any click outside of a icon button
     document.addEventListener('click', (e: any) => {
-      if (state.contextMenu.isOpen && !e.target.className.includes('material-icon')) {
+      if (state.contextMenu.isOpen && !e.target.className.includes('material-icons')) {
         state.setContextMenu({ ...contextMenu, isOpen: false });
       }
     })
