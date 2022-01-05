@@ -83,7 +83,8 @@ export default function Playlist(props: IProps) {
   }
 
   const openMenu = (e: any) => {
-    state.setContextMenu({ isOpen: true, x: e.clientX, y: e.clientY, type: "playlist", data: [] })
+    //not working fully because 'tracks' initially only contains the first 50 tracks of a playlist
+    state.setContextMenu({ isOpen: true, x: e.clientX, y: e.clientY, type: "playlist", data: tracks.map(t => t.track.uri) })
   }
 
   // Fetch the main album data
