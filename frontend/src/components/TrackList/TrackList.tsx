@@ -5,25 +5,28 @@ import { PlaylistTrack } from "../Playlist/Playlist";
 import TrackContextMenuWrapper from "../TrackContextMenu/TrackContextMenuWrapper";
 import React, { useEffect, useState } from "react";
 import TrackListItem from "../TrackListItem/TrackListItem";
+import TagsSystem from "../../utils/tags-system";
 
-type Props =
-  | {
+type Props = {
       type: "album";
       tracks: AlbumTrack[];
       loadMoreCallback: () => void;
       fullyLoaded: boolean;
+      id_tracklist: string;
     }
   | {
       type: "playlist";
       tracks: PlaylistTrack[];
       loadMoreCallback: () => void;
       fullyLoaded: boolean;
+      id_tracklist: string;
     }
   | {
       type: "saved";
       tracks: SavedTrackObject[];
       loadMoreCallback: () => void;
       fullyLoaded: boolean;
+      id_tracklist: string;
     };
 
 type ContextMenuType = {
@@ -46,7 +49,7 @@ function scrollHandler(
 }
 
 function TrackList(props: Props) {
-  const { type, loadMoreCallback, fullyLoaded } = props;
+  const { type, loadMoreCallback, fullyLoaded, id_tracklist } = props;
   // stores currently selected track uris with their list index: (uri-listIndex, e.g spotify:track:HJG6FHmf7HG-3)
   // selectedTracks must have unique IDs to avoid weird behaviour when the same song is in a playlist multiple times
   const [selectedTracks, setSelected] = useState<String[]>([]);
@@ -121,6 +124,9 @@ function TrackList(props: Props) {
     return selectedTracks.some((track) => track === trackUniqueId);
   };
 
+  // Tags
+  const tags = TagsSystem.getTags();
+
   return (
     <>
       {contextMenu.show && contextMenu.x && contextMenu.y && (
@@ -144,10 +150,12 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
             <div className={"TableCell TableCellLiked"}>Liked</div>
+            <div className={"TableCell TableCellTags"}>Tags</div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
               const track = item;
+              const tagList = tags.spotifyElements[track.id]?.map((id) => tags.availableTags[id]) ?? [];
               return (
                 <TrackListItem
                   track={track}
@@ -160,6 +168,9 @@ function TrackList(props: Props) {
                   selected={isTrackSelected(track, index)}
                   onSelectionChange={handleSelectionChange}
                   onContextMenuOpen={handleContextMenuOpen}
+                  id_tracklist={id_tracklist}
+                  type={type}
+                  tags={tagList}
                 />
               );
             })}
@@ -188,10 +199,12 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellAddedAt"}>Added</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
             <div className={"TableCell TableCellLiked"}>Liked</div>
+            <div className={"TableCell TableCellTags"}>Tags</div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
               const { track } = item;
+              const tagList = tags.spotifyElements[track.id]?.map((id) => tags.availableTags[id]) ?? [];
               return (
                 <TrackListItem
                   track={track}
@@ -206,6 +219,9 @@ function TrackList(props: Props) {
                   selected={isTrackSelected(track, index)}
                   onSelectionChange={handleSelectionChange}
                   onContextMenuOpen={handleContextMenuOpen}
+                  id_tracklist={id_tracklist}
+                  type={type}
+                  tags={tagList}
                 />
               );
             })}
@@ -233,10 +249,12 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellAlbum"}>Album</div>
             <div className={"TableCell TableCellAddedAt"}>Added</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
+            <div className={"TableCell TableCellTags"}>Tags</div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
               const { track } = item;
+              const tagList = tags.spotifyElements[track.id]?.map((id) => tags.availableTags[id]) ?? [];
               return (
                 <TrackListItem
                   track={track}
@@ -250,6 +268,9 @@ function TrackList(props: Props) {
                   selected={isTrackSelected(track, index)}
                   onSelectionChange={handleSelectionChange}
                   onContextMenuOpen={handleContextMenuOpen}
+                  id_tracklist={''}
+                  type={type}
+                  tags={tagList}
                 />
               );
             })}

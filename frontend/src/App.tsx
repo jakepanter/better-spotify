@@ -11,6 +11,7 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import Topbar from "./components/Topbar/Topbar";
+import SettingsPage from "./pages/SettingsPage/SettingsPage";
 
 function authorize() {
   fetch(`${API_URL}api/spotify/get-auth-url`)
@@ -24,6 +25,8 @@ function authorize() {
 function App() {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [editable, setEditable] = useState(false);
+  const [miniMenu, setMiniMenu] = useState(false);
+  const menuToggle = () => { setMiniMenu(!miniMenu)};
 
   const toggleEditable = () => setEditable(!editable);
 
@@ -48,12 +51,16 @@ function App() {
   return (
       <Router>
         <div className="structure">
-          <div className="structure--left-panel">
+          {/* Minimize menu */}
+          <button className={`minimizeMenuButton ${miniMenu ? "positionMenuButton" : ""}`} onClick={menuToggle}>{miniMenu ?
+              <p className="material-icons minimize-icon turned" title={"Maximize menu"} >chevron_left</p> :
+              <p className="material-icons minimize-icon" title={"Minimize menu"} >chevron_left</p>}
+          </button>
+          <div className={`structure--left-panel ${miniMenu ? "minimizeMenu" : ""}`}>
             <Sidebar />
           </div>
           <div className="structure--main">
             <Topbar editable={editable} onChangeEditable={toggleEditable} />
-            <Player />
             <Switch>
               <Route exact path="/">
                 <Dashboard editable={editable} />
@@ -65,17 +72,19 @@ function App() {
                 <PlaylistPage />
               </Route>
               <Route path="/album/:id">
-                <h1>Album</h1>
                 <AlbumPage />
               </Route>
               <Route path="/collections/albums">
                 <Albums />
               </Route>
               <Route path="/me/tracks">
-                <h1>Saved Tracks</h1>
                 <SavedTracks headerStyle={'full'}/>
               </Route>
+              <Route path="/settings">
+                <SettingsPage/>
+              </Route>
             </Switch>
+            <Player />
           </div>
         </div>
       </Router>

@@ -51,7 +51,7 @@ $side-panel-size: 190px;
 // padding
 $spacer: 2rem !default;
 $padding-vertical: $spacer/2 !default;
-$padding-horizontal: $spacer !default;
+$padding-horizontal: 1rem !default;
 
 // borders
 $border-width: 1px !default;
@@ -60,7 +60,7 @@ $border-style: solid;
 $border-radius: 5px !default;
 
 // transitions
-$transition-base: all 0.5s ease-in-out !default;
+$transition-base: all 0.2s ease-in-out !default;
 $transition-fade: opacity .2s linear !default;
 
 // fonts
@@ -126,6 +126,14 @@ $button-padding-vertical: 15px !default;
 $button-transition-base: $transition-base !default;
 
 $checkbox-icon: $color-primary;
+
+// Tags
+$color-tag-0: $color-primary;
+$color-tag-1: #FA7627;
+$color-tag-2: #481CFC;
+$color-tag-3: #F7DF19;
+$color-tag-4: #0CF79D;
+$color-tag-5: #FA160F;
 
 
 /*

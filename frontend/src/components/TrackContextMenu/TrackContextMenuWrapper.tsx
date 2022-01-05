@@ -15,6 +15,7 @@ import {
 import "@szhsin/react-menu/dist/index.css";
 import { API_URL } from "../../utils/constants";
 import { createNewPlaylist } from "../../helpers/api-helpers";
+import TagsSystem from "../../utils/tags-system";
 
 type Props = {
   tracks: String[];
@@ -24,6 +25,11 @@ type Props = {
 };
 
 function TrackContextMenuWrapper(props: Props) {
+  const trackId = props.tracks.map((track) => track.split("-")[0].split(':')[2])[0];
+
+  const tags = TagsSystem.getTags();
+  const [tagsForTrack, setTagsForTrack] = useState<string[]>(TagsSystem.getTagsOfElement(trackId));
+
   const [anchorPoint, setAnchorPoint] = useState({
     x: props.positionX,
     y: props.positionY,
@@ -85,6 +91,15 @@ function TrackContextMenuWrapper(props: Props) {
     addToPlaylist(newPlaylist.id);
   };
 
+  const setTags = (tagId: string, checked: boolean) => {
+    if (checked) {
+      TagsSystem.addTagToElement(trackId, tagId);
+    } else {
+      TagsSystem.removeTagFromElement(trackId, tagId);
+    }
+    setTagsForTrack(TagsSystem.getTagsOfElement(trackId));
+  }
+
   return (
     <ControlledMenu
       {...menuProps}
@@ -111,6 +126,21 @@ function TrackContextMenuWrapper(props: Props) {
         )}
       </SubMenu>
       <MenuItem>Like</MenuItem>
+      <SubMenu label={"Tags"}
+               overflow={"auto"}
+               position={"anchor"}
+               disabled={Object.keys(tags.availableTags).length === 0}
+      >
+        {Object.entries(tags.availableTags).map((e) =>
+          <MenuItem key={e[0]}
+                    type={"checkbox"}
+                    checked={tagsForTrack.includes(e[0])}
+                    onClick={(event) => setTags(e[0], event.checked !== undefined ? event.checked : false)}
+          >
+            {e[1].title}
+          </MenuItem>
+        )}
+      </SubMenu>
     </ControlledMenu>
   );
 }

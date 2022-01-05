@@ -88,6 +88,26 @@ export default class App {
       return res.json(data);
     });
 
+    /**
+     * Add multiple tracks to saved tracks
+     * Accepts a list of track ids
+     */
+    this.server.get('/api/spotify/me/tracks/add', async (req: Request, res: Response) => {
+      const trackIds: string[] = (req.query.trackIds as string ?? '').split(',');
+      const data = await this.spotifyService.addToSavedTracks(trackIds);
+      return res.json(data);
+    });
+
+    /**
+     * Remove multiple tracks from saved tracks
+     * Accepts a list of track ids
+     */
+    this.server.get('/api/spotify/me/tracks/remove', async (req: Request, res: Response) => {
+      const trackIds: string[] = (req.query.trackIds as string ?? '').split(',');
+      const data = await this.spotifyService.removeFromSavedTracks(trackIds);
+      return res.json(data);
+    });
+
     this.server.get('/api/spotify/album/:albumId', async (req: Request, res: Response) => {
       const albumId = req.params.albumId as string;
       const album = await this.spotifyService.getAlbum(albumId);
@@ -157,8 +177,10 @@ export default class App {
 
     this.server.get('*', (req: Request, res: Response) => res.sendFile(path.join(`${__dirname}/../../frontend/build`)));
 
-    // DB
-    // TODO
+    this.server.put('/api/spotify/me/player/play', async (req: Request, res: Response) => {
+      const answer = await this.spotifyService.setTrack(req.body);
+      return res.json(answer);
+    });
 
     // Start
     this.server.listen(Config.general.port, () => {

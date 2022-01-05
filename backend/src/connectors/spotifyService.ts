@@ -118,6 +118,16 @@ export default class SpotifyService {
     return data.body;
   }
 
+  addToSavedTracks = async (trackIds: string[]) => {
+    const data = await this.spotifyApi.addToMySavedTracks(trackIds);
+    return data.body;
+  };
+
+  removeFromSavedTracks = async (trackIds: string[]) => {
+    const data = await this.spotifyApi.removeFromMySavedTracks(trackIds);
+    return data.body;
+  };
+
   getMyPlaylists = async (limit: number, offset: number) => {
     const options: any = { limit, offset };
     const result = await this.spotifyApi.getUserPlaylists(options);
@@ -154,4 +164,9 @@ export default class SpotifyService {
   }
 
   getAccessToken = async () => this.spotifyApi.getAccessToken();
+
+  setTrack = async (options: Object) => {
+    const result = await this.spotifyApi.play(options);
+    return result.body;
+  }
 }
