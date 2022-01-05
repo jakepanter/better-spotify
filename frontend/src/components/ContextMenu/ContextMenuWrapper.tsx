@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "@szhsin/react-menu/dist/index.css";
 import TracksMenu from "./TracksMenu";
 import AddToPlaylistsMenu from "./AddToPlaylistsMenu";
 import PlaylistMenu from "./PlaylistMenu";
+import AppContext from "../../AppContext";
 
 type MenuProps = {
   type: String;
@@ -16,11 +17,13 @@ function ContextMenuWrapper(props: MenuProps) {
     x: props.positionX,
     y: props.positionY,
   });
+  const state = useContext(AppContext)
 
   useEffect(() => {
     setAnchorPoint({ x: props.positionX, y: props.positionY})
   }, [props.positionX, props.positionY])
   
+  if (!state.contextMenu.isOpen) return null
   if (props.type === "tracks") return <TracksMenu data={props.data} anchorPoint={anchorPoint}/>
   else if (props.type === "addToPlaylist") return <AddToPlaylistsMenu data={props.data} anchorPoint={anchorPoint}/>
   else if (props.type === "playlist") return <PlaylistMenu data={props.data} anchorPoint={anchorPoint}/>
