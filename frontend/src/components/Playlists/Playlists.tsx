@@ -7,7 +7,6 @@ import {
 } from "spotify-types";
 import "./Playlists.scss";
 import { API_URL } from "../../utils/constants";
-import Button from "../Button/Button";
 import "../../cards.scss";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import { createNewPlaylist } from "../../helpers/api-helpers";
@@ -80,8 +79,15 @@ class Playlists extends Component<IProps, IState> {
 
     return (
       <div style={{ overflow: "hidden auto" }}>
-        <h2>My Playlists</h2>
-        <Button onClick={this.handleCreateNewPlaylist}>New Playlist</Button>
+          <h2>
+        <span>
+            My Playlists
+          <button className="add-button" onClick={this.handleCreateNewPlaylist}>
+            <span className="material-icons">add</span>
+            <span className="text">New Playlist</span>
+          </button>
+        </span>
+            </h2>
         <div className={"overview"}>
           <ul className={"overview-items"}>{playlists}</ul>
         </div>
