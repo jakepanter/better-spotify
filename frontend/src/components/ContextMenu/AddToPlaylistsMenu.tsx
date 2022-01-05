@@ -4,6 +4,7 @@ import { ControlledMenu, MenuItem, useMenuState } from "@szhsin/react-menu";
 import { CurrentUsersProfileResponse, ListOfUsersPlaylistsResponse } from "spotify-types";
 import AppContext from "../../AppContext";
 import useSWR from "swr";
+import "./ContextMenu.scss"
 
 type Props = {
     data: String[];
