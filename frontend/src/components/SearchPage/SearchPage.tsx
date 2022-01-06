@@ -54,7 +54,7 @@ export default function SearchPage() {
               <h3>Artists</h3>
               <Link to={`/customsearch/artists/${search}`}>View More</Link>
           </div>
-          <div className={"overview"}>
+          <div className={"searchPage overview"}>
               <ul className={"overview-items"}
                   style={{height: '37vh', overflow: 'hidden'}}>{Artists}</ul>
           </div>
@@ -92,7 +92,7 @@ export default function SearchPage() {
             <h3>Albums</h3>
             <Link to={`/customsearch/albums/${search}`}>View More</Link>
         </div>
-        <div className={"overview"}>
+        <div className={"overview searchPage"}>
             <ul className={"overview-items"}
                 style={{height: '40vh', overflow: 'hidden'}}>{Albums}</ul>
         </div>
@@ -130,7 +130,7 @@ export default function SearchPage() {
             <h3>Playlists</h3>
             <Link to={`/customsearch/playlists/${search}`}>View More</Link>
         </div>
-        <div className={"overview"}>
+        <div className={"overview searchPage"}>
             <ul className={"overview-items"}
                 style={{height: '40vh', overflow: 'hidden'}}>{Playlists}</ul>
         </div>
@@ -168,7 +168,7 @@ export default function SearchPage() {
             <h3>Podcasts</h3>
             <Link to={`/customsearch/shows/${search}`}>View More</Link>
         </div>
-        <div className={"overview"}>
+        <div className={"overview searchPage"}>
             <ul className={"overview-items"}
                 style={{height: '40vh', overflow: 'hidden'}}>{Shows}</ul>
         </div>
@@ -204,7 +204,7 @@ export default function SearchPage() {
               <h3>Podcast Episodes</h3>
               <Link to={`/customsearch/episodes/${search}`}>View More</Link>
           </div>
-          <div className={"overview"}>
+          <div className={"overview searchPage"}>
               <ul className={"overview-items"}
                   style={{height: '37vh', overflow: 'hidden'}}>{Episodes}</ul>
           </div>
@@ -234,7 +234,7 @@ export default function SearchPage() {
             <h3>Tracks</h3>
             <Link to={`/customsearch/${"tracks"}/${search}`}>View More</Link>
         </div>
-        <div className={"overview"} style={{marginTop: '3vh'}}>
+        <div className={"overview searchPage"} style={{marginTop: '3vh'}}>
           {Tracks}
         </div>
       </div>
@@ -246,7 +246,7 @@ export default function SearchPage() {
     return (
       <div style={{ overflow: "hidden auto" }}>
         <h2>Search for &quot;{search}&quot;</h2>
-        <div className={"overview"}>
+        <div className={"overview searchPage"}>
           {searchTracks}
           {searchAlbums}
           {searchArtists}
