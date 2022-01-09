@@ -20,7 +20,7 @@ interface IState {
   results: any[];
 }
 
-class Searchbar extends Component<IProps, IState> {
+class Searchbar extends Component<IProps, IState> {  
   constructor(props: IProps) {
     super(props);
 
@@ -37,6 +37,10 @@ class Searchbar extends Component<IProps, IState> {
   async handleKeyUp(e: any) {
     const value = e.target.value;
     const key = e.which;
+
+    var searchbarResults = document.getElementById("SearchbarResultsID");
+    if(searchbarResults != null)
+      searchbarResults.style.display = 'block';
 
     this.setState((state) => ({...state, value: value}));
 
@@ -105,9 +109,10 @@ class Searchbar extends Component<IProps, IState> {
         <div className={'Searchbar'}>
           <span className={'material-icons search-icon'}>search</span>
           <input className={'SearchbarInput'} type={'search'} placeholder={'Artist, Albums, Songs ...'} onKeyUp={this.handleKeyUp} />
-          {this.state.results.length > 0
-          ? <ul className={'SearchbarResults'}>
-                {autofill}
+          {this.state.results.length > 0 
+            ?   
+              <ul className={'SearchbarResults'}>
+                  {autofill}
               </ul>
           : ''}
         </div>

@@ -12,8 +12,6 @@ export default function SearchPageCustom() {
     let params = useParams() as { type: string, search: string };
     const search = params.search;
     const type = params.type;
-
-    console.log(search, type);
     const [result, setSearchResult] = useState<SearchResponse>()
 
     async function fetchSearchResult() {
@@ -22,8 +20,6 @@ export default function SearchPageCustom() {
         ).then((res) => res.json());
         
         setSearchResult(data);
-        console.log(data);
-        console.log("hallo");
     }
 
     useEffect(() => {
@@ -39,9 +35,7 @@ export default function SearchPageCustom() {
                 fullyLoaded = {true}
                 type={"search"}
                 tracks={result.tracks?.items}
-                loadMoreCallback={() =>
-                    console.log("")
-                }
+                loadMoreCallback={() => null}
                 id_tracklist={search}
                 />
             );
@@ -57,7 +51,6 @@ export default function SearchPageCustom() {
         }
     } 
     
-
     if(type == 'albums') {
         const searchAlbums = result.albums?.items.map((item) => {
             return (
@@ -205,8 +198,6 @@ export default function SearchPageCustom() {
             </div>
         )
     }
-
-
     return (
         <div style={{ overflow: "hidden auto" }}>
         </div>

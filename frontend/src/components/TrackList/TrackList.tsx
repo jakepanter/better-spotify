@@ -254,6 +254,7 @@ function TrackList(props: Props) {
             </div>
             <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
+              const tagList = tags.spotifyElements[item.id]?.map((id) => tags.availableTags[id]) ?? [];
               return (
                 <div key="TrackList">
                     <TrackListItem
@@ -269,6 +270,7 @@ function TrackList(props: Props) {
                       onContextMenuOpen={handleContextMenuOpen}
                       id_tracklist={''}
                       type={type}
+                      tags={tagList}
                     />
                 </div>
               );

@@ -221,9 +221,7 @@ export default function SearchPage() {
           fullyLoaded = {true}
           type={"search"}
           tracks={result.tracks.items.slice(0, 9)}
-          loadMoreCallback={() =>
-            console.log("")
-          }
+          loadMoreCallback={() => null}
           id_tracklist={search}
         />
       );
