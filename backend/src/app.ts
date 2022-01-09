@@ -155,6 +155,17 @@ export default class App {
       return res.status(200);
     });
 
+    this.server.get('/api/spotify/artist/:artistId/albums', async (req: Request, res: Response) => {
+      const artistId = req.params.artistId as string;
+
+      const include_groups = req.query?.include_groups as string ?? undefined;
+      const limit = Number(req.query?.limit ?? 20);
+      const market = req.query?.market as string ?? "DE";
+      const offset = Number(req.query?.offset ?? 0);
+      const albums = await this.spotifyService.getArtistAlbums(artistId, limit, market, offset, include_groups);
+      return res.json(albums);
+    });
+
     this.server.get('/api/spotify/playlist/:playlistId/tracks', async (req: Request, res: Response) => {
       const limit = Number(req.query?.limit ?? 50);
       const offset = Number(req.query?.offset ?? 0);

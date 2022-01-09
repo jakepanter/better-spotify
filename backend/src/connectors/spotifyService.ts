@@ -150,6 +150,12 @@ export default class SpotifyService {
     return album.body;
   }
 
+  getArtistAlbums = async (artistId: string, limit: number, market: string, offset: number, include_groups?: string) => {
+    const options: any = { limit, market, offset , include_groups};
+    const albums = await this.spotifyApi.getArtistAlbums(artistId, options);
+    return albums.body;
+  }
+
   setVolume = async (volume: number) => {
     const result = await this.spotifyApi.setVolume(volume);
     return result;

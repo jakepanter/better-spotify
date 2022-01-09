@@ -9,6 +9,7 @@ import {
 import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import TrackList from "../TrackList/TrackList";
+import {Link} from "react-router-dom";
 
 // The fetching limit, can be adjusted by changing this value
 const limit = 20;
@@ -122,10 +123,12 @@ export default function Album(props: IProps) {
             <div className={"PlaylistHeaderMeta"}>
               <h4>Album</h4>
               <h1>{album.name}</h1>
-              <p>
+              {/*TODO Link weg machen!*/}
+              <Link to={`/artist/${album.artists[0].id}`}><p>
                 by {album.artists.map((a) => a.name).join(", ")} —{" "}
                 {album.tracks.total} Song{album.tracks.total === 1 ? "" : "s"}
               </p>
+              </Link>
             </div>
             <div className={"PlaylistHeaderFilter"}>{/* Filter */}</div>
           </div>
