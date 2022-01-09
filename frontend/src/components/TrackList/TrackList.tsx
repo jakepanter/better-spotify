@@ -6,6 +6,7 @@ import TrackContextMenuWrapper from "../TrackContextMenu/TrackContextMenuWrapper
 import React, { useEffect, useState } from "react";
 import TrackListItem from "../TrackListItem/TrackListItem";
 import TagsSystem from "../../utils/tags-system";
+import {TagsTrack} from "../TagTracklist/TagTracklist";
 
 type Props = {
       type: "album";
@@ -27,7 +28,15 @@ type Props = {
       loadMoreCallback: () => void;
       fullyLoaded: boolean;
       id_tracklist: string;
-    };
+    }
+  | {
+      type: "tags";
+      tracks: TagsTrack[];
+      loadMoreCallback: () => void;
+      fullyLoaded: boolean;
+      id_tracklist: string;
+      hideTag: string;
+};
 
 type ContextMenuType = {
   show: boolean;
@@ -155,7 +164,7 @@ function TrackList(props: Props) {
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
               const track = item;
-              const tagList = tags.spotifyElements[track.id]?.map((id) => tags.availableTags[id]) ?? [];
+              const tagList = TagsSystem.getTagsOfElement(track.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
               return (
                 <TrackListItem
                   track={track}
@@ -204,7 +213,7 @@ function TrackList(props: Props) {
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
               const { track } = item;
-              const tagList = tags.spotifyElements[track.id]?.map((id) => tags.availableTags[id]) ?? [];
+              const tagList = TagsSystem.getTagsOfElement(track.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
               return (
                 <TrackListItem
                   track={track}
@@ -254,7 +263,7 @@ function TrackList(props: Props) {
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
               const { track } = item;
-              const tagList = tags.spotifyElements[track.id]?.map((id) => tags.availableTags[id]) ?? [];
+              const tagList = TagsSystem.getTagsOfElement(track.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
               return (
                 <TrackListItem
                   track={track}
@@ -270,6 +279,54 @@ function TrackList(props: Props) {
                   onContextMenuOpen={handleContextMenuOpen}
                   id_tracklist={''}
                   type={type}
+                  tags={tagList}
+                />
+              );
+            })}
+            {!fullyLoaded ? (
+              <div className={"PlaylistLoader"}>
+                <div className={"loader"} />
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+      )}
+
+      {type === "tags" && (
+        <div
+          className={"Tracklist"}
+          onScroll={(e: React.UIEvent<HTMLDivElement>) =>
+            scrollHandler(e, loadMoreCallback)
+          }
+        >
+          <div className={"TableHeader TableRow"}>
+            <div className={"TableCell TableCellArtwork"} />
+            <div className={"TableCell TableCellTitleArtist"}>Title</div>
+            <div className={"TableCell TableCellAlbum"}>Album</div>
+            <div className={"TableCell TableCellDuration"}>Duration</div>
+            <div className={"TableCell TableCellLiked"}>Liked</div>
+            <div className={"TableCell TableCellTags"}>Tags</div>
+          </div>
+          <div className={"TableBody"}>
+            {props.tracks.map((track, index) => {
+              const tagList = TagsSystem.getTagsOfElement(track.id).filter((t) => t !== props.hideTag).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
+              return (
+                <TrackListItem
+                  track={track}
+                  name={track.name}
+                  artists={track.artists}
+                  duration_ms={track.duration_ms}
+                  album={track.album}
+                  key={type + "-track-" + track.id + "-" + index}
+                  listIndex={index}
+                  selected={isTrackSelected(track, index)}
+                  onSelectionChange={handleSelectionChange}
+                  onContextMenuOpen={handleContextMenuOpen}
+                  id_tracklist={id_tracklist}
+                  type={type}
+                  liked={track.is_saved}
                   tags={tagList}
                 />
               );

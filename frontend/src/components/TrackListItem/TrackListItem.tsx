@@ -11,7 +11,8 @@ import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import "./TrackListItem.scss";
 import {API_URL} from "../../utils/constants";
-import {Tag} from "../../utils/tags-system";
+import TagsSystem, {Tag} from "../../utils/tags-system";
+import { Link } from "react-router-dom";
 
 type Body = {
   context_uri: string | undefined,
@@ -20,6 +21,10 @@ type Body = {
     uri: string | undefined
   }
 };
+
+interface TagWithId extends Tag {
+  id: string;
+}
 
 type Props = {
   track: TrackObjectFull | TrackObjectSimplified;
@@ -31,7 +36,7 @@ type Props = {
   album?: AlbumObjectSimplified;
   listIndex: number;
   selected: boolean;
-  tags: Tag[];
+  tags?: TagWithId[];
   onSelectionChange: (
     trackUniqueId: String,
     isSelected: boolean,
@@ -60,7 +65,7 @@ function TrackListItem(props: Props) {
       context_uri = "spotify:album:" + id_tracklist;
     } else if (type=="playlist") {
       context_uri = "spotify:playlist:" + id_tracklist;
-    } else if (type === 'saved') {
+    } else if (type === 'saved' || type === 'tags') {
       const userId = await fetchUserId();
       context_uri = userId + ':collection:'
     }
@@ -68,7 +73,7 @@ function TrackListItem(props: Props) {
       context_uri: context_uri,
       position_ms: 0
     }
-    if (type !== 'saved') {
+    if (type !== 'saved' && type !== 'tags') {
       body.offset = {
         uri: track_uri
       }
@@ -174,15 +179,20 @@ function TrackListItem(props: Props) {
       ) : (
         <></>
       )}
-      <div className={"TableCell TableCellTags"}>
-        {track.tags.map((t, i) =>
-          <span key={i}
-                className={`Tag TagColor${t.color}`}
-          >
-            {t.title}
-          </span>
-        )}
-      </div>
+      {track.tags !== undefined ? (
+        <div className={"TableCell TableCellTags"}>
+          {track.tags.map((t, i) =>
+            <Link key={i}
+                  className={`Tag TagColor${t.color}`}
+                  to={`/tag/${t.id}`}
+            >
+              {t.title}
+            </Link>
+          )}
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

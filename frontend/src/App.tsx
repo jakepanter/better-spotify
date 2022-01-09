@@ -12,6 +12,7 @@ import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import Topbar from "./components/Topbar/Topbar";
 import SettingsPage from "./pages/SettingsPage/SettingsPage";
+import TagTracklistPage from "./pages/TagTracklistPage/TagTracklistPage";
 
 function authorize() {
   fetch(`${API_URL}api/spotify/get-auth-url`)
@@ -82,6 +83,9 @@ function App() {
               </Route>
               <Route path="/settings">
                 <SettingsPage/>
+              </Route>
+              <Route path="/tag/:id">
+                <TagTracklistPage/>
               </Route>
             </Switch>
             <Player />

@@ -44,6 +44,12 @@ export default class TagsSystem {
     return newTagId;
   }
 
+  static getTagById(tagId: string) {
+    const tags = TagsSystem.getTags();
+
+    return tags.availableTags[tagId] ?? null;
+  }
+
   static editTag(tagId: string, newProps: { title?: string, color?: number }) {
     const tags = TagsSystem.getTags();
 
@@ -83,6 +89,11 @@ export default class TagsSystem {
     tags.spotifyElements[elementId] = tagIds;
 
     TagsSystem.saveTags(tags);
+  }
+
+  static getElementsForTag(tagId: string) {
+    const tags = TagsSystem.getTags();
+    return Object.entries(tags.spotifyElements).filter((e) => e[1].includes(tagId)).map((e) => e[0]) ?? [];
   }
 
   static addTagToElement(elementId: string, tagId: string) {

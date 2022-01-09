@@ -4,7 +4,6 @@ import Dialog from "../../components/Dialog/Dialog";
 import TagsSystem, {TagData} from "../../utils/tags-system";
 
 function SettingsPage() {
-  // TODO: will be implemented by TagSystem
   const [tags, setTags] = useState<TagData>(TagsSystem.getTags());
 
   const [showDialogAddTag, setShowDialogAddTag] = useState<boolean>(false);
