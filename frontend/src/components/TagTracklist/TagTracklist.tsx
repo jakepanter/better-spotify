@@ -72,9 +72,7 @@ function TagTracklist(props: IProps) {
       {headerStyle !== "none" ? (
         headerStyle === "compact" ? (
           <div className={"PlaylistHeader PlaylistHeaderCompact"}>
-            <h2>
-              {}
-            </h2>
+            <h2>{tagData.title}</h2>
           </div>
         ) : (
           <div className={"PlaylistHeader PlaylistHeaderFull"}>
