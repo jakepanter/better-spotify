@@ -163,6 +163,12 @@ export default class App {
       return res.json(album);
     });
 
+    this.server.get('/api/spotify/playlist/:playlistId/unfollow', async (req: Request, res: Response) => {
+      const playlistId = req.params.playlistId as string;
+      await this.spotifyService.unfollowPlaylist(playlistId);
+      return res.status(200);
+    });
+
     this.server.get('/api/spotify/volume', async (req: Request, res: Response) => {
       const volume: any = req.query?.volume ?? 100;
       const result = await this.spotifyService.setVolume(volume);
