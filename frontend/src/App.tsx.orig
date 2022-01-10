@@ -11,11 +11,8 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import Topbar from "./components/Topbar/Topbar";
-<<<<<<< HEAD
 import SearchPage from "./components/SearchPage/SearchPage";
-=======
 import SettingsPage from "./pages/SettingsPage/SettingsPage";
->>>>>>> ce02178c57d8c2c600018afa0c89121c942bea00
 
 function authorize() {
   fetch(`${API_URL}api/spotify/get-auth-url`)
