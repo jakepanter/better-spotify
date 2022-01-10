@@ -29,30 +29,27 @@ export default function Playlist(props: IProps) {
 
   // The album object itself
   const [playlist, setPlaylist] = useState<PlaylistObjectFull>();
+  const [title, setTitle] = useState("");
   // The list of tracks of the album
   const [tracks, setTracks] = useState<PlaylistTrack[]>([]);
   // The current offset for fetching new tracks
   const [offset, setOffset] = useState<number>(0);
-  const state = useContext(AppContext)
+  const state = useContext(AppContext);
 
   async function fetchPlaylistData() {
     //this only fetches the total number of tracks, cover image and owner of the playlist, not the actual tracks
     const data: SinglePlaylistResponse = await fetch(
-      `${API_URL}api/spotify/playlist/${id}?fields=tracks(total)&fields=images&fields=owner&fields=name`
+      `${API_URL}api/spotify/playlist/${id}?fields=tracks(total)&fields=images&fields=owner&fields=name&fields=id`
     ).then((res) => res.json());
 
     // Save album data
     setPlaylist(data);
+    setTitle(data.name);
   }
 
   async function fetchPlaylistTrackData(newOffset: number) {
     // Only fetch if there are tracks left to fetch
-    if (
-      playlist &&
-      playlist.tracks &&
-      playlist.tracks.total &&
-      playlist.tracks.total <= offset
-    )
+    if (playlist && playlist.tracks && playlist.tracks.total && playlist.tracks.total <= offset)
       return;
 
     const data: PlaylistTrackResponse = await fetch(
@@ -84,8 +81,14 @@ export default function Playlist(props: IProps) {
 
   const openMenu = (e: any) => {
     //not working fully because 'tracks' initially only contains the first 50 tracks of a playlist
-    state.setContextMenu({ isOpen: true, x: e.clientX, y: e.clientY, type: "playlist", data: tracks.map(t => t.track.uri) })
-  }
+    state.setContextMenu({
+      isOpen: true,
+      x: e.clientX,
+      y: e.clientY,
+      type: "playlist",
+      data: { playlist: id, tracks: tracks.map((t) => t.track.uri) },
+    });
+  };
 
   // Fetch the main album data
   useEffect(() => {
@@ -96,6 +99,25 @@ export default function Playlist(props: IProps) {
   useEffect(() => {
     fetchPlaylistTrackData(offset);
   }, [offset]);
+
+  const changeTitle = (e: any) => {
+    const newTitle = e.target.value;
+    setTitle(newTitle);
+  };
+
+  const updateTitle = () => {
+    if (title === "" && playlist) {
+      setTitle(playlist.name);
+    } else {
+      if (title !== playlist?.name) {
+        fetch(`${API_URL}api/spotify/playlist/${playlist?.id}/edit`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: title }),
+        });
+      }
+    }
+  };
 
   if (!playlist) return <p>loading...</p>;
 
@@ -117,16 +139,27 @@ export default function Playlist(props: IProps) {
             </div>
             <div className={"PlaylistHeaderMeta"}>
               <h4>Playlist</h4>
-              <h1>{playlist.name}</h1>
+              <h1>
+                <input
+                  type="text"
+                  maxLength={50}
+                  min={1}
+                  value={title}
+                  onChange={changeTitle}
+                  onBlur={updateTitle}
+                />
+              </h1>
               <p>
                 by {playlist.owner.display_name} — {playlist.tracks.total} Song
                 {playlist.tracks.total === 1 ? "" : "s"}
               </p>
             </div>
-            <div className={"PlaylistHeaderFilter"}>
-              {/* Filter */}
-            </div>
-            <p className="material-icons minimize-icon" title={"More"} onClick={openMenu}>more_horiz</p>
+            <div className={"PlaylistHeaderFilter"}>{/* Filter */}</div>
+            <button className="more-button">
+              <span className="material-icons minimize-icon" title={"More"} onClick={openMenu}>
+                more_horiz
+              </span>
+            </button>
           </div>
         )
       ) : (
@@ -134,9 +167,7 @@ export default function Playlist(props: IProps) {
       )}
       <TrackList
         fullyLoaded={playlist.tracks.total <= tracks.length}
-        loadMoreCallback={() =>
-          setOffset((currentOffset) => currentOffset + limit)
-        }
+        loadMoreCallback={() => setOffset((currentOffset) => currentOffset + limit)}
         type={"playlist"}
         tracks={tracks}
         id_tracklist={id}
