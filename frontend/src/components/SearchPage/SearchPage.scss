@@ -43,32 +43,5 @@
           display: none;
         }
       }
-    }
-
-
-    /*.column {
-      //3 columns when tablet
-      @media screen and(min-width: $breakpoint-sm) and(max-width: $breakpoint-md) {
-        width: calc(100% / 3 - 2rem);
-        &:nth-last-child(-n+2) {
-          display: none;
-        }
-      }
-
-      //4 columns when bigger than tablet
-      @media screen and(min-width: $breakpoint-md) and (max-width: $breakpoint-xl) {
-
-        width: calc(100% / 4 - 2rem);
-
-        &:last-child {
-          display: none;
-        }
-      }
-
-      //5 columns when widescreen
-      @media screen and(min-width: $breakpoint-xl) {
-        width: calc(100% / 5 - 2rem);
-      }
-    }*/
   }
 }
