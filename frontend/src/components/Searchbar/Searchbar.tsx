@@ -44,7 +44,7 @@ class Searchbar extends Component<IProps, IState> {
 
     this.setState((state) => ({...state, value: value}));
 
-    if (key === 13) {
+    if (key === 13 && value.trim() != '') {
       this.setState((state) => ({...state, value: value, redirect: true}));
     }
     else {
