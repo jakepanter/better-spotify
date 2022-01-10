@@ -154,6 +154,10 @@ export default class SpotifyService {
     await this.spotifyApi.unfollowPlaylist(playlistId);
   }
 
+  editPlaylistDetails = async (playlistId: string, options: Object) => {
+    await this.spotifyApi.changePlaylistDetails(playlistId, options);
+  }
+
   setVolume = async (volume: number) => {
     const result = await this.spotifyApi.setVolume(volume);
     return result;
