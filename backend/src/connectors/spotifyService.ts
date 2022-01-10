@@ -1,6 +1,24 @@
 import SpotifyWebApi from 'spotify-web-api-node';
 import Config from '../config/variables';
 
+interface DeviceOptions {
+  // eslint-disable-next-line camelcase
+  device_id?: string | undefined;
+}
+
+interface PlayOptions extends DeviceOptions {
+  // eslint-disable-next-line camelcase
+  context_uri?: string | undefined;
+  uris?: ReadonlyArray<string> | undefined;
+  offset?: { position: number } | { uri: string } | undefined;
+  // eslint-disable-next-line camelcase
+  position_ms?: number | undefined;
+}
+
+interface TransferPlaybackOptions {
+  play?: boolean | undefined;
+}
+
 export default class SpotifyService {
   private static readonly scopes: string[] = [
     'ugc-image-upload',
@@ -150,15 +168,27 @@ export default class SpotifyService {
     return album.body;
   }
 
-  setVolume = async (volume: number) => {
-    const result = await this.spotifyApi.setVolume(volume);
-    return result;
-  }
+  setVolume = async (volume: number) => this.spotifyApi.setVolume(volume);
 
   getAccessToken = async () => this.spotifyApi.getAccessToken();
 
-  setTrack = async (options: Object) => {
-    const result = await this.spotifyApi.play(options);
-    return result.body;
-  }
+  getDevices = async () => this.spotifyApi.getMyDevices();
+
+  getPlaybackState = async () => this.spotifyApi.getMyCurrentPlaybackState();
+
+  pause = async () => this.spotifyApi.pause();
+
+  play = async (options: PlayOptions) => this.spotifyApi.play(options);
+
+  previous = async () => this.spotifyApi.skipToPrevious();
+
+  next = async () => this.spotifyApi.skipToNext();
+
+  removeTracks = async (trackIds: ReadonlyArray<string>) => this.spotifyApi.removeFromMySavedTracks(trackIds);
+
+  saveTracks = async (trackIds: ReadonlyArray<string>) => this.spotifyApi.addToMySavedTracks(trackIds);
+
+  seek = async (position: number) => this.spotifyApi.seek(position);
+
+  setDevice = async (deviceIds: ReadonlyArray<string>, options: TransferPlaybackOptions) => this.spotifyApi.transferMyPlayback(deviceIds, options);
 }

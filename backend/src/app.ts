@@ -163,18 +163,68 @@ export default class App {
       return res.json(album);
     });
 
-    this.server.get('/api/spotify/volume', async (req: Request, res: Response) => {
+    this.server.put('/api/spotify/volume', async (req: Request, res: Response) => {
       const volume: any = req.query?.volume ?? 100;
       const result = await this.spotifyService.setVolume(volume);
       return res.json(result);
     });
 
-    this.server.get('*', (req: Request, res: Response) => res.sendFile(path.join(`${__dirname}/../../frontend/build`)));
+    // Player Routes
+    this.server.get('/api/spotify/me/player/devices', async (req: Request, res: Response) => {
+      const result = await this.spotifyService.getDevices();
+      return res.json(result);
+    });
+
+    this.server.get('/api/spotify/me/player', async (req: Request, res: Response) => {
+      const result = await this.spotifyService.getPlaybackState();
+      return res.json(result);
+    });
+
+    this.server.put('/api/spotify/me/player/pause', async (req: Request, res: Response) => {
+      const result = await this.spotifyService.pause();
+      return res.json(result);
+    });
 
     this.server.put('/api/spotify/me/player/play', async (req: Request, res: Response) => {
-      const answer = await this.spotifyService.setTrack(req.body);
-      return res.json(answer);
+      const result = await this.spotifyService.play(req.body);
+      return res.json(result);
     });
+
+    this.server.post('/api/spotify/me/player/previous', async (req: Request, res: Response) => {
+      const result = await this.spotifyService.previous();
+      return res.json(result);
+    });
+
+    this.server.post('/api/spotify/me/player/next', async (req: Request, res: Response) => {
+      const result = await this.spotifyService.next();
+      return res.json(result);
+    });
+
+    this.server.delete('/api/spotify/me/tracks', async (req: Request, res: Response) => {
+      const result = await this.spotifyService.removeTracks(JSON.parse(req.body));
+      return res.json(result);
+    });
+
+    this.server.put('/api/spotify/me/tracks', async (req: Request, res: Response) => {
+      const result = await this.spotifyService.saveTracks(JSON.parse(req.body));
+      return res.json(result);
+    });
+
+    this.server.put('/api/spotify/me/player/seek', async (req: Request, res: Response) => {
+      const position: any = req.query?.position ?? 0;
+      const result = await this.spotifyService.seek(position);
+      return res.json(result);
+    });
+
+    this.server.put('/api/spotify/me/player', async (req: Request, res: Response) => {
+      // eslint-disable-next-line camelcase
+      const { device_ids, play } = req.body ?? null;
+      const result = await this.spotifyService.setDevice(device_ids, { play });
+      return res.json(result);
+    });
+
+    // Serve static frontend files
+    this.server.get('*', (req: Request, res: Response) => res.sendFile(path.join(`${__dirname}/../../frontend/build`)));
 
     // Start
     this.server.listen(Config.general.port, () => {
