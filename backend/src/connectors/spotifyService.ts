@@ -168,6 +168,28 @@ export default class SpotifyService {
     return album.body;
   }
 
+  getSavedShows = async () => {
+    const result = await this.spotifyApi.getMySavedShows();
+    return result.body;
+  }
+
+  getShowEpisodes = async (id: string, limit: number, offset: number) => {
+    const options: any = { limit, offset };
+    const result = await this.spotifyApi.getShowEpisodes(id, options);
+    return result.body;
+  }
+
+  getShow = async(showId: string, limit: number, offset: number) => {
+    const options: any = { limit, offset };
+    const result = await this.spotifyApi.getShow(showId, options);
+    return result.body;
+  }
+
+  getEpisode = async(episodeId: string) => {
+    const result = await this.spotifyApi.getEpisode(episodeId);
+    return result.body;
+  }
+
   setVolume = async (volume: number) => this.spotifyApi.setVolume(volume);
 
   getAccessToken = async () => this.spotifyApi.getAccessToken();
