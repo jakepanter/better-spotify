@@ -12,16 +12,16 @@ import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import Topbar from "./components/Topbar/Topbar";
 import SettingsPage from "./pages/SettingsPage/SettingsPage";
-import AppContext, { ContextMenu } from './AppContext';
+import AppContext, { ContextMenu } from "./AppContext";
 import ContextMenuWrapper from "./components/ContextMenu/ContextMenuWrapper";
 
 function authorize() {
   fetch(`${API_URL}api/spotify/get-auth-url`)
-      .then((res) => res.text())
-      .then((url) => {
-        console.log(url);
-        window.location.href = url;
-      });
+    .then((res) => res.text())
+    .then((url) => {
+      console.log(url);
+      window.location.href = url;
+    });
 }
 
 function App() {
@@ -29,13 +29,15 @@ function App() {
   const [editable, setEditable] = useState(false);
   const toggleEditable = () => setEditable(!editable);
   const [miniMenu, setMiniMenu] = useState(false);
-  const menuToggle = () => { setMiniMenu(!miniMenu)};
+  const menuToggle = () => {
+    setMiniMenu(!miniMenu);
+  };
   const [contextMenu, setContextMenu] = useState<ContextMenu>({
     isOpen: false,
-    type: "tracks",
+    type: "",
     x: null,
     y: null,
-    data: [],
+    data: null,
   });
 
   const state = {
@@ -45,18 +47,17 @@ function App() {
 
   useEffect(() => {
     async function getAccessToken() {
-      const res = await fetch(`${API_URL}api/spotify/access-token`)
-          .then((res) => res.json());
+      const res = await fetch(`${API_URL}api/spotify/access-token`).then((res) => res.json());
       setIsAuthorized(res !== undefined);
     }
     getAccessToken();
 
     // close contextMenu on any click outside of a icon button
-    document.addEventListener('click', (e: any) => {
-      if (state.contextMenu.isOpen && !e.target.className.includes('material-icons')) {
+    document.addEventListener("click", (e: any) => {
+      if (state.contextMenu.isOpen && !e.target.className.includes("material-icons")) {
         state.setContextMenu({ ...contextMenu, isOpen: false });
       }
-    })
+    });
   }, []);
 
   if (!isAuthorized) {
@@ -81,9 +82,19 @@ function App() {
             />
           )}
           {/* Minimize menu */}
-          <button className={`minimizeMenuButton ${miniMenu ? "positionMenuButton" : ""}`} onClick={menuToggle}>{miniMenu ?
-              <p className="material-icons minimize-icon turned" title={"Maximize menu"} >chevron_left</p> :
-              <p className="material-icons minimize-icon" title={"Minimize menu"} >chevron_left</p>}
+          <button
+            className={`minimizeMenuButton ${miniMenu ? "positionMenuButton" : ""}`}
+            onClick={menuToggle}
+          >
+            {miniMenu ? (
+              <p className="material-icons minimize-icon turned" title={"Maximize menu"}>
+                chevron_left
+              </p>
+            ) : (
+              <p className="material-icons minimize-icon" title={"Minimize menu"}>
+                chevron_left
+              </p>
+            )}
           </button>
           <div className={`structure--left-panel ${miniMenu ? "minimizeMenu" : ""}`}>
             <Sidebar />
@@ -107,10 +118,10 @@ function App() {
                 <Albums />
               </Route>
               <Route path="/me/tracks">
-                <SavedTracks headerStyle={'full'}/>
+                <SavedTracks headerStyle={"full"} />
               </Route>
               <Route path="/settings">
-                <SettingsPage/>
+                <SettingsPage />
               </Route>
             </Switch>
             <Player />

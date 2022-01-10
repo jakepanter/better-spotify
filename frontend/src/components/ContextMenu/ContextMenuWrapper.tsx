@@ -7,27 +7,29 @@ import AppContext from "../../AppContext";
 
 type MenuProps = {
   type: String;
-  data: String[];
+  data: any;
   positionX: number;
   positionY: number;
-}
+};
 
 function ContextMenuWrapper(props: MenuProps) {
   const [anchorPoint, setAnchorPoint] = useState({
     x: props.positionX,
     y: props.positionY,
   });
-  const state = useContext(AppContext)
+  const state = useContext(AppContext);
 
   useEffect(() => {
-    setAnchorPoint({ x: props.positionX, y: props.positionY})
-  }, [props.positionX, props.positionY])
-  
-  if (!state.contextMenu.isOpen) return null
-  if (props.type === "tracks") return <TracksMenu data={props.data} anchorPoint={anchorPoint}/>
-  else if (props.type === "addToPlaylist") return <AddToPlaylistsMenu data={props.data} anchorPoint={anchorPoint}/>
-  else if (props.type === "playlist") return <PlaylistMenu data={props.data} anchorPoint={anchorPoint}/>
-  return null
+    setAnchorPoint({ x: props.positionX, y: props.positionY });
+  }, [props.positionX, props.positionY]);
+
+  if (!state.contextMenu.isOpen) return null;
+  if (props.type === "tracks") return <TracksMenu data={props.data} anchorPoint={anchorPoint} />;
+  else if (props.type === "addToPlaylist")
+    return <AddToPlaylistsMenu data={props.data} anchorPoint={anchorPoint} />;
+  else if (props.type === "playlist")
+    return <PlaylistMenu data={props.data} anchorPoint={anchorPoint} />;
+  return null;
 }
 
 export default ContextMenuWrapper;
