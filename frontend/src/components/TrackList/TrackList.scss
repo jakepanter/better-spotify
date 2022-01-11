@@ -1,5 +1,10 @@
 @import "src/boilerplate";
 
+.albumLink {
+  text-decoration: none!important;
+  color: $color-default;
+}
+
 .Tracklist {
   background: $color-accent-dark;
   border-radius: $border-radius;

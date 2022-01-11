@@ -5,6 +5,7 @@ import { PlaylistTrack } from "../Playlist/Playlist";
 import TrackContextMenuWrapper from "../TrackContextMenu/TrackContextMenuWrapper";
 import React, { useEffect, useState } from "react";
 import TrackListItem from "../TrackListItem/TrackListItem";
+import {Link} from "react-router-dom";
 
 type Props =
   | {
@@ -302,6 +303,7 @@ function TrackList(props: Props) {
                     {props.tracks.map((item, index) => {
                         const  track  = item.track as TrackObjectFull;
                         return (
+                            <Link to={`/album/${track.album.id}`} className={"albumLink"} key={track.album.id}>
                             <TrackListItem
                                 track={track}
                                 name={track.name}
@@ -316,6 +318,7 @@ function TrackList(props: Props) {
                                 id_tracklist={''}
                                 type={type}
                             />
+                            </Link>
                         );
                     })}
                     {!fullyLoaded ? (
@@ -344,6 +347,7 @@ function TrackList(props: Props) {
                     {props.tracks.map((item, index) => {
                         const  track  = item;
                         return (
+                            <Link to={`/album/${track.id}`} className={"albumLink"} key={track.id}>
                             <TrackListItem
                                 track={track}
                                 name={track.name}
@@ -357,6 +361,7 @@ function TrackList(props: Props) {
                                 id_tracklist={''}
                                 type={type}
                             />
+                            </Link>
                         );
                     })}
                     {!fullyLoaded ? (

@@ -51,7 +51,7 @@ export default function Albums() {
             <CoverPlaceholder />
           )}
           <span className={"title"}>{item.album.name}</span>
-          <span className={"artists-name"}>{item.album.artists[0].name}</span>
+          <span className={"artists-name"}>{item.album.artists.map((a) => a.name).join(", ")}</span>
         </Link>
       </li>
     );

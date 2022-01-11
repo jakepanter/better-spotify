@@ -7,8 +7,7 @@ import { API_URL } from '../../utils/constants';
 import TrackList from "../TrackList/TrackList";
 
 const limit = 20;
-//TODO
-// Filter vor available country?
+
 export default function Releases() {
     // The list of tracks of the album
     const [tracks, setTracks] = useState<AlbumObjectSimplified[]>([]);

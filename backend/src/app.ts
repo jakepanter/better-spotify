@@ -187,7 +187,7 @@ export default class App {
     });
 
     this.server.get('/api/spotify/browse/new-releases', async (req: Request, res: Response) => {
-      const country: any = req.query?.country as string ?? "DE";
+      const country: any = req.query?.country as string ?? undefined;
       const limit: any = Number(req.query?.limit ?? 20);
       const offset: any = Number(req.query?.offset ?? 0);
       const newRealeses = await this.spotifyService.getNewReleases(country,limit,offset);

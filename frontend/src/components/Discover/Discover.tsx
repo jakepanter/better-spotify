@@ -27,6 +27,9 @@ interface IState {
     }[];
 }
 
+
+const limit = 5;
+
 class Discover extends Component<IProps, IState> {
 
 
@@ -40,22 +43,28 @@ class Discover extends Component<IProps, IState> {
         };
     }
 
-    async componentDidMount() {
-        // Fetch recently played tracks
-        const recentPlayedTracksData: UsersRecentlyPlayedTracksResponse = await fetch(
-            `${API_URL}api/spotify/player/recently-played?limit=5`
-        ).then((res) => res.json());
 
-        // Save to state
-        this.setState((state) => ({...state, recentlyPlayedTracks: recentPlayedTracksData.items}));
+
+    async componentDidMount() {
+
+        //Fetch reently played tracks
+        this.fetchRecentlyPlayedTracks().then((recentPlayedTracksData) => {
+            // Save to state
+            this.setState((state) => ({...state, recentlyPlayedTracks: recentPlayedTracksData.items}));
+        });
+
+        //get users country
+        const me = await fetch(
+            `${API_URL}api/spotify/me`
+        ).then((res) => res.json());
+        const country = me.country;
 
         // Fetch new releases
-        const newReleasedAlbums: ListOfNewReleasesResponse = await fetch(
-            `${API_URL}api/spotify/browse/new-releases?limit=5`
-        ).then((res) => res.json());
-        this.setState((state) => ({...state, newReleases: newReleasedAlbums.albums.items}));
+        this.fetchNewReleases(country).then((newReleasedAlbums)=>{
+            this.setState((state) => ({...state, newReleases: newReleasedAlbums.albums.items}));
+        });
 
-
+        //Fetch related artist of top three artists
         this.fetchTopArtists().then((topArtists) => {
             //slice top three artists
             const topThreeArtists: ArtistObjectFull[] = topArtists.items.sort(()=> 0.5-Math.random()).slice(0,3);
@@ -71,6 +80,22 @@ class Discover extends Component<IProps, IState> {
                 )
             });
         });
+    }
+
+    async fetchRecentlyPlayedTracks() {
+        const res = await fetch(
+            `${API_URL}api/spotify/player/recently-played?limit=${limit}`
+        );
+        const recentPlayedTracksData: UsersRecentlyPlayedTracksResponse = await res.json();
+        return recentPlayedTracksData;
+    }
+
+    async fetchNewReleases(country: string) {
+        const res = await fetch(
+            `${API_URL}api/spotify/browse/new-releases?country=${country}&limit=${limit}`
+        );
+        const newReleasedAlbums: ListOfNewReleasesResponse = await res.json();
+        return newReleasedAlbums;
     }
 
 
@@ -93,25 +118,7 @@ class Discover extends Component<IProps, IState> {
 
     render() {
         // TODO
-        // add fallback for images
-        if (this.state.relatedArtistsList.length === 0) return <p>loading...</p>;
-        const relatedArtists = this.state.relatedArtistsList.map((relatedArtistsListItem) => {
-            const relatedArtistsForOneArtist = relatedArtistsListItem.relatedArtists.map((relatedArtist) => {
-                return (
-                    <li className="column" key={relatedArtist.id}>
-                        <Link to={`/artist/${relatedArtist.id}`}>
-                            <div className={"cover"} style={{
-                                backgroundImage: `url(${relatedArtist.images[0].url})`
-                            }}>
-                            </div>
-                            <span className="title">{relatedArtist.name}</span>
-                        </Link>
-                    </li>
-                );
-            });
-            return relatedArtistsForOneArtist;
-        });
-
+        //  add fallback for images
         // for recently played tracks
         if (this.state.recentlyPlayedTracks.length === 0) return <p>loading...</p>;
         const recentlyPlayedList = this.state.recentlyPlayedTracks.map((recentlyPlayedTrack) => {
@@ -124,6 +131,7 @@ class Discover extends Component<IProps, IState> {
                         }}>
                         </div>
                         <span className={"title"}>{track.name}</span>
+
                     </Link>
                 </li>
             );
@@ -143,6 +151,25 @@ class Discover extends Component<IProps, IState> {
                     </Link>
                 </li>
             );
+        });
+
+        //for related artists
+        if (this.state.relatedArtistsList.length === 0) return <p>loading...</p>;
+        const relatedArtists = this.state.relatedArtistsList.map((relatedArtistsListItem) => {
+            const relatedArtistsForOneArtist = relatedArtistsListItem.relatedArtists.map((relatedArtist) => {
+                return (
+                    <li className="column" key={relatedArtist.id}>
+                        <Link to={`/artist/${relatedArtist.id}`}>
+                            <div className={"cover"} style={{
+                                backgroundImage: `url(${relatedArtist.images[0].url})`
+                            }}>
+                            </div>
+                            <span className="title">{relatedArtist.name}</span>
+                        </Link>
+                    </li>
+                );
+            });
+            return relatedArtistsForOneArtist;
         });
 
         return (

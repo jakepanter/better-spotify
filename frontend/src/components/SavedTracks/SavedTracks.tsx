@@ -26,7 +26,7 @@ export default function SavedTracks(props: IProps) {
         const data: PlaylistTrackResponse = await fetch(
             `${API_URL}api/spotify/me/tracks?offset=${newOffset}&limit=${limit}`
         ).then((res) => res.json());
-        console.log(data)
+
         // Save new tracks
         setTracks((oldTracks) => [...oldTracks, ...data.items]);
 
