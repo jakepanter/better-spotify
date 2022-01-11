@@ -100,8 +100,8 @@ function PlaylistMenu(props: Props) {
       onClose={() => toggleMenu(false)}
       ref={ref}
     >
-      <MenuItem>Add to Queue</MenuItem>
-      <MenuItem>Add to Startpage</MenuItem>
+      <MenuItem disabled>Add to Queue</MenuItem>
+      <MenuItem disabled>Add to Startpage</MenuItem>
       <SubMenu label={"Add to Playlist"}>
         {playlists && me ? (
           playlists.items
@@ -120,7 +120,7 @@ function PlaylistMenu(props: Props) {
           <MenuItem>Fetching Playlists...</MenuItem>
         )}
       </SubMenu>
-      <MenuItem onClick={deletePlaylist}>Delete</MenuItem>
+      <MenuItem onClick={deletePlaylist}>Unfollow</MenuItem>
     </ControlledMenu>
   );
 }

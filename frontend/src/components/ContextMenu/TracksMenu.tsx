@@ -61,7 +61,7 @@ function TracksMenu(props: Props) {
       onClose={() => toggleMenu(false)}
       ref={ref}
     >
-      <MenuItem>Add to Queue</MenuItem>
+      <MenuItem disabled>Add to Queue</MenuItem>
       <SubMenu label={"Add to Playlist"}>
         {playlists && me ? (
           playlists.items
@@ -80,10 +80,10 @@ function TracksMenu(props: Props) {
           <MenuItem>Fetching Playlists...</MenuItem>
         )}
       </SubMenu>
-      <MenuItem>Show Artist</MenuItem>
-      <MenuItem>Show Album</MenuItem>
-      <MenuItem>Download</MenuItem>
-      <MenuItem>Like</MenuItem>
+      <MenuItem disabled>Show Artist</MenuItem>
+      <MenuItem disabled>Show Album</MenuItem>
+      <MenuItem disabled>Download</MenuItem>
+      <MenuItem disabled>Like</MenuItem>
     </ControlledMenu>
   );
 }
