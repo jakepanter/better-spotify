@@ -333,8 +333,6 @@ class Dashboard extends Component<IProps, IState> {
     const { editable } = this.props;
     const tags = TagsSystem.getTags();
 
-    console.log(tagTracklists);
-
     return (
       <div className={`DashboardContainer ${editable ? 'editable' : ''}`} ref={this.containerRef}>
         {editable ?

@@ -26,7 +26,7 @@ function SettingsPage() {
   }
 
   const addTag = (title: string, color: number) => {
-    if (addTagTitle.current !== null && addTagColor.current !== null) {
+    if (addTagTitle.current !== null && addTagColor.current !== null && title !== '') {
       TagsSystem.createTag(title, color);
       setTags(TagsSystem.getTags());
       setShowDialogAddTag(false);
@@ -42,6 +42,8 @@ function SettingsPage() {
   }
 
   const saveEditTag = (title: string, color: number) => {
+    if (title === '') return;
+
     TagsSystem.editTag(selectedTag, {
       title,
       color,
@@ -109,6 +111,7 @@ function SettingsPage() {
                      ref={addTagTitle}
                      value={addTagTitleValue}
                      onChange={(e) => setAddTagTitleValue(e.target.value)}
+                     required={true}
               />
             </label>
             <label className={'Label'}>
@@ -127,7 +130,10 @@ function SettingsPage() {
                 <option className={'TagColor TagColor5'} value={5}/>
               </select>
             </label>
-            <button className={'button'} onClick={() => addTag(addTagTitleValue, addTagColorValue)}>
+            <button className={'button'}
+                    onClick={() => addTag(addTagTitleValue, addTagColorValue)}
+                    disabled={addTagTitleValue === ''}
+            >
               <span className={'material-icons'}>add</span>
               Add
             </button>
@@ -141,6 +147,7 @@ function SettingsPage() {
                      ref={editTagTitle}
                      value={editTagTitleValue}
                      onChange={(e) => setEditTagTitleValue(e.target.value)}
+                     required={true}
               />
             </label>
             <label className={'Label'}>
@@ -159,7 +166,10 @@ function SettingsPage() {
                 <option className={'TagColor TagColor5'} value={5}/>
               </select>
             </label>
-            <button className={'button'} onClick={() => saveEditTag(editTagTitleValue, editTagColorValue)}>
+            <button className={'button'}
+                    onClick={() => saveEditTag(editTagTitleValue, editTagColorValue)}
+                    disabled={editTagTitleValue === ''}
+            >
               <span className={'material-icons'}>save</span>
               Save
             </button>
