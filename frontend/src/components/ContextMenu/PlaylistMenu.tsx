@@ -1,11 +1,11 @@
-import React, { useContext, useEffect } from "react";
-// import { API_URL } from "../../utils/constants";
+import React, { useContext, useEffect, useRef } from "react";
 import { CurrentUsersProfileResponse, ListOfUsersPlaylistsResponse } from "spotify-types";
 import { ControlledMenu, MenuItem, SubMenu, useMenuState } from "@szhsin/react-menu";
 import useSWR from "swr";
 import "./ContextMenu.scss";
 import { API_URL } from "../../utils/constants";
 import AppContext from "../../AppContext";
+import useOutsideClick from "../../helpers/useOutsideClick";
 
 type Props = {
   data: { playlist: string; tracks: string[] };
@@ -26,6 +26,11 @@ function PlaylistMenu(props: Props) {
     `${API_URL}api/spotify/me`,
     fetcher
   );
+
+  const ref = useRef();
+  useOutsideClick(ref, () => {
+    state.setContextMenu({ ...state.contextMenu, isOpen: false });
+  });
 
   useEffect(() => {
     toggleMenu(true);
@@ -51,6 +56,7 @@ function PlaylistMenu(props: Props) {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
     const playlistId = props.data.playlist;
     fetch(`${API_URL}api/spotify/playlist/${playlistId}/unfollow`);
+    //TODO: better way to redirect?
     window.location.href = "/";
   };
 
@@ -61,6 +67,7 @@ function PlaylistMenu(props: Props) {
       {...menuProps}
       anchorPoint={props.anchorPoint}
       onClose={() => toggleMenu(false)}
+      ref={ref}
     >
       <MenuItem>Add to Queue</MenuItem>
       <MenuItem>Add to Startpage</MenuItem>
