@@ -155,7 +155,8 @@ export default class SpotifyService {
     return result;
   }
 
-
+  // only 'before' is specified because we want to display the recently played tracks from the current timestamp
+  //we do not need the option 'after' in our case
   getMyRecentlyPlayedTracks = async (before:number, limit:number) => {
     const options: any = {limit, before};
     const result = await this.spotifyApi.getMyRecentlyPlayedTracks(options);

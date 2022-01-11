@@ -43,6 +43,8 @@ class RelatedArtists extends Component<IProps, IState> {
     }
 
     render() {
+        // TODO
+        //  add fallback for images
         if (this.state.relatedArtistsList.length === 0) return <p>loading...</p>;
         const relatedArtists = this.state.relatedArtistsList.map((artist) => {
             return (

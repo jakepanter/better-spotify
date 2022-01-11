@@ -177,9 +177,7 @@ export default class App {
     });
 
     this.server.get('/api/spotify/player/recently-played', async (req: Request, res: Response) => {
-      // TODO
-      //  only after or before should be specified
-      //  add comment why after is not considered
+      // only 'before' is specified because we want to display the recently played tracks from the current timestamp
       const before: any = req.query?.before ?? Date.now();
       const limit: any = req.query?.limit ?? 20;
       const recentTracks = await this.spotifyService.getMyRecentlyPlayedTracks(before, limit);

@@ -20,10 +20,15 @@ export default function Releases() {
         // Only fetch if there are tracks left to fetch
         if (total >= 0 && total <= offset) return;
 
-        const data: ListOfNewReleasesResponse = await fetch(
-            `${API_URL}api/spotify/browse/new-releases?offset=${newOffset}&limit=${limit}`
+        //get users country
+        const me = await fetch(
+            `${API_URL}api/spotify/me`
         ).then((res) => res.json());
-        console.log(data)
+        const country = me.country;
+
+        const data: ListOfNewReleasesResponse = await fetch(
+            `${API_URL}api/spotify/browse/new-releases?country=${country}&offset=${newOffset}&limit=${limit}`
+        ).then((res) => res.json());
         // Save new tracks
         setTracks((oldTracks) => [...oldTracks, ...data.albums.items]);
 

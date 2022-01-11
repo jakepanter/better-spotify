@@ -47,24 +47,24 @@ class Discover extends Component<IProps, IState> {
 
     async componentDidMount() {
 
-        //Fetch reently played tracks
+        // fetch reently played tracks
         this.fetchRecentlyPlayedTracks().then((recentPlayedTracksData) => {
             // Save to state
             this.setState((state) => ({...state, recentlyPlayedTracks: recentPlayedTracksData.items}));
         });
 
-        //get users country
+        // get users country
         const me = await fetch(
             `${API_URL}api/spotify/me`
         ).then((res) => res.json());
         const country = me.country;
 
-        // Fetch new releases
+        // fetch new releases
         this.fetchNewReleases(country).then((newReleasedAlbums)=>{
             this.setState((state) => ({...state, newReleases: newReleasedAlbums.albums.items}));
         });
 
-        //Fetch related artist of top three artists
+        // fetch related artist of top three artists
         this.fetchTopArtists().then((topArtists) => {
             //slice top three artists
             const topThreeArtists: ArtistObjectFull[] = topArtists.items.sort(()=> 0.5-Math.random()).slice(0,3);
