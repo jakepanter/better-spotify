@@ -4,6 +4,7 @@ import TracksMenu from "./TracksMenu";
 import AddToPlaylistsMenu from "./AddToPlaylistsMenu";
 import PlaylistMenu from "./PlaylistMenu";
 import AppContext from "../../AppContext";
+import PlaylistsMenu from "./PlaylistsMenu";
 
 type MenuProps = {
   type: String;
@@ -29,6 +30,8 @@ function ContextMenuWrapper(props: MenuProps) {
     return <AddToPlaylistsMenu data={props.data} anchorPoint={anchorPoint} />;
   else if (props.type === "playlist")
     return <PlaylistMenu data={props.data} anchorPoint={anchorPoint} />;
+  else if (props.type === "playlists")
+    return <PlaylistsMenu data={props.data} anchorPoint={anchorPoint} />;
   return null;
 }
 
