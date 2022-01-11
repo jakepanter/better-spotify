@@ -37,7 +37,7 @@ export default function Playlist(props: IProps) {
   const state = useContext(AppContext);
 
   async function fetchPlaylistData() {
-    //this only fetches the total number of tracks, cover image and owner of the playlist, not the actual tracks
+    //this only fetches metadata of the playlist not the actual tracks
     const data: SinglePlaylistResponse = await fetch(
       `${API_URL}api/spotify/playlist/${id}?fields=tracks(total)&fields=images&fields=owner&fields=name&fields=id`
     ).then((res) => res.json());
@@ -86,7 +86,7 @@ export default function Playlist(props: IProps) {
       x: e.clientX,
       y: e.clientY,
       type: "playlist",
-      data: { playlist: id, tracks: tracks.map((t) => t.track.uri) },
+      data: playlist,
     });
   };
 

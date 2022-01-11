@@ -56,7 +56,6 @@ function PlaylistMenu(props: Props) {
   }, [props.anchorPoint]);
 
   const getAllTracksOfPlaylist = async (playlist: PlaylistObjectSimplified): Promise<string[]> => {
-    console.log(playlist.name);
     const total = playlist.tracks.total;
     const playlistId = playlist.id;
     let tracks: string[] = [];
