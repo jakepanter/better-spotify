@@ -50,12 +50,28 @@ export default class App {
     /**
      * Perform a user's search with a given query
      */
-    this.server.get('/api/spotify/search', async (req: Request, res: Response) => {
+     this.server.get('/api/spotify/customsearch', async (req: Request, res: Response) => {
+      const type = req.query?.type;
+      const search = req.query?.search;
+      if (type === undefined || type === '' || search=== undefined || search === '') return res.sendStatus(400);
+      const result = await this.spotifyService.searchCustom(type.toString(), search.toString());
+      return res.json(result);
+    });
+
+    this.server.get('/api/spotify/searchtracks', async (req: Request, res: Response) => {
       const { query } = req.query;
       if (query === undefined || query === '') return res.sendStatus(400);
       const tracks = await this.spotifyService.searchTracks(query.toString());
       return res.json(tracks);
     });
+
+    this.server.get('/api/spotify/search', async (req: Request, res: Response) => {
+      const { query } = req.query;
+      if (query === undefined || query === '') return res.sendStatus(400);
+      const tracks = await this.spotifyService.search(query.toString());
+      return res.json(tracks);
+    });
+    /**
 
     /**
      * Get me
@@ -145,6 +161,12 @@ export default class App {
       return res.json(playlists);
     });
 
+    this.server.post('/api/spotify/playlists', async (req: Request, res: Response) => {
+      const { playlistName, options } = req.body;
+      const playlist = await this.spotifyService.createPlaylist(playlistName, options);
+      return res.json(playlist);
+    });
+
     this.server.get('/api/spotify/playlist/:playlistId', async (req: Request, res: Response) => {
       const playlistId = req.params.playlistId as string;
       // define what specific fields to get,
@@ -169,18 +191,68 @@ export default class App {
       return res.json(album);
     });
 
-    this.server.get('/api/spotify/volume', async (req: Request, res: Response) => {
+    this.server.put('/api/spotify/volume', async (req: Request, res: Response) => {
       const volume: any = req.query?.volume ?? 100;
       const result = await this.spotifyService.setVolume(volume);
       return res.json(result);
     });
 
-    this.server.get('*', (req: Request, res: Response) => res.sendFile(path.join(`${__dirname}/../../frontend/build`)));
+    // Player Routes
+    this.server.get('/api/spotify/me/player/devices', async (req: Request, res: Response) => {
+      const result = await this.spotifyService.getDevices();
+      return res.json(result);
+    });
+
+    this.server.get('/api/spotify/me/player', async (req: Request, res: Response) => {
+      const result = await this.spotifyService.getPlaybackState();
+      return res.json(result);
+    });
+
+    this.server.put('/api/spotify/me/player/pause', async (req: Request, res: Response) => {
+      const result = await this.spotifyService.pause();
+      return res.json(result);
+    });
 
     this.server.put('/api/spotify/me/player/play', async (req: Request, res: Response) => {
-      const answer = await this.spotifyService.setTrack(req.body);
-      return res.json(answer);
+      const result = await this.spotifyService.play(req.body);
+      return res.json(result);
     });
+
+    this.server.post('/api/spotify/me/player/previous', async (req: Request, res: Response) => {
+      const result = await this.spotifyService.previous();
+      return res.json(result);
+    });
+
+    this.server.post('/api/spotify/me/player/next', async (req: Request, res: Response) => {
+      const result = await this.spotifyService.next();
+      return res.json(result);
+    });
+
+    this.server.delete('/api/spotify/me/tracks', async (req: Request, res: Response) => {
+      const result = await this.spotifyService.removeTracks(JSON.parse(req.body));
+      return res.json(result);
+    });
+
+    this.server.put('/api/spotify/me/tracks', async (req: Request, res: Response) => {
+      const result = await this.spotifyService.saveTracks(JSON.parse(req.body));
+      return res.json(result);
+    });
+
+    this.server.put('/api/spotify/me/player/seek', async (req: Request, res: Response) => {
+      const position: any = req.query?.position ?? 0;
+      const result = await this.spotifyService.seek(position);
+      return res.json(result);
+    });
+
+    this.server.put('/api/spotify/me/player', async (req: Request, res: Response) => {
+      // eslint-disable-next-line camelcase
+      const { device_ids, play } = req.body ?? null;
+      const result = await this.spotifyService.setDevice(device_ids, { play });
+      return res.json(result);
+    });
+
+    // Serve static frontend files
+    this.server.get('*', (req: Request, res: Response) => res.sendFile(path.join(`${__dirname}/../../frontend/build`)));
 
     // Start
     this.server.listen(Config.general.port, () => {

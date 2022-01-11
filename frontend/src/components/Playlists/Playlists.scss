@@ -1,0 +1,21 @@
+@import './src/boilerplate.scss';
+
+.add-button {
+    border-radius: $border-radius;
+    padding: 0px 10px;
+    background: $color-accent-dark;
+    border: none;
+    margin-left: 20px;
+    font-size: 14px;
+    font-family: 'Roboto';
+    &:hover {
+        background-color: $color-primary;
+    }
+    .text {
+        vertical-align: super;
+    }
+    .material-icons {
+      color: $gray-light;
+      vertical-align: sub;
+    }
+  }

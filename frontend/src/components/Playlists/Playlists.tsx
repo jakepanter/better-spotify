@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import {
+  CreatePlaylistResponse,
   ListOfUsersPlaylistsResponse,
   PlaylistObjectSimplified,
 } from "spotify-types";
-import "../../cards.scss";
+import "./Playlists.scss";
 import { API_URL } from "../../utils/constants";
+import "../../cards.scss";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
+import { createNewPlaylist } from "../../helpers/api-helpers";
 
 interface IProps {}
 
@@ -21,6 +24,8 @@ class Playlists extends Component<IProps, IState> {
     this.state = {
       results: [],
     };
+
+    this.handleCreateNewPlaylist = this.handleCreateNewPlaylist.bind(this);
   }
 
   async componentDidMount() {
@@ -30,6 +35,23 @@ class Playlists extends Component<IProps, IState> {
     ).then((res) => res.json());
     // Save to state
     this.setState((state) => ({ ...state, results: data.items }));
+  }
+
+  async handleCreateNewPlaylist() {
+    const number = this.state.results ? this.state.results.length + 1 : "-1";
+    const options = {
+      collaborative: false,
+      public: false,
+    };
+    const newPlaylist: CreatePlaylistResponse = await createNewPlaylist(
+      "coole neue playlist #" + number,
+      options
+    );
+    const arr = [newPlaylist, ...this.state.results];
+    this.setState((state) => ({
+      ...state,
+      results: arr,
+    }));
   }
 
   render() {
@@ -44,7 +66,7 @@ class Playlists extends Component<IProps, IState> {
                 style={{ backgroundImage: `url(${playlist.images[0].url})` }}
               />
             ) : (
-              <CoverPlaceholder className="cover"/>
+              <CoverPlaceholder className="cover" />
             )}
             <span className={"title"}>{playlist.name}</span>
             <span className={"artists-name"}>
@@ -57,7 +79,15 @@ class Playlists extends Component<IProps, IState> {
 
     return (
       <div style={{ overflow: "hidden auto" }}>
-        <h2>My Playlists</h2>
+          <h2>
+        <span>
+            My Playlists
+          <button className="add-button" onClick={this.handleCreateNewPlaylist}>
+            <span className="material-icons">add</span>
+            <span className="text">New Playlist</span>
+          </button>
+        </span>
+            </h2>
         <div className={"overview"}>
           <ul className={"overview-items"}>{playlists}</ul>
         </div>

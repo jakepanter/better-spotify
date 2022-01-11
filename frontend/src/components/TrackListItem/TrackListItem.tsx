@@ -68,6 +68,8 @@ function TrackListItem(props: Props) {
     } else if (type === 'saved' || type === 'tags') {
       const userId = await fetchUserId();
       context_uri = userId + ':collection:'
+    } else if (type === "search") {
+      context_uri = "spotify:album:" + track.album?.id;
     }
     const body: Body = {
       context_uri: context_uri,

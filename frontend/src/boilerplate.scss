@@ -14,29 +14,38 @@
 
 // colors
 $none: none;
-$transparent: transparent;
-$black: #000 !default;
-$white: #fff !default;
-$gray-dark: #CDCECD !default;
-$gray: #E4E3E2 !default;
-$gray-light: #F2F2F2 !default;
+$black: #000;
+$white: #fff;
+$gray-dark: #CDCECD;
+$gray: #E4E3E2;
+$gray-light: #F2F2F2;
 
 // project base colors
-$color-background: #131218 !default;
-$color-primary: #008FF7 !default;
-$color-secondary: #18283A !default;
-$color-default: #E0E0E0 !default;
+$color-background: #131218;
+$color-primary: #008FF7;
+$color-secondary: #18283A;
+$color-default: #E0E0E0;
 
 // project special colors
-$color-accent-dark: #1C1C23 !default;
-$color-accent-darker: #008FF7 !default;
-$color-accent-darkest: #0072C5 !default;
-$color-waring-dark: #F47960 !default;
-$color-waring-darker: #EA5030 !default;
-$color-waring-darkest: #D83010 !default;
-$color-positive-dark: #35DF91 !default;
-$color-positive-darker: #1EB972 !default;
-$color-positive-darkest: #188D58 !default;
+$color-accent-dark: #1C1C23;
+$color-accent-darker: #008FF7;
+$color-accent-darkest: #0072C5;
+$color-waring-dark: #F47960;
+$color-waring-darker: #EA5030;
+$color-waring-darkest: #D83010;
+$color-positive-dark: #35DF91;
+$color-positive-darker: #1EB972;
+$color-positive-darkest: #188D58;
+
+$checkbox-icon: $color-primary;
+
+// Tags
+$color-tag-0: $color-primary;
+$color-tag-1: #FA7627;
+$color-tag-2: #481CFC;
+$color-tag-3: #F7DF19;
+$color-tag-4: $color-positive-dark;
+$color-tag-5: $color-waring-darker;
 
 
 // Sizes
@@ -49,96 +58,67 @@ $breakpoint-xl: 100rem !default; // ~ 1600px
 $side-panel-size: 190px;
 
 // padding
-$spacer: 2rem !default;
-$padding-vertical: $spacer/2 !default;
-$padding-horizontal: 1rem !default;
+$spacer: 2rem;
+$padding-vertical: $spacer/2;
+$padding-horizontal: 1rem;
 
 // borders
-$border-width: 1px !default;
+$border-width: 1px;
 $border-color: $color-primary;
 $border-style: solid;
-$border-radius: 5px !default;
+$border-radius: 5px;
 
 // transitions
-$transition-base: all 0.2s ease-in-out !default;
-$transition-fade: opacity .2s linear !default;
+$transition-base: all 0.2s ease-in-out;
 
 // fonts
-$font-default: 'Roboto' !default;
-$font-special: 'Roboto Condensed' !default;
+$font-default: 'Roboto';
+$font-special: 'Roboto Condensed';
 
-$fz-base: 16px !default;
-$lh-base: 1.5rem !default;
-$ls-base: 0px !default;
-$fw-base: 400 !default;
-$fs-base: normal !default;
-$fw-bold: 700 !default;
+$fz-base: 16px;
+$lh-base: 1.5rem;
+$ls-base: 0px;
+$fw-base: 400;
+$fs-base: normal;
+$fw-bold: 700;
 
 // shadows
-$text-shadow: 0 0 1px rgba($gray-light, .7) !default;
-$box-shadow: 0 0 ($spacer/2) rgba($gray-light, .7) !default;
-
-// Text - links
-$link-color: $color-default !default;
-$link-hover-color: $color-primary !default;
-$link-decoration: none !default;
-$link-hover-decoration: underline !default;
+$box-shadow: 0 0 ($spacer/2) rgba($gray-light, .7);
 
 // Text - Headlines
-$color-headlines: $color-primary !default;
-$ff-headlines: $font-special !default;
-$lh-headlines: 1.5 !default;
-$fw-headlines: $fw-bold !default;
-$ls-headlines: 0px !default;
-$fs-headlines: normal !default;
-$fz-h1: 40px !default;
-$fz-h2: 20px !default;
-$fz-h3: 28px !default;
-$fz-h4: 24px !default;
-$fz-h5: 20px !default;
-$fz-h6: 18px !default;
+$ff-headlines: $font-special;
+$fz-h1: 40px;
+$fz-h2: 20px;
+$fz-h3: 28px;
+$fz-h4: 24px;
+$fz-h5: 20px;
+$fz-h6: 18px;
 
-// tables
-$table-cell-padding: .75rem !default;
-$table-bg: transparent !default;
-$table-border-width: $border-width !default;
-$table-border-color: $gray-light !default;
-$table-head-bg: $gray-light !default;
-$table-head-color: $gray !default;
 
 // Buttons
-$button-background: $color-primary !default;
-$button-background-active: none !default;
-$button-color: $white !default;
-$button-color-active: $color-primary !default;
-$ff-buttons: $font-default !default;
-$lh-buttons: 1.5 !default;
-$ls-buttons: 0px !default;
-$fw-buttons: $fw-base !default;
-$tt-buttons: none !default;
-$button-border-style: solid !default;
-$button-border-width: 1px !default;
-$button-border-color: $color-primary !default;
-$button-border-color-active: $color-primary !default;
-$button-border-radius: 0px !default;
-$button-padding-horizontal: 10px !default;
-$button-padding-vertical: 15px !default;
-$button-transition-base: $transition-base !default;
-
-$checkbox-icon: $color-primary;
-
-// Tags
-$color-tag-0: $color-primary;
-$color-tag-1: #FA7627;
-$color-tag-2: #481CFC;
-$color-tag-3: #F7DF19;
-$color-tag-4: #0CF79D;
-$color-tag-5: #FA160F;
+$button-background: $color-primary;
+$button-background-active: none;
+$button-color: $white;
+$button-color-active: $color-primary;
+$ff-buttons: $font-default;
+$lh-buttons: 1.5;
+$ls-buttons: 0px;
+$fw-buttons: $fw-base;
+$tt-buttons: none;
+$button-border-style: solid;
+$button-border-width: 1px;
+$button-border-color: $color-primary;
+$button-border-color-active: $color-primary;
+$button-border-radius: 0px;
+$button-padding-horizontal: 10px;
+$button-padding-vertical: 15px;
+$button-transition-base: $transition-base;
 
 
 /*
    STANDARD MIXINS
 */
+
 @mixin columns(
   $columns-xl: 5,
   $columns: 3,
@@ -163,6 +143,7 @@ $color-tag-5: #FA160F;
     overflow: hidden;
 
     // Columns calculation for breakpoints
+    // min 1600px
     @media screen and(min-width: $breakpoint-xl) {
       width: calc(100% / #{$columns-xl} - #{$margin-xl} * ((#{$columns-xl} - 1) / #{$columns-xl}));
       padding: $box-padding-xl;
@@ -174,7 +155,9 @@ $color-tag-5: #FA160F;
     @media screen and(max-width: $breakpoint-xl) and (min-width: $breakpoint-md) {
       width: calc(100% / #{$columns} - #{$margin} * ((#{$columns} - 1) / #{$columns}));
       padding: $box-padding;
-
+      &:nth-child(#{$columns}n) {
+        margin-right: 0;
+      }
       &:not(:nth-child(#{$columns}n)) {
         margin-right: $margin;
       }
@@ -183,7 +166,9 @@ $color-tag-5: #FA160F;
     @media screen and(max-width: $breakpoint-md) and (min-width: $breakpoint-sm) {
       width: calc(100% / #{$columns-md} - #{$margin-md} * ((#{$columns-md} - 1) / #{$columns-md}));
       padding: $box-padding-md;
-
+      &:nth-child(#{$columns-md}n) {
+        margin-right: 0;
+      }
       &:not(:nth-child(#{$columns-md}n)) {
         margin-right: $margin-md;
       }
@@ -195,123 +180,13 @@ $color-tag-5: #FA160F;
       padding: $box-padding-xs;
       margin-left: 0;
       margin-right: 0;
+      &:nth-child(#{$columns-xs}n) {
+        margin-right: 0;
+      }
 
       &:not(:last-child) {
         margin-bottom: $margin-xs;
       }
     }
   }
-}
-
-;
-
-/*
-  Make sure, you used "grid-box"-class for all child container
-  You have the option of using "auto" grid - this has a basic style, see if it fits for your case
-  -> It is also possible to use auto an manipulate the css via custom css
-  -------------------------------------------------
-  If you want to build a manual grid, implement this mixin anyway:
-  set the number for your grid with "$grid-template-columns"
-  used "grid-box"-class for all child container
-  then you are able to add the basic grid css
-
-  .grid-box:nth-child(1) {
-    grid-column:1/2;
-    grid-row: 1/2;
-  }
-  You just need the code for the childes, rest should work
-  https://css-tricks.com/snippets/css/complete-guide-grid/
-*/
-
-@mixin grid(
-  $grid: auto, // "auto" or "manual"
-  $grid-template-columns: 4, // 3,4,6,8,12 ...
-  $grid-template-columns-md: 3, // 3,4,6,8,12 ...
-  $grid-unequal: false, // false or true
-  $margin: 1rem,
-  $margin-md: 1rem,
-  $margin-sm: 1rem
-) {
-  $grid-template-rows: floor($grid-template-columns/2);
-  $grid-items: if($grid-template-rows < 2, 3, ($grid-template-rows * $grid-template-rows) + 1);
-  $grid-first: 1;
-  $grid-end: ($grid-items + $grid-first + $grid-template-rows);
-
-  //TABLET
-  $grid-template-rows-md: floor($grid-template-columns-md/2);
-  $grid-items-md: if($grid-template-rows-md < 2, 3, ($grid-template-rows-md * $grid-template-rows-md) + 1);
-  $grid-end-md: ($grid-items-md + $grid-first + $grid-template-rows-md);
-
-
-  @supports (display: grid) {
-    display: grid;
-    grid-auto-flow: dense;
-
-    grid-template-columns: repeat($grid-template-columns, 1fr);
-    grid-template-rows: repeat(calc(max(#{ $grid-template-rows} , 2)), 1fr);
-
-    @media screen and (max-width: $breakpoint-md) {
-      grid-template-columns: repeat($grid-template-columns-md, 1fr);
-      grid-template-rows: repeat(calc(max(#{ $grid-template-rows-md} , 2)), 1fr);
-    }
-
-    @media screen and (max-width: $breakpoint-sm) {
-      display: flex;
-      max-width: 100%;
-      flex-direction: column;
-      padding: $margin-sm;
-    }
-  }
-  .grid-box {
-    background: $color-primary;
-    margin: calc(#{$margin} / 2);
-
-    @media screen and (max-width: $breakpoint-md) {
-      margin: calc(#{$margin-md} / 2);
-    }
-
-    @media screen and(max-width: $breakpoint-sm) {
-      margin: 0 0 $margin-sm 0;
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
-    @if $grid == "auto" {
-      @media screen and (min-width: $breakpoint-md) {
-
-        @if $grid-unequal == true {
-          // Grid implementation
-          &:nth-child(#{2*$grid-items}n+#{$grid-first}),
-          &:nth-child(#{2*$grid-items}n+#{$grid-end}) {
-            grid-column: span calc(max( #{ $grid-template-rows} ,2)) / auto;
-            grid-row: auto / span calc(max(#{ $grid-template-rows} , 2));
-          }
-        } @else {
-          &:nth-child(#{2*$grid-items}n+#{$grid-first}),
-          &:nth-child(#{$grid-items}n+#{$grid-first}) {
-            grid-column: span calc(max( #{ $grid-template-rows} ,2)) / auto;
-            grid-row: auto / span calc(max(#{ $grid-template-rows} , 2));
-          }
-        }
-      }
-      @media screen and (max-width: $breakpoint-md) {
-        @if $grid-unequal == true {
-          // Grid implementation
-          &:nth-child(#{2*$grid-items-md}n+#{$grid-first}),
-          &:nth-child(#{2*$grid-items-md}n+#{$grid-end-md}) {
-            grid-column: span calc(max( #{ $grid-template-rows-md} ,2)) / auto;
-            grid-row: auto / span calc(max(#{ $grid-template-rows-md} , 2));
-          }
-        } @else {
-          &:nth-child(#{2*$grid-items-md}n+#{$grid-first}),
-          &:nth-child(#{$grid-items-md}n+#{$grid-first}) {
-            grid-column: span calc(max( #{ $grid-template-rows-md} ,2)) / auto;
-            grid-row: auto / span calc(max(#{ $grid-template-rows-md} , 2));
-          }
-        }
-      }
-    }
-  }
-}
-
-;
+};

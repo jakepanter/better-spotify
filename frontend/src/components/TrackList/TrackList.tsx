@@ -36,7 +36,14 @@ type Props = {
       fullyLoaded: boolean;
       id_tracklist: string;
       hideTag: string;
-};
+    }
+  | {
+    type: "search";
+    tracks: TrackObjectFull[];
+    loadMoreCallback: () => void;
+    fullyLoaded: boolean;
+    id_tracklist: string;
+  };
 
 type ContextMenuType = {
   show: boolean;
@@ -213,7 +220,7 @@ function TrackList(props: Props) {
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
               const { track } = item;
-              const tagList = TagsSystem.getTagsOfElement(track.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
+              const tagList = tags.spotifyElements[track.id]?.map((id) => tags.availableTags[id]) ?? [];
               return (
                 <TrackListItem
                   track={track}
@@ -245,6 +252,49 @@ function TrackList(props: Props) {
         </div>
       )}
 
+      {
+        type === "search" && (
+          <div className={"Tracklist"}>
+            <div className={"TableHeader TableRow"}>
+              <div className={"TableCell TableCellArtwork"} />
+              <div className={"TableCell TableCellTitleArtist"}>Title</div>
+              <div className={"TableCell TableCellAlbum"}>Album</div>
+              <div className={"TableCell TableCellDuration"}>Duration</div>
+            </div>
+            <div className={"TableBody"}>
+            {props.tracks.map((item, index) => {
+              const tagList = tags.spotifyElements[item.id]?.map((id) => tags.availableTags[id]) ?? [];
+              return (
+                <div key="TrackList">
+                    <TrackListItem
+                      track={item}
+                      name={item.name}
+                      artists={item.artists}
+                      duration_ms={item.duration_ms}
+                      album={item.album}
+                      key={type + "-track-" + item.id + "-" + index}
+                      listIndex={index}
+                      selected={isTrackSelected(item, index)}
+                      onSelectionChange={handleSelectionChange}
+                      onContextMenuOpen={handleContextMenuOpen}
+                      id_tracklist={''}
+                      type={type}
+                      tags={tagList}
+                    />
+                </div>
+              );
+            })}
+            {!fullyLoaded ? (
+              <div className={"PlaylistLoader"}>
+                <div className={"loader"} />
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+      )}
+
       {type === "saved" && (
         <div
           className={"Tracklist"}
@@ -263,7 +313,7 @@ function TrackList(props: Props) {
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
               const { track } = item;
-              const tagList = TagsSystem.getTagsOfElement(track.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
+              const tagList = tags.spotifyElements[track.id]?.map((id) => tags.availableTags[id]) ?? [];
               return (
                 <TrackListItem
                   track={track}

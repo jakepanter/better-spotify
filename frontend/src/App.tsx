@@ -87,6 +87,12 @@ function App() {
               <Route path="/tag/:id">
                 <TagTracklistPage/>
               </Route>
+              <Route path="/search/:search">
+                <SearchPage/>
+              </Route>
+              <Route path="/customsearch/:type/:search">
+                <SearchPageCustom/>
+              </Route>
             </Switch>
             <Player />
           </div>
