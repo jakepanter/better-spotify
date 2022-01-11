@@ -11,6 +11,8 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import Topbar from "./components/Topbar/Topbar";
+import SearchPage from "./components/SearchPage/SearchPage";
+import SearchPageCustom from "./components/SearchPage/Custom/SearchPageCustom"
 import SettingsPage from "./pages/SettingsPage/SettingsPage";
 
 function authorize() {
@@ -82,6 +84,12 @@ function App() {
               </Route>
               <Route path="/settings">
                 <SettingsPage/>
+              </Route>
+              <Route path="/search/:search">
+                <SearchPage/>
+              </Route>
+              <Route path="/customsearch/:type/:search">
+                <SearchPageCustom/>
               </Route>
             </Switch>
             <Player />
