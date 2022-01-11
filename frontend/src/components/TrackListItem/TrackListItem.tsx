@@ -11,6 +11,7 @@ import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import "./TrackListItem.scss";
 import {API_URL} from "../../utils/constants";
+import {Tag} from "../../utils/tags-system";
 
 type Body = {
   context_uri: string | undefined,
@@ -30,6 +31,7 @@ type Props = {
   album?: AlbumObjectSimplified;
   listIndex: number;
   selected: boolean;
+  tags: Tag[];
   onSelectionChange: (
     trackUniqueId: String,
     isSelected: boolean,
@@ -61,6 +63,8 @@ function TrackListItem(props: Props) {
     } else if (type === 'saved') {
       const userId = await fetchUserId();
       context_uri = userId + ':collection:'
+    } else if (type === "search") {
+      context_uri = "spotify:album:" + track.album?.id;
     }
     const body: Body = {
       context_uri: context_uri,
@@ -173,6 +177,15 @@ function TrackListItem(props: Props) {
       ) : (
         <></>
       )}
+      <div className={"TableCell TableCellTags"}>
+        {track.tags.map((t, i) =>
+          <span key={i}
+                className={`Tag TagColor${t.color}`}
+          >
+            {t.title}
+          </span>
+        )}
+      </div>
     </div>
   );
 }
