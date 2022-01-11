@@ -19,6 +19,7 @@ const Sidebar = () => {
                 <p className="material-icons left-side-panel--icon">circle</p> :
                 <p className="material-icons left-side-panel--icon">radio_button_unchecked</p>}
             </button>
+            
             {/* Sidebar menu */}
             <ul className={`left-side-panel--list ${navbarOpen ? " showMenu" : ""}`}>
                 <img className={"logoImg"} src="logo512.png" alt="Logo"></img>
