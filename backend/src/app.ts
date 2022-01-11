@@ -171,10 +171,15 @@ export default class App {
 
     this.server.post('/api/spotify/playlist/:playlistId/edit', async (req: Request, res: Response) => {
       const playlistId = req.params.playlistId as string;
-      console.log('req.body');
-      console.log(req.body);
       const options = req.body;
       await this.spotifyService.editPlaylistDetails(playlistId, options);
+      return res.status(200);
+    });
+
+    this.server.post('/api/spotify/playlist/:playlistId/image', async (req: Request, res: Response) => {
+      const playlistId = req.params.playlistId as string;
+      const imgData = req.body.image;
+      await this.spotifyService.addPlaylistImage(playlistId, imgData);
       return res.status(200);
     });
 

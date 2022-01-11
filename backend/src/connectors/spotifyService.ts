@@ -158,6 +158,10 @@ export default class SpotifyService {
     await this.spotifyApi.changePlaylistDetails(playlistId, options);
   }
 
+  addPlaylistImage = async (playlistId: string, imgData: string) => {
+    await this.spotifyApi.uploadCustomPlaylistCoverImage(playlistId, imgData);
+  }
+
   setVolume = async (volume: number) => {
     const result = await this.spotifyApi.setVolume(volume);
     return result;
