@@ -1,12 +1,15 @@
 @import "./src/boilerplate.scss";
 
 .szh-menu {
-    background-color: $color-background;
+  background-color: $color-background;
 
-    &__item {
-        color: $color-default;
-        &--hover {
-          background-color: $color-accent-dark;
-        }
+  &__item {
+    color: $color-default;
+    &--hover {
+      background-color: $color-accent-dark;
     }
+    &--disabled {
+      color: darkgrey;
+    }
+  }
 }
