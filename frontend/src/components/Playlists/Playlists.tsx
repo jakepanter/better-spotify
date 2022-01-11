@@ -33,7 +33,6 @@ export default function Playlists() {
     e.preventDefault();
     //pass clicked playlist to context menu (doesnt contain tracks)
     const playlist = items.find((playlist) => playlist.id === playlistId);
-    console.log(playlist);
     state.setContextMenu({
       ...state.contextMenu,
       type: "playlists",

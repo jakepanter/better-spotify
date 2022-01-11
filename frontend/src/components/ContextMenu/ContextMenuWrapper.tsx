@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import "@szhsin/react-menu/dist/index.css";
+import AppContext from "../../AppContext";
 import TracksMenu from "./TracksMenu";
 import AddToPlaylistsMenu from "./AddToPlaylistsMenu";
 import PlaylistMenu from "./PlaylistMenu";
-import AppContext from "../../AppContext";
 import PlaylistsMenu from "./PlaylistsMenu";
+import AlbumsMenu from "./AlbumsMenu";
 
 type MenuProps = {
   type: String;
@@ -32,6 +33,8 @@ function ContextMenuWrapper(props: MenuProps) {
     return <PlaylistMenu data={props.data} anchorPoint={anchorPoint} />;
   else if (props.type === "playlists")
     return <PlaylistsMenu data={props.data} anchorPoint={anchorPoint} />;
+  else if (props.type === "albums")
+    return <AlbumsMenu data={props.data} anchorPoint={anchorPoint} />;
   return null;
 }
 
