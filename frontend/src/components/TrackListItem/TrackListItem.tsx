@@ -23,7 +23,7 @@ type Body = {
 
 type Props = {
   track: TrackObjectFull | TrackObjectSimplified | AlbumObjectSimplified;
-  name: string;
+  name?: string;
   artists: ArtistObjectSimplified[];
   duration_ms?: number;
   added_at?: string;
@@ -31,7 +31,7 @@ type Props = {
   album?: AlbumObjectSimplified;
   listIndex: number;
   selected: boolean;
-  tags: Tag[];
+  tags?: Tag[];
   onSelectionChange: (
     trackUniqueId: String,
     isSelected: boolean,
@@ -145,14 +145,16 @@ function TrackListItem(props: Props) {
       ) : (
         <CoverPlaceholder />
       )}
-
-      <div className={"TableCell TableCellTitleArtist"}>
-        <span className={"TableCellTitle"}>{track.name}</span>
-        <span className={"TableCellArtist"}>
+        {track.name !== undefined ? (<div className={"TableCell TableCellTitleArtist"}>
+            <span className={"TableCellTitle"}>{track.name}</span>
+            <span className={"TableCellArtist"}>
           {track.artists.map((artist) => artist.name).join(", ")}
         </span>
-      </div>
-      {track.album !== undefined ? (
+        </div>): (
+            <></>
+        )}
+
+      {track.album !== undefined && type !== "releases" ? (
         <div className={"TableCell TableCellAlbum"}>{track.album.name}</div>
       ) : (
         <></>
@@ -177,15 +179,19 @@ function TrackListItem(props: Props) {
       ) : (
         <></>
       )}
-      <div className={"TableCell TableCellTags"}>
-        {track.tags.map((t, i) =>
-          <span key={i}
-                className={`Tag TagColor${t.color}`}
-          >
+        {track.tags !== undefined ? (
+            <div className={"TableCell TableCellTags"}>
+            {track.tags.map((t, i) =>
+                    <span key={i}
+                          className={`Tag TagColor${t.color}`}
+                    >
             {t.title}
           </span>
-        )}
-      </div>
+            )}
+        </div>) :(
+            <></>
+        ) }
+
     </div>
   );
 }

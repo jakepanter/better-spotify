@@ -131,7 +131,7 @@ class Discover extends Component<IProps, IState> {
                         }}>
                         </div>
                         <span className={"title"}>{track.name}</span>
-
+                        <span className={"artists-name"}>{track.album.artists.map((a) => a.name).join(", ")}</span>
                     </Link>
                 </li>
             );
@@ -148,6 +148,7 @@ class Discover extends Component<IProps, IState> {
                         }}>
                         </div>
                         <span className="title">{newReleasedAlbum.name}</span>
+                        <span className={"artists-name"}>{newReleasedAlbum.artists.map((a) => a.name).join(", ")}</span>
                     </Link>
                 </li>
             );

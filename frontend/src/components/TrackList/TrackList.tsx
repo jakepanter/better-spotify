@@ -35,7 +35,6 @@ type Props = {
     loadMoreCallback: () => void;
     fullyLoaded: boolean;
     id_tracklist: string;
-  };
     }| {
     type: "songhistory";
     tracks: PlayHistoryObject[];
@@ -404,7 +403,8 @@ function TrackList(props: Props) {
             >
                 <div className={"TableHeader TableRow"}>
                     <div className={"TableCell TableCellArtwork"} />
-                    <div className={"TableCell TableCellTitleArtist"}>Title</div>
+                    <div className={"TableCell TableCellTitleArtist"}>Album</div>
+                    <div className={"TableCell TableCellAddedAt"}>Added</div>
                 </div>
                 <div className={"TableBody"}>
                     {props.tracks.map((item, index) => {
@@ -416,6 +416,7 @@ function TrackList(props: Props) {
                                 name={track.name}
                                 artists={track.artists}
                                 album = {track}
+                                added_at={track.release_date}
                                 key={type + "-track-" + track.id + "-" + index}
                                 listIndex={index}
                                 selected={isTrackSelected(track, index)}
