@@ -9,17 +9,18 @@ import {
   TrackObjectSimplified,
 } from "spotify-types";
 import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
-import {API_URL} from "../../utils/constants";
+import { API_URL } from "../../utils/constants";
 import Button from "../Button/Button";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import AppContext from "../../AppContext";
+import { Tag } from "../../utils/tags-system";
 
 type Body = {
-  context_uri: string | undefined,
-  position_ms: number | undefined,
+  context_uri: string | undefined;
+  position_ms: number | undefined;
   offset?: {
-    uri: string | undefined
-  }
+    uri: string | undefined;
+  };
 };
 
 type Props = {
@@ -32,6 +33,7 @@ type Props = {
   album?: AlbumObjectSimplified;
   listIndex: number;
   selected: boolean;
+  tags: Tag[];
   onSelectionChange: (
     trackUniqueId: String,
     isSelected: boolean,
@@ -48,38 +50,39 @@ function TrackListItem(props: Props) {
   const [selected, setSelected] = useState<boolean>(props.selected);
   const [specialKey, setSpecialKey] = useState<String | null>(null);
   const [liked, setLiked] = useState<boolean>(!!props.liked);
-  const state = useContext(AppContext)
+  const state = useContext(AppContext);
 
-  const id_tracklist= props.id_tracklist;
+  const id_tracklist = props.id_tracklist;
   const type = props.type;
   const track_uri = "spotify:track:" + props.track.id;
 
   const sendRequest = useCallback(async () => {
     // POST request using fetch inside useEffect React hook
     let context_uri;
-    if (type === "album"){
+    if (type === "album") {
       context_uri = "spotify:album:" + id_tracklist;
-    } else if (type=="playlist") {
+    } else if (type == "playlist") {
       context_uri = "spotify:playlist:" + id_tracklist;
-    } else if (type === 'saved') {
+    } else if (type === "saved") {
       const userId = await fetchUserId();
-      context_uri = userId + ':collection:'
+      context_uri = userId + ":collection:";
+    } else if (type === "search") {
+      context_uri = "spotify:album:" + track.album?.id;
     }
     const body: Body = {
       context_uri: context_uri,
-      position_ms: 0
-    }
-    if (type !== 'saved') {
+      position_ms: 0,
+    };
+    if (type !== "saved") {
       body.offset = {
-        uri: track_uri
-      }
+        uri: track_uri,
+      };
     }
     fetch(`${API_URL}api/spotify/me/player/play`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    })
-        .then(response => response.json())
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    }).then((response) => response.json());
   }, []);
 
   useEffect(() => {
@@ -100,7 +103,7 @@ function TrackListItem(props: Props) {
     }
     setSelected(!selected);
 
-    if (e.detail === 2) sendRequest()
+    if (e.detail === 2) sendRequest();
   };
 
   const handleRightClick = (e: any) => {
@@ -109,26 +112,36 @@ function TrackListItem(props: Props) {
   };
 
   const fetchUserId = async () => {
-    return await fetch(`${API_URL}api/spotify/me`).then(res => res.json()).then(data => data.uri)
+    return await fetch(`${API_URL}api/spotify/me`)
+      .then((res) => res.json())
+      .then((data) => data.uri);
   };
 
   const handleLikeButton = async (e: any) => {
     e.stopPropagation();
     if (!liked) {
       // add
-      await fetch(`${API_URL}api/spotify/me/tracks/add?trackIds=${track.track.id}`)
-          .then((res) => res.json());
+      await fetch(`${API_URL}api/spotify/me/tracks/add?trackIds=${track.track.id}`).then((res) =>
+        res.json()
+      );
       setLiked(true);
     } else {
       // remove
-      await fetch(`${API_URL}api/spotify/me/tracks/remove?trackIds=${track.track.id}`)
-          .then((res) => res.json());
+      await fetch(`${API_URL}api/spotify/me/tracks/remove?trackIds=${track.track.id}`).then((res) =>
+        res.json()
+      );
       setLiked(false);
     }
-  }
+  };
   const handleAddToPlaylist = (e: any) => {
     e.stopPropagation();
-    state.setContextMenu({ isOpen: true, data: [trackUniqueId], x: e.clientX, y: e.clientY, type: "addToPlaylist" })
+    state.setContextMenu({
+      isOpen: true,
+      data: [trackUniqueId],
+      x: e.clientX,
+      y: e.clientY,
+      type: "addToPlaylist",
+    });
   };
 
   return (
@@ -137,14 +150,9 @@ function TrackListItem(props: Props) {
       onClick={(e) => handleClick(e)}
       onContextMenu={(e) => handleRightClick(e)}
     >
-      {track.album !== undefined &&
-      track.album.available_markets !== undefined ? (
+      {track.album !== undefined && track.album.available_markets !== undefined ? (
         <div className={"TableCell TableCellArtwork"}>
-          <img
-            src={track.album.images[2].url}
-            alt=""
-            style={{ width: "40px", height: "40px" }}
-          />
+          <img src={track.album.images[2].url} alt="" style={{ width: "40px", height: "40px" }} />
         </div>
       ) : (
         <CoverPlaceholder />
@@ -168,18 +176,23 @@ function TrackListItem(props: Props) {
       ) : (
         <></>
       )}
-      <div className={"TableCell TableCellDuration"}>
-        {formatTimestamp(track.duration_ms)}
-      </div>
+      <div className={"TableCell TableCellDuration"}>{formatTimestamp(track.duration_ms)}</div>
       {track.liked !== undefined ? (
         <div className={"TableCell TableCellLiked"}>
-          <button className={`checkbox ${liked ? 'checked' : ''}`} onClick={handleLikeButton}>
-            <span className={'material-icons'}>{liked ? 'favorite' : 'favorite_border'}</span>
+          <button className={`checkbox ${liked ? "checked" : ""}`} onClick={handleLikeButton}>
+            <span className={"material-icons"}>{liked ? "favorite" : "favorite_border"}</span>
           </button>
         </div>
       ) : (
         <></>
       )}
+      <div className={"TableCell TableCellTags"}>
+        {track.tags.map((t, i) => (
+          <span key={i} className={`Tag TagColor${t.color}`}>
+            {t.title}
+          </span>
+        ))}
+      </div>
       <div className="TableCell TableCellActions">
         <Button
           simple

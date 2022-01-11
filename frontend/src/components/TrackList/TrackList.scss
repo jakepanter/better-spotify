@@ -11,6 +11,11 @@
   position: relative;
   width: 100%;
 
+  .Link {
+    text-decoration: none !important;
+    color: $color-default;
+  }
+
   .TableRow {
     padding: 0.5rem;
     align-items: center;
@@ -89,6 +94,13 @@
 
     &Actions {
       flex: 0 0 60px;
+    }
+
+    &Tags {
+      align-items: center;
+      display: flex;
+      flex: 0.5 0 0;
+      flex-flow: row nowrap;
     }
   }
 }

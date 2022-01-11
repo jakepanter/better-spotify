@@ -1,10 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ListOfUsersPlaylistsResponse, PlaylistObjectSimplified } from "spotify-types";
 import AppContext from "../../AppContext";
 import "../../cards.scss";
+import {
+  CreatePlaylistResponse,
+  ListOfUsersPlaylistsResponse,
+  PlaylistObjectSimplified,
+} from "spotify-types";
+import "./Playlists.scss";
 import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
+import { createNewPlaylist } from "../../helpers/api-helpers";
 
 export default function Playlists() {
   const [playlists, setPlaylists] = useState<ListOfUsersPlaylistsResponse>();
@@ -36,6 +42,20 @@ export default function Playlists() {
       y: e.clientY,
       data: playlist,
     });
+  };
+
+  const handleCreateNewPlaylist = async () => {
+    const number = items ? items.length + 1 : "-1";
+    const options = {
+      collaborative: false,
+      public: false,
+    };
+    const newPlaylist: CreatePlaylistResponse = await createNewPlaylist(
+      "coole neue playlist #" + number,
+      options
+    );
+    const arr = [newPlaylist, ...items];
+    setItems(arr);
   };
 
   //fetch next playlists when you reach the bottom of the current list
@@ -76,7 +96,15 @@ export default function Playlists() {
 
   return (
     <div style={{ overflow: "hidden auto" }}>
-      <h2>My Playlists</h2>
+      <h2>
+        <span>
+          My Playlists
+          <button className="add-button" onClick={handleCreateNewPlaylist}>
+            <span className="material-icons">add</span>
+            <span className="text">New Playlist</span>
+          </button>
+        </span>
+      </h2>
       <div className={"overview"} onScroll={onScroll}>
         <ul className={"overview-items"}>{myPlaylists}</ul>
       </div>
