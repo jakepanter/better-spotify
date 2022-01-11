@@ -155,6 +155,12 @@ export default class App {
       return res.json(playlists);
     });
 
+    this.server.post('/api/spotify/playlists', async (req: Request, res: Response) => {
+      const { playlistName, options } = req.body;
+      const playlist = await this.spotifyService.createPlaylist(playlistName, options);
+      return res.json(playlist);
+    });
+
     this.server.get('/api/spotify/playlist/:playlistId', async (req: Request, res: Response) => {
       const playlistId = req.params.playlistId as string;
       // define what specific fields to get,
