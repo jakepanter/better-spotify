@@ -22,14 +22,14 @@ For development please ensure to use the linter with the provided configs.
 
 ## Deployment
 
-To deploy the application to the staging server inside HTW VPN follow these steps:
-* Copy your _.env_ to a file named _.env.staging_ and change the variable `REACT_APP_API_URL` inside to `https://s-potify.fun/`
-* Connect to **HTW VPN**
-* Run `deploy_to_server.sh` bash script
-* It will create builds for backend and frontend and then deploy these on the server
-* You will be prompted the servers password for user `local` twice in the process
-* Next go to [https://s-potify.fun](https://s-potify.fun/) _(from within HTW VPN)_ to check the application
-* You will most probably be warned about an unsecure connection, you need to allow this in order to view the site
+To deploy the application in Heroku follow these steps:
+* Login to [Heroku](https://id.heroku.com/login)
+* Select s-potify project
+* Go to Deploy > Manual Deploy
+* Select main branch
+* Click on deploy
+* Wait for the deployment to succeed, if there's a failed deployment check the logs 
+* The site will be accessible on [s-potify.herokuapp.com/](s-potify.herokuapp.com/)
 
 
 
