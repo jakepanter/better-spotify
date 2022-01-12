@@ -8,6 +8,8 @@ import Album from "../Album/Album";
 import Playlist from "../Playlist/Playlist";
 import Albums from "../Albums/Albums";
 import Playlists from "../Playlists/Playlists";
+import TagTracklist from "../TagTracklist/TagTracklist";
+import TagsSystem from "../../utils/tags-system";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -27,6 +29,10 @@ export interface IDashboardChart extends DashboardItem {
   period: ChartPeriod;
 }
 
+export interface IDashboardTagTracklist extends DashboardItem {
+  id: string;
+}
+
 interface IProps {
   editable: boolean;
 }
@@ -36,6 +42,7 @@ interface IState {
   playlists: IDashboardPlaylist[];
   albums: IDashboardAlbum[];
   charts: IDashboardChart[];
+  tagTracklists: IDashboardTagTracklist[];
   showFavorites: boolean;
   showAlbums: boolean;
   showPlaylists: boolean;
@@ -44,6 +51,7 @@ interface IState {
     type: ChartType,
     period: ChartPeriod,
   };
+  tagTracklistsSelection: string;
   width: number;
 }
 
@@ -112,6 +120,7 @@ const DEFAULT_DASHBOARD_STATE: IState = {
   charts: [
     {countryCode: 'global', chartType: 'top', period: 'daily'}
   ],
+  tagTracklists: [],
   showFavorites: true,
   showAlbums: true,
   showPlaylists: true,
@@ -120,6 +129,7 @@ const DEFAULT_DASHBOARD_STATE: IState = {
     type: 'top',
     period: 'daily',
   },
+  tagTracklistsSelection: '',
   width: 0,
 };
 
@@ -207,6 +217,27 @@ class Dashboard extends Component<IProps, IState> {
     );
   }
 
+  private addTagTracklist(id: string) {
+    const { tagTracklists } = this.state;
+    if (!tagTracklists.some((t) => t.id === id)) {
+      const newTagTracklists = [...tagTracklists, { id }];
+      this.updateTagTracklist(newTagTracklists);
+    }
+  }
+
+  private removeTagTracklist(id: string) {
+    const { tagTracklists } = this.state;
+    const newTagTracklists = tagTracklists.filter((t) => t.id !== id);
+    this.updateTagTracklist(newTagTracklists);
+  }
+
+  private updateTagTracklist(newTagTracklists: IDashboardTagTracklist[]) {
+    this.setState(
+      (state) => ({...state, tagTracklists: newTagTracklists}),
+      () => this.saveState(),
+    )
+  }
+
   // Save Layout
   private saveLayouts(layout: Layout[], layouts: Layouts) {
     this.setState(
@@ -236,6 +267,14 @@ class Dashboard extends Component<IProps, IState> {
 
     this.setState(
       (state) => ({...state, chartSelection: {...state.chartSelection, ...newProp}}),
+      () => this.saveState(),
+    );
+  }
+
+  // TagTracklists form
+  private updateTagTracklistSelection(e: ChangeEvent<HTMLSelectElement>) {
+    this.setState(
+      (state) => ({...state, tagTracklistsSelection: e.target.value}),
       () => this.saveState(),
     );
   }
@@ -283,18 +322,46 @@ class Dashboard extends Component<IProps, IState> {
       albums,
       playlists,
       charts,
+      tagTracklists,
       showFavorites,
       showAlbums,
       showPlaylists,
       chartSelection,
+      tagTracklistsSelection,
       width
     } = this.state;
     const { editable } = this.props;
+    const tags = TagsSystem.getTags();
 
     return (
       <div className={`DashboardContainer ${editable ? 'editable' : ''}`} ref={this.containerRef}>
         {editable ?
           <div className={'DashboardConfigurator'}>
+            <div className={'DashboardTagTracklistsForm'}>
+              <div className={'DashboardTagTracklistsFormSelects'}>
+                <select
+                  className={'input-select'}
+                  value={tagTracklistsSelection}
+                  onChange={(e) => this.updateTagTracklistSelection(e)}
+                >
+                  {Object.entries(tags.availableTags).map((t) => <option value={t[0]}>{t[1].title}</option>)}
+                </select>
+              </div>
+              <div className={'DashboardTagTracklistsFormButtons'}>
+                <button
+                  className={'button'}
+                  onClick={() => this.addTagTracklist(tagTracklistsSelection)}
+                >
+                  Add Tag Tracklist
+                </button>
+                <button
+                  className={'button'}
+                  onClick={() => this.removeTagTracklist(tagTracklistsSelection)}
+                >
+                  Remove Tag Tracklist
+                </button>
+              </div>
+            </div>
             <div className={'DashboardChartsForm'}>
               <div className={'DashboardChartsFormSelects'}>
                 <select
@@ -401,6 +468,9 @@ class Dashboard extends Component<IProps, IState> {
               </div>
             );
           })}
+          {tagTracklists.map((t) => <div key={t.id} className={'DashboardItem'}>
+            <TagTracklist id={t.id} headerStyle={'compact'}/>
+          </div>)}
         </ResponsiveGridLayout>
       </div>
     );
