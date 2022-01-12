@@ -95,7 +95,7 @@ function PlaylistsMenu(props: Props) {
     const playlistId = props.data.id;
     await fetch(`${API_URL}api/spotify/playlist/${playlistId}/unfollow`);
     mutate(`${API_URL}api/spotify/playlists`);
-    history.push("/playlists", { unfollowed: playlistId });
+    history.push(history.location.pathname, { unfollowed: playlistId });
   };
 
   if (playlistsError || meError) return <p>error</p>;
