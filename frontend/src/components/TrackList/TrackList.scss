@@ -12,7 +12,7 @@
   width: 100%;
 
   .Link {
-    text-decoration: none!important;
+    text-decoration: none !important;
     color: $color-default
   }
 
@@ -30,8 +30,14 @@
       color: $color-default;
       background-color: lighten($color-accent-dark, 5%);
 
-      .TableCellArtwork::before {
-        visibility: visible;
+      .TableCellArtwork {
+        &:before, &:after {
+          visibility: visible;
+        }
+      }
+
+      .TableCellCoverPlaceholder::before {
+        color: rgba($white, 1);
       }
     }
   }
@@ -46,9 +52,14 @@
     top: 0;
     width: 100%;
 
-    &:first-child .TableCell::before {
-      visibility: visible;
-      background: none;
+    &:first-child .TableCell {
+      &:before {
+        visibility: visible;
+      }
+
+      &:after {
+        background: none;
+      }
     }
   }
 
@@ -67,27 +78,36 @@
     white-space: nowrap;
 
     &Artwork {
-      flex: 0 0 55px;
+      flex: 0 0 42px;
       width: 56px;
       height: 56px;
       padding: 8px $spacer / 2 8px 0;
       position: relative;
 
-      &:before {
+      &:before, &:after {
         position: absolute;
+        content: "";
+        width: 40px;
+        left: 0%;
+        top: 50%;
+        transform: translate(0%, -50%);
+        pointer-events: none;
+        visibility: hidden;
+      }
+
+      &:before {
         content: "\e038";
         font-family: 'Material Icons';
         font-size: 30px;
+        z-index: 1;
+        display: inline-block;
         text-align: center;
-        width: 40px;
+      }
+
+      &:after {
         height: 40px;
         background: rgba($color-primary, .5);
-        left: 0%;
-        top: 50%;
-        transform: translate(0, -50%);
-        pointer-events: none;
         border-radius: $border-radius;
-        visibility: hidden;
       }
 
       img {
@@ -134,5 +154,23 @@
       flex: 0.5 0 0;
       flex-flow: row nowrap;
     }
+  }
+}
+
+.TableCellCoverPlaceholder {
+  flex: 0 0 46px;
+  width: 56px;
+  padding: 0;
+  position: relative;
+
+  &:before {
+    content: "\e038";
+    font-family: 'Material Icons';
+    width: 42px;
+    display: inline-block;
+    font-size: 30px;
+    text-align: center;
+    pointer-events: none;
+    color: rgba($white, .45);
   }
 }
