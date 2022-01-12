@@ -161,7 +161,11 @@ function TrackListItem(props: Props) {
         )}
 
       {track.album !== undefined ? (
-        <div className={"TableCell TableCellAlbum"}>{track.album.name}</div>
+        <div className={"TableCell TableCellAlbum"}>
+          <Link to={`/album/${track.album.id}`} className={"albumLink"} key={trackUniqueId}>
+            {track.album.name}
+          </Link>
+          </div>
       ) : (
         <></>
       )}

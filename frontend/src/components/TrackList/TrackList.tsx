@@ -7,7 +7,6 @@ import React, { useEffect, useState } from "react";
 import TrackListItem from "../TrackListItem/TrackListItem";
 import TagsSystem from "../../utils/tags-system";
 import {TagsTrack} from "../TagTracklist/TagTracklist";
-import {Link} from "react-router-dom";
 
 type Props = {
       type: "album";
@@ -424,7 +423,6 @@ function TrackList(props: Props) {
                         const  track  = item.track as TrackObjectFull;
                         const tagList = TagsSystem.getTagsOfElement(track.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
                         return (
-                            <Link to={`/album/${track.album.id}`} className={"albumLink"} key={track.id + index}>
                             <TrackListItem
                                 track={track}
                                 name={track.name}
@@ -440,7 +438,6 @@ function TrackList(props: Props) {
                                 type={type}
                                 tags={tagList}
                             />
-                            </Link>
                         );
                     })}
                     {!fullyLoaded ? (
@@ -471,7 +468,6 @@ function TrackList(props: Props) {
                     {props.tracks.map((item, index) => {
                         const  track  = item;
                         return (
-                            <Link to={`/album/${track.id}`} className={"albumLink"} key={track.id}>
                             <TrackListItem
                                 track={track}
                                 name={track.name}
@@ -486,7 +482,6 @@ function TrackList(props: Props) {
                                 id_tracklist={''}
                                 type={type}
                             />
-                            </Link>
                         );
                     })}
                     {!fullyLoaded ? (

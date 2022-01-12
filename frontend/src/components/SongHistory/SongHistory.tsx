@@ -26,6 +26,9 @@ export default function SongHistory() {
         setRecentTracks((playedTracks) => [...playedTracks, ...recentPlayedTracksData.items]);
 
         // extract next and set as before timestamp
+        // when the scroller is on bottom we want to fetch more recently played tracks,
+        // therefore the timestamp for the before parameter must be set
+        // the next property contains the before value
         if (recentPlayedTracksData.next !== null) {
             const next: any = recentPlayedTracksData.next;
             const re = new RegExp('(?<==).+?(?=&)');
@@ -37,7 +40,7 @@ export default function SongHistory() {
         }
     }
 
-    // Fetch the main ..... data
+    // Fetch data when limitNumber changes
     useEffect(() => {
         fetchRecentTracksData(beforeTimestamp);
     }, [limitNumber]);
