@@ -148,7 +148,9 @@ function TrackListItem(props: Props) {
             <CoverPlaceholder />
           </div>
       )}
-        {track.name !== undefined && track.type !== "releases" ? (<div className={"TableCell TableCellTitleArtist"}>
+        {/*in the new releases list there is no title, it is like an album list, therefore this cell is not needed*/}
+        {track.name !== undefined && track.type !== "releases" ? (
+            <div className={"TableCell TableCellTitleArtist"}>
             <span className={"TableCellTitle"}>{track.name}</span>
               <span className={"TableCellArtist"}>
           {track.artists.map((artist) => artist.name).join(", ")}
@@ -163,13 +165,11 @@ function TrackListItem(props: Props) {
       ) : (
         <></>
       )}
+      {/*in the new releases list the artists should be shown in an own column*/}
       {track.artists !== undefined && track.type === "releases" ? (
           <span className={"TableCellArtist"}>
           {track.artists.map((artist) => artist.name).join(", ")}
-
-
           </span>
-
       ) : (
           <></>
       )}

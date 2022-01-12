@@ -23,7 +23,7 @@ export default function SongHistory() {
             `${API_URL}api/spotify/player/recently-played?before=${before}&limit=${defaultLimit}`
         ).then((res) => res.json());
         // Save to state
-        setRecentTracks((oldTracks) => [...oldTracks, ...recentPlayedTracksData.items]);
+        setRecentTracks((playedTracks) => [...playedTracks, ...recentPlayedTracksData.items]);
 
         // extract next and set as before timestamp
         if (recentPlayedTracksData.next !== null) {
