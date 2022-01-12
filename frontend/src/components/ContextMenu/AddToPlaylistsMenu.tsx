@@ -1,11 +1,17 @@
 import React, { useContext, useEffect, useRef } from "react";
 import { API_URL } from "../../utils/constants";
-import { ControlledMenu, MenuItem, useMenuState } from "@szhsin/react-menu";
-import { CurrentUsersProfileResponse, ListOfUsersPlaylistsResponse } from "spotify-types";
+import { ControlledMenu, MenuDivider, MenuItem, useMenuState } from "@szhsin/react-menu";
+import {
+  CreatePlaylistResponse,
+  CurrentUsersProfileResponse,
+  ListOfUsersPlaylistsResponse,
+} from "spotify-types";
 import AppContext from "../../AppContext";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import "./ContextMenu.scss";
 import useOutsideClick from "../../helpers/useOutsideClick";
+import { createNewPlaylist } from "../../helpers/api-helpers";
+import { useHistory } from "react-router-dom";
 
 type Props = {
   data: String[];
@@ -17,6 +23,7 @@ const fetcher = (url: any) => fetch(url).then((r) => r.json());
 function AddToPlaylistsMenu(props: Props) {
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
   const state = useContext(AppContext);
+  const history = useHistory();
 
   const { data: playlists, error: playlistsError } = useSWR<ListOfUsersPlaylistsResponse>(
     `${API_URL}api/spotify/playlists`,
@@ -52,6 +59,23 @@ function AddToPlaylistsMenu(props: Props) {
     });
   };
 
+  const addToNewPlaylist = async () => {
+    //create new playlist
+    // const number = playlists ? playlists.items.length + 1 : "-1";
+    const options = {
+      collaborative: false,
+      public: false,
+    };
+    const newPlaylist: CreatePlaylistResponse = await createNewPlaylist(
+      "coole neue playlist",
+      options
+    );
+    //add tracks to new playlist
+    await addToPlaylist(newPlaylist.id);
+    mutate(`${API_URL}api/spotify/playlists`);
+    history.push(`/playlist/${newPlaylist.id}`, { created: newPlaylist.id });
+  };
+
   if (playlistsError || meError) return <p>error</p>;
 
   return (
@@ -61,6 +85,8 @@ function AddToPlaylistsMenu(props: Props) {
       onClose={() => toggleMenu(false)}
       ref={ref}
     >
+      <MenuItem onClick={addToNewPlaylist}>Add to new Playlist</MenuItem>
+      <MenuDivider />
       {playlists && me ? (
         playlists.items
           .filter((list) => list.owner.id === me.id)

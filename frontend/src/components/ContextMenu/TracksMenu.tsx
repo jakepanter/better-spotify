@@ -1,12 +1,17 @@
-import React, { useContext, useEffect, useRef } from "react";
-import { API_URL } from "../../utils/constants";
-import { ControlledMenu, MenuItem, SubMenu, useMenuState } from "@szhsin/react-menu";
-import { CurrentUsersProfileResponse, ListOfUsersPlaylistsResponse } from "spotify-types";
-import AppContext from "../../AppContext";
-import useSWR from "swr";
 import "./ContextMenu.scss";
-import useOutsideClick from "../../helpers/useOutsideClick";
+import React, { useContext, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
+import { ControlledMenu, MenuDivider, MenuItem, SubMenu, useMenuState } from "@szhsin/react-menu";
+import {
+  CreatePlaylistResponse,
+  CurrentUsersProfileResponse,
+  ListOfUsersPlaylistsResponse,
+} from "spotify-types";
+import AppContext from "../../AppContext";
+import useSWR, { mutate } from "swr";
+import useOutsideClick from "../../helpers/useOutsideClick";
+import { createNewPlaylist } from "../../helpers/api-helpers";
+import { API_URL } from "../../utils/constants";
 
 type Props = {
   data: String[];
@@ -18,7 +23,7 @@ const fetcher = (url: any) => fetch(url).then((r) => r.json());
 function TracksMenu(props: Props) {
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
   const state = useContext(AppContext);
-  let history = useHistory();
+  const history = useHistory();
 
   const { data: playlists, error: playlistsError } = useSWR<ListOfUsersPlaylistsResponse>(
     `${API_URL}api/spotify/playlists`,
@@ -51,6 +56,24 @@ function TracksMenu(props: Props) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(tracks),
     });
+    console.log("added to playlist");
+  };
+
+  const addToNewPlaylist = async () => {
+    //create new playlist
+    // const number = playlists ? playlists.items.length + 1 : "-1";
+    const options = {
+      collaborative: false,
+      public: false,
+    };
+    const newPlaylist: CreatePlaylistResponse = await createNewPlaylist(
+      "coole neue playlist",
+      options
+    );
+    //add tracks to new playlist
+    await addToPlaylist(newPlaylist.id);
+    mutate(`${API_URL}api/spotify/playlists`);
+    history.push(`/playlist/${newPlaylist.id}`, { msg: "new" });
   };
 
   const showAlbum = async () => {
@@ -81,6 +104,8 @@ function TracksMenu(props: Props) {
       >
         <MenuItem disabled>Add to Queue</MenuItem>
         <SubMenu label={"Add to Playlist"}>
+          <MenuItem onClick={addToNewPlaylist}>Add to new Playlist</MenuItem>
+          <MenuDivider />
           {playlists && me ? (
             playlists.items
               .filter((list) => list.owner.id === me.id)
@@ -115,6 +140,8 @@ function TracksMenu(props: Props) {
       >
         <MenuItem disabled>Add to Queue</MenuItem>
         <SubMenu label={"Add to Playlist"}>
+          <MenuItem onClick={addToNewPlaylist}>Add to new Playlist</MenuItem>
+          <MenuDivider />
           {playlists && me ? (
             playlists.items
               .filter((list) => list.owner.id === me.id)
