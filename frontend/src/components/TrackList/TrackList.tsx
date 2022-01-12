@@ -424,7 +424,7 @@ function TrackList(props: Props) {
                         const  track  = item.track as TrackObjectFull;
                         const tagList = TagsSystem.getTagsOfElement(track.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
                         return (
-                            <Link to={`/album/${track.album.id}`} className={"albumLink"} key={track.album.id}>
+                            <Link to={`/album/${track.album.id}`} className={"albumLink"} key={track.id + index}>
                             <TrackListItem
                                 track={track}
                                 name={track.name}
