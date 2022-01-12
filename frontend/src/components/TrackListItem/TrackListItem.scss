@@ -22,18 +22,17 @@
   }
 }
 
-.TrackListRow:hover {
-    transition: $transition-base;
-    color: $color-default;
-    background-color: lighten($color-accent-dark, 5%);
-}
-
 .Tag {
   border: 1px solid currentColor;
   border-radius: $border-radius;
   display: inline-block;
   padding: 4px;
   margin-right: 4px;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 
   &Color0 {
     color: $color-tag-0;

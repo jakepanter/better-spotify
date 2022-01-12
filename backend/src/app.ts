@@ -98,6 +98,12 @@ export default class App {
       return res.json(track);
     });
 
+    this.server.get('/api/spotify/tracks', async (req: Request, res: Response) => {
+      const trackIds: string[] = (req.query.trackIds as string ?? '').split(',');
+      const data = await this.spotifyService.getTracks(trackIds);
+      return res.json(data);
+    });
+
     this.server.get('/api/spotify/me/tracks/contains', async (req: Request, res: Response) => {
       const trackIds: string[] = (req.query.trackIds as string ?? '').split(',');
       const data = await this.spotifyService.isSaved(trackIds);

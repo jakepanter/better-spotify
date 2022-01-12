@@ -14,10 +14,14 @@
     display: flex;
   }
 
+  .customize-button {
+    visibility: hidden;
+  }
+
   .settings-button {
     &.profile-image {
       padding: 0 !important;
-      background: rgba(0,0,0,0);
+      background: rgba(0, 0, 0, 0);
 
       img {
         width: 38px;
@@ -84,4 +88,9 @@
     }
   }
 
+}
+
+.customize-start .customize-button {
+  // important necessary to overwrite
+  visibility: visible !important;
 }
