@@ -11,7 +11,7 @@ import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import "./TrackListItem.scss";
 import {API_URL} from "../../utils/constants";
-import TagsSystem, {Tag} from "../../utils/tags-system";
+import {TagWithId} from "../../utils/tags-system";
 import { Link } from "react-router-dom";
 
 type Body = {
@@ -21,10 +21,6 @@ type Body = {
     uri: string | undefined
   }
 };
-
-interface TagWithId extends Tag {
-  id: string;
-}
 
 type Props = {
   track: TrackObjectFull | TrackObjectSimplified;

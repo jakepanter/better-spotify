@@ -13,6 +13,8 @@ import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import Topbar from "./components/Topbar/Topbar";
 import SettingsPage from "./pages/SettingsPage/SettingsPage";
 import TagTracklistPage from "./pages/TagTracklistPage/TagTracklistPage";
+import SearchPage from "./components/SearchPage/SearchPage";
+import SearchPageCustom from "./components/SearchPage/Custom/SearchPageCustom";
 
 function authorize() {
   fetch(`${API_URL}api/spotify/get-auth-url`)

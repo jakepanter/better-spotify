@@ -14,6 +14,10 @@ export interface Tag {
   color: number;
 }
 
+export interface TagWithId extends Tag {
+  id: string;
+}
+
 export default class TagsSystem {
   private static readonly DEFAULT_TAGS: TagData = {
     availableTags: {},

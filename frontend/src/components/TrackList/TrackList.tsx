@@ -220,7 +220,7 @@ function TrackList(props: Props) {
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
               const { track } = item;
-              const tagList = tags.spotifyElements[track.id]?.map((id) => tags.availableTags[id]) ?? [];
+              const tagList = TagsSystem.getTagsOfElement(track.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
               return (
                 <TrackListItem
                   track={track}
@@ -260,10 +260,11 @@ function TrackList(props: Props) {
               <div className={"TableCell TableCellTitleArtist"}>Title</div>
               <div className={"TableCell TableCellAlbum"}>Album</div>
               <div className={"TableCell TableCellDuration"}>Duration</div>
+              <div className={"TableCell TableCellTags"}>Tags</div>
             </div>
             <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
-              const tagList = tags.spotifyElements[item.id]?.map((id) => tags.availableTags[id]) ?? [];
+              const tagList = TagsSystem.getTagsOfElement(item.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
               return (
                 <div key="TrackList">
                     <TrackListItem
@@ -313,7 +314,7 @@ function TrackList(props: Props) {
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
               const { track } = item;
-              const tagList = tags.spotifyElements[track.id]?.map((id) => tags.availableTags[id]) ?? [];
+              const tagList = TagsSystem.getTagsOfElement(track.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
               return (
                 <TrackListItem
                   track={track}
