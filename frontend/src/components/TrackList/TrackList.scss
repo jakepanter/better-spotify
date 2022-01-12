@@ -159,9 +159,11 @@
 
 .TableCellCoverPlaceholder {
   flex: 0 0 42px;
-  padding: 8px $spacer / 2 8px 0;
   width: 42px;
   position: relative;
+  justify-content: center;
+  align-items: center;
+  display: flex;
 
   &:before {
     content: "\e038";
