@@ -73,7 +73,7 @@ function TracksMenu(props: Props) {
     //add tracks to new playlist
     await addToPlaylist(newPlaylist.id);
     mutate(`${API_URL}api/spotify/playlists`);
-    history.push(`/playlist/${newPlaylist.id}`, { msg: "new" });
+    history.push(`/playlist/${newPlaylist.id}`, { created: newPlaylist.id });
   };
 
   const showAlbum = async () => {
