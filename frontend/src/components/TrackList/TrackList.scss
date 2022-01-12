@@ -158,15 +158,15 @@
 }
 
 .TableCellCoverPlaceholder {
-  flex: 0 0 46px;
-  width: 56px;
-  padding: 0;
+  flex: 0 0 42px;
+  padding: 8px $spacer / 2 8px 0;
+  width: 42px;
   position: relative;
 
   &:before {
     content: "\e038";
     font-family: 'Material Icons';
-    width: 42px;
+    width: 40px;
     display: inline-block;
     font-size: 30px;
     text-align: center;
