@@ -431,7 +431,7 @@ function TrackList(props: Props) {
                                 artists={track.artists}
                                 duration_ms={track.duration_ms}
                                 album={track.album}
-                                //key={type + "-track-" + track.id + "-" + index}
+                                key={type + "-track-" + track.id + "-" + index}
                                 listIndex={index}
                                 selected={isTrackSelected(track, index)}
                                 onSelectionChange={handleSelectionChange}
