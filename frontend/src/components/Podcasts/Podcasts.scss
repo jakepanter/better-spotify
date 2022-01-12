@@ -1,0 +1,53 @@
+.c-card * {
+    display: block;
+    box-sizing: border-box
+}
+
+.card-container {
+    max-width: 900px;
+    margin: 0 auto
+}
+
+.c-card {
+    display: inline-block;
+    width: 100%;
+    //max-width: 350px;
+    margin: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    background: #1C1C23;
+    box-shadow: 0 6px 10px -5px rgba(0, 0, 0, 0.2);
+  
+    &__body {
+        padding: 20px
+    }
+    
+    &__title {
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 1.2;
+        margin: 0;
+        padding: 0;
+        text-transform: uppercase
+    }
+        
+    &__subtitle {
+        font-size: 13px;
+        margin-top: 5px;
+        padding: 0
+    }   
+
+    &__intro {
+        margin-bottom: 0
+    }
+
+    &__footer {
+        padding: 20px;
+        border-top: 1px solid #ddd 0 20px 20px -15px rgba(0, 0, 0, 0.3)
+    }  
+  
+    &__image {
+        max-width: 100%
+    }
+}

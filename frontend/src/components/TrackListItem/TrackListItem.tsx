@@ -4,6 +4,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import {
   AlbumObjectSimplified,
   ArtistObjectSimplified,
+  EpisodeObject,
+  ImageObject,
+  ShowObjectSimplified,
   TrackObjectFull,
   TrackObjectSimplified,
 } from "spotify-types";
@@ -22,13 +25,15 @@ type Body = {
 };
 
 type Props = {
-  track: TrackObjectFull | TrackObjectSimplified;
+  track: TrackObjectFull | TrackObjectSimplified| EpisodeObject;
   name: string;
-  artists: ArtistObjectSimplified[];
+  artists: string[];
   duration_ms: number;
   added_at?: string;
   liked?: boolean;
-  album?: AlbumObjectSimplified;
+  album?: AlbumObjectSimplified| ShowObjectSimplified;
+  image?: ImageObject;
+  description?: string;
   listIndex: number;
   selected: boolean;
   tags: Tag[];
@@ -51,7 +56,7 @@ function TrackListItem(props: Props) {
 
   const id_tracklist= props.id_tracklist;
   const type = props.type;
-  const track_uri = "spotify:track:" + props.track.id;
+  var track_uri = "spotify:track:" + props.track.id;
 
   const sendRequest = useCallback(async () => {
     // POST request using fetch inside useEffect React hook
@@ -63,6 +68,9 @@ function TrackListItem(props: Props) {
     } else if (type === 'saved') {
       const userId = await fetchUserId();
       context_uri = userId + ':collection:'
+    } else if (type === 'show') {
+      context_uri = "spotify:show:" + id_tracklist;
+      track_uri = "spotify:episode:" + props.track.id;
     }
     const body: Body = {
       context_uri: context_uri,
@@ -102,6 +110,10 @@ function TrackListItem(props: Props) {
     if (e.detail === 2) sendRequest()
   };
 
+  const playClick =(e: any) => {
+    sendRequest()
+  }
+
   const handleRightClick = (e: any) => {
     e.preventDefault();
     props.onContextMenuOpen(trackUniqueId, e.pageX, e.pageY);
@@ -124,67 +136,95 @@ function TrackListItem(props: Props) {
       setLiked(false);
     }
   };
-
-  return (
-    <div
-      className={`Pointer TableRow ${selected ? "Selected" : ""}`}
-      onClick={(e) => handleClick(e)}
-      onContextMenu={(e) => handleRightClick(e)}
-    >
-      {track.album !== undefined &&
-      track.album.available_markets !== undefined ? (
-        <div className={"TableCell TableCellArtwork"}>
-          <img
-            src={track.album.images[2].url}
-            alt=""
-            style={{ width: "40px", height: "40px" }}
-          />
+  if(type === "show") {
+    return (
+      <div className={`Pointer TableRow ${selected ? "Selected" : ""}`}
+        onClick={(e) => handleClick(e)}
+        onContextMenu={(e) => handleRightClick(e)}
+      >  
+        <div className={"TabelCell"}>
+          {track.image !== undefined && track.image !== null ? (
+            <div className={"TableCell TableCellArtwork"}>
+              <img
+                src={track.image.url}
+                alt=""
+                style={{ width: "100px", height: "100px" }}
+              />
+            </div>
+          ) : (
+            <CoverPlaceholder />
+          )}
         </div>
-      ) : (
-        <CoverPlaceholder />
-      )}
-
-      <div className={"TableCell TableCellTitleArtist"}>
-        <span className={"TableCellTitle"}>{track.name}</span>
-        <span className={"TableCellArtist"}>
-          {track.artists.map((artist) => artist.name).join(", ")}
-        </span>
+        <div>{track.description}</div>
+        <div>{track.name}</div>
+        <div>{track.duration_ms}</div>
+        <div onClick={(e) => playClick(e)}>Play Button</div>
       </div>
-      {track.album !== undefined ? (
-        <div className={"TableCell TableCellAlbum"}>{track.album.name}</div>
-      ) : (
-        <></>
-      )}
-      {track.added_at !== undefined ? (
-        <div className={"TableCell TableCellAddedAt"}>
-          {formatTimeDiff(new Date(track.added_at).getTime(), Date.now())}
-        </div>
-      ) : (
-        <></>
-      )}
-      <div className={"TableCell TableCellDuration"}>
-        {formatTimestamp(track.duration_ms)}
-      </div>
-      {track.liked !== undefined ? (
-        <div className={"TableCell TableCellLiked"}>
-          <button className={`checkbox ${liked ? 'checked' : ''}`} onClick={handleLikeButton}>
-            <span className={'material-icons'}>{liked ? 'favorite' : 'favorite_border'}</span>
-          </button>
-        </div>
-      ) : (
-        <></>
-      )}
-      <div className={"TableCell TableCellTags"}>
-        {track.tags.map((t, i) =>
-          <span key={i}
-                className={`Tag TagColor${t.color}`}
-          >
-            {t.title}
-          </span>
+    );
+  }
+
+  else {
+    return (
+      <div
+        className={`Pointer TableRow ${selected ? "Selected" : ""}`}
+        onClick={(e) => handleClick(e)}
+        onContextMenu={(e) => handleRightClick(e)}
+      >
+        {track.album !== undefined && track.album !== null &&
+        track.album.available_markets !== undefined ? (
+          <div className={"TableCell TableCellArtwork"}>
+            <img
+              src={track.album.images[2].url}
+              alt=""
+              style={{ width: "40px", height: "40px" }}
+            />
+          </div>
+        ) : (
+          <CoverPlaceholder />
         )}
+  
+        <div className={"TableCell TableCellTitleArtist"}>
+          <span className={"TableCellTitle"}>{track.name}</span>
+          <span className={"TableCellArtist"}>
+            {track.artists}
+          </span>
+        </div>
+        {track.album !== undefined && track.album !== null ? (
+          <div className={"TableCell TableCellAlbum"}>{track.album.name}</div>
+        ) : (
+          <></>
+        )}
+        {track.added_at !== undefined ? (
+          <div className={"TableCell TableCellAddedAt"}>
+            {formatTimeDiff(new Date(track.added_at).getTime(), Date.now())}
+          </div>
+        ) : (
+          <></>
+        )}
+        <div className={"TableCell TableCellDuration"}>
+          {formatTimestamp(track.duration_ms)}
+        </div>
+        {track.liked !== undefined ? (
+          <div className={"TableCell TableCellLiked"}>
+            <button className={`checkbox ${liked ? 'checked' : ''}`} onClick={handleLikeButton}>
+              <span className={'material-icons'}>{liked ? 'favorite' : 'favorite_border'}</span>
+            </button>
+          </div>
+        ) : (
+          <></>
+        )}
+        <div className={"TableCell TableCellTags"}>
+          {track.tags.map((t, i) =>
+            <span key={i}
+                  className={`Tag TagColor${t.color}`}
+            >
+              {t.title}
+            </span>
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  } 
 }
 
 export default TrackListItem;

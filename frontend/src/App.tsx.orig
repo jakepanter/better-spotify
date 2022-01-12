@@ -3,7 +3,11 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.scss";
 import Albums from "./components/Albums/Albums";
 import Playlists from "./components/Playlists/Playlists";
+<<<<<<< HEAD
 import Podcasts from "./components/Podcasts/Podcasts"
+import Searchbar from "./components/Searchbar/Searchbar";
+=======
+>>>>>>> 5875b7e06e7f174caf01efd3f72822a01c9d711b
 import SavedTracks from "./components/SavedTracks/SavedTracks";
 import Player from "./components/Player/Player";
 import { API_URL } from "./utils/constants";
@@ -12,8 +16,6 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import Topbar from "./components/Topbar/Topbar";
-import SettingsPage from "./pages/SettingsPage/SettingsPage";
-import ShowPage from "./pages/ShowPage/ShowPage";
 
 function authorize() {
   fetch(`${API_URL}api/spotify/get-auth-url`)
@@ -27,8 +29,6 @@ function authorize() {
 function App() {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [editable, setEditable] = useState(false);
-  const [miniMenu, setMiniMenu] = useState(false);
-  const menuToggle = () => { setMiniMenu(!miniMenu)};
 
   const toggleEditable = () => setEditable(!editable);
 
@@ -51,14 +51,56 @@ function App() {
   }
 
   return (
+<<<<<<< HEAD
+    <Router>
+      <div className="structure">
+        <div className="structure--left-panel">
+          <Sidebar />
+        </div>
+        <div className="structure--main">
+          <Searchbar />
+          <Player />
+          <button className="AuthorizeButton button" onClick={authorize}>
+            Authorize
+          </button>
+          <Switch>
+            <Route exact path="/">
+              <button
+                className={"button"}
+                onClick={toggleEditable}
+                style={{ position: "fixed", right: "100px", top: 0 }}
+              >
+                <span className={"material-icons"}>
+                  {editable ? "close" : "edit"}
+                </span>
+              </button>
+              <Dashboard editable={editable} />
+            </Route>
+            <Route path="/playlists">
+              <Playlists />
+            </Route>
+            <Route path="/playlist/:id">
+              <PlaylistPage />
+            </Route>
+            <Route path="/album/:id">
+              <h1>Album</h1>
+              <AlbumPage />
+            </Route>
+            <Route path="/collections/albums">
+              <Albums />
+            </Route>
+            <Route path="/collections/podcasts">
+              <Podcasts/>
+            </Route>
+            <Route path="/me/tracks">
+              <h1>Saved Tracks</h1>
+              <SavedTracks />
+            </Route>
+          </Switch>
+=======
       <Router>
         <div className="structure">
-          {/* Minimize menu */}
-          <button className={`minimizeMenuButton ${miniMenu ? "positionMenuButton" : ""}`} onClick={menuToggle}>{miniMenu ?
-              <p className="material-icons minimize-icon turned" title={"Maximize menu"} >chevron_left</p> :
-              <p className="material-icons minimize-icon" title={"Minimize menu"} >chevron_left</p>}
-          </button>
-          <div className={`structure--left-panel ${miniMenu ? "minimizeMenu" : ""}`}>
+          <div className="structure--left-panel">
             <Sidebar />
           </div>
           <div className="structure--main">
@@ -76,27 +118,16 @@ function App() {
               <Route path="/album/:id">
                 <AlbumPage />
               </Route>
-              <Route path="/show/:id">
-                <ShowPage/>
-              </Route>
-              <Route path="/episode/:id">
-                <AlbumPage />
-              </Route>
               <Route path="/collections/albums">
                 <Albums />
-              </Route>
-              <Route path="/collections/podcasts">
-                <Podcasts/>
               </Route>
               <Route path="/me/tracks">
                 <SavedTracks headerStyle={'full'}/>
               </Route>
-              <Route path="/settings">
-                <SettingsPage/>
-              </Route>
             </Switch>
             <Player />
           </div>
+>>>>>>> 5875b7e06e7f174caf01efd3f72822a01c9d711b
         </div>
       </Router>
   );

@@ -1,33 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { EpisodeObjectSimplified, ShowEpisodesResponse, ShowObjectFull, SingleShowResponse, UsersSavedShowsResponse} from "spotify-types";
+import { EpisodeObject, ShowEpisodesResponse, ShowObjectFull, SingleShowResponse} from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
+import TrackList from "../TrackList/TrackList";
 
 // The fetching limit, can be adjusted by changing this value
 const limit = 20;
 
 // The show id
 interface IProps {
-    id: "5as3aKmN2k11yfDDDSrvaZ";
-    //headerStyle: "none" | "compact" | "full";
+  id: string;
+  headerStyle: "none" | "compact" | "full";
 }
 
-export interface ShowEpisodes extends EpisodeObjectSimplified {
+export interface ShowEpisodes extends EpisodeObject {
     is_saved: boolean;
 }
 
 export default function Show(props: IProps) {
-    const { id/*, headerStyle*/ } = props;
+    const { id, headerStyle } = props;
     const [show, setShow] = useState<ShowObjectFull>();
     // The list of tracks of the album
     const [episodes, setEpisodes] = useState<ShowEpisodes[]>([]);
     // The current offset for fetching new tracks
     const [offset, setOffset] = useState<number>(limit);
-    var headerStyle = "full";
 
     async function fetchShowData() {
         const data: SingleShowResponse = await fetch(
-            `${API_URL}api/spotify/shows/${id}?limit=${limit}`        
+            `${API_URL}api/spotify/show/${id}`        
         ).then((res) => res.json());
 
         setShow(data);
@@ -70,10 +70,14 @@ export default function Show(props: IProps) {
             }),
         ]);    
     }
-
+    
     useEffect(() => {
         fetchShowData();
     }, [id]);
+
+    useEffect(() => {
+        fetchShowEpisodeData(offset);
+    }, [offset]);
 
     if(!show) return <p>loading...</p>;
 
@@ -95,7 +99,7 @@ export default function Show(props: IProps) {
               )}
             </div>
             <div className={"PlaylistHeaderMeta"}>
-              <h4>Album</h4>
+              <h4>Podcast</h4>
               <h1>{show.name}</h1>
               <p>
                 by {show.publisher} —{" "}
@@ -108,6 +112,14 @@ export default function Show(props: IProps) {
       ) : (
         <></>
       )}
-
+        <TrackList
+            fullyLoaded={show.episodes.total <= episodes.length}
+            loadMoreCallback={() =>
+                setOffset((currentOffset) => currentOffset + limit)
+            }
+            type={"show"}
+            tracks={episodes}
+            id_tracklist={show.id}
+        />
     </div>
 }

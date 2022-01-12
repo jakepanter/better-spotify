@@ -168,28 +168,45 @@ export default class App {
       return res.json(shows);
     })
 
-    this.server.get('/api/spotify/show/:showId/episodes', async (req: Request, res: Response) => {
+    this.server.get('/api/spotify/shows/:showId/episodes', async (req: Request, res: Response) => {
+<<<<<<< HEAD
       const limit = Number(req.query?.limit ?? 50);
       const offset = Number(req.query?.offset ?? 0);
       const showId = req.params.id as string;
 
       const episodes = await this.spotifyService.getShowEpisodes(showId, limit, offset);
+=======
+      const { showId } = req.params;
+      const episodes = await this.spotifyService.getShowEpisodes(showId);
+>>>>>>> 4d03405f41dfef7d6e74151106a85c4b49c42c26
       return res.json(episodes);
     })
 
-    this.server.get('/api/spotify/show/:showId', async (req: Request, res: Response) => {
-      const showId = req.params.showId as string;
+    this.server.get('api/spotify/shows/:showId', async (req: Request, res: Response) => {
+<<<<<<< HEAD
+      const limit = Number(req.query?.limit ?? 50);
+      const offset = Number(req.query?.offset ?? 0);
+      const showId = req.params.id as string;
+
+      const show = await this.spotifyService.getShow(showId, limit, offset);
+=======
+      const { showId } = req.params;
       const show = await this.spotifyService.getShow(showId);
+>>>>>>> 4d03405f41dfef7d6e74151106a85c4b49c42c26
       return res.json(show);
     })
 
-    this.server.get('/api/spotify/episode/:episodeId', async (req: Request, res: Response) => {
+    this.server.get('api/spotify/episodes/:episodeId', async (req: Request, res: Response) => {
       const { episodeId } = req.params;
       const episode = await this.spotifyService.getEpisode(episodeId);
       return res.json(episode);
     })
+<<<<<<< HEAD
 
     this.server.put('/api/spotify/volume', async (req: Request, res: Response) => {
+=======
+    this.server.get('/api/spotify/volume', async (req: Request, res: Response) => {
+>>>>>>> 4d03405f41dfef7d6e74151106a85c4b49c42c26
       const volume: any = req.query?.volume ?? 100;
       const result = await this.spotifyService.setVolume(volume);
       return res.json(result);
