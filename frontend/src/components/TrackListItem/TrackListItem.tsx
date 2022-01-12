@@ -144,7 +144,9 @@ function TrackListItem(props: Props) {
           />
         </div>
       ) : (
-        <CoverPlaceholder />
+          <div className={"TableCellCoverPlaceholder"}>
+            <CoverPlaceholder />
+          </div>
       )}
 
       <div className={"TableCell TableCellTitleArtist"}>
