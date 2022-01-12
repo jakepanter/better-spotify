@@ -3,8 +3,7 @@ import {NavLink, Link} from "react-router-dom";
 import './Sidebar.scss';
 
 const Sidebar = () => {
-    {/* Mobile toggle setup */
-    }
+    {/* Mobile toggle setup */}
     const [navbarOpen, setNavbarOpen] = useState(false);
     const handleToggle = () => {
         setNavbarOpen(!navbarOpen)
@@ -19,7 +18,6 @@ const Sidebar = () => {
                 <p className="material-icons left-side-panel--icon">circle</p> :
                 <p className="material-icons left-side-panel--icon">radio_button_unchecked</p>}
             </button>
-
             {/* Sidebar menu */}
             <ul className={`left-side-panel--list ${navbarOpen ? " showMenu" : ""}`}>
                 <img className={"logoImg"} src="logo512.png" alt="Logo"></img>
