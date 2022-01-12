@@ -162,7 +162,6 @@ function TrackList(props: Props) {
           }
         >
           <div className={"TableHeader TableRow"}>
-            <div className={"TableCell TableCellArtwork"} />
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
             <div className={"TableCell TableCellLiked"}>Liked</div>
