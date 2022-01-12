@@ -5,6 +5,7 @@ import {
 import {API_URL} from '../../utils/constants';
 import {Link} from "react-router-dom";
 import "../../cards.scss";
+import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 
 
 interface IProps {
@@ -43,17 +44,19 @@ class RelatedArtists extends Component<IProps, IState> {
     }
 
     render() {
-        // TODO
-        //  add fallback for images
         if (this.state.relatedArtistsList.length === 0) return <p>loading...</p>;
         const relatedArtists = this.state.relatedArtistsList.map((artist) => {
             return (
                 <li className="column" key={artist.id}>
                     <Link to={`/artist/${artist.id}`}>
-                        <div className={"cover"} style={{
-                            backgroundImage: `url(${artist.images[0].url})`
-                        }}>
-                        </div>
+                        {artist.images !==undefined ? (
+                            <div className={"cover"} style={{
+                                backgroundImage: `url(${artist.images[0].url})`
+                            }}>
+                            </div>
+                        ) :(
+                            <CoverPlaceholder/>
+                        )}
                         <span className="title">{artist.name}</span>
                     </Link>
                 </li>

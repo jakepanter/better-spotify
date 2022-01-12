@@ -11,6 +11,7 @@ import './Discover.scss';
 import "../../cards.scss";
 import {API_URL} from "../../utils/constants";
 import {NavLink, Link} from "react-router-dom";
+import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 
 interface IProps {
 }
@@ -44,7 +45,6 @@ class Discover extends Component<IProps, IState> {
     }
 
 
-
     async componentDidMount() {
 
         // fetch reently played tracks
@@ -60,17 +60,17 @@ class Discover extends Component<IProps, IState> {
         const country = me.country;
 
         // fetch new releases
-        this.fetchNewReleases(country).then((newReleasedAlbums)=>{
+        this.fetchNewReleases(country).then((newReleasedAlbums) => {
             this.setState((state) => ({...state, newReleases: newReleasedAlbums.albums.items}));
         });
 
         // fetch related artist of top three artists
         this.fetchTopArtists().then((topArtists) => {
             //slice top three artists
-            const topThreeArtists: ArtistObjectFull[] = topArtists.items.sort(()=> 0.5-Math.random()).slice(0,3);
-            topThreeArtists.map ((topArtist) =>{
+            const topThreeArtists: ArtistObjectFull[] = topArtists.items.sort(() => 0.5 - Math.random()).slice(0, 3);
+            topThreeArtists.map((topArtist) => {
                 this.fetchRelatedArtists(topArtist.id).then((relatedArtists) => {
-                        const fiveRelatedArtists = relatedArtists.artists.sort(()=> 0.5-Math.random()).slice(0,5);
+                        const fiveRelatedArtists = relatedArtists.artists.sort(() => 0.5 - Math.random()).slice(0, 5);
                         const list = {
                             "artist": topArtist,
                             "relatedArtists": fiveRelatedArtists
@@ -117,8 +117,6 @@ class Discover extends Component<IProps, IState> {
     }
 
     render() {
-        // TODO
-        //  add fallback for images
         // for recently played tracks
         if (this.state.recentlyPlayedTracks.length === 0) return <p>loading...</p>;
         const recentlyPlayedList = this.state.recentlyPlayedTracks.map((recentlyPlayedTrack) => {
@@ -126,10 +124,13 @@ class Discover extends Component<IProps, IState> {
             return (
                 <li className={"column"} key={recentlyPlayedTrack.played_at}>
                     <Link to={`/album/${track.album.id}`}>
-                        <div className={"cover"} style={{
-                            backgroundImage: `url(${track.album.images[0].url})`
-                        }}>
-                        </div>
+                        {track.album.images !== undefined ? (
+                            <div className={"cover"} style={{
+                                backgroundImage: `url(${track.album.images[0].url})`
+                            }}>
+                            </div>) : (
+                                <CoverPlaceholder/>
+                                )}
                         <span className={"title"}>{track.name}</span>
                         <span className={"artists-name"}>{track.album.artists.map((a) => a.name).join(", ")}</span>
                     </Link>
@@ -143,10 +144,12 @@ class Discover extends Component<IProps, IState> {
             return (
                 <li className="column" key={newReleasedAlbum.id}>
                     <Link to={`/album/${newReleasedAlbum.id}`}>
+                        {newReleasedAlbum.images !== undefined ? (
                         <div className={"cover"} style={{
                             backgroundImage: `url(${newReleasedAlbum.images[0].url})`
                         }}>
-                        </div>
+                        </div>) :
+                            ( <CoverPlaceholder/>)}
                         <span className="title">{newReleasedAlbum.name}</span>
                         <span className={"artists-name"}>{newReleasedAlbum.artists.map((a) => a.name).join(", ")}</span>
                     </Link>
@@ -161,10 +164,15 @@ class Discover extends Component<IProps, IState> {
                 return (
                     <li className="column" key={relatedArtist.id}>
                         <Link to={`/artist/${relatedArtist.id}`}>
-                            <div className={"cover"} style={{
-                                backgroundImage: `url(${relatedArtist.images[0].url})`
-                            }}>
-                            </div>
+                            {relatedArtist.images !== undefined ? (
+                                <div className={"cover"} style={{
+                                    backgroundImage: `url(${relatedArtist.images[0].url})`
+                                }}>
+                                </div>
+                            ) : (
+                                <CoverPlaceholder/>
+                                )}
+
                             <span className="title">{relatedArtist.name}</span>
                         </Link>
                     </li>
@@ -202,8 +210,8 @@ class Discover extends Component<IProps, IState> {
                     </div>
 
                     {/*More like "artist"*/}
-                    {relatedArtists.map((tmp,index)=>
-                   <div className={"section"} key={this.state.relatedArtistsList[index].artist.id}>
+                    {relatedArtists.map((tmp, index) =>
+                        <div className={"section"} key={this.state.relatedArtistsList[index].artist.id}>
                             <div className={"overview"} key={this.state.relatedArtistsList[index].artist.id}>
                                 <div className={'header'}>
                                     <h3>More like &quot;{this.state.relatedArtistsList[index].artist.name}&quot;</h3>
@@ -213,7 +221,7 @@ class Discover extends Component<IProps, IState> {
                                 <ul className={"overview-items"}
                                     style={{height: '40vh', overflow: 'hidden'}}>{tmp}</ul>
                             </div>
-                    </div>
+                        </div>
                     )}
                 </div>
             </>

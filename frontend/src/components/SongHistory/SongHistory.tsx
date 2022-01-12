@@ -22,11 +22,10 @@ export default function SongHistory() {
         const recentPlayedTracksData: UsersRecentlyPlayedTracksResponse = await fetch(
             `${API_URL}api/spotify/player/recently-played?before=${before}&limit=${defaultLimit}`
         ).then((res) => res.json());
-        console.log(recentPlayedTracksData)
         // Save to state
         setRecentTracks((oldTracks) => [...oldTracks, ...recentPlayedTracksData.items]);
 
-        // extract
+        // extract next and set as before timestamp
         if (recentPlayedTracksData.next !== null) {
             const next: any = recentPlayedTracksData.next;
             const re = new RegExp('(?<==).+?(?=&)');

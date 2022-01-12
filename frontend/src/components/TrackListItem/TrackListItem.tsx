@@ -135,7 +135,7 @@ function TrackListItem(props: Props) {
       onContextMenu={(e) => handleRightClick(e)}
     >
       {track.album !== undefined &&
-      track.album.available_markets !== undefined ? (
+      track.album.available_markets !== undefined ?(
         <div className={"TableCell TableCellArtwork"}>
           <img
             src={track.album.images[2].url}
@@ -148,20 +148,32 @@ function TrackListItem(props: Props) {
             <CoverPlaceholder />
           </div>
       )}
-        {track.name !== undefined ? (<div className={"TableCell TableCellTitleArtist"}>
+        {track.name !== undefined && track.type !== "releases" ? (<div className={"TableCell TableCellTitleArtist"}>
             <span className={"TableCellTitle"}>{track.name}</span>
-            <span className={"TableCellArtist"}>
+              <span className={"TableCellArtist"}>
           {track.artists.map((artist) => artist.name).join(", ")}
-        </span>
+          </span>
+
         </div>): (
             <></>
         )}
 
-      {track.album !== undefined && type !== "releases" ? (
+      {track.album !== undefined ? (
         <div className={"TableCell TableCellAlbum"}>{track.album.name}</div>
       ) : (
         <></>
       )}
+      {track.artists !== undefined && track.type === "releases" ? (
+          <span className={"TableCellArtist"}>
+          {track.artists.map((artist) => artist.name).join(", ")}
+
+
+          </span>
+
+      ) : (
+          <></>
+      )}
+
       {track.added_at !== undefined ? (
         <div className={"TableCell TableCellAddedAt"}>
           {formatTimeDiff(new Date(track.added_at).getTime(), Date.now())}

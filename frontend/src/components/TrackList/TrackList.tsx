@@ -417,10 +417,12 @@ function TrackList(props: Props) {
                     <div className={"TableCell TableCellTitleArtist"}>Title</div>
                     <div className={"TableCell TableCellAlbum"}>Album</div>
                     <div className={"TableCell TableCellDuration"}>Duration</div>
+                    <div className={"TableCell TableCellTags"}>Tags</div>
                 </div>
                 <div className={"TableBody"}>
                     {props.tracks.map((item, index) => {
                         const  track  = item.track as TrackObjectFull;
+                        const tagList = TagsSystem.getTagsOfElement(track.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
                         return (
                             <Link to={`/album/${track.album.id}`} className={"albumLink"} key={track.album.id}>
                             <TrackListItem
@@ -429,13 +431,14 @@ function TrackList(props: Props) {
                                 artists={track.artists}
                                 duration_ms={track.duration_ms}
                                 album={track.album}
-                                key={type + "-track-" + track.id + "-" + index}
+                                //key={type + "-track-" + track.id + "-" + index}
                                 listIndex={index}
                                 selected={isTrackSelected(track, index)}
                                 onSelectionChange={handleSelectionChange}
                                 onContextMenuOpen={handleContextMenuOpen}
                                 id_tracklist={''}
                                 type={type}
+                                tags={tagList}
                             />
                             </Link>
                         );
@@ -460,7 +463,8 @@ function TrackList(props: Props) {
             >
                 <div className={"TableHeader TableRow"}>
                     <div className={"TableCell TableCellArtwork"} />
-                    <div className={"TableCell TableCellTitleArtist"}>Album</div>
+                    <div className={"TableCell TableCellAlbum"}>Album</div>
+                    <div className={"TableCell TableCellArtist"}>Artist</div>
                     <div className={"TableCell TableCellAddedAt"}>Added</div>
                 </div>
                 <div className={"TableBody"}>

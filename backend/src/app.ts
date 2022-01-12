@@ -251,14 +251,6 @@ export default class App {
       return res.json(result);
     });
 
-    // Serve static frontend files
-    this.server.get('*', (req: Request, res: Response) => res.sendFile(path.join(`${__dirname}/../../frontend/build`)));
-
-    this.server.put('/api/spotify/me/player/play', async (req: Request, res: Response) => {
-      const result = await this.spotifyService.play(req.body);
-      return result;
-    });
-
     this.server.get('/api/spotify/player/recently-played', async (req: Request, res: Response) => {
       // only 'before' is specified because we want to display the recently played tracks from the current timestamp
       const before: any = req.query?.before ?? Date.now();
@@ -296,6 +288,15 @@ export default class App {
       const artists = await this.spotifyService.getArtistRelatedArtists(artistId);
       return res.json(artists);
     });
+
+      this.server.put('/api/spotify/me/player/play', async (req: Request, res: Response) => {
+          const result = await this.spotifyService.play(req.body);
+          return result;
+      });
+
+      //This must be before this.server.listen(...)
+      // Serve static frontend files
+      this.server.get('*', (req: Request, res: Response) => res.sendFile(path.join(`${__dirname}/../../frontend/build`)));
 
     // Start
     this.server.listen(Config.general.port, () => {
