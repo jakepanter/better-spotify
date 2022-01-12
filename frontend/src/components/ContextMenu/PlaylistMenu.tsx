@@ -7,11 +7,12 @@ import {
   SinglePlaylistResponse,
 } from "spotify-types";
 import { ControlledMenu, MenuItem, SubMenu, useMenuState } from "@szhsin/react-menu";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import "./ContextMenu.scss";
 import { API_URL } from "../../utils/constants";
 import AppContext from "../../AppContext";
 import useOutsideClick from "../../helpers/useOutsideClick";
+import { useHistory } from "react-router-dom";
 
 type Props = {
   data: SinglePlaylistResponse;
@@ -27,6 +28,7 @@ let offset = 0;
 function PlaylistMenu(props: Props) {
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
   const state = useContext(AppContext);
+  const history = useHistory();
 
   const { data: playlists, error: playlistsError } = useSWR<ListOfUsersPlaylistsResponse>(
     `${API_URL}api/spotify/playlists`,
@@ -85,10 +87,10 @@ function PlaylistMenu(props: Props) {
 
   const deletePlaylist = async () => {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
-    const playlistId = props.data;
-    fetch(`${API_URL}api/spotify/playlist/${playlistId}/unfollow`);
-    //TODO: better way to redirect?
-    window.location.href = "/";
+    const playlistId = props.data.id;
+    await fetch(`${API_URL}api/spotify/playlist/${playlistId}/unfollow`);
+    mutate(`${API_URL}api/spotify/playlists`);
+    history.push("/playlists");
   };
 
   if (playlistsError || meError) return <p>error</p>;

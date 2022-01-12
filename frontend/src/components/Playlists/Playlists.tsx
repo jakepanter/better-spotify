@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import AppContext from "../../AppContext";
 import "../../cards.scss";
 import {
@@ -17,10 +17,19 @@ export default function Playlists() {
   const [items, setItems] = useState<PlaylistObjectSimplified[]>([]);
   const [next, setNext] = useState<string>(`${API_URL}api/spotify/playlists`);
   const state = useContext(AppContext);
+  const location = useLocation<any>();
 
   useEffect(() => {
     fetchData(next);
   }, []);
+
+  useEffect(() => {
+    // remove unfollowed playlist from items
+    if (location.state && location.state.unfollowed) {
+      const unfollowedPlaylistId = location.state.unfollowed;
+      setItems(items.filter((list) => list.id !== unfollowedPlaylistId));
+    }
+  }, [location]);
 
   async function fetchData(url: string) {
     const data: ListOfUsersPlaylistsResponse = await fetch(url).then((res) => res.json());
@@ -44,13 +53,13 @@ export default function Playlists() {
   };
 
   const handleCreateNewPlaylist = async () => {
-    const number = items ? items.length + 1 : "-1";
+    // const number = items ? items.length + 1 : "-1";
     const options = {
       collaborative: false,
       public: false,
     };
     const newPlaylist: CreatePlaylistResponse = await createNewPlaylist(
-      "coole neue playlist #" + number,
+      "coole neue playlist",
       options
     );
     const arr = [newPlaylist, ...items];

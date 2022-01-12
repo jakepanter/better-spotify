@@ -49,7 +49,8 @@ export default function Playlist(props: IProps) {
 
   async function fetchPlaylistTrackData(newOffset: number) {
     // Only fetch if there are tracks left to fetch
-    if (playlist && playlist.tracks && playlist.tracks.total && playlist.tracks.total <= offset)
+    if (!playlist) return;
+    if (playlist && playlist.tracks && playlist.tracks.total && playlist.tracks.total <= newOffset)
       return;
 
     const data: PlaylistTrackResponse = await fetch(
@@ -92,8 +93,13 @@ export default function Playlist(props: IProps) {
 
   // Fetch the main album data
   useEffect(() => {
+    setTracks([]);
     fetchPlaylistData();
   }, [id]);
+
+  useEffect(() => {
+    if (tracks.length === 0) fetchPlaylistTrackData(0);
+  }, [playlist]);
 
   // Fetch more album tracks if necessary
   useEffect(() => {
