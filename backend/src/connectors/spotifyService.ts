@@ -157,6 +157,11 @@ export default class SpotifyService {
     return track.body;
   }
 
+  getArtist = async (id: string) => {
+    const track = await this.spotifyApi.getArtist(id);
+    return track.body;
+  }
+
   getAlbum = async (id: string) => {
     const album = await this.spotifyApi.getAlbum(id);
     return album.body;
@@ -197,7 +202,8 @@ export default class SpotifyService {
 
   addTracksToPlaylist = async (playlistId: string, tracks: string[]) => {
     // TODO: error handling
-    await this.spotifyApi.addTracksToPlaylist(playlistId, tracks);
+    const res = await this.spotifyApi.addTracksToPlaylist(playlistId, tracks);
+    return res.body;
   }
 
   getPlaylist = async (playlistId: string, fields: string) => {
@@ -212,15 +218,18 @@ export default class SpotifyService {
   }
 
   unfollowPlaylist = async (playlistId: string) => {
-    await this.spotifyApi.unfollowPlaylist(playlistId);
+    const res = await this.spotifyApi.unfollowPlaylist(playlistId);
+    return res.body;
   }
 
   editPlaylistDetails = async (playlistId: string, options: Object) => {
-    await this.spotifyApi.changePlaylistDetails(playlistId, options);
+    const res = await this.spotifyApi.changePlaylistDetails(playlistId, options);
+    return res.body;
   }
 
   addPlaylistImage = async (playlistId: string, imgData: string) => {
-    await this.spotifyApi.uploadCustomPlaylistCoverImage(playlistId, imgData);
+    const res = await this.spotifyApi.uploadCustomPlaylistCoverImage(playlistId, imgData);
+    return res.body;
   }
 
   createPlaylist = async (

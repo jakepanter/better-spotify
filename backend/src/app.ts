@@ -124,6 +124,12 @@ export default class App {
       return res.json(data);
     });
 
+    this.server.get('/api/spotify/artist/:artistId', async (req: Request, res: Response) => {
+      const albumId = req.params.albumId as string;
+      const artist = await this.spotifyService.getArtist(albumId);
+      return res.json(artist);
+    });
+
     this.server.get('/api/spotify/album/:albumId', async (req: Request, res: Response) => {
       const albumId = req.params.albumId as string;
       const album = await this.spotifyService.getAlbum(albumId);
@@ -173,8 +179,8 @@ export default class App {
     this.server.post('/api/spotify/playlist/:playlistId/add', async (req: Request, res: Response) => {
       const { playlistId } = req.params;
       const tracks = req.body;
-      await this.spotifyService.addTracksToPlaylist(playlistId, tracks);
-      return res.status(200);
+      const response = await this.spotifyService.addTracksToPlaylist(playlistId, tracks);
+      return res.json(response);
     });
 
     this.server.get('/api/spotify/playlist/:playlistId/tracks', async (req: Request, res: Response) => {
@@ -187,22 +193,22 @@ export default class App {
 
     this.server.get('/api/spotify/playlist/:playlistId/unfollow', async (req: Request, res: Response) => {
       const playlistId = req.params.playlistId as string;
-      await this.spotifyService.unfollowPlaylist(playlistId);
-      return res.status(200);
+      const response = await this.spotifyService.unfollowPlaylist(playlistId);
+      return res.json(response);
     });
 
     this.server.post('/api/spotify/playlist/:playlistId/edit', async (req: Request, res: Response) => {
       const playlistId = req.params.playlistId as string;
       const options = req.body;
-      await this.spotifyService.editPlaylistDetails(playlistId, options);
-      return res.status(200);
+      const response = await this.spotifyService.editPlaylistDetails(playlistId, options);
+      return res.json(response);
     });
 
     this.server.post('/api/spotify/playlist/:playlistId/image', async (req: Request, res: Response) => {
       const playlistId = req.params.playlistId as string;
       const imgData = req.body.image;
-      await this.spotifyService.addPlaylistImage(playlistId, imgData);
-      return res.status(200);
+      const response = await this.spotifyService.addPlaylistImage(playlistId, imgData);
+      return res.json(response);
     });
 
     this.server.get('/api/spotify/volume', async (req: Request, res: Response) => {
