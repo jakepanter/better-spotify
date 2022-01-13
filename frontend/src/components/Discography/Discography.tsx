@@ -1,75 +1,68 @@
-/*
-import Album from "../Album/Album";
-import React from "react";
-
-const { ids } = props;
-if(ids === undefined) return <p>loading...</p>;
-
-const albums = ids.map((id) => {
-    return (
-        <div key={id} style={{height: "40% !important"}}>
-            <Album id={id} headerStyle={'full'}/>
-        </div>
-    )
-
-});
-
-return (<div>{albums}</div>)*/
-
-import React, {Component} from "react";
-import {ArtistsAlbumsResponse} from "spotify-types";
+import React, { useEffect, useState } from "react";
+import {ArtistsAlbumsResponse, AlbumObjectSimplified} from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import Album from "../Album/Album";
-//import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 
 
 // The fetching limit, can be adjusted by changing this value
-const limit = 30;
+const limit = 2;
+
 interface IProps {
     id: string;
 }
 
 
-interface IState {
-    ids: string[];
-}
+export default function Discography (props: IProps) {
 
+    const { id } = props;
 
+    const [albums, setAlbums] = useState<ArtistsAlbumsResponse>();
+    const [albumItems, setAlbumItems] = useState<AlbumObjectSimplified[]>([]);
+    const [next, setNext] = useState<string>(
+        `${API_URL}api/spotify/artist/${id}/albums?limit=${limit}`
+    );
+    //const [albumIds, setAlbumIds] = useState<string[]>();
 
-class Discography extends Component<IProps, IState> {
-    constructor(props: IProps) {
-        super(props);
-        this.state = {
-            ids:[]
-        };
-    }
-    async componentDidMount()
-    {
-        // Fetch albums, these include albums, singles and appears_on
-        const allAlbums: ArtistsAlbumsResponse = await fetch(
-            `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=${limit}&market=DE`
-        ).then((res) => res.json());
-
-        //filter all ids
-        allAlbums.items.filter((album) => {
-            this.setState({ ids: [...this.state.ids, album.id] })
-        });
-        console.log(this.state.ids)
+    async function fetchAlbums(url: string) {
+        const allAlbums: ArtistsAlbumsResponse = await fetch(url).then((res) => res.json());
+        setAlbums(allAlbums);
+        const arr: AlbumObjectSimplified[] = [...albumItems, ...allAlbums.items];
+        setAlbumItems(arr);
     }
 
+    //if (!albums || ! albumItems) return <p>loading...</p>;
+    const allAlbums = albumItems.map((album) => {
+        return(
+            <Album id={album.id} headerStyle={"full"} key={album.id}/>
+        )
+    });
 
-    render(){
-        if(this.state.ids.length === 0) return <p>loading</p>
-    return (
+    const onScroll = (e: any) => {
+        const bottom =
+            e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+        if (bottom && albums && (albums.next !== null)) {
+            console.log(albums.offset)
+            const limit = albums.limit;
+            const offset = albums.offset + limit;
+            const url = `${API_URL}api/spotify/artist/${id}/albums?offset=${offset}&limit=${limit}&market=DE`;
+            setNext(url);
+        }
+    };
+
+
+    useEffect(() => {
+        fetchAlbums(next)
+    }, [next]);
+
+
+
+    return(
+        <div style={{overflow: "hidden auto"}}>
         <div>
-            {this.state.ids.map((id)=> {
-                return(
-                <div key={id}>
-                    <Album id={id} headerStyle={'full'} />
-                </div>)
-            })}
+        <div className={"list-items"} style={{overflow: "scroll", height: "75vh"}} onScroll={onScroll}>
+            {allAlbums}
         </div>
-    )}
+        </div>
+        </div>
+    )
 }
-
-export default Discography;

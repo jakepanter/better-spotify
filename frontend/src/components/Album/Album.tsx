@@ -39,7 +39,7 @@ export default function Album(props: IProps) {
 
     // Save album data
     setAlbum(data);
-
+    console.log(data.name)
     // Save if tracks are saved
     const saved: CheckUsersSavedTracksResponse = await fetchIsSavedData(
       data.tracks.items.map((i) => i.id)
@@ -125,7 +125,7 @@ export default function Album(props: IProps) {
               <h1>{album.name}</h1>
               {/*TODO Link weg machen!*/}
               <Link to={`/artist/${album.artists[0].id}`}><p>
-                by {album.artists.map((a) => a.name).join(", ")} —{" "}
+                by {album.artists.map((a) =>a.name).join(", ")} —{" "}
                 {album.tracks.total} Song{album.tracks.total === 1 ? "" : "s"}
               </p>
               </Link>
