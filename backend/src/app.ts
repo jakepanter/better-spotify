@@ -155,6 +155,12 @@ export default class App {
       return res.status(200);
     });
 
+    this.server.get('/api/spotify/artist/:artistId', async (req: Request, res: Response) => {
+      const artistId = req.params.artistId as string;
+      const artist = await this.spotifyService.getArtist(artistId);
+      return res.json(artist);
+    });
+
     this.server.get('/api/spotify/artist/:artistId/albums', async (req: Request, res: Response) => {
       const artistId = req.params.artistId as string;
 

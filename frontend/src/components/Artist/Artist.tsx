@@ -1,11 +1,14 @@
-import React, { useEffect, useState} from "react";
+import React, {Component} from "react";
 import {
+    SingleArtistResponse,
+    //ArtistObjectFull,
     AlbumObjectSimplified,
     ArtistsAlbumsResponse
 } from "spotify-types";
 import {API_URL} from "../../utils/constants";
-import {Link} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
+import "./Artist.scss"
 import "../../cards.scss";
 import Album from "../Album/Album";
 
@@ -15,115 +18,64 @@ interface IProps {
 }
 
 
-export default function Artist(props: IProps) {
-    const {id} = props;
-    // for albums
-    const [albums, setAlbums] = useState<ArtistsAlbumsResponse>();
-    const [albumItems, setAlbumItems] = useState<AlbumObjectSimplified[]>([]);
-    const [nextAlbumURL, setNextAlbumURL] = useState<string>(
-        `${API_URL}api/spotify/artist/${id}/albums?market=DE&include_groups=album`
-    );
-    // for singles
-    const [singles, setSingles] = useState<ArtistsAlbumsResponse>();
-    const [singleItems, setSingleItems] = useState<AlbumObjectSimplified[]>([]);
-    const [nextSingleURL, setNextSingleURL] = useState<string>(
-        `${API_URL}api/spotify/artist/${id}/albums?market=DE&include_groups=single`
-    );
-    // for albums where the artist appears on
-    const [appears_on, setAppearsOn] = useState<ArtistsAlbumsResponse>();
-    const [appearsOnItems, setAppearsOnItems] = useState<AlbumObjectSimplified[]>([]);
-    const [nextAppearsOnURL, setNextAppearsOnURL] = useState<string>(
-        `${API_URL}api/spotify/artist/${id}/albums?market=DE&include_groups=appears_on`
-    );
-    // for compilations
-    const [compilations, setCompilations] = useState<ArtistsAlbumsResponse>();
-    const [compilationItems, setCompilationItems] = useState<AlbumObjectSimplified[]>([]);
-    const [nextCompilationURL, setNextCompilationURL] = useState<string>(
-        `${API_URL}api/spotify/artist/${id}/albums?market=DE&include_groups=compilation`
-    );
+interface IState {
+    albums: AlbumObjectSimplified[];
+    singles: AlbumObjectSimplified[];
+    appearsOn: AlbumObjectSimplified[];
+    compilations: AlbumObjectSimplified[];
+}
 
-
-    // fetch albums
-    async function fetchAlbums(url: string) {
-        const allAlbums: ArtistsAlbumsResponse = await fetch(url).then((res) => res.json());
-        setAlbums(allAlbums);
-        const arr: AlbumObjectSimplified[] = [...albumItems, ...allAlbums.items];
-        setAlbumItems(arr);
+class Artist extends Component<IProps, IState> {
+    constructor(props: IProps) {
+        super(props);
+        this.state = {
+            albums: [],
+            singles: [],
+            appearsOn: [],
+            compilations: []
+        };
     }
 
-    //fetch singles
-    async function fetchSingles(url: string) {
-        const allSingles: ArtistsAlbumsResponse = await fetch(url).then((res) => res.json());
-        setSingles(allSingles);
-        const arr: AlbumObjectSimplified[] = [...singleItems, ...allSingles.items];
-        //console.log(arr)
-        setSingleItems(arr);
+
+    async componentDidMount() {
+        // fetch artist
+        const artistData: SingleArtistResponse = await fetch(
+            `${API_URL}api/spotify/artist/${this.props.id}`
+        ).then((res) => res.json());
+        const artist = artistData;
+        console.log(artistData);
+        console.log(artist);
+
+        // fetch albums
+        const allAlbums: ArtistsAlbumsResponse = await fetch(
+            `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=album`
+        ).then((res) => res.json());
+        this.setState((state) => ({...state, albums: allAlbums.items}));
+
+
+        // fetch singles
+        const allSingles: ArtistsAlbumsResponse = await fetch(
+            `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=single`
+        ).then((res) => res.json());
+        this.setState((state) => ({...state, singles: allSingles.items}));
+
+
+        // fetch albums where the artist appears on
+        const allAppearsOn: ArtistsAlbumsResponse = await fetch(
+            `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=appears_on`
+        ).then((res) => res.json());
+        this.setState((state) => ({...state, appearsOn: allAppearsOn.items}));
+
+
+        // fetch albums where the artist appears on
+        const allCompilations: ArtistsAlbumsResponse = await fetch(
+            `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=compilation`
+        ).then((res) => res.json());
+        this.setState((state) => ({...state, compilations: allCompilations.items}));
     }
 
-    // fetch albums where the artist appears on
-    async function fetchAppearsOn(url: string) {
-        const allAppearsOn: ArtistsAlbumsResponse = await fetch(url).then((res) => res.json());
-        setAppearsOn(allAppearsOn);
-        const arr: AlbumObjectSimplified[] = [...appearsOnItems, ...allAppearsOn.items];
-        //console.log(arr)
-        setAppearsOnItems(arr);
-    }
-
-    // fetch albums where the artist appears on
-    async function fetchCompilations(url: string) {
-        const allCompilations: ArtistsAlbumsResponse = await fetch(url).then((res) => res.json());
-        setCompilations(allCompilations);
-        const arr: AlbumObjectSimplified[] = [...compilationItems, ...allCompilations.items];
-        //console.log(arr)
-        setCompilationItems(arr);
-    }
-
-    const onScrollAlbums = (e: any) => {
-        const bottom =
-            e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-        if (bottom && albums && (albums.next !== null)) {
-            const limit = albums.limit;
-            const offset = albums.offset + limit;
-            const url = `${API_URL}api/spotify/artist/${id}/albums?market=DE&include_groups=album&offset=${offset}&limit=${limit}`;
-            setNextAlbumURL(url);
-        }
-    };
-
-    //TODO
-    // check if all onScrolls are implemented corrected
-    // especially check if the checked conditions makes sense
-    const onScrollSingles = (e: any) => {
-        const bottom =
-            e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-        if (bottom && singles && (singles.next !== null)) {
-            const limit = singles.limit;
-            const offset = singles.offset + limit;
-            const url = `${API_URL}api/spotify/artist/${id}/albums?market=DE&include_groups=single&offset=${offset}&limit=${limit}`;
-            setNextSingleURL(url);
-        }
-    };
-
-    const onScrollAppearsOn = (e: any) => {
-        const bottom =
-            e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-        if (bottom && appears_on && (appears_on.next !== null)) {
-            const limit = appears_on.limit;
-            const offset = appears_on.offset + limit;
-            const url = `${API_URL}api/spotify/artist/${id}/albums?market=DE&include_groups=appears_on&offset=${offset}&limit=${limit}`;
-            setNextAppearsOnURL(url);
-        }
-    };
-    const onScrollCompilations = (e: any) => {
-        const bottom =
-            e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-        if (bottom && compilations && (compilations.next !== null)) {
-            const limit = compilations.limit;
-            const offset = compilations.offset + limit;
-            const url = `${API_URL}api/spotify/artist/${id}/albums?market=DE&include_groups=compilations&offset=${offset}&limit=${limit}`;
-            setNextCompilationURL(url);
-        }
-    };
-        const allAlbums = albumItems.map((album) => {
+    render() {
+        const albums = this.state.albums.map((album) => {
             return (
                 <li className={"column"} key={album.id}>
                     <Link to={`/album/${album.id}`}>
@@ -144,7 +96,7 @@ export default function Artist(props: IProps) {
             );
         });
 
-        const allSingles = singleItems.map((single) => {
+        const singles = this.state.singles.map((single) => {
             return (
                 <li className={"column"} key={single.id}>
                     <Link to={`/album/${single.id}`}>
@@ -164,8 +116,7 @@ export default function Artist(props: IProps) {
                 </li>
             );
         });
-
-        const allAppearsOn = appearsOnItems.map((album) => {
+        const appearsOnAlbum = this.state.appearsOn.map((album) => {
             return (
                 <li className={"column"} key={album.id}>
                     <Link to={`/album/${album.id}`}>
@@ -185,8 +136,7 @@ export default function Artist(props: IProps) {
                 </li>
             );
         });
-
-        const allCompilations = compilationItems.map((compilation) => {
+        const compilations = this.state.compilations.map((compilation) => {
             return (
                 <li className={"column"} key={compilation.id}>
                     <Link to={`/album/${compilation.id}`}>
@@ -207,71 +157,79 @@ export default function Artist(props: IProps) {
             );
         });
 
-    useEffect(() => {
-        fetchAlbums(nextAlbumURL);
-    }, [nextAlbumURL]);
-
-    useEffect(() => {
-        fetchSingles(nextSingleURL);
-    }, [nextSingleURL]);
-
-    useEffect(() => {
-        fetchAppearsOn(nextAppearsOnURL);
-    }, [nextAppearsOnURL]);
-
-    useEffect(() => {
-        fetchCompilations(nextCompilationURL);
-    }, [nextCompilationURL]);
-
         return (
-            <div>
-                <div>
-                    <h2>Discography</h2>
-                    <Link to={`/discography/${id}`}>View Entire Discography</Link>
-                    {albumItems.length > 0 ? (
-                    <Album id={albumItems[0].id} headerStyle={"none"}/>
-                        ) : (<></>)}
-                </div>
+            <div style={{overflow: "hidden auto"}}>
+                {albums.length > 0 ? (
+                        <div className={"section"} key={"discography"}>
+                            <div className={"header"}>
+                                <h2>Discography
+                                    <NavLink to={`/discography/${this.props.id}`} className={"viewMoreLink"}>View Entire
+                                        Discography</NavLink>
+                                </h2>
+                            </div>
 
-                {albumItems.length > 0 ? (
-                    <div style={{overflow: "hidden auto"}}>
-                        <h2>Albums</h2>
-                        <div className={"overview"} >
-                            <ul className={"overview-items"} onScroll={onScrollAlbums}>{allAlbums}</ul>
-                        </div>
-                    </div>)
-                        : (<></>)}
+                            <Album id={this.state.albums[0].id} headerStyle={"none"}/>
 
-               {allSingles.length > 0 ? (
-                <div style={{overflow: "hidden auto"}}>
-                    <h2>Singles</h2>
-                    <div className={"overview"}>
-                        <ul className={"overview-items"} onScroll={onScrollSingles}>{allSingles}</ul>
-                    </div>
-                </div>
-                    )
+                        </div>)
                     : (<></>)}
 
-                {allAppearsOn.length > 0 ? (
-                        <div style={{overflow: "hidden auto"}}>
-                            <h2>Appears on</h2>
-                            <div className={"overview"}>
-                                <ul className={"overview-items"} onScroll={onScrollAppearsOn}>{allAppearsOn}</ul>
+                {albums.length > 0 ? (
+                        <div className={"section"} key={"album"}>
+                            <div className={"header"}>
+                                <h2>Albums</h2>
+                                <NavLink to={`/artist2/${this.props.id}/albums/album`} className={"viewMoreLink"}>View
+                                    All</NavLink>
                             </div>
-                        </div>
-                    )
+                            <div className={"overview"}>
+                                <ul className={"overview-items"} style={{height: '40vh', overflow: 'hidden'}}>{albums}</ul>
+                            </div>
+                        </div>)
                     : (<></>)}
 
-                {allCompilations.length > 0 ? (
-                        <div style={{overflow: "hidden auto"}}>
-                            <h2>Compilations</h2>
-                            <div className={"overview"}>
-                                <ul className={"overview-items"} onScroll={onScrollCompilations}>{allCompilations}</ul>
+                {singles.length > 0 ? (
+                        <div className={"section"} key={"singles"}>
+                            <div className={"header"}>
+                                <h2>Singles</h2>
+                                <NavLink to={`/artist2/${this.props.id}/albums/single`} className={"viewMoreLink"}>View
+                                    All</NavLink>
                             </div>
-                        </div>
-                    )
+                            <div className={"overview"}>
+                                <ul className={"overview-items"} style={{height: '40vh', overflow: 'hidden'}}>{singles}</ul>
+                            </div>
+                        </div>)
+                    : (<></>)}
+
+                {appearsOnAlbum.length > 0 ? (
+                        <div className={"section"} key="appearsOn">
+                            <div className={"header"}>
+                                <h2>Appears on</h2>
+                                <NavLink to={`/artist2/${this.props.id}/albums/appears_on`} className={"viewMoreLink"}>View
+                                    All</NavLink>
+                            </div>
+                            <div className={"overview"}>
+                                <ul className={"overview-items"}
+                                    style={{height: '40vh', overflow: 'hidden'}}>{appearsOnAlbum}</ul>
+                            </div>
+                        </div>)
+                    : (<></>)}
+
+                {compilations.length > 0 ? (
+                        <div className={"section"} key="compilations">
+                            <div className={"header"}>
+                                <h2>Compilations</h2>
+                                <NavLink to={`/artist2/${this.props.id}/albums/compilation`} className={"viewMoreLink"}>View
+                                    All</NavLink>
+                            </div>
+                            <div className={"overview"}>
+                                <ul className={"overview-items"}
+                                    style={{height: '40vh', overflow: 'hidden'}}>{compilations}</ul>
+                            </div>
+                        </div>)
                     : (<></>)}
             </div>
         );
+    }
 
 }
+
+export default Artist;
