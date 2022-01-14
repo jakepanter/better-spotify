@@ -3,5 +3,13 @@
 .EpisodeDescription{
     display: flex;
     height: 100%;
-    color: $color-default;
+    color: $gray-dark;
+    //color: $color-default;
+    border-top: 1px solid rgba(205, 206, 205, 0.11);
+    padding-top: 32px;
+    font-size: $fz-h5;    
+}
+
+.PlaylistHeaderCover{
+    width: unset;
 }

@@ -148,7 +148,7 @@ function TrackListItem(props: Props) {
         onContextMenu={(e) => handleRightClick(e)}
       >  
         <Link to={`/episode/${props.track.id}`}>
-          <div className={"TabelCell"}>
+          <div className={"TableCell"}>
             {track.image !== undefined && track.image !== null ? (
               <div className={"TableCell TableCellArtwork"}>
                 <img

@@ -10,6 +10,18 @@
     background-color: $color-secondary;
   }
 }
+
+.EpisodeRow {
+  padding: 0.5rem;
+  align-items: center;
+  display: flex;
+  flex-flow: row nowrap;
+  height: 175px;
+  width: 100%;
+  transition: $transition-base;
+  border-top: 1px solid rgba(205, 206, 205, 0.11);
+}
+
 .Selected {
   background-color: $color-primary;
 

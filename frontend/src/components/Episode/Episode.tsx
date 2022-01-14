@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { EpisodeObjectFull, SingleEpisodeResponse } from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
+import "./Episode.scss"
 
 interface IProps {
     id: string;
