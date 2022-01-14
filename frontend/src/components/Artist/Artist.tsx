@@ -88,7 +88,7 @@ class Artist extends Component<IProps, IState> {
             ) : (
                 <CoverPlaceholder/>
             )}
-            <span className={"artists-name"}>{this.state.artist.name}</span>
+            <p className={"artists-name"}>{this.state.artist.name}</p>
         </div>;
 
         const albums = this.state.albums.map((album, index) => {
