@@ -161,6 +161,10 @@ td, th {
     outline: none;
     border-bottom-color: $color-primary;
   }
+
+  &:invalid {
+    border-bottom-color: $color-waring-darker;
+  }
 }
 
 .input-select {

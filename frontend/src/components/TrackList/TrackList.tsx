@@ -5,9 +5,10 @@ import { PlaylistTrack } from "../Playlist/Playlist";
 import TrackContextMenuWrapper from "../TrackContextMenu/TrackContextMenuWrapper";
 import React, { useEffect, useState } from "react";
 import TrackListItem from "../TrackListItem/TrackListItem";
+import TagsSystem from "../../utils/tags-system";
+import {TagsTrack} from "../TagTracklist/TagTracklist";
 
-type Props =
-  | {
+type Props = {
       type: "album";
       tracks: AlbumTrack[];
       loadMoreCallback: () => void;
@@ -27,7 +28,22 @@ type Props =
       loadMoreCallback: () => void;
       fullyLoaded: boolean;
       id_tracklist: string;
-    };
+    }
+  | {
+      type: "tags";
+      tracks: TagsTrack[];
+      loadMoreCallback: () => void;
+      fullyLoaded: boolean;
+      id_tracklist: string;
+      hideTag: string;
+    }
+  | {
+    type: "search";
+    tracks: TrackObjectFull[];
+    loadMoreCallback: () => void;
+    fullyLoaded: boolean;
+    id_tracklist: string;
+  };
 
 type ContextMenuType = {
   show: boolean;
@@ -124,6 +140,9 @@ function TrackList(props: Props) {
     return selectedTracks.some((track) => track === trackUniqueId);
   };
 
+  // Tags
+  const tags = TagsSystem.getTags();
+
   return (
     <>
       {contextMenu.show && contextMenu.x && contextMenu.y && (
@@ -143,14 +162,15 @@ function TrackList(props: Props) {
           }
         >
           <div className={"TableHeader TableRow"}>
-            <div className={"TableCell TableCellArtwork"} />
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
             <div className={"TableCell TableCellLiked"}>Liked</div>
+            <div className={"TableCell TableCellTags"}>Tags</div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
               const track = item;
+              const tagList = TagsSystem.getTagsOfElement(track.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
               return (
                 <TrackListItem
                   track={track}
@@ -165,6 +185,7 @@ function TrackList(props: Props) {
                   onContextMenuOpen={handleContextMenuOpen}
                   id_tracklist={id_tracklist}
                   type={type}
+                  tags={tagList}
                 />
               );
             })}
@@ -193,10 +214,12 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellAddedAt"}>Added</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
             <div className={"TableCell TableCellLiked"}>Liked</div>
+            <div className={"TableCell TableCellTags"}>Tags</div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
               const { track } = item;
+              const tagList = TagsSystem.getTagsOfElement(track.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
               return (
                 <TrackListItem
                   track={track}
@@ -213,7 +236,52 @@ function TrackList(props: Props) {
                   onContextMenuOpen={handleContextMenuOpen}
                   id_tracklist={id_tracklist}
                   type={type}
+                  tags={tagList}
                 />
+              );
+            })}
+            {!fullyLoaded ? (
+              <div className={"PlaylistLoader"}>
+                <div className={"loader"} />
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+      )}
+
+      {
+        type === "search" && (
+          <div className={"Tracklist"}>
+            <div className={"TableHeader TableRow"}>
+              <div className={"TableCell TableCellArtwork"} />
+              <div className={"TableCell TableCellTitleArtist"}>Title</div>
+              <div className={"TableCell TableCellAlbum"}>Album</div>
+              <div className={"TableCell TableCellDuration"}>Duration</div>
+              <div className={"TableCell TableCellTags"}>Tags</div>
+            </div>
+            <div className={"TableBody"}>
+            {props.tracks.map((item, index) => {
+              const tagList = TagsSystem.getTagsOfElement(item.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
+              return (
+                <div key="TrackList">
+                    <TrackListItem
+                      track={item}
+                      name={item.name}
+                      artists={item.artists}
+                      duration_ms={item.duration_ms}
+                      album={item.album}
+                      key={type + "-track-" + item.id + "-" + index}
+                      listIndex={index}
+                      selected={isTrackSelected(item, index)}
+                      onSelectionChange={handleSelectionChange}
+                      onContextMenuOpen={handleContextMenuOpen}
+                      id_tracklist={''}
+                      type={type}
+                      tags={tagList}
+                    />
+                </div>
               );
             })}
             {!fullyLoaded ? (
@@ -240,10 +308,12 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellAlbum"}>Album</div>
             <div className={"TableCell TableCellAddedAt"}>Added</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
+            <div className={"TableCell TableCellTags"}>Tags</div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
               const { track } = item;
+              const tagList = TagsSystem.getTagsOfElement(track.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
               return (
                 <TrackListItem
                   track={track}
@@ -259,6 +329,55 @@ function TrackList(props: Props) {
                   onContextMenuOpen={handleContextMenuOpen}
                   id_tracklist={''}
                   type={type}
+                  tags={tagList}
+                />
+              );
+            })}
+            {!fullyLoaded ? (
+              <div className={"PlaylistLoader"}>
+                <div className={"loader"} />
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+      )}
+
+      {type === "tags" && (
+        <div
+          className={"Tracklist"}
+          onScroll={(e: React.UIEvent<HTMLDivElement>) =>
+            scrollHandler(e, loadMoreCallback)
+          }
+        >
+          <div className={"TableHeader TableRow"}>
+            <div className={"TableCell TableCellArtwork"} />
+            <div className={"TableCell TableCellTitleArtist"}>Title</div>
+            <div className={"TableCell TableCellAlbum"}>Album</div>
+            <div className={"TableCell TableCellDuration"}>Duration</div>
+            <div className={"TableCell TableCellLiked"}>Liked</div>
+            <div className={"TableCell TableCellTags"}>Tags</div>
+          </div>
+          <div className={"TableBody"}>
+            {props.tracks.map((track, index) => {
+              const tagList = TagsSystem.getTagsOfElement(track.id).filter((t) => t !== props.hideTag).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
+              return (
+                <TrackListItem
+                  track={track}
+                  name={track.name}
+                  artists={track.artists}
+                  duration_ms={track.duration_ms}
+                  album={track.album}
+                  key={type + "-track-" + track.id + "-" + index}
+                  listIndex={index}
+                  selected={isTrackSelected(track, index)}
+                  onSelectionChange={handleSelectionChange}
+                  onContextMenuOpen={handleContextMenuOpen}
+                  id_tracklist={id_tracklist}
+                  type={type}
+                  liked={track.is_saved}
+                  tags={tagList}
                 />
               );
             })}

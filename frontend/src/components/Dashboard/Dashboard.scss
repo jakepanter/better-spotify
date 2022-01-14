@@ -21,13 +21,30 @@
   top: 0;
   z-index: 1;
 
+  .DashboardTagTracklistsForm {
+    align-items: stretch;
+    display: flex;
+    flex-flow: row wrap;
+    margin-right: $spacer;
+
+    &Selects {
+      align-items: center;
+      display: flex;
+      flex-flow: row wrap;
+      margin-right: $spacer / 4;
+      .input-select {
+        height: 100%;
+      }
+    }
+  }
+
   .DashboardChartsForm {
     align-items: stretch;
     display: flex;
     flex-flow: row wrap;
     margin-right: $spacer;
 
-    .DashboardChartsFormSelects {
+    &Selects {
       align-items: center;
       display: flex;
       flex-flow: row wrap;
