@@ -23,6 +23,11 @@ interface IState {
     singles: AlbumObjectSimplified[];
     appearsOn: AlbumObjectSimplified[];
     compilations: AlbumObjectSimplified[];
+    showAlbums: boolean,
+    showDiscography: boolean,
+    showSingles: boolean,
+    showAppearsOn: boolean,
+    showCompilations: boolean
 }
 
 class Artist extends Component<IProps, IState> {
@@ -33,8 +38,14 @@ class Artist extends Component<IProps, IState> {
             albums: [],
             singles: [],
             appearsOn: [],
-            compilations: []
+            compilations: [],
+            showAlbums: true,
+            showDiscography: true,
+            showSingles: true,
+            showAppearsOn: true,
+            showCompilations: true
         };
+        this.hideSection = this.hideSection.bind(this);
     }
 
 
@@ -43,15 +54,18 @@ class Artist extends Component<IProps, IState> {
         const artistData: SingleArtistResponse = await fetch(
             `${API_URL}api/spotify/artist/${this.props.id}`
         ).then((res) => res.json());
-        this.setState({
-            artist: artistData
-        });
+        this.setState({artist: artistData});
+
 
         // fetch albums
         const allAlbums: ArtistsAlbumsResponse = await fetch(
             `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=album`
         ).then((res) => res.json());
         this.setState((state) => ({...state, albums: allAlbums.items}));
+        if(allAlbums === undefined || !(allAlbums.items.length > 0)) {
+            this.setState({showAlbums: false});
+        }
+
 
 
         // fetch singles
@@ -59,6 +73,9 @@ class Artist extends Component<IProps, IState> {
             `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=single`
         ).then((res) => res.json());
         this.setState((state) => ({...state, singles: allSingles.items}));
+        if(allSingles === undefined || !(allSingles.items.length > 0)) {
+            this.setState({showSingles: false});
+        }
 
 
         // fetch albums where the artist appears on
@@ -66,6 +83,9 @@ class Artist extends Component<IProps, IState> {
             `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=appears_on`
         ).then((res) => res.json());
         this.setState((state) => ({...state, appearsOn: allAppearsOn.items}));
+        if(allAppearsOn === undefined || !(allAppearsOn.items.length > 0)) {
+            this.setState({showAppearsOn: false});
+        }
 
 
         // fetch albums where the artist appears on
@@ -73,6 +93,55 @@ class Artist extends Component<IProps, IState> {
             `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=compilation`
         ).then((res) => res.json());
         this.setState((state) => ({...state, compilations: allCompilations.items}));
+        if(allCompilations === undefined || !(allCompilations.items.length > 0)) {
+            this.setState({showCompilations: false});
+        }
+    }
+
+    hideSection(value: string){
+        const index = Number(value) -1;
+        if(index === 0){
+            this.setState({showDiscography: true});
+            this.setState({showAlbums: false});
+            this.setState({showSingles: false});
+            this.setState({showAppearsOn: false});
+            this.setState({showCompilations: false});
+        }
+        else if(index === 1){
+            this.setState({showAlbums: true});
+            this.setState({showDiscography: false});
+            this.setState({showSingles: false});
+            this.setState({showAppearsOn: false});
+            this.setState({showCompilations: false});
+        }
+        else if(index === 2){
+            this.setState({showAlbums: false});
+            this.setState({showDiscography: false});
+            this.setState({showSingles: true});
+            this.setState({showAppearsOn: false});
+            this.setState({showCompilations: false});
+        }
+        else if(index === 3){
+            this.setState({showAlbums: false});
+            this.setState({showDiscography: false});
+            this.setState({showSingles: false});
+            this.setState({showAppearsOn: true});
+            this.setState({showCompilations: false});
+        }
+        else if(index === 4){
+            this.setState({showAlbums: false});
+            this.setState({showDiscography: false});
+            this.setState({showSingles: false});
+            this.setState({showAppearsOn: false});
+            this.setState({showCompilations: true});
+        }
+        else{
+            this.setState({showAlbums: true});
+            this.setState({showDiscography: true});
+            this.setState({showSingles: true});
+            this.setState({showAppearsOn: true});
+            this.setState({showCompilations: true});
+        }
     }
 
     render() {
@@ -90,6 +159,7 @@ class Artist extends Component<IProps, IState> {
             )}
             <p className={"artists-name"}>{this.state.artist.name}</p>
         </div>;
+
 
         const albums = this.state.albums.map((album, index) => {
             return (
@@ -175,12 +245,33 @@ class Artist extends Component<IProps, IState> {
 
         return (
             <div style={{overflow: "hidden auto"}}>
+                {/*Filter*/}
+                <div className="select">
+                    <select className = {"input-select"} onChange={(e) => {this.hideSection(e.target.value)}}>
+                        <option value="0">Filter</option>
+                        {albums.length > 0 ? (
+                            <option value="1">Discography</option>) :(<></>)}
+                        {albums.length > 0 ? (
+                        <option value="2">Albums</option>):(<></>)}
+                        {singles.length > 0 ? (
+                        <option value="3">Singles</option>) :(<></>)}
+                        {appearsOnAlbum.length > 0 ? (
+                        <option value="4">Appears On</option>):(<></>)}
+                        {compilations.length > 0 ? (
+                        <option value="5">Compilations</option>):(<></>)}
+
+                    </select>
+                </div>
+
+
+
                 <div className={"artist"}>
+                    <h1 className={"titleName"}>Artist</h1>
                 {artist}
                 </div>
                 {/*Discography*/}
                 {/* TODO condition ändern*/}
-                {albums.length > 0 ? (
+                {this.state.showDiscography && albums.length > 0 ? (
                         <div className={"section"} key={"discography"}>
                             <div className={"header"}>
                                 <h2>Discography
@@ -193,7 +284,7 @@ class Artist extends Component<IProps, IState> {
                     : (<></>)}
 
                 {/*Albums*/}
-                {albums.length > 0 ? (
+                {this.state.showAlbums && albums.length > 0 ? (
                         <div className={"section"} key={"album"}>
                             <div className={"header"}>
                                 <h2>Albums</h2>
@@ -207,7 +298,7 @@ class Artist extends Component<IProps, IState> {
                     : (<></>)}
 
                 {/*Singles*/}
-                {singles.length > 0 ? (
+                {this.state.showSingles && singles.length > 0 ? (
                         <div className={"section"} key={"singles"}>
                             <div className={"header"}>
                                 <h2>Singles</h2>
@@ -221,7 +312,7 @@ class Artist extends Component<IProps, IState> {
                     : (<></>)}
 
                 {/*Appears On*/}
-                {appearsOnAlbum.length > 0 ? (
+                {this.state.showAppearsOn && appearsOnAlbum.length > 0 ? (
                         <div className={"section"} key="appearsOn">
                             <div className={"header"}>
                                 <h2>Appears on</h2>
@@ -236,7 +327,7 @@ class Artist extends Component<IProps, IState> {
                     : (<></>)}
 
                 {/*Compilations*/}
-                {compilations.length > 0 ? (
+                {this.state.showCompilations && compilations.length > 0 ? (
                         <div className={"section"} key="compilations">
                             <div className={"header"}>
                                 <h2>Compilations</h2>
