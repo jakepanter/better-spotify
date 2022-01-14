@@ -1,5 +1,5 @@
 import "./TrackList.scss";
-import { PlayHistoryObject, AlbumObjectSimplified ,SavedTrackObject, TrackObjectFull } from "spotify-types";
+import {  AlbumObjectSimplified ,SavedTrackObject, TrackObjectFull } from "spotify-types";
 import { AlbumTrack } from "../Album/Album";
 import { PlaylistTrack } from "../Playlist/Playlist";
 import TrackContextMenuWrapper from "../TrackContextMenu/TrackContextMenuWrapper";
@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import TrackListItem from "../TrackListItem/TrackListItem";
 import TagsSystem from "../../utils/tags-system";
 import {TagsTrack} from "../TagTracklist/TagTracklist";
+import {SongHistoryTrack} from "../SongHistory/SongHistory";
 
 type Props = {
       type: "album";
@@ -45,7 +46,7 @@ type Props = {
     id_tracklist: string;
     }| {
     type: "songhistory";
-    tracks: PlayHistoryObject[];
+    tracks: SongHistoryTrack[];
     loadMoreCallback: () => void;
     fullyLoaded: boolean;
     id_tracklist: string;
@@ -416,6 +417,7 @@ function TrackList(props: Props) {
                     <div className={"TableCell TableCellTitleArtist"}>Title</div>
                     <div className={"TableCell TableCellAlbum"}>Album</div>
                     <div className={"TableCell TableCellDuration"}>Duration</div>
+                    <div className={"TableCell TableCellLiked"}>Liked</div>
                     <div className={"TableCell TableCellTags"}>Tags</div>
                 </div>
                 <div className={"TableBody"}>
@@ -436,6 +438,7 @@ function TrackList(props: Props) {
                                 onContextMenuOpen={handleContextMenuOpen}
                                 id_tracklist={''}
                                 type={type}
+                                liked={item.is_saved}
                                 tags={tagList}
                             />
                         );
