@@ -14,7 +14,10 @@ export default function ArtistAlbums() {
     let params = useParams() as { id: string, type?: string };
     const id = params.id;
     const type = params.type;
-    if(type === "single"){
+    if(type === "album"){
+        header = "Albums";
+    }
+    else if(type === "single"){
         header = "Singles";
     }
     else if(type == "appears_on"){

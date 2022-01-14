@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {
     SingleArtistResponse,
-    //ArtistObjectFull,
+    ArtistObjectFull,
     AlbumObjectSimplified,
     ArtistsAlbumsResponse
 } from "spotify-types";
@@ -17,8 +17,8 @@ interface IProps {
     id: string;
 }
 
-
 interface IState {
+    artist: ArtistObjectFull;
     albums: AlbumObjectSimplified[];
     singles: AlbumObjectSimplified[];
     appearsOn: AlbumObjectSimplified[];
@@ -29,6 +29,7 @@ class Artist extends Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
+            artist: {} as ArtistObjectFull,
             albums: [],
             singles: [],
             appearsOn: [],
@@ -42,9 +43,9 @@ class Artist extends Component<IProps, IState> {
         const artistData: SingleArtistResponse = await fetch(
             `${API_URL}api/spotify/artist/${this.props.id}`
         ).then((res) => res.json());
-        const artist = artistData;
-        console.log(artistData);
-        console.log(artist);
+        this.setState({
+            artist: artistData
+        });
 
         // fetch albums
         const allAlbums: ArtistsAlbumsResponse = await fetch(
@@ -75,9 +76,24 @@ class Artist extends Component<IProps, IState> {
     }
 
     render() {
-        const albums = this.state.albums.map((album) => {
+
+        if(this.state.artist.images === undefined) return <p>loading</p>;
+
+        const artist =<div>
+            {this.state.artist.images.length > 0 ? (
+                <div
+                    className={"cover"}
+                    style={{backgroundImage: `url(${this.state.artist.images[0].url}`}}
+                />
+            ) : (
+                <CoverPlaceholder/>
+            )}
+            <span className={"artists-name"}>{this.state.artist.name}</span>
+        </div>;
+
+        const albums = this.state.albums.map((album, index) => {
             return (
-                <li className={"column"} key={album.id}>
+                <li className={"column"} key={album.id + index}>
                     <Link to={`/album/${album.id}`}>
                         {album.images.length > 0 ? (
                             <div
@@ -96,9 +112,9 @@ class Artist extends Component<IProps, IState> {
             );
         });
 
-        const singles = this.state.singles.map((single) => {
+        const singles = this.state.singles.map((single, index) => {
             return (
-                <li className={"column"} key={single.id}>
+                <li className={"column"} key={single.id + index}>
                     <Link to={`/album/${single.id}`}>
                         {single.images.length > 0 ? (
                             <div
@@ -116,9 +132,9 @@ class Artist extends Component<IProps, IState> {
                 </li>
             );
         });
-        const appearsOnAlbum = this.state.appearsOn.map((album) => {
+        const appearsOnAlbum = this.state.appearsOn.map((album, index) => {
             return (
-                <li className={"column"} key={album.id}>
+                <li className={"column"} key={album.id + index}>
                     <Link to={`/album/${album.id}`}>
                         {album.images.length > 0 ? (
                             <div
@@ -136,9 +152,9 @@ class Artist extends Component<IProps, IState> {
                 </li>
             );
         });
-        const compilations = this.state.compilations.map((compilation) => {
+        const compilations = this.state.compilations.map((compilation, index) => {
             return (
-                <li className={"column"} key={compilation.id}>
+                <li className={"column"} key={compilation.id + index}>
                     <Link to={`/album/${compilation.id}`}>
                         {compilation.images.length > 0 ? (
                             <div
@@ -159,6 +175,11 @@ class Artist extends Component<IProps, IState> {
 
         return (
             <div style={{overflow: "hidden auto"}}>
+                <div className={"artist"}>
+                {artist}
+                </div>
+                {/*Discography*/}
+                {/* TODO condition ändern*/}
                 {albums.length > 0 ? (
                         <div className={"section"} key={"discography"}>
                             <div className={"header"}>
@@ -167,12 +188,11 @@ class Artist extends Component<IProps, IState> {
                                         Discography</NavLink>
                                 </h2>
                             </div>
-
                             <Album id={this.state.albums[0].id} headerStyle={"none"}/>
-
                         </div>)
                     : (<></>)}
 
+                {/*Albums*/}
                 {albums.length > 0 ? (
                         <div className={"section"} key={"album"}>
                             <div className={"header"}>
@@ -186,6 +206,7 @@ class Artist extends Component<IProps, IState> {
                         </div>)
                     : (<></>)}
 
+                {/*Singles*/}
                 {singles.length > 0 ? (
                         <div className={"section"} key={"singles"}>
                             <div className={"header"}>
@@ -199,6 +220,7 @@ class Artist extends Component<IProps, IState> {
                         </div>)
                     : (<></>)}
 
+                {/*Appears On*/}
                 {appearsOnAlbum.length > 0 ? (
                         <div className={"section"} key="appearsOn">
                             <div className={"header"}>
@@ -213,6 +235,7 @@ class Artist extends Component<IProps, IState> {
                         </div>)
                     : (<></>)}
 
+                {/*Compilations*/}
                 {compilations.length > 0 ? (
                         <div className={"section"} key="compilations">
                             <div className={"header"}>

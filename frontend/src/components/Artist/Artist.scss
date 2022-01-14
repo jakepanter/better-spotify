@@ -17,3 +17,22 @@
     }
   }
 }
+.artist {
+  .cover {
+    width: 20%;
+    height: 250px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    border-radius: $border-radius;
+    margin-bottom: 1rem;
+  }
+
+  .artists-name {
+    display: block;
+    font-family: $font-special;
+    font-size: 24px;
+    color: $color-default;
+    margin-top: 4px;
+  }
+}
