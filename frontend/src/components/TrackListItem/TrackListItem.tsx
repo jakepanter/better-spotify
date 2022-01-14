@@ -143,7 +143,7 @@ function TrackListItem(props: Props) {
   };
   if(type === "show") {
     return (
-      <div className={`Pointer TableRow ${selected ? "Selected" : ""}`}
+      <div className={`Pointer EpisodeRow ${selected ? "Selected" : ""}`}
         onClick={(e) => handleClick(e)}
         onContextMenu={(e) => handleRightClick(e)}
       >  
@@ -161,10 +161,24 @@ function TrackListItem(props: Props) {
               <CoverPlaceholder />
             )}
           </div>
+          <div className={"TableCell TableCellTitleArtist"}>{track.name}</div>
           <div>{track.description}</div>
-          <div>{track.name}</div>
           <div>{track.duration_ms}</div>
           <div onClick={(e) => playClick(e)}>Play Button</div>
+            {track.tags !== undefined ? (
+          <div className={"TableCell TableCellTags"}>
+            {track.tags.map((t, i) =>
+              <Link key={i}
+                    className={`Tag TagColor${t.color}`}
+                    to={`/tag/${t.id}`}
+              >
+                {t.title}
+              </Link>
+            )}
+          </div>
+      ) : (
+        <></>
+      )}
         </Link>
       </div>
     );
@@ -238,6 +252,7 @@ function TrackListItem(props: Props) {
       )}
     </div>
   );
-}}
+}
+}
 
 export default TrackListItem;

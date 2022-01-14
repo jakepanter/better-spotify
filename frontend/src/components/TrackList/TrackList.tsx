@@ -46,11 +46,11 @@ type Props = {
       hideTag: string;
     }
   | {
-    type: "search";
-    tracks: TrackObjectFull[];
-    loadMoreCallback: () => void;
-    fullyLoaded: boolean;
-    id_tracklist: string;
+      type: "search";
+      tracks: TrackObjectFull[];
+      loadMoreCallback: () => void;
+      fullyLoaded: boolean;
+      id_tracklist: string;
   };
 
 type ContextMenuType = {
@@ -334,8 +334,7 @@ function TrackList(props: Props) {
               const { track } = item;
               var artistArray: string[];
               artistArray = [];
-              track.artists.map((artist) => 
-                artistArray.push(artist.name));
+              track.artists.map((artist) => artistArray.push(artist.name));
               const tagList = TagsSystem.getTagsOfElement(track.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
               return (
                 <TrackListItem

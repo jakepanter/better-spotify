@@ -46,10 +46,10 @@ export default function Episode(props: IProps) {
         </div>
         <div className={"PlaylistHeaderFilter"}>{/* Filter */}</div>
       </div>
-      <div>
-
-      
+      <div className="EpisodeDescription">
+        {episode.description}
       </div>
+      
     )
   ) : (
     <></>
