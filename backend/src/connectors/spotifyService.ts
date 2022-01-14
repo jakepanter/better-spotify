@@ -85,6 +85,36 @@ export default class SpotifyService {
     return true;
   }
 
+  searchCustom = async (type: string, search: string) => {
+    let searchRes = null;
+
+    if (type === 'tracks') {
+      searchRes = await this.spotifyApi.searchTracks(search);
+    } else if (type === 'albums') {
+      searchRes = await this.spotifyApi.searchAlbums(search);
+    } else if (type === 'artists') {
+      searchRes = await this.spotifyApi.searchArtists(search);
+    } else if (type === 'playlists') {
+      searchRes = await this.spotifyApi.searchPlaylists(search);
+    } else if (type === 'shows') {
+      searchRes = await this.spotifyApi.searchShows(search);
+    } else if (type === 'episodes') {
+      searchRes = await this.spotifyApi.searchEpisodes(search);
+    }
+    if (searchRes == null) {
+      // TODO: Error handling
+      return [];
+    }
+
+    if (searchRes.statusCode !== 200) {
+      // Authorization did not work
+      // TODO: Error handling
+      return [];
+    }
+
+    return searchRes.body;
+  }
+
   searchTracks = async (query: string) => {
     const searchRes = await this.spotifyApi.search(query, ['track']);
 
@@ -95,6 +125,19 @@ export default class SpotifyService {
     }
 
     return searchRes.body.tracks;
+  }
+
+  // search in every Category
+  search = async (query: string) => {
+    const searchRes = await this.spotifyApi.search(query, ['album', 'artist', 'playlist', 'track', 'show', 'episode']);
+
+    if (searchRes.statusCode !== 200) {
+      // Authorization did not work
+      // TODO: Error handling
+      return [];
+    }
+
+    return searchRes.body;
   }
 
   getMySavedTracks = async (limit: number, offset: number) => {
@@ -112,6 +155,11 @@ export default class SpotifyService {
   getTrack = async (id: string) => {
     const track = await this.spotifyApi.getTrack(id);
     return track.body;
+  }
+
+  getTracks = async (ids: string[]) => {
+    const tracks = await this.spotifyApi.getTracks(ids);
+    return tracks.body;
   }
 
   getAlbum = async (id: string) => {
@@ -194,7 +242,18 @@ export default class SpotifyService {
     return result.body;
   }
 
-  setVolume = async (volume: number) => this.spotifyApi.setVolume(volume);
+  createPlaylist = async (
+    playlistName: string,
+    options: { description?: string, collaborative: boolean, public: boolean },
+  ) => {
+    const result = await this.spotifyApi.createPlaylist(playlistName, options);
+    return result.body;
+  }
+
+  setVolume = async (volume: number) => {
+    const result = await this.spotifyApi.setVolume(volume);
+    return result;
+  }
 
   getAccessToken = async () => this.spotifyApi.getAccessToken();
 
@@ -210,11 +269,17 @@ export default class SpotifyService {
 
   next = async () => this.spotifyApi.skipToNext();
 
-  removeTracks = async (trackIds: ReadonlyArray<string>) => this.spotifyApi.removeFromMySavedTracks(trackIds);
+  removeTracks = async (trackIds: ReadonlyArray<string>) => {
+    this.spotifyApi.removeFromMySavedTracks(trackIds);
+  }
 
-  saveTracks = async (trackIds: ReadonlyArray<string>) => this.spotifyApi.addToMySavedTracks(trackIds);
+  saveTracks = async (trackIds: ReadonlyArray<string>) => {
+    this.spotifyApi.addToMySavedTracks(trackIds);
+  }
 
   seek = async (position: number) => this.spotifyApi.seek(position);
 
-  setDevice = async (deviceIds: ReadonlyArray<string>, options: TransferPlaybackOptions) => this.spotifyApi.transferMyPlayback(deviceIds, options);
+  setDevice = async (deviceIds: ReadonlyArray<string>, options: TransferPlaybackOptions) => {
+    this.spotifyApi.transferMyPlayback(deviceIds, options);
+  }
 }

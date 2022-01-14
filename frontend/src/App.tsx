@@ -13,6 +13,9 @@ import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import Topbar from "./components/Topbar/Topbar";
 import SettingsPage from "./pages/SettingsPage/SettingsPage";
+import TagTracklistPage from "./pages/TagTracklistPage/TagTracklistPage";
+import SearchPage from "./components/SearchPage/SearchPage";
+import SearchPageCustom from "./components/SearchPage/Custom/SearchPageCustom";
 import ShowPage from "./pages/ShowPage/ShowPage";
 import EpisodePage from "./pages/EpisodePage/EpisodePage";
 
@@ -97,6 +100,15 @@ function App() {
               </Route>
               <Route path="/settings">
                 <SettingsPage/>
+              </Route>
+              <Route path="/tag/:id">
+                <TagTracklistPage/>
+              </Route>
+              <Route path="/search/:search">
+                <SearchPage/>
+              </Route>
+              <Route path="/customsearch/:type/:search">
+                <SearchPageCustom/>
               </Route>
             </Switch>
             <Player />

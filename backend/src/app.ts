@@ -50,12 +50,28 @@ export default class App {
     /**
      * Perform a user's search with a given query
      */
-    this.server.get('/api/spotify/search', async (req: Request, res: Response) => {
+    this.server.get('/api/spotify/customsearch', async (req: Request, res: Response) => {
+      const type = req.query?.type;
+      const search = req.query?.search;
+      if (type === undefined || type === '' || search === undefined || search === '') return res.sendStatus(400);
+      const result = await this.spotifyService.searchCustom(type.toString(), search.toString());
+      return res.json(result);
+    });
+
+    this.server.get('/api/spotify/searchtracks', async (req: Request, res: Response) => {
       const { query } = req.query;
       if (query === undefined || query === '') return res.sendStatus(400);
       const tracks = await this.spotifyService.searchTracks(query.toString());
       return res.json(tracks);
     });
+
+    this.server.get('/api/spotify/search', async (req: Request, res: Response) => {
+      const { query } = req.query;
+      if (query === undefined || query === '') return res.sendStatus(400);
+      const tracks = await this.spotifyService.search(query.toString());
+      return res.json(tracks);
+    });
+    /**
 
     /**
      * Get me
@@ -80,6 +96,12 @@ export default class App {
       const trackId = req.params.trackId as string;
       const track = await this.spotifyService.getTrack(trackId);
       return res.json(track);
+    });
+
+    this.server.get('/api/spotify/tracks', async (req: Request, res: Response) => {
+      const trackIds: string[] = (req.query.trackIds as string ?? '').split(',');
+      const data = await this.spotifyService.getTracks(trackIds);
+      return res.json(data);
     });
 
     this.server.get('/api/spotify/me/tracks/contains', async (req: Request, res: Response) => {
@@ -137,6 +159,12 @@ export default class App {
 
       const playlists = await this.spotifyService.getMyPlaylists(limit, offset);
       return res.json(playlists);
+    });
+
+    this.server.post('/api/spotify/playlists', async (req: Request, res: Response) => {
+      const { playlistName, options } = req.body;
+      const playlist = await this.spotifyService.createPlaylist(playlistName, options);
+      return res.json(playlist);
     });
 
     this.server.get('/api/spotify/playlist/:playlistId', async (req: Request, res: Response) => {

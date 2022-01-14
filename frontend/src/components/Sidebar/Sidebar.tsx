@@ -29,22 +29,19 @@ const Sidebar = () => {
                     </NavLink>
                 </li>
                 <li className="column">
-                    <NavLink title={"Favorites"} activeClassName="active" className="button" to="/me/tracks" onClick={() => closeMenu()}
-                             exact>
+                    <NavLink title={"Favorites"} activeClassName="active" className="button" to="/me/tracks" onClick={() => closeMenu()} exact>
                         <span className="material-icons left-side-panel--icon">favorite</span>
                         <span className="left-side-panel--text">Favorites</span>
                     </NavLink>
                 </li>
                 <li className="column">
-                    <NavLink title={"Playlists"} activeClassName="active" className="button" to="/playlists" onClick={() => closeMenu()}
-                             exact>
+                    <NavLink title={"Playlists"} activeClassName="active" className="button" to="/playlists" onClick={() => closeMenu()} exact>
                         <span className="material-icons left-side-panel--icon">queue_music</span>
                         <span className="left-side-panel--text">Playlists</span>
                     </NavLink>
                 </li>
                 <li className="column">
-                    <NavLink title={"Albums"} activeClassName="active" className="button" to="/collections/albums"
-                             onClick={() => closeMenu()} exact>
+                    <NavLink title={"Albums"} activeClassName="active" className="button" to="/collections/albums" onClick={() => closeMenu()} exact>
                         <span className="material-icons left-side-panel--icon">library_music</span>
                         <span className="left-side-panel--text">Albums</span>
                     </NavLink>
