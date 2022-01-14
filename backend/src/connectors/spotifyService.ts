@@ -172,6 +172,11 @@ export default class SpotifyService {
     const result = await this.spotifyApi.getMySavedShows();
     return result.body;
   }
+  
+  getShows = async (showIds: string[]) => {
+    const data = await this.spotifyApi.getShows(showIds);
+    return data.body;
+  }; 
 
   getShowEpisodes = async (showId: string, limit: number, offset: number) => {
     const options: any = { limit, offset };

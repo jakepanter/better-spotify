@@ -3,7 +3,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
   AlbumObjectSimplified,
-  ArtistObjectSimplified,
   EpisodeObject,
   ImageObject,
   ShowObjectSimplified,
@@ -15,6 +14,8 @@ import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import "./TrackListItem.scss";
 import {API_URL} from "../../utils/constants";
 import {Tag} from "../../utils/tags-system";
+import { Link } from "react-router-dom";
+
 
 type Body = {
   context_uri: string | undefined,
@@ -98,16 +99,18 @@ function TrackListItem(props: Props) {
   }, [props.selected]);
 
   const handleClick = (e: any) => {
-    if (e.shiftKey) {
-      setSpecialKey("shift");
-    } else if (e.ctrlKey) {
-      setSpecialKey("ctrl");
-    } else {
-      setSpecialKey(null);
-    }
-    setSelected(!selected);
+    if(type != "show") {
+      if (e.shiftKey) {
+        setSpecialKey("shift");
+      } else if (e.ctrlKey) {
+        setSpecialKey("ctrl");
+      } else {
+        setSpecialKey(null);
+      }
+      setSelected(!selected); 
 
-    if (e.detail === 2) sendRequest()
+      if (e.detail === 2) sendRequest()
+    }
   };
 
   const playClick =(e: any) => {
@@ -142,23 +145,25 @@ function TrackListItem(props: Props) {
         onClick={(e) => handleClick(e)}
         onContextMenu={(e) => handleRightClick(e)}
       >  
-        <div className={"TabelCell"}>
-          {track.image !== undefined && track.image !== null ? (
-            <div className={"TableCell TableCellArtwork"}>
-              <img
-                src={track.image.url}
-                alt=""
-                style={{ width: "100px", height: "100px" }}
-              />
-            </div>
-          ) : (
-            <CoverPlaceholder />
-          )}
-        </div>
-        <div>{track.description}</div>
-        <div>{track.name}</div>
-        <div>{track.duration_ms}</div>
-        <div onClick={(e) => playClick(e)}>Play Button</div>
+        <Link to={`/episode/${props.track.id}`}>
+          <div className={"TabelCell"}>
+            {track.image !== undefined && track.image !== null ? (
+              <div className={"TableCell TableCellArtwork"}>
+                <img
+                  src={track.image.url}
+                  alt=""
+                  style={{ width: "100px", height: "100px" }}
+                />
+              </div>
+            ) : (
+              <CoverPlaceholder />
+            )}
+          </div>
+          <div>{track.description}</div>
+          <div>{track.name}</div>
+          <div>{track.duration_ms}</div>
+          <div onClick={(e) => playClick(e)}>Play Button</div>
+        </Link>
       </div>
     );
   }

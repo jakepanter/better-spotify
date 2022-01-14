@@ -168,6 +168,12 @@ export default class App {
       return res.json(shows);
     })
 
+    this.server.get('/api/spotify/shows', async (req: Request, res: Response) => {
+      const showIds: string[] = (req.query.showIds as string ?? ' ').split(',');
+      const shows = await this.spotifyService.getShows(showIds);
+      return res.json(shows);
+    })
+
     this.server.get('/api/spotify/show/:showId/episodes', async (req: Request, res: Response) => {
       const limit = Number(req.query?.limit ?? 50);
       const offset = Number(req.query?.offset ?? 0);

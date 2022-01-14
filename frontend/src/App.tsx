@@ -14,6 +14,7 @@ import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import Topbar from "./components/Topbar/Topbar";
 import SettingsPage from "./pages/SettingsPage/SettingsPage";
 import ShowPage from "./pages/ShowPage/ShowPage";
+import EpisodePage from "./pages/EpisodePage/EpisodePage";
 
 function authorize() {
   fetch(`${API_URL}api/spotify/get-auth-url`)
@@ -78,6 +79,9 @@ function App() {
               </Route>
               <Route path="/show/:id">
                 <ShowPage/>
+              </Route>
+              <Route path="/episode/:id">
+                <EpisodePage/>
               </Route>
               <Route path="/episode/:id">
                 <AlbumPage />

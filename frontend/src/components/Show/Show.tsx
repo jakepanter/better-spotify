@@ -31,7 +31,6 @@ export default function Show(props: IProps) {
         ).then((res) => res.json());
 
         setShow(data);
-        console.log("hallo")
         // Save if tracks are saved
         /*
         const saved: UsersSavedShowsResponse = await fetchIsSavedData(
