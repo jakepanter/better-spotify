@@ -7,6 +7,7 @@ import { API_URL } from '../../utils/constants';
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import {Link} from "react-router-dom";
 import "./Releases.scss";
+import {formatTimeDiff} from "../../utils/functions";
 
 const limit = 24;
 let country: string;
@@ -67,13 +68,13 @@ export default function Releases() {
                 )}
                 <span className={"CardTitle"}>{album.name}</span>
                 <span className={"CardArtist"}>{album.artists.map((a) => a.name).join(", ")}</span>
+                <span className={"CardAddedAt"}>{formatTimeDiff(new Date(album.release_date).getTime(), Date.now())}</span>
             </Link>
         );
     });
 
     return (
         <div className={'Releases'}>
-            <h2 className={'Header'}>Albums</h2>
             <div className={'Content'} onScroll={onScroll}
             >
                 <div className={'CoverList'}>{releasedAlbums}</div>

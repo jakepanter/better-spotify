@@ -12,6 +12,7 @@ import "../../cards.scss";
 import {API_URL} from "../../utils/constants";
 import {NavLink, Link} from "react-router-dom";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
+import {formatTimeDiff} from "../../utils/functions";
 
 interface IProps {
 }
@@ -150,8 +151,9 @@ class Discover extends Component<IProps, IState> {
                         }}>
                         </div>) :
                             ( <CoverPlaceholder/>)}
-                        <span className="title">{newReleasedAlbum.name}</span>
+                        <span className={"title"}>{newReleasedAlbum.name}</span>
                         <span className={"artists-name"}>{newReleasedAlbum.artists.map((a) => a.name).join(", ")}</span>
+                        <span className={"added-at"}>{formatTimeDiff(new Date(newReleasedAlbum.release_date).getTime(), Date.now())}</span>
                     </Link>
                 </li>
             );
