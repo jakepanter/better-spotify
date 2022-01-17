@@ -1,5 +1,5 @@
 import "./TrackList.scss";
-import {  AlbumObjectSimplified ,SavedTrackObject, TrackObjectFull } from "spotify-types";
+import { SavedTrackObject, TrackObjectFull } from "spotify-types";
 import { AlbumTrack } from "../Album/Album";
 import { PlaylistTrack } from "../Playlist/Playlist";
 import TrackContextMenuWrapper from "../TrackContextMenu/TrackContextMenuWrapper";
@@ -47,12 +47,6 @@ type Props = {
     }| {
     type: "songhistory";
     tracks: SongHistoryTrack[];
-    loadMoreCallback: () => void;
-    fullyLoaded: boolean;
-    id_tracklist: string;
-}| {
-    type: "releases";
-    tracks: AlbumObjectSimplified[];
     loadMoreCallback: () => void;
     fullyLoaded: boolean;
     id_tracklist: string;
@@ -146,7 +140,7 @@ function TrackList(props: Props) {
   */
 
   const isTrackSelected = (
-    track: TrackObjectFull | AlbumTrack | AlbumObjectSimplified,
+    track: TrackObjectFull | AlbumTrack,
     index: number
   ) => {
     const trackUniqueId = `${track.uri}-${index}`;
@@ -455,51 +449,6 @@ function TrackList(props: Props) {
                                 type={type}
                                 liked={item.is_saved}
                                 tags={tagList}
-                            />
-                        );
-                    })}
-                    {!fullyLoaded ? (
-                        <div className={"PlaylistLoader"}>
-                            <div className={"loader"} />
-                        </div>
-                    ) : (
-                        <></>
-                    )}
-                </div>
-            </div>
-        )}
-
-        {type === "releases" && (
-            <div
-                className={`Tracklist ${sizeClass}`}
-                onScroll={(e: React.UIEvent<HTMLDivElement>) =>
-                    scrollHandler(e, loadMoreCallback)
-                }
-                ref={container}
-            >
-                <div className={"TableHeader TableRow"}>
-                    <div className={"TableCell TableCellArtwork"} />
-                    <div className={"TableCell TableCellAlbum"}>Album</div>
-                    <div className={"TableCell TableCellArtist"}>Artist</div>
-                    <div className={"TableCell TableCellAddedAt"}>Added</div>
-                </div>
-                <div className={"TableBody"}>
-                    {props.tracks.map((item, index) => {
-                        const  track  = item;
-                        return (
-                            <TrackListItem
-                                track={track}
-                                name={track.name}
-                                artists={track.artists}
-                                album = {track}
-                                added_at={track.release_date}
-                                key={type + "-track-" + track.id + "-" + index}
-                                listIndex={index}
-                                selected={isTrackSelected(track, index)}
-                                onSelectionChange={handleSelectionChange}
-                                onContextMenuOpen={handleContextMenuOpen}
-                                id_tracklist={''}
-                                type={type}
                             />
                         );
                     })}

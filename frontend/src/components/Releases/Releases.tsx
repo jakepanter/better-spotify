@@ -4,47 +4,79 @@ import {
     AlbumObjectSimplified
 } from "spotify-types";
 import { API_URL } from '../../utils/constants';
-import TrackList from "../TrackList/TrackList";
+import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
+import {Link} from "react-router-dom";
+import "./Releases.scss";
 
-const limit = 20;
+const limit = 24;
+let country: string;
 
 export default function Releases() {
-    // The list of tracks of the album
-    const [tracks, setTracks] = useState<AlbumObjectSimplified[]>([]);
-    // The current offset for fetching new tracks
+    // The list of releases (albums)
+    const [releases, setReleases] = useState<ListOfNewReleasesResponse>();
+    // The list of releases (albums)
+    const [albums, setAlbums] = useState<AlbumObjectSimplified[]>([]);
     const [offset, setOffset] = useState<number>(0);
-    // Total count of tracks
-    const [total, setTotal] = useState<number>(-1);
-
-    async function fetchTrackData(newOffset: number) {
-        // Only fetch if there are tracks left to fetch
-        if (total >= 0 && total <= offset) return;
-
-        //get users country
-        const me = await fetch(
-            `${API_URL}api/spotify/me`
-        ).then((res) => res.json());
-        const country = me.country;
-
-        const data: ListOfNewReleasesResponse = await fetch(
-            `${API_URL}api/spotify/browse/new-releases?country=${country}&offset=${newOffset}&limit=${limit}`
-        ).then((res) => res.json());
-        // Save new tracks
-        setTracks((oldTracks) => [...oldTracks, ...data.albums.items]);
-
-        if (total < 0) {
-            setTotal(data.albums.total);
-        }
-    }
 
     // Fetch more album tracks if necessary
     useEffect(() => {
         fetchTrackData(offset);
     }, [offset]);
 
-    if (!tracks) return <p>loading...</p>;
+    async function fetchTrackData(offset: number) {
+        //get users country
+        const me = await fetch(
+            `${API_URL}api/spotify/me`
+        ).then((res) => res.json());
+        country = me.country;
+
+        const data: ListOfNewReleasesResponse = await fetch(`${API_URL}api/spotify/browse/new-releases?limit=${limit}&country=${country}&offset=${offset}`).then((res) => res.json());
+        setReleases(data);
+        // Save new tracks
+        const arr: AlbumObjectSimplified[] = [...albums, ...data.albums.items];
+        setAlbums(arr);
+    }
+
+
+
+    //fetch next albums when you reach the bottom of the current list
+    const onScroll = (e: any) => {
+        const bottom =
+            e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+        if (bottom && releases && offset !== releases.albums.total) {
+            const limit = releases.albums.limit;
+            const offset = Number(releases.albums.offset) + Number(limit);
+            setOffset(offset);
+        }
+    };
+
+    if (!releases || !albums) return <p>loading...</p>;
+    const releasedAlbums = albums.map((album)=>{
+        return(
+            <Link to={`/album/${album.id}`}
+                  className={'Card'}
+                  key={album.id}
+            >
+                {album.images.length > 0 ? (
+                    <div
+                        className={"CardCover"}
+                        style={{ backgroundImage: `url(${album.images[0].url}` }} key={album.id}
+                    />
+                ) : (
+                    <CoverPlaceholder />
+                )}
+                <span className={"CardTitle"}>{album.name}</span>
+                <span className={"CardArtist"}>{album.artists.map((a) => a.name).join(", ")}</span>
+            </Link>
+        );
+    });
 
     return (
-        <TrackList fullyLoaded={total <= tracks.length} loadMoreCallback={() => setOffset((currentOffset) => currentOffset + limit)} type={"releases"} tracks={tracks} id_tracklist={''} />
-    );
+        <div className={'Releases'}>
+            <h2 className={'Header'}>Albums</h2>
+            <div className={'Content'} onScroll={onScroll}
+            >
+                <div className={'CoverList'}>{releasedAlbums}</div>
+            </div>
+        </div> );
 }
