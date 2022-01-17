@@ -2,37 +2,39 @@ import React, { useEffect, useState } from "react";
 import { EpisodeObjectFull, SingleEpisodeResponse } from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
-import "./Episode.scss"
+import "./Episode.scss";
+
 
 interface IProps {
-    id: string;
+  id: string;
 }
 
 export default function Episode(props: IProps) {
-    const { id } = props;
-    const [episode, setEpisode] = useState<EpisodeObjectFull>();
-    
-    async function fetchEpisodeData() {
-        const data: SingleEpisodeResponse = await fetch(
-            `${API_URL}api/spotify/episode/${id}`        
-        ).then((res) => res.json());
+  const { id } = props;
+  const [episode, setEpisode] = useState<EpisodeObjectFull>();
 
-        setEpisode(data);
-    }
+  async function fetchEpisodeData() {
+    const data: SingleEpisodeResponse = await fetch(
+      `${API_URL}api/spotify/episode/${id}`
+    ).then((res) => res.json());
 
-    useEffect(() => {
-        fetchEpisodeData();
-    }, [id]);
+    setEpisode(data);
+  }
 
-    if(!episode) return <p>loading...</p>;
+  useEffect(() => {
+    fetchEpisodeData();
+  }, [id]);
 
-    return <div className={"Playlist"}>
+  if (!episode) return <p>loading...</p>;
+
+  return (
+    <div className={"Playlist"}>
       <div className={"PlaylistHeader PlaylistHeaderFull"}>
         <div className={"PlaylistHeaderCover"}>
           {episode.images !== undefined ? (
             <img src={episode.images[1].url} alt={"Album Cover"} />
           ) : (
-            <CoverPlaceholder/>
+            <CoverPlaceholder />
           )}
         </div>
         <div className={"PlaylistHeaderMeta"}>
@@ -42,18 +44,20 @@ export default function Episode(props: IProps) {
             by {episode.show.publisher}
           </p>
           <p>
-            {episode.show.name} 
+            {episode.show.name}
           </p>
         </div>
         <div className={"PlaylistHeaderFilter"}>{/* Filter */}</div>
       </div>
       <div className="EpisodeDescription">
+        <h4>Description</h4>
         {episode.description}
       </div>
-      
-    )
-  ) : (
-    <></>
+
+      )
+      ) : (
+      <></>
+      )
+    </div>
   )
-  </div>
 }

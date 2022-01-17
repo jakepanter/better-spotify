@@ -2,14 +2,24 @@
 
 .EpisodeDescription{
     display: flex;
-    height: 100%;
+    flex-direction: column;
     color: $gray-dark;
-    //color: $color-default;
     border-top: 1px solid rgba(205, 206, 205, 0.11);
-    padding-top: 32px;
-    font-size: $fz-h5;    
+    padding: 32px;
+    font-size: $fz-h6;  
+    opacity: 0.8;  
+    line-height: 140%;
+
+    h4 {
+        padding-bottom: 16px;
+        text-transform: none;
+
+      }
 }
 
-.PlaylistHeaderCover{
-    width: unset;
+.PlaylistHeaderCover {
+    img{
+        width: 123px;
+    }
 }
+
