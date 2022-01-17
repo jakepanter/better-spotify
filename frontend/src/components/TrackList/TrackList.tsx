@@ -421,10 +421,11 @@ function TrackList(props: Props) {
 
         {type === "songhistory" && (
             <div
-                className={"Tracklist"}
+                className={`Tracklist ${sizeClass}`}
                 onScroll={(e: React.UIEvent<HTMLDivElement>) =>
                     scrollHandler(e, loadMoreCallback)
                 }
+                ref={container}
             >
                 <div className={"TableHeader TableRow"}>
                     <div className={"TableCell TableCellArtwork"} />
@@ -470,10 +471,11 @@ function TrackList(props: Props) {
 
         {type === "releases" && (
             <div
-                className={"Tracklist"}
+                className={`Tracklist ${sizeClass}`}
                 onScroll={(e: React.UIEvent<HTMLDivElement>) =>
                     scrollHandler(e, loadMoreCallback)
                 }
+                ref={container}
             >
                 <div className={"TableHeader TableRow"}>
                     <div className={"TableCell TableCellArtwork"} />
