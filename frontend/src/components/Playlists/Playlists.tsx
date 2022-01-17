@@ -58,40 +58,37 @@ class Playlists extends Component<IProps, IState> {
     if (this.state.results.length === 0) return <p>loading...</p>;
     const playlists = this.state.results.map((playlist) => {
       return (
-        <li className={"column"} key={playlist.id}>
-          <Link to={`/playlist/${playlist.id}`}>
-            {playlist.images.length > 0 ? (
-              <div
-                className={"cover"}
-                style={{ backgroundImage: `url(${playlist.images[0].url})` }}
-              />
-            ) : (
-              <CoverPlaceholder className="cover" />
-            )}
-            <span className={"title"}>{playlist.name}</span>
-            <span className={"artists-name"}>
-              by {playlist.owner.display_name}
-            </span>
-          </Link>
-        </li>
+        <Link to={`/playlist/${playlist.id}`}
+              className={'Card'}
+              key={playlist.id}
+        >
+          {playlist.images.length > 0 ? (
+            <div
+              className={"CardCover"}
+              style={{ backgroundImage: `url(${playlist.images[0].url})` }}
+            />
+          ) : (
+            <CoverPlaceholder className="CardCover" />
+          )}
+          <span className={"CardTitle"}>{playlist.name}</span>
+          <span className={"CardArtist"}>{playlist.owner.display_name}</span>
+        </Link>
       );
     });
 
     return (
-      <div style={{ overflow: "hidden auto" }}>
-          <h2>
-        <span>
-            My Playlists
-          <button className="add-button" onClick={this.handleCreateNewPlaylist}>
-            <span className="material-icons">add</span>
-            <span className="text">New Playlist</span>
-          </button>
-        </span>
-            </h2>
-        <div className={"overview"}>
-          <ul className={"overview-items"}>{playlists}</ul>
-        </div>
+    <div className={'Playlists'}>
+      <h2 className={'Header'}>
+        Playlists
+        <button className="add-button" onClick={this.handleCreateNewPlaylist}>
+          <span className="material-icons">add</span>
+          <span className="text">New Playlist</span>
+        </button>
+      </h2>
+      <div className={'Content'}>
+        <div className={'CoverList'}>{playlists}</div>
       </div>
+    </div>
     );
   }
 }
