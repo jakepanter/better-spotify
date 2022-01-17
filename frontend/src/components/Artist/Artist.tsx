@@ -1,8 +1,10 @@
 import React, {Component} from "react";
 import {
+    TrackObjectFull,
     SingleArtistResponse,
     ArtistObjectFull,
     AlbumObjectSimplified,
+    ArtistsTopTracksResponse,
     ArtistsAlbumsResponse
 } from "spotify-types";
 import {API_URL} from "../../utils/constants";
@@ -10,7 +12,7 @@ import {Link, NavLink} from "react-router-dom";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import "./Artist.scss"
 import "../../cards.scss";
-import Album from "../Album/Album";
+//import Album from "../Album/Album";
 
 
 interface IProps {
@@ -19,6 +21,7 @@ interface IProps {
 
 interface IState {
     artist: ArtistObjectFull;
+    artistTopTracks: TrackObjectFull[];
     albums: AlbumObjectSimplified[];
     singles: AlbumObjectSimplified[];
     appearsOn: AlbumObjectSimplified[];
@@ -35,6 +38,7 @@ class Artist extends Component<IProps, IState> {
         super(props);
         this.state = {
             artist: {} as ArtistObjectFull,
+            artistTopTracks: [],
             albums: [],
             singles: [],
             appearsOn: [],
@@ -56,6 +60,12 @@ class Artist extends Component<IProps, IState> {
         ).then((res) => res.json());
         this.setState({artist: artistData});
 
+        //fetch artist top tracks
+        const topTracks: ArtistsTopTracksResponse = await fetch(
+            `${API_URL}api/spotify/artist/${this.props.id}/top-tracks`
+        ).then((res)=>res.json());
+        this.setState({artistTopTracks: topTracks.tracks});
+        console.log(this.state.artistTopTracks);
 
         // fetch albums
         const allAlbums: ArtistsAlbumsResponse = await fetch(
@@ -65,7 +75,6 @@ class Artist extends Component<IProps, IState> {
         if(allAlbums === undefined || !(allAlbums.items.length > 0)) {
             this.setState({showAlbums: false});
         }
-
 
 
         // fetch singles
@@ -271,7 +280,7 @@ class Artist extends Component<IProps, IState> {
                 </div>
                 {/*Discography*/}
                 {/* TODO condition ändern*/}
-                {this.state.showDiscography && albums.length > 0 ? (
+                {/*{this.state.showDiscography && albums.length > 0 ? (
                         <div className={"section"} key={"discography"}>
                             <div className={"header"}>
                                 <h2>Discography
@@ -282,7 +291,7 @@ class Artist extends Component<IProps, IState> {
                             <Album id={this.state.albums[0].id} headerStyle={"none"}/>
                         </div>)
                     : (<></>)}
-
+*/}
                 {/*Albums*/}
                 {this.state.showAlbums && albums.length > 0 ? (
                         <div className={"section"} key={"album"}>

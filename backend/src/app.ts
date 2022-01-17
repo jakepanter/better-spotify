@@ -200,6 +200,14 @@ export default class App {
       return res.json(albums);
     });
 
+    this.server.get('/api/spotify/artist/:artistId/top-tracks', async (req: Request, res: Response) => {
+      const artistId = req.params.artistId as string;
+
+      const country = req.query?.country as string ?? "DE";
+      const topTracks = await this.spotifyService.getArtistTopTracks(artistId, country);
+      return res.json(topTracks);
+    });
+
     this.server.get('/api/spotify/playlist/:playlistId/tracks', async (req: Request, res: Response) => {
       const limit = Number(req.query?.limit ?? 50);
       const offset = Number(req.query?.offset ?? 0);

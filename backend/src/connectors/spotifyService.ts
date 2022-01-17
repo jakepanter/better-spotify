@@ -235,6 +235,11 @@ export default class SpotifyService {
     return albums.body;
   }
 
+  getArtistTopTracks = async (artistId: string, country: string) => {
+    const topTracks = await this.spotifyApi.getArtistTopTracks(artistId, country);
+    return topTracks.body;
+  }
+
   setVolume = async (volume: number) => {
     const result = await this.spotifyApi.setVolume(volume);
     return result;
