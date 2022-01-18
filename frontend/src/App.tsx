@@ -6,7 +6,6 @@ import Albums from "./components/Albums/Albums";
 import Playlists from "./components/Playlists/Playlists";
 import SavedTracks from "./components/SavedTracks/SavedTracks";
 import Player from "./components/Player/Player";
-import { API_URL } from "./utils/constants";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Topbar from "./components/Topbar/Topbar";
@@ -16,24 +15,14 @@ import SearchPageCustom from "./components/SearchPage/Custom/SearchPageCustom";
 import Discover from "./components/Discover/Discover";
 import SongHistory from "./components/SongHistory/SongHistory";
 import Releases from "./components/Releases/Releases";
-
 import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import SettingsPage from "./pages/SettingsPage/SettingsPage";
 import TagTracklistPage from "./pages/TagTracklistPage/TagTracklistPage";
 import RelatedArtistsPage from "./pages/RelatedArtistsPage/RelatedArtistsPage";
 import AuthorizePage from "./components/AuthorizePage/AuthorizePage";
-
 import AppContext, { ContextMenu } from "./AppContext";
 
-function authorize() {
-  fetch(`${API_URL}api/spotify/get-auth-url`)
-    .then((res) => res.text())
-    .then((url) => {
-      console.log(url);
-      window.location.href = url;
-    });
-}
 
 function App() {
   const [isAuthorized, setIsAuthorized] = useState(false);
