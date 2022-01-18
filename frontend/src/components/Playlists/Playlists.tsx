@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import AppContext from "../../AppContext";
@@ -67,54 +68,47 @@ export default function Playlists() {
   };
 
   //fetch next playlists when you reach the bottom of the current list
-  const onScroll = (e: any) => {
-    const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-    if (bottom && playlists) {
-      const limit = playlists.limit;
-      const offset = playlists.offset + limit;
-      const url = `${API_URL}api/spotify/playlists?offset=${offset}&limit=${limit}`;
-      setNext(url);
-    }
-  };
+  // const onScroll = (e: any) => {
+  //   const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+  //   if (bottom && playlists) {
+  //     const limit = playlists.limit;
+  //     const offset = playlists.offset + limit;
+  //     const url = `${API_URL}api/spotify/playlists?offset=${offset}&limit=${limit}`;
+  //     setNext(url);
+  //   }
+  // };
 
   if (!playlists || !items) return <p>loading...</p>;
 
   const myPlaylists = items.map((playlist) => {
     return (
-      <li
-        className={"column"}
-        key={playlist.id}
-        onContextMenu={(e) => handleRightClick(e, playlist.id)}
-      >
-        <Link to={`/playlist/${playlist.id}`}>
-          {playlist.images.length > 0 ? (
-            <div
-              className={"cover"}
-              style={{ backgroundImage: `url(${playlist.images[0].url})` }}
-            />
-          ) : (
-            <CoverPlaceholder className="cover" />
-          )}
-          <span className={"title"}>{playlist.name}</span>
-          <span className={"artists-name"}>by {playlist.owner.display_name}</span>
-        </Link>
-      </li>
+      <Link to={`/playlist/${playlist.id}`} className={"Card"} key={playlist.id}>
+        {playlist.images.length > 0 ? (
+          <div
+            onContextMenu={(e) => handleRightClick(e, playlist.id)}
+            className={"CardCover"}
+            style={{ backgroundImage: `url(${playlist.images[0].url})` }}
+          />
+        ) : (
+          <CoverPlaceholder className="CardCover" />
+        )}
+        <span className={"CardTitle"}>{playlist.name}</span>
+        <span className={"CardArtist"}>{playlist.owner.display_name}</span>
+      </Link>
     );
   });
 
   return (
-    <div style={{ overflow: "hidden auto" }}>
-      <h2>
-        <span>
-          My Playlists
-          <button className="add-button" onClick={handleCreateNewPlaylist}>
-            <span className="material-icons">add</span>
-            <span className="text">New Playlist</span>
-          </button>
-        </span>
+    <div className={"Playlists"}>
+      <h2 className={"Header"}>
+        Playlists
+        <button className="add-button" onClick={handleCreateNewPlaylist}>
+          <span className="material-icons">add</span>
+          <span className="text">New Playlist</span>
+        </button>
       </h2>
-      <div className={"overview"} onScroll={onScroll}>
-        <ul className={"overview-items"}>{myPlaylists}</ul>
+      <div className={"Content"}>
+        <div className={"CoverList"}>{myPlaylists}</div>
       </div>
     </div>
   );

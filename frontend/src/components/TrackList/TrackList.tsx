@@ -1,5 +1,5 @@
 import "./TrackList.scss";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { SavedTrackObject, TrackObjectFull } from "spotify-types";
 import { AlbumTrack } from "../Album/Album";
 import { PlaylistTrack } from "../Playlist/Playlist";
@@ -136,12 +136,23 @@ function TrackList(props: Props) {
   // Tags
   const tags = TagsSystem.getTags();
 
+  // Hiding tracklist information
+  const container = useRef<HTMLDivElement>(null);
+  let sizeClass = "TracklistSmall";
+  const width = container?.current?.clientWidth ?? 0;
+  if (width > 1000) {
+    sizeClass = "TracklistLarge";
+  } else if (width > 512) {
+    sizeClass = "TracklistMedium";
+  }
+
   return (
     <>
       {type === "album" && (
         <div
-          className={"Tracklist"}
+          className={`Tracklist ${sizeClass}`}
           onScroll={(e: React.UIEvent<HTMLDivElement>) => scrollHandler(e, loadMoreCallback)}
+          ref={container}
         >
           <div className={"TableHeader TableRow"}>
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
@@ -189,8 +200,9 @@ function TrackList(props: Props) {
 
       {type === "playlist" && (
         <div
-          className={"Tracklist"}
+          className={`Tracklist ${sizeClass}`}
           onScroll={(e: React.UIEvent<HTMLDivElement>) => scrollHandler(e, loadMoreCallback)}
+          ref={container}
         >
           <div className={"TableHeader TableRow"}>
             <div className={"TableCell TableCellArtwork"} />
@@ -242,7 +254,7 @@ function TrackList(props: Props) {
       )}
 
       {type === "search" && (
-        <div className={"Tracklist"}>
+        <div className={`Tracklist ${sizeClass}`} ref={container}>
           <div className={"TableHeader TableRow"}>
             <div className={"TableCell TableCellArtwork"} />
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
@@ -290,8 +302,9 @@ function TrackList(props: Props) {
 
       {type === "saved" && (
         <div
-          className={"Tracklist"}
+          className={`Tracklist ${sizeClass}`}
           onScroll={(e: React.UIEvent<HTMLDivElement>) => scrollHandler(e, loadMoreCallback)}
+          ref={container}
         >
           <div className={"TableHeader TableRow"}>
             <div className={"TableCell TableCellArtwork"} />
@@ -342,8 +355,9 @@ function TrackList(props: Props) {
 
       {type === "tags" && (
         <div
-          className={"Tracklist"}
+          className={`Tracklist ${sizeClass}`}
           onScroll={(e: React.UIEvent<HTMLDivElement>) => scrollHandler(e, loadMoreCallback)}
+          ref={container}
         >
           <div className={"TableHeader TableRow"}>
             <div className={"TableCell TableCellArtwork"} />

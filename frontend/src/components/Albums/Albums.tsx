@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { UsersSavedAlbumsResponse, SavedAlbumObject } from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import "../../cards.scss";
+import "./Albums.scss";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import AppContext from "../../AppContext";
 
@@ -51,32 +52,31 @@ export default function Albums() {
   if (!albums || !items) return <p>loading...</p>;
   const savedAlbums = items.map((item) => {
     return (
-      <li
-        className={"column"}
+      <Link
+        to={`/album/${item.album.id}`}
+        className={"Card"}
         key={item.album.id}
         onContextMenu={(e) => handleRightClick(e, item.album.id)}
       >
-        <Link to={`/album/${item.album.id}`}>
-          {item.album.images.length > 0 ? (
-            <div
-              className={"cover"}
-              style={{ backgroundImage: `url(${item.album.images[0].url}` }}
-            />
-          ) : (
-            <CoverPlaceholder />
-          )}
-          <span className={"title"}>{item.album.name}</span>
-          <span className={"artists-name"}>{item.album.artists[0].name}</span>
-        </Link>
-      </li>
+        {item.album.images.length > 0 ? (
+          <div
+            className={"CardCover"}
+            style={{ backgroundImage: `url(${item.album.images[0].url}` }}
+          />
+        ) : (
+          <CoverPlaceholder />
+        )}
+        <span className={"CardTitle"}>{item.album.name}</span>
+        <span className={"CardArtist"}>{item.album.artists[0].name}</span>
+      </Link>
     );
   });
 
   return (
-    <div style={{ overflow: "hidden auto" }}>
-      <h2>Albums</h2>
-      <div className={"overview"} onScroll={onScroll}>
-        <ul className={"overview-items"}>{savedAlbums}</ul>
+    <div className={"Albums"}>
+      <h2 className={"Header"}>Albums</h2>
+      <div className={"Content"} onScroll={onScroll}>
+        <div className={"CoverList"}>{savedAlbums}</div>
       </div>
     </div>
   );

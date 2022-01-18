@@ -91,7 +91,7 @@
         position: absolute;
         content: "";
         width: 40px;
-        left: 0%;
+        left: 0;
         top: 50%;
         transform: translate(0%, -50%);
         pointer-events: none;
@@ -160,6 +160,26 @@
       display: flex;
       flex: 0.5 0 0;
       flex-flow: row nowrap;
+    }
+  }
+
+  &Small {
+    .TableCell {
+      &Album,
+      &AddedAt,
+      &Liked,
+      &Tags {
+        display: none;
+      }
+    }
+  }
+
+  &Medium {
+    .TableCell {
+      &AddedAt,
+      &Tags {
+        display: none;
+      }
     }
   }
 }
