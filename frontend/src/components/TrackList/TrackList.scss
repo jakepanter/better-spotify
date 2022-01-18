@@ -16,7 +16,6 @@
     color: $color-default
   }
 
-
   .TableRow {
     padding: 0.5rem;
     align-items: center;
@@ -128,7 +127,9 @@
     }
 
     &Artist {
-      color: transparentize($color-default, 0.2);
+      display: flex;
+      flex: 1 0 0;
+      flex-flow: column nowrap;
     }
 
     &Album {

@@ -251,8 +251,52 @@ export default class App {
       return res.json(result);
     });
 
-    // Serve static frontend files
-    this.server.get('*', (req: Request, res: Response) => res.sendFile(path.join(`${__dirname}/../../frontend/build`)));
+    this.server.get('/api/spotify/player/recently-played', async (req: Request, res: Response) => {
+      // only 'before' is specified because we want to display the recently played tracks from the current timestamp
+      const before: any = req.query?.before ?? Date.now();
+      const limit: any = req.query?.limit ?? 20;
+      const recentTracks = await this.spotifyService.getMyRecentlyPlayedTracks(before, limit);
+      return res.json(recentTracks);
+    });
+
+    this.server.get('/api/spotify/browse/new-releases', async (req: Request, res: Response) => {
+      const country: any = req.query?.country as string ?? undefined;
+      const limit: any = Number(req.query?.limit ?? 20);
+      const offset: any = Number(req.query?.offset ?? 0);
+      const newRealeses = await this.spotifyService.getNewReleases(country,limit,offset);
+      return res.json(newRealeses);
+
+    });
+
+    this.server.get('/api/spotify/me/top/artists', async (req: Request, res: Response) => {
+      const limit: number = Number(req.query?.limit ?? 20);
+      const offset: number = Number(req.query?.offset ?? 0);
+      const time_range: string = req.query?.time_range as string ?? "medium_term";
+      const topArtists = await this.spotifyService.getMyTopArtists(limit, offset, time_range);
+      return res.json(topArtists);
+    });
+
+    // fetch artist
+    this.server.get('/api/spotify/artists/:artistId', async (req: Request, res: Response) => {
+      const artistId: string = req.params.artistId as string;
+      const artists = await this.spotifyService.getArtist(artistId);
+      return res.json(artists);
+    });
+
+    this.server.get('/api/spotify/artists/:artistId/related-artists', async (req: Request, res: Response) => {
+      const artistId: string = req.params.artistId as string;
+      const artists = await this.spotifyService.getArtistRelatedArtists(artistId);
+      return res.json(artists);
+    });
+
+      this.server.put('/api/spotify/me/player/play', async (req: Request, res: Response) => {
+          const result = await this.spotifyService.play(req.body);
+          return result;
+      });
+
+      //This must be before this.server.listen(...)
+      // Serve static frontend files
+      this.server.get('*', (req: Request, res: Response) => res.sendFile(path.join(`${__dirname}/../../frontend/build`)));
 
     // Start
     this.server.listen(Config.general.port, () => {

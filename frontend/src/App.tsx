@@ -15,6 +15,10 @@ import SettingsPage from "./pages/SettingsPage/SettingsPage";
 import TagTracklistPage from "./pages/TagTracklistPage/TagTracklistPage";
 import SearchPage from "./components/SearchPage/SearchPage";
 import SearchPageCustom from "./components/SearchPage/Custom/SearchPageCustom";
+import Discover from "./components/Discover/Discover";
+import SongHistory from "./components/SongHistory/SongHistory";
+import Releases from "./components/Releases/Releases";
+import RelatedArtistsPage from "./pages/RelatedArtistsPage/RelatedArtistsPage";
 
 function authorize() {
   fetch(`${API_URL}api/spotify/get-auth-url`)
@@ -95,6 +99,20 @@ function App() {
               <Route path="/customsearch/:type/:search">
                 <SearchPageCustom/>
               </Route>
+                <Route path="/discover">
+                    <Discover/>
+                </Route>
+                <Route path="/song-history">
+                    <h1>Song History</h1>
+                    <SongHistory/>
+                </Route>
+                <Route path="/new-releases">
+                    <h1>New Releases</h1>
+                    <Releases/>
+                </Route>
+                <Route path="/related-artists/:id">
+                    <RelatedArtistsPage />
+                </Route>
             </Switch>
             <Player />
           </div>
