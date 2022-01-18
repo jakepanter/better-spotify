@@ -157,6 +157,11 @@ export default class SpotifyService {
     return track.body;
   }
 
+  getArtist = async (id: string) => {
+    const track = await this.spotifyApi.getArtist(id);
+    return track.body;
+  }
+
   getTracks = async (ids: string[]) => {
     const tracks = await this.spotifyApi.getTracks(ids);
     return tracks.body;
@@ -202,7 +207,8 @@ export default class SpotifyService {
 
   addTracksToPlaylist = async (playlistId: string, tracks: string[]) => {
     // TODO: error handling
-    await this.spotifyApi.addTracksToPlaylist(playlistId, tracks);
+    const res = await this.spotifyApi.addTracksToPlaylist(playlistId, tracks);
+    return res.body;
   }
 
   getPlaylist = async (playlistId: string, fields: string) => {
@@ -214,6 +220,21 @@ export default class SpotifyService {
     const options: any = { limit, offset };
     const album = await this.spotifyApi.getPlaylistTracks(id, options);
     return album.body;
+  }
+
+  unfollowPlaylist = async (playlistId: string) => {
+    const res = await this.spotifyApi.unfollowPlaylist(playlistId);
+    return res.body;
+  }
+
+  editPlaylistDetails = async (playlistId: string, options: Object) => {
+    const res = await this.spotifyApi.changePlaylistDetails(playlistId, options);
+    return res.body;
+  }
+
+  addPlaylistImage = async (playlistId: string, imgData: string) => {
+    const res = await this.spotifyApi.uploadCustomPlaylistCoverImage(playlistId, imgData);
+    return res.body;
   }
 
   createPlaylist = async (
@@ -230,27 +251,22 @@ export default class SpotifyService {
   }
 
   // only 'before' is specified because we want to display the recently played tracks from the current timestamp
-  //we do not need the option 'after' in our case
-  getMyRecentlyPlayedTracks = async (before:number, limit:number) => {
-    const options: any = {limit, before};
+  // we do not need the option 'after' in our case
+  getMyRecentlyPlayedTracks = async (before: number, limit: number) => {
+    const options: any = { limit, before };
     const result = await this.spotifyApi.getMyRecentlyPlayedTracks(options);
     return result.body;
   }
 
-  getNewReleases = async (country: string, limit: number, offset:number) => {
-    const options: any = {country, limit, offset};
+  getNewReleases = async (country: string, limit: number, offset: number) => {
+    const options: any = { country, limit, offset };
     const result = await this.spotifyApi.getNewReleases(options);
     return result.body;
   }
 
-  getMyTopArtists = async (limit: number, offset:number, time_range: string) => {
-    const options: any = {limit, offset, time_range};
+  getMyTopArtists = async (limit: number, offset: number, time_range: string) => {
+    const options: any = { limit, offset, time_range };
     const result = await this.spotifyApi.getMyTopArtists(options);
-    return result.body;
-  }
-
-  getArtist = async (artistId: string) => {
-    const result = await this.spotifyApi.getArtist(artistId);
     return result.body;
   }
 
@@ -258,7 +274,6 @@ export default class SpotifyService {
     const result = await this.spotifyApi.getArtistRelatedArtists(artistId);
     return result.body;
   }
-
 
   getAccessToken = async () => this.spotifyApi.getAccessToken();
 
