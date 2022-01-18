@@ -1,0 +1,29 @@
+@import './src/boilerplate.scss';
+
+.AuthorizePage {
+  width: 100vw;
+  height: 100vh;
+  backgroundImage:"./public/start-image.png";
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  @include columns($columns: 2, $margin-xl: 0rem, $margin: 0rem);
+  .column {
+    border-radius: 0px;
+    //background: green;
+
+    &:first-child {
+    //  background: red;
+    }
+  }
+
+
+}
+
+.AuthorizeButton {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1;
+}
+

@@ -19,15 +19,9 @@ import Discover from "./components/Discover/Discover";
 import SongHistory from "./components/SongHistory/SongHistory";
 import Releases from "./components/Releases/Releases";
 import RelatedArtistsPage from "./pages/RelatedArtistsPage/RelatedArtistsPage";
+import AuthorizePage from "./components/AuthorizePage/AuthorizePage";
 
-function authorize() {
-  fetch(`${API_URL}api/spotify/get-auth-url`)
-      .then((res) => res.text())
-      .then((url) => {
-        console.log(url);
-        window.location.href = url;
-      });
-}
+
 
 function App() {
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -47,11 +41,8 @@ function App() {
   }, []);
 
   if (!isAuthorized) {
-    //possible TODO: Login Page
     return (
-      <button className="button" onClick={authorize}>
-        Log in with Spotify
-      </button>
+        <AuthorizePage />
     );
   }
 
