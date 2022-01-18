@@ -12,11 +12,15 @@ import Topbar from "./components/Topbar/Topbar";
 import SearchPage from "./components/SearchPage/SearchPage";
 import ContextMenuWrapper from "./components/ContextMenu/ContextMenuWrapper";
 import SearchPageCustom from "./components/SearchPage/Custom/SearchPageCustom";
+import Discover from "./components/Discover/Discover";
+import SongHistory from "./components/SongHistory/SongHistory";
+import Releases from "./components/Releases/Releases";
 
 import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import SettingsPage from "./pages/SettingsPage/SettingsPage";
 import TagTracklistPage from "./pages/TagTracklistPage/TagTracklistPage";
+import RelatedArtistsPage from "./pages/RelatedArtistsPage/RelatedArtistsPage";
 
 import AppContext, { ContextMenu } from "./AppContext";
 
@@ -129,6 +133,20 @@ function App() {
               </Route>
               <Route path="/customsearch/:type/:search">
                 <SearchPageCustom />
+              </Route>
+              <Route path="/discover">
+                <Discover />
+              </Route>
+              <Route path="/song-history">
+                <h1>Song History</h1>
+                <SongHistory />
+              </Route>
+              <Route path="/new-releases">
+                <h1>New Releases</h1>
+                <Releases />
+              </Route>
+              <Route path="/related-artists/:id">
+                <RelatedArtistsPage />
               </Route>
             </Switch>
             <Player />

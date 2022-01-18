@@ -7,6 +7,7 @@ import TrackListItem from "../TrackListItem/TrackListItem";
 import AppContext from "../../AppContext";
 import TagsSystem from "../../utils/tags-system";
 import { TagsTrack } from "../TagTracklist/TagTracklist";
+import { SongHistoryTrack } from "../SongHistory/SongHistory";
 
 type Props =
   | {
@@ -41,6 +42,13 @@ type Props =
   | {
       type: "search";
       tracks: TrackObjectFull[];
+      loadMoreCallback: () => void;
+      fullyLoaded: boolean;
+      id_tracklist: string;
+    }
+  | {
+      type: "songhistory";
+      tracks: SongHistoryTrack[];
       loadMoreCallback: () => void;
       fullyLoaded: boolean;
       id_tracklist: string;
@@ -388,6 +396,58 @@ function TrackList(props: Props) {
                   id_tracklist={id_tracklist}
                   type={type}
                   liked={track.is_saved}
+                  tags={tagList}
+                />
+              );
+            })}
+            {!fullyLoaded ? (
+              <div className={"PlaylistLoader"}>
+                <div className={"loader"} />
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+      )}
+
+      {type === "songhistory" && (
+        <div
+          className={`Tracklist ${sizeClass}`}
+          onScroll={(e: React.UIEvent<HTMLDivElement>) => scrollHandler(e, loadMoreCallback)}
+          ref={container}
+        >
+          <div className={"TableHeader TableRow"}>
+            <div className={"TableCell TableCellArtwork"} />
+            <div className={"TableCell TableCellTitleArtist"}>Title</div>
+            <div className={"TableCell TableCellAlbum"}>Album</div>
+            <div className={"TableCell TableCellDuration"}>Duration</div>
+            <div className={"TableCell TableCellLiked"}>Liked</div>
+            <div className={"TableCell TableCellTags"}>Tags</div>
+          </div>
+          <div className={"TableBody"}>
+            {props.tracks.map((item, index) => {
+              const track = item.track as TrackObjectFull;
+              const tagList =
+                TagsSystem.getTagsOfElement(track.id).map((id) => ({
+                  id,
+                  ...tags.availableTags[id],
+                })) ?? [];
+              return (
+                <TrackListItem
+                  track={track}
+                  name={track.name}
+                  artists={track.artists}
+                  duration_ms={track.duration_ms}
+                  album={track.album}
+                  key={type + "-track-" + track.id + "-" + index}
+                  listIndex={index}
+                  selected={isTrackSelected(track, index)}
+                  onSelectionChange={handleSelectionChange}
+                  onContextMenuOpen={handleContextMenuOpen}
+                  id_tracklist={""}
+                  type={type}
+                  liked={item.is_saved}
                   tags={tagList}
                 />
               );

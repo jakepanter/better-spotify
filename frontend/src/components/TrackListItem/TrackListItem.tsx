@@ -17,8 +17,6 @@ import { TagWithId } from "../../utils/tags-system";
 import Button from "../Button/Button";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 
-import AppContext from "../../AppContext";
-
 type Body = {
   context_uri: string | undefined;
   position_ms: number | undefined;
@@ -29,7 +27,7 @@ type Body = {
 
 type Props = {
   track: TrackObjectFull | TrackObjectSimplified;
-  name: string;
+  name?: string;
   artists: ArtistObjectSimplified[];
   duration_ms: number;
   added_at?: string;
@@ -54,7 +52,6 @@ function TrackListItem(props: Props) {
   const [selected, setSelected] = useState<boolean>(props.selected);
   const [specialKey, setSpecialKey] = useState<String | null>(null);
   const [liked, setLiked] = useState<boolean>(!!props.liked);
-  const state = useContext(AppContext);
 
   const id_tracklist = props.id_tracklist;
   const type = props.type;
@@ -137,16 +134,6 @@ function TrackListItem(props: Props) {
       setLiked(false);
     }
   };
-  const handleAddToPlaylist = (e: any) => {
-    e.stopPropagation();
-    state.setContextMenu({
-      isOpen: true,
-      data: [trackUniqueId],
-      x: e.clientX,
-      y: e.clientY,
-      type: "addToPlaylist",
-    });
-  };
 
   return (
     <div
@@ -170,11 +157,17 @@ function TrackListItem(props: Props) {
           {track.artists.map((artist) => artist.name).join(", ")}
         </span>
       </div>
+
       {track.album !== undefined ? (
-        <div className={"TableCell TableCellAlbum"}>{track.album.name}</div>
+        <div className={"TableCell TableCellAlbum"}>
+          <Link to={`/album/${track.album.id}`} className={"albumLink"} key={trackUniqueId}>
+            {track.album.name}
+          </Link>
+        </div>
       ) : (
         <></>
       )}
+
       {track.added_at !== undefined ? (
         <div className={"TableCell TableCellAddedAt"}>
           {formatTimeDiff(new Date(track.added_at).getTime(), Date.now())}
@@ -182,6 +175,7 @@ function TrackListItem(props: Props) {
       ) : (
         <></>
       )}
+
       <div className={"TableCell TableCellDuration"}>{formatTimestamp(track.duration_ms)}</div>
       {track.liked !== undefined ? (
         <div className={"TableCell TableCellLiked"}>
@@ -203,14 +197,6 @@ function TrackListItem(props: Props) {
       ) : (
         <></>
       )}
-      <div className="TableCell TableCellActions">
-        <Button
-          simple
-          icon="playlist_add"
-          className="material-icons"
-          onClick={handleAddToPlaylist}
-        />
-      </div>
     </div>
   );
 }
