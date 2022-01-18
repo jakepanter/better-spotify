@@ -468,9 +468,12 @@ class Dashboard extends Component<IProps, IState> {
               </div>
             );
           })}
-          {tagTracklists.map((t) => <div key={t.id} className={'DashboardItem'}>
-            <TagTracklist id={t.id} headerStyle={'compact'}/>
-          </div>)}
+          {tagTracklists &&
+            tagTracklists.map((t) => (
+              <div key={t.id} className={"DashboardItem"}>
+                <TagTracklist id={t.id} headerStyle={"compact"} />
+              </div>
+            ))}
         </ResponsiveGridLayout>
       </div>
     );

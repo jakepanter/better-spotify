@@ -13,7 +13,7 @@
 
   .Link {
     text-decoration: none !important;
-    color: $color-default
+    color: $color-default;
   }
 
   .TableRow {
@@ -25,12 +25,15 @@
     width: 100%;
     transition: $transition-base;
 
-    &:hover {
+    &:hover:not(.TableHeader) {
+      user-select: none;
+      background-color: $color-secondary;
       color: $color-default;
       background-color: lighten($color-accent-dark, 5%);
 
       .TableCellArtwork {
-        &:before, &:after {
+        &:before,
+        &:after {
           visibility: visible;
         }
       }
@@ -83,7 +86,8 @@
       padding: 8px $spacer / 2 8px 0;
       position: relative;
 
-      &:before, &:after {
+      &:before,
+      &:after {
         position: absolute;
         content: "";
         width: 40px;
@@ -96,7 +100,7 @@
 
       &:before {
         content: "\e038";
-        font-family: 'Material Icons';
+        font-family: "Material Icons";
         font-size: 30px;
         z-index: 1;
         display: inline-block;
@@ -105,7 +109,7 @@
 
       &:after {
         height: 40px;
-        background: rgba($color-primary, .5);
+        background: rgba($color-primary, 0.5);
         border-radius: $border-radius;
       }
 
@@ -149,6 +153,10 @@
       flex: 0 0 90px;
     }
 
+    &Actions {
+      flex: 0 0 60px;
+    }
+
     &Tags {
       align-items: center;
       display: flex;
@@ -188,12 +196,12 @@
 
   &:before {
     content: "\e038";
-    font-family: 'Material Icons';
+    font-family: "Material Icons";
     width: 40px;
     display: inline-block;
     font-size: 30px;
     text-align: center;
     pointer-events: none;
-    color: rgba($white, .45);
+    color: rgba($white, 0.45);
   }
 }

@@ -130,6 +130,12 @@ export default class App {
       return res.json(data);
     });
 
+    this.server.get('/api/spotify/artist/:artistId', async (req: Request, res: Response) => {
+      const artistId = req.params.artistId as string;
+      const artist = await this.spotifyService.getArtist(artistId);
+      return res.json(artist);
+    });
+
     this.server.get('/api/spotify/album/:albumId', async (req: Request, res: Response) => {
       const albumId = req.params.albumId as string;
       const album = await this.spotifyService.getAlbum(albumId);
@@ -179,8 +185,8 @@ export default class App {
     this.server.post('/api/spotify/playlist/:playlistId/add', async (req: Request, res: Response) => {
       const { playlistId } = req.params;
       const tracks = req.body;
-      await this.spotifyService.addTracksToPlaylist(playlistId, tracks);
-      return res.status(200);
+      const response = await this.spotifyService.addTracksToPlaylist(playlistId, tracks);
+      return res.json(response);
     });
 
     this.server.get('/api/spotify/playlist/:playlistId/tracks', async (req: Request, res: Response) => {
@@ -191,7 +197,27 @@ export default class App {
       return res.json(album);
     });
 
-    this.server.put('/api/spotify/volume', async (req: Request, res: Response) => {
+    this.server.get('/api/spotify/playlist/:playlistId/unfollow', async (req: Request, res: Response) => {
+      const playlistId = req.params.playlistId as string;
+      const response = await this.spotifyService.unfollowPlaylist(playlistId);
+      return res.json(response);
+    });
+
+    this.server.post('/api/spotify/playlist/:playlistId/edit', async (req: Request, res: Response) => {
+      const playlistId = req.params.playlistId as string;
+      const options = req.body;
+      const response = await this.spotifyService.editPlaylistDetails(playlistId, options);
+      return res.json(response);
+    });
+
+    this.server.post('/api/spotify/playlist/:playlistId/image', async (req: Request, res: Response) => {
+      const playlistId = req.params.playlistId as string;
+      const imgData = req.body.image;
+      const response = await this.spotifyService.addPlaylistImage(playlistId, imgData);
+      return res.json(response);
+    });
+
+    this.server.get('/api/spotify/volume', async (req: Request, res: Response) => {
       const volume: any = req.query?.volume ?? 100;
       const result = await this.spotifyService.setVolume(volume);
       return res.json(result);
@@ -263,24 +289,16 @@ export default class App {
       const country: any = req.query?.country as string ?? undefined;
       const limit: any = Number(req.query?.limit ?? 20);
       const offset: any = Number(req.query?.offset ?? 0);
-      const newRealeses = await this.spotifyService.getNewReleases(country,limit,offset);
+      const newRealeses = await this.spotifyService.getNewReleases(country, limit, offset);
       return res.json(newRealeses);
-
     });
 
     this.server.get('/api/spotify/me/top/artists', async (req: Request, res: Response) => {
       const limit: number = Number(req.query?.limit ?? 20);
       const offset: number = Number(req.query?.offset ?? 0);
-      const time_range: string = req.query?.time_range as string ?? "medium_term";
+      const time_range: string = req.query?.time_range as string ?? 'medium_term';
       const topArtists = await this.spotifyService.getMyTopArtists(limit, offset, time_range);
       return res.json(topArtists);
-    });
-
-    // fetch artist
-    this.server.get('/api/spotify/artists/:artistId', async (req: Request, res: Response) => {
-      const artistId: string = req.params.artistId as string;
-      const artists = await this.spotifyService.getArtist(artistId);
-      return res.json(artists);
     });
 
     this.server.get('/api/spotify/artists/:artistId/related-artists', async (req: Request, res: Response) => {
@@ -289,14 +307,14 @@ export default class App {
       return res.json(artists);
     });
 
-      this.server.put('/api/spotify/me/player/play', async (req: Request, res: Response) => {
-          const result = await this.spotifyService.play(req.body);
-          return result;
-      });
+    this.server.put('/api/spotify/me/player/play', async (req: Request, res: Response) => {
+      const result = await this.spotifyService.play(req.body);
+      return result;
+    });
 
-      //This must be before this.server.listen(...)
-      // Serve static frontend files
-      this.server.get('*', (req: Request, res: Response) => res.sendFile(path.join(`${__dirname}/../../frontend/build`)));
+    // This must be before this.server.listen(...)
+    // Serve static frontend files
+    this.server.get('*', (req: Request, res: Response) => res.sendFile(path.join(`${__dirname}/../../frontend/build`)));
 
     // Start
     this.server.listen(Config.general.port, () => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./Playlist.scss";
 import TrackList from "../TrackList/TrackList";
 import {
@@ -10,6 +10,7 @@ import {
 } from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
+import AppContext from "../../AppContext";
 
 // The fetching limit, can be adjusted by changing this value
 const limit = 50;
@@ -28,29 +29,28 @@ export default function Playlist(props: IProps) {
 
   // The album object itself
   const [playlist, setPlaylist] = useState<PlaylistObjectFull>();
+  const [title, setTitle] = useState("");
   // The list of tracks of the album
   const [tracks, setTracks] = useState<PlaylistTrack[]>([]);
   // The current offset for fetching new tracks
   const [offset, setOffset] = useState<number>(0);
+  const state = useContext(AppContext);
 
   async function fetchPlaylistData() {
-    //this only fetches the total number of tracks, cover image and owner of the playlist, not the actual tracks
+    //this only fetches metadata of the playlist not the actual tracks
     const data: SinglePlaylistResponse = await fetch(
-      `${API_URL}api/spotify/playlist/${id}?fields=tracks(total)&fields=images&fields=owner&fields=name`
+      `${API_URL}api/spotify/playlist/${id}?fields=tracks(total)&fields=images&fields=owner&fields=name&fields=id`
     ).then((res) => res.json());
 
     // Save album data
     setPlaylist(data);
+    setTitle(data.name);
   }
 
   async function fetchPlaylistTrackData(newOffset: number) {
     // Only fetch if there are tracks left to fetch
-    if (
-      playlist &&
-      playlist.tracks &&
-      playlist.tracks.total &&
-      playlist.tracks.total <= offset
-    )
+    if (!playlist) return;
+    if (playlist && playlist.tracks && playlist.tracks.total && playlist.tracks.total <= newOffset)
       return;
 
     const data: PlaylistTrackResponse = await fetch(
@@ -80,15 +80,50 @@ export default function Playlist(props: IProps) {
     return data;
   }
 
+  const openMenu = (e: any) => {
+    //not working fully because 'tracks' initially only contains the first 50 tracks of a playlist
+    state.setContextMenu({
+      isOpen: true,
+      x: e.clientX,
+      y: e.clientY,
+      type: "playlist",
+      data: playlist,
+    });
+  };
+
   // Fetch the main album data
   useEffect(() => {
+    setTracks([]);
     fetchPlaylistData();
   }, [id]);
+
+  useEffect(() => {
+    if (tracks.length === 0) fetchPlaylistTrackData(0);
+  }, [playlist]);
 
   // Fetch more album tracks if necessary
   useEffect(() => {
     fetchPlaylistTrackData(offset);
   }, [offset]);
+
+  const changeTitle = (e: any) => {
+    const newTitle = e.target.value;
+    setTitle(newTitle);
+  };
+
+  const updateTitle = () => {
+    if (title === "" && playlist) {
+      setTitle(playlist.name);
+    } else {
+      if (title !== playlist?.name) {
+        fetch(`${API_URL}api/spotify/playlist/${playlist?.id}/edit`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: title }),
+        });
+      }
+    }
+  };
 
   if (!playlist) return <p>loading...</p>;
 
@@ -110,13 +145,27 @@ export default function Playlist(props: IProps) {
             </div>
             <div className={"PlaylistHeaderMeta"}>
               <h4>Playlist</h4>
-              <h1>{playlist.name}</h1>
+              <h1>
+                <input
+                  type="text"
+                  maxLength={50}
+                  min={1}
+                  value={title}
+                  onChange={changeTitle}
+                  onBlur={updateTitle}
+                />
+              </h1>
               <p>
                 by {playlist.owner.display_name} — {playlist.tracks.total} Song
                 {playlist.tracks.total === 1 ? "" : "s"}
               </p>
             </div>
             <div className={"PlaylistHeaderFilter"}>{/* Filter */}</div>
+            <button className="more-button">
+              <span className="material-icons minimize-icon" title={"More"} onClick={openMenu}>
+                more_horiz
+              </span>
+            </button>
           </div>
         )
       ) : (
@@ -124,9 +173,7 @@ export default function Playlist(props: IProps) {
       )}
       <TrackList
         fullyLoaded={playlist.tracks.total <= tracks.length}
-        loadMoreCallback={() =>
-          setOffset((currentOffset) => currentOffset + limit)
-        }
+        loadMoreCallback={() => setOffset((currentOffset) => currentOffset + limit)}
         type={"playlist"}
         tracks={tracks}
         id_tracklist={id}
