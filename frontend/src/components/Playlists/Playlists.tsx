@@ -22,7 +22,7 @@ export default function Playlists() {
 
   useEffect(() => {
     fetchData(next);
-  }, []);
+  }, [next]);
 
   useEffect(() => {
     // remove unfollowed playlist from items
@@ -68,15 +68,15 @@ export default function Playlists() {
   };
 
   //fetch next playlists when you reach the bottom of the current list
-  // const onScroll = (e: any) => {
-  //   const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-  //   if (bottom && playlists) {
-  //     const limit = playlists.limit;
-  //     const offset = playlists.offset + limit;
-  //     const url = `${API_URL}api/spotify/playlists?offset=${offset}&limit=${limit}`;
-  //     setNext(url);
-  //   }
-  // };
+  const onScroll = (e: any) => {
+    const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+    if (bottom && playlists && playlists.offset < playlists.total) {
+      const limit = playlists.limit;
+      const offset = playlists.offset + limit;
+      const url = `${API_URL}api/spotify/playlists?offset=${offset}&limit=${limit}`;
+      setNext(url);
+    }
+  };
 
   if (!playlists || !items) return <p>loading...</p>;
 
@@ -107,7 +107,7 @@ export default function Playlists() {
           <span className="text">New Playlist</span>
         </button>
       </h2>
-      <div className={"Content"}>
+      <div className={"Content"} onScroll={onScroll}>
         <div className={"CoverList"}>{myPlaylists}</div>
       </div>
     </div>
