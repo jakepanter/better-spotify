@@ -148,8 +148,9 @@ function TrackListItem(props: Props) {
         onClick={(e) => handleClick(e)}
         onContextMenu={(e) => handleRightClick(e)}
       >
+
         <Link to={`/episode/${props.track.id}`}>
-          <div className={"TableCell"}>
+          <div className="noTags">
             {track.image !== undefined && track.image !== null ? (
               <div className={"TableCell TableCellArtwork"}>
                 <img
@@ -161,12 +162,12 @@ function TrackListItem(props: Props) {
             ) : (
               <CoverPlaceholder />
             )}
-          </div>
-          <div className="EpisodeContent">
-            <h5 className={"TableCellTitleArtist"}>{track.name}</h5>
-            <p>{track.description}</p>
-            <div>{track.duration_ms}</div>
-            <div onClick={(e) => playClick(e)}>Play Button</div>
+            <div className="EpisodeContent">
+              <h5 className={"TableCellTitleArtist"}>{track.name}</h5>
+              <p>{track.description}</p>
+              <div>{track.duration_ms}</div>
+              <div onClick={(e) => playClick(e)}>Play Button</div>
+            </div>
           </div>
           {track.tags !== undefined ? (
             <div className={"TableCell TableCellTags"}>
@@ -183,7 +184,7 @@ function TrackListItem(props: Props) {
             <></>
           )}
         </Link>
-      </div>
+      </div >
     );
   }
 
