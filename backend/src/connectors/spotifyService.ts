@@ -251,27 +251,22 @@ export default class SpotifyService {
   }
 
   // only 'before' is specified because we want to display the recently played tracks from the current timestamp
-  //we do not need the option 'after' in our case
-  getMyRecentlyPlayedTracks = async (before:number, limit:number) => {
-    const options: any = {limit, before};
+  // we do not need the option 'after' in our case
+  getMyRecentlyPlayedTracks = async (before: number, limit: number) => {
+    const options: any = { limit, before };
     const result = await this.spotifyApi.getMyRecentlyPlayedTracks(options);
     return result.body;
   }
 
-  getNewReleases = async (country: string, limit: number, offset:number) => {
-    const options: any = {country, limit, offset};
+  getNewReleases = async (country: string, limit: number, offset: number) => {
+    const options: any = { country, limit, offset };
     const result = await this.spotifyApi.getNewReleases(options);
     return result.body;
   }
 
-  getMyTopArtists = async (limit: number, offset:number, time_range: string) => {
-    const options: any = {limit, offset, time_range};
+  getMyTopArtists = async (limit: number, offset: number, time_range: string) => {
+    const options: any = { limit, offset, time_range };
     const result = await this.spotifyApi.getMyTopArtists(options);
-    return result.body;
-  }
-
-  getArtist = async (artistId: string) => {
-    const result = await this.spotifyApi.getArtist(artistId);
     return result.body;
   }
 
@@ -279,7 +274,6 @@ export default class SpotifyService {
     const result = await this.spotifyApi.getArtistRelatedArtists(artistId);
     return result.body;
   }
-
 
   getAccessToken = async () => this.spotifyApi.getAccessToken();
 
