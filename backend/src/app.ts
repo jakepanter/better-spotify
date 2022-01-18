@@ -31,20 +31,26 @@ export default class App {
       const { code } = req.query;
       if (code === undefined) return res.sendStatus(400);
 
-      const isAuthorized = await this.spotifyService.authorizationCodeGrant(code.toString());
-      if (!isAuthorized) {
+      const authorization = await this.spotifyService.authorizationCodeGrant(code.toString());
+      if (!authorization) {
         return res.redirect(`${Config.general.frontend_url}?error`);
       }
 
       // eslint-disable-next-line no-console
       console.log('Authorized');
 
-      return res.redirect(`${Config.general.frontend_url}`);
+      return res.redirect(`${Config.general.frontend_url}?access_token=${authorization.access_token}&refresh_token=${authorization.refresh_token}&expires_in=${authorization.expires_in}`);
     });
 
     this.server.get('/api/spotify/access-token', async (req: Request, res: Response) => {
       const token = await this.spotifyService.getAccessToken();
       return res.json(token);
+    });
+
+    this.server.get('/api/spotify/refresh-token', async (req: Request, res: Response) => {
+      const refreshToken = req.headers.authorization?.split(' ')[1];
+      const authRes = await this.spotifyService.refreshToken(refreshToken as string);
+      return res.json(authRes);
     });
 
     /**
@@ -263,15 +269,14 @@ export default class App {
       const country: any = req.query?.country as string ?? undefined;
       const limit: any = Number(req.query?.limit ?? 20);
       const offset: any = Number(req.query?.offset ?? 0);
-      const newRealeses = await this.spotifyService.getNewReleases(country,limit,offset);
+      const newRealeses = await this.spotifyService.getNewReleases(country, limit, offset);
       return res.json(newRealeses);
-
     });
 
     this.server.get('/api/spotify/me/top/artists', async (req: Request, res: Response) => {
       const limit: number = Number(req.query?.limit ?? 20);
       const offset: number = Number(req.query?.offset ?? 0);
-      const time_range: string = req.query?.time_range as string ?? "medium_term";
+      const time_range: string = req.query?.time_range as string ?? 'medium_term';
       const topArtists = await this.spotifyService.getMyTopArtists(limit, offset, time_range);
       return res.json(topArtists);
     });
@@ -289,14 +294,14 @@ export default class App {
       return res.json(artists);
     });
 
-      this.server.put('/api/spotify/me/player/play', async (req: Request, res: Response) => {
-          const result = await this.spotifyService.play(req.body);
-          return result;
-      });
+    this.server.put('/api/spotify/me/player/play', async (req: Request, res: Response) => {
+      const result = await this.spotifyService.play(req.body);
+      return result;
+    });
 
-      //This must be before this.server.listen(...)
-      // Serve static frontend files
-      this.server.get('*', (req: Request, res: Response) => res.sendFile(path.join(`${__dirname}/../../frontend/build`)));
+    // This must be before this.server.listen(...)
+    // Serve static frontend files
+    this.server.get('*', (req: Request, res: Response) => res.sendFile(path.join(`${__dirname}/../../frontend/build`)));
 
     // Start
     this.server.listen(Config.general.port, () => {

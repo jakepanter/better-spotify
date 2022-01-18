@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import "./App.scss";
 import Albums from "./components/Albums/Albums";
 import Playlists from "./components/Playlists/Playlists";
@@ -20,6 +20,8 @@ import SongHistory from "./components/SongHistory/SongHistory";
 import Releases from "./components/Releases/Releases";
 import RelatedArtistsPage from "./pages/RelatedArtistsPage/RelatedArtistsPage";
 
+const AUTH_LOCAL_STORAGE_KEY = 'authorization';
+
 function authorize() {
   fetch(`${API_URL}api/spotify/get-auth-url`)
       .then((res) => res.text())
@@ -33,18 +35,63 @@ function App() {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [editable, setEditable] = useState(false);
   const [miniMenu, setMiniMenu] = useState(false);
+  const [authorization, setAuthorization] = useState({
+    accessToken: '',
+    refreshToken: '',
+    expiresIn: '',
+  });
+
   const menuToggle = () => { setMiniMenu(!miniMenu)};
 
   const toggleEditable = () => setEditable(!editable);
 
   useEffect(() => {
-    async function getAccessToken() {
-      const res = await fetch(`${API_URL}api/spotify/access-token`)
-          .then((res) => res.json());
-      setIsAuthorized(res !== undefined);
+    localStorage.setItem(AUTH_LOCAL_STORAGE_KEY, JSON.stringify(authorization));
+  }, [authorization]);
+
+  useEffect(() => {
+    const refreshInterval = setInterval(async () => {
+      const bearerToken = `Bearer ${authorization.refreshToken}`;
+      fetch(`${API_URL}api/spotify/refresh-token`, {
+        headers: {
+          'Authorization': bearerToken
+        }
+      })
+          .then(res => res.json())
+          .then(res => res.body)
+          .then(res => {
+        setAuthorization({
+          accessToken: res.access_token,
+          refreshToken: authorization.refreshToken,
+          expiresIn: res.expiresIn,
+        })
+      });
+    }, parseInt(authorization.expiresIn) * 1000 - 10000);
+    return () => clearInterval(refreshInterval);
+  }, [authorization]);
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const localAuthorization = localStorage.getItem(AUTH_LOCAL_STORAGE_KEY);
+
+    const accessToken = queryParams.get('access_token') ? queryParams.get('access_token') as string : '';
+    const refreshToken = queryParams.get('refresh_token') ? queryParams.get('refresh_token') as string : '';
+    const expiresIn = queryParams.get('expires_in') ? queryParams.get('expires_in') as string : '';
+    if (accessToken != '' && refreshToken != '' && expiresIn != '') {
+      setAuthorization({
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        expiresIn: expiresIn,
+      });
+      setIsAuthorized(true);
+    } else if (localAuthorization != null && JSON.parse(localAuthorization).accessToken != '') {
+      setAuthorization(JSON.parse(localAuthorization));
+      setIsAuthorized(true);
+    } else {
+      console.log('Could not authorize!');
     }
-    getAccessToken();
   }, []);
+
 
   if (!isAuthorized) {
     //possible TODO: Login Page
@@ -114,7 +161,7 @@ function App() {
                     <RelatedArtistsPage />
                 </Route>
             </Switch>
-            <Player />
+            <Player token={authorization.accessToken} />
           </div>
         </div>
       </Router>

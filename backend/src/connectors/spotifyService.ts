@@ -65,25 +65,17 @@ export default class SpotifyService {
       return false;
     }
 
-    this.spotifyApi.setAccessToken(authRes.body.access_token);
-    this.spotifyApi.setRefreshToken(authRes.body.refresh_token);
-
-    // Setup access token refresher
-    clearInterval(this.tokenRefresher);
-    this.tokenRefresher = setInterval(() => {
-      this.spotifyApi.refreshAccessToken()
-        .then((data) => {
-          this.spotifyApi.setAccessToken(data.body.access_token);
-        })
-        .catch((err) => {
-          // TODO: Error handling
-          // eslint-disable-next-line no-console
-          console.log(err);
-        });
-    }, authRes.body.expires_in * 1000 - 10000);
-
-    return true;
+    return {
+      access_token: authRes.body.access_token,
+      refresh_token: authRes.body.refresh_token,
+      expires_in: authRes.body.expires_in,
+    };
   }
+
+  refreshToken = async (refreshToken: string) => {
+    this.spotifyApi.setRefreshToken(refreshToken);
+    return this.spotifyApi.refreshAccessToken();
+  };
 
   searchCustom = async (type: string, search: string) => {
     let searchRes = null;
@@ -230,21 +222,21 @@ export default class SpotifyService {
   }
 
   // only 'before' is specified because we want to display the recently played tracks from the current timestamp
-  //we do not need the option 'after' in our case
+  // we do not need the option 'after' in our case
   getMyRecentlyPlayedTracks = async (before:number, limit:number) => {
-    const options: any = {limit, before};
+    const options: any = { limit, before };
     const result = await this.spotifyApi.getMyRecentlyPlayedTracks(options);
     return result.body;
   }
 
   getNewReleases = async (country: string, limit: number, offset:number) => {
-    const options: any = {country, limit, offset};
+    const options: any = { country, limit, offset };
     const result = await this.spotifyApi.getNewReleases(options);
     return result.body;
   }
 
   getMyTopArtists = async (limit: number, offset:number, time_range: string) => {
-    const options: any = {limit, offset, time_range};
+    const options: any = { limit, offset, time_range };
     const result = await this.spotifyApi.getMyTopArtists(options);
     return result.body;
   }
@@ -258,7 +250,6 @@ export default class SpotifyService {
     const result = await this.spotifyApi.getArtistRelatedArtists(artistId);
     return result.body;
   }
-
 
   getAccessToken = async () => this.spotifyApi.getAccessToken();
 
