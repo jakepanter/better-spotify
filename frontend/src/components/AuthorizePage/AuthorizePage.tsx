@@ -12,20 +12,37 @@ function authorize() {
         });
 }
 
-const AuthorizePage = () => {
+
+function AuthorizePage() {
+    const [checked, setChecked] = React.useState(false);
+    const handleChange = () => {
+        setChecked(!checked);
+    };
+
     return (
         <div className={"AuthorizePage"}>
-            <div className={"column"}>
-                <button className="button" onClick={authorize}>
-                    Log in with Spotify
-                </button>
-            </div>
-            <div className={"column"}>
-                <button className="button" onClick={authorize}>
+            <div className={"AuthorizePageInner"}>
+                <div>
+                    <img className={"AuthorizePageLogo"} src="logo512.png"/>
+                    <h1 className={"headlineBetterSpotify"}>Better<span className="non-colored-headline">Spotify</span></h1>
+                </div>
+                <div>
+                    <label>
+                        <input type={"checkbox"}
+                               checked={checked}
+                               onChange={handleChange}/>
+                        <p>
+                            By registering you agree to the terms and conditions. On the following page you will be informed
+                            about the terms and conditions of spotify*.
+                        </p>
+                    </label>
+                </div>
+                <button className={`button ${checked ? " " : "ApprovalRequired"}`} onClick={authorize}>
                     Log in with Spotify
                 </button>
             </div>
         </div>
     )
 }
+
 export default AuthorizePage;

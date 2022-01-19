@@ -1,29 +1,65 @@
 @import './src/boilerplate.scss';
 
 .AuthorizePage {
-  width: 100vw;
   height: 100vh;
-  backgroundImage:"./public/start-image.png";
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  @include columns($columns: 2, $margin-xl: 0rem, $margin: 0rem);
-  .column {
-    border-radius: 0px;
-    //background: green;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    &:first-child {
-    //  background: red;
+  .AuthorizePageInner {
+    width: 500px;
+    height: 500px;
+    box-shadow: $box-shadow;
+    border-radius: $border-radius;
+    border: 1px solid $gray-light;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    justify-content: space-around;
+    align-items: center;
+
+    > div {
+      align-content: center;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: visible;
+
+      input[type="checkbox"] {
+        position: absolute;
+        top: 5px;
+        left: 8px;
+        font-size: 17px;
+        color: $gray-dark;
+      }
+
+      p {
+        margin-left: 2rem;
+        color: $color-background;
+      }
     }
   }
 
+  .AuthorizePageLogo {
+    max-width: 150px;
+    margin: 0 auto;
+    padding-bottom: 1rem;
+  }
 
-}
+  .headlineBetterSpotify {
+    text-align: center;
+    color: $color-primary;
 
-.AuthorizeButton {
-  position: fixed;
-  top: 0;
-  right: 0;
-  z-index: 1;
+    .non-colored-headline, {
+      color: $gray-dark;
+
+    }
+  }
+
+  .ApprovalRequired {
+    pointer-events: none;
+    background: $gray;
+    border-color: $gray-dark;
+  }
 }
 
