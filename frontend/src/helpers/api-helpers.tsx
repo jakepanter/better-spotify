@@ -1,5 +1,13 @@
-import { CreatePlaylistResponse } from "spotify-types";
 import { API_URL } from "../utils/constants";
+import { CreatePlaylistResponse } from "spotify-types";
+
+export const addToPlaylist = (playlistId: string, tracks: string[]) => {
+  return fetch(`${API_URL}api/spotify/playlist/${playlistId}/add`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(tracks),
+  });
+};
 
 export const createNewPlaylist = async (
   name: string,
