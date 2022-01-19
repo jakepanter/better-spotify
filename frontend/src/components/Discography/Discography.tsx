@@ -19,7 +19,7 @@ export default function Discography (props: IProps) {
     const [albums, setAlbums] = useState<ArtistsAlbumsResponse>();
     const [albumItems, setAlbumItems] = useState<AlbumObjectSimplified[]>([]);
     const [next, setNext] = useState<string>(
-        `${API_URL}api/spotify/artist/${id}/albums?limit=${limit}`
+        `${API_URL}api/spotify/artist/${id}/albums?limit=${limit}&include_groups=album,single`
     );
     //const [albumIds, setAlbumIds] = useState<string[]>();
 
@@ -44,7 +44,7 @@ export default function Discography (props: IProps) {
             console.log(albums.offset)
             const limit = albums.limit;
             const offset = albums.offset + limit;
-            const url = `${API_URL}api/spotify/artist/${id}/albums?offset=${offset}&limit=${limit}&market=DE`;
+            const url = `${API_URL}api/spotify/artist/${id}/albums?offset=${offset}&limit=${limit}&market=DE&include_groups=album,single`;
             setNext(url);
         }
     };

@@ -43,7 +43,13 @@ type Props = {
     loadMoreCallback: () => void;
     fullyLoaded: boolean;
     id_tracklist: string;
-  };
+  }| {
+  type: "topTracks";
+  tracks: TrackObjectFull[];
+  loadMoreCallback: () => void;
+  fullyLoaded: boolean;
+  id_tracklist: string;
+};
 
 type ContextMenuType = {
   show: boolean;
@@ -306,7 +312,47 @@ function TrackList(props: Props) {
           </div>
         </div>
       )}
-
+      {
+        type === "topTracks" && (
+            <div className={`Tracklist ${sizeClass}`} ref={container}>
+              <div className={"TableHeader TableRow"}>
+                <div className={"TableCell TableCellArtwork"} />
+                <div className={"TableCell TableCellTitleArtist"}>Title</div>
+                <div className={"TableCell TableCellAlbum"}>Album</div>
+                <div className={"TableCell TableCellDuration"}>Duration</div>
+                <div className={"TableCell TableCellTags"}>Tags</div>
+              </div>
+              <div className={"TableBody"}>
+                {props.tracks.map((item, index) => {
+                  const tagList = TagsSystem.getTagsOfElement(item.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
+                  return (
+                        <TrackListItem
+                            track={item}
+                            name={item.name}
+                            artists={item.artists}
+                            duration_ms={item.duration_ms}
+                            album={item.album}
+                            key={type + "-track-" + item.id + "-" + index}
+                            listIndex={index}
+                            selected={isTrackSelected(item, index)}
+                            onSelectionChange={handleSelectionChange}
+                            onContextMenuOpen={handleContextMenuOpen}
+                            id_tracklist={''}
+                            type={type}
+                            tags={tagList}
+                        />
+                  );
+                })}
+                {!fullyLoaded ? (
+                    <div className={"PlaylistLoader"}>
+                      <div className={"loader"} />
+                    </div>
+                ) : (
+                    <></>
+                )}
+              </div>
+            </div>
+        )}
       {type === "saved" && (
         <div
           className={`Tracklist ${sizeClass}`}
