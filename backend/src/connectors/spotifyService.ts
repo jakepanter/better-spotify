@@ -77,7 +77,8 @@ export default class SpotifyService {
     return this.spotifyApi.refreshAccessToken();
   };
 
-  searchCustom = async (type: string, search: string) => {
+  searchCustom = async (accessToken: string, type: string, search: string) => {
+    this.spotifyApi.setAccessToken(accessToken);
     let searchRes = null;
 
     if (type === 'tracks') {
@@ -93,6 +94,9 @@ export default class SpotifyService {
     } else if (type === 'episodes') {
       searchRes = await this.spotifyApi.searchEpisodes(search);
     }
+
+    this.spotifyApi.resetAccessToken();
+
     if (searchRes == null) {
       // TODO: Error handling
       return [];
@@ -107,9 +111,10 @@ export default class SpotifyService {
     return searchRes.body;
   }
 
-  searchTracks = async (query: string) => {
+  searchTracks = async (accessToken: string, query: string) => {
+    this.spotifyApi.setAccessToken(accessToken);
     const searchRes = await this.spotifyApi.search(query, ['track']);
-
+    this.spotifyApi.resetAccessToken();
     if (searchRes.statusCode !== 200) {
       // Authorization did not work
       // TODO: Error handling
@@ -120,8 +125,10 @@ export default class SpotifyService {
   }
 
   // search in every Category
-  search = async (query: string) => {
+  search = async (accessToken: string, query: string) => {
+    this.spotifyApi.setAccessToken(accessToken);
     const searchRes = await this.spotifyApi.search(query, ['album', 'artist', 'playlist', 'track', 'show', 'episode']);
+    this.spotifyApi.resetAccessToken();
 
     if (searchRes.statusCode !== 200) {
       // Authorization did not work
@@ -132,150 +139,227 @@ export default class SpotifyService {
     return searchRes.body;
   }
 
-  getMySavedTracks = async (limit: number, offset: number) => {
+  getMySavedTracks = async (accessToken: string, limit: number, offset: number) => {
     const options: any = { limit, offset };
+    this.spotifyApi.setAccessToken(accessToken);
     const tracks = await this.spotifyApi.getMySavedTracks(options);
+    this.spotifyApi.resetAccessToken();
 
     return tracks.body;
   }
 
-  getMe = async () => {
+  getMe = async (accessToken: string) => {
+    this.spotifyApi.setAccessToken(accessToken);
     const me = await this.spotifyApi.getMe();
+    this.spotifyApi.resetAccessToken();
     return me.body;
   }
 
-  getTrack = async (id: string) => {
+  getTrack = async (accessToken: string, id: string) => {
+    this.spotifyApi.setAccessToken(accessToken);
     const track = await this.spotifyApi.getTrack(id);
+    this.spotifyApi.resetAccessToken();
     return track.body;
   }
 
-  getTracks = async (ids: string[]) => {
+  getTracks = async (accessToken: string, ids: string[]) => {
+    this.spotifyApi.setAccessToken(accessToken);
     const tracks = await this.spotifyApi.getTracks(ids);
+    this.spotifyApi.resetAccessToken();
     return tracks.body;
   }
 
-  getAlbum = async (id: string) => {
+  getAlbum = async (accessToken: string, id: string) => {
+    this.spotifyApi.setAccessToken(accessToken);
     const album = await this.spotifyApi.getAlbum(id);
+    this.spotifyApi.resetAccessToken();
     return album.body;
   }
 
-  getAlbumTracks = async (id: string, limit: number, offset: number) => {
+  getAlbumTracks = async (accessToken: string, id: string, limit: number, offset: number) => {
     const options: any = { limit, offset };
+    this.spotifyApi.setAccessToken(accessToken);
     const album = await this.spotifyApi.getAlbumTracks(id, options);
+    this.spotifyApi.resetAccessToken();
     return album.body;
   }
 
-  getMySavedAlbums = async (limit: number, offset: number) => {
+  getMySavedAlbums = async (accessToken: string, limit: number, offset: number) => {
     const options: any = { limit, offset };
+    this.spotifyApi.setAccessToken(accessToken);
     const albums = await this.spotifyApi.getMySavedAlbums(options);
+    this.spotifyApi.resetAccessToken();
     return albums.body;
   }
 
-  isSaved = async (trackIds: string[]) => {
+  isSaved = async (accessToken: string, trackIds: string[]) => {
+    this.spotifyApi.setAccessToken(accessToken);
     const data = await this.spotifyApi.containsMySavedTracks(trackIds);
+    this.spotifyApi.resetAccessToken();
     return data.body;
   }
 
-  addToSavedTracks = async (trackIds: string[]) => {
+  addToSavedTracks = async (accessToken: string, trackIds: string[]) => {
+    this.spotifyApi.setAccessToken(accessToken);
     const data = await this.spotifyApi.addToMySavedTracks(trackIds);
+    this.spotifyApi.resetAccessToken();
     return data.body;
   };
 
-  removeFromSavedTracks = async (trackIds: string[]) => {
+  removeFromSavedTracks = async (accessToken: string, trackIds: string[]) => {
+    this.spotifyApi.setAccessToken(accessToken);
     const data = await this.spotifyApi.removeFromMySavedTracks(trackIds);
+    this.spotifyApi.resetAccessToken();
     return data.body;
   };
 
-  getMyPlaylists = async (limit: number, offset: number) => {
+  getMyPlaylists = async (accessToken: string, limit: number, offset: number) => {
     const options: any = { limit, offset };
+    this.spotifyApi.setAccessToken(accessToken);
     const result = await this.spotifyApi.getUserPlaylists(options);
+    this.spotifyApi.resetAccessToken();
     return result.body;
   }
 
-  addTracksToPlaylist = async (playlistId: string, tracks: string[]) => {
+  addTracksToPlaylist = async (accessToken: string, playlistId: string, tracks: string[]) => {
     // TODO: error handling
+    this.spotifyApi.setAccessToken(accessToken);
     await this.spotifyApi.addTracksToPlaylist(playlistId, tracks);
+    this.spotifyApi.resetAccessToken();
   }
 
-  getPlaylist = async (playlistId: string, fields: string) => {
+  getPlaylist = async (accessToken: string, playlistId: string, fields: string) => {
+    this.spotifyApi.setAccessToken(accessToken);
     const result = await this.spotifyApi.getPlaylist(playlistId, { fields });
+    this.spotifyApi.resetAccessToken();
     return result.body;
   }
 
-  getPlaylistTracks = async (id: string, limit: number, offset: number) => {
+  getPlaylistTracks = async (accessToken: string, id: string, limit: number, offset: number) => {
     const options: any = { limit, offset };
+    this.spotifyApi.setAccessToken(accessToken);
     const album = await this.spotifyApi.getPlaylistTracks(id, options);
+    this.spotifyApi.resetAccessToken();
     return album.body;
   }
 
-  createPlaylist = async (
+  createPlaylist = async (accessToken: string,
     playlistName: string,
-    options: { description?: string, collaborative: boolean, public: boolean },
-  ) => {
+    options: { description?: string, collaborative: boolean, public: boolean }) => {
+    this.spotifyApi.setAccessToken(accessToken);
     const result = await this.spotifyApi.createPlaylist(playlistName, options);
+    this.spotifyApi.resetAccessToken();
     return result.body;
   }
 
-  setVolume = async (volume: number) => {
-    const result = await this.spotifyApi.setVolume(volume);
-    return result;
+  setVolume = async (accessToken: string, volume: number) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    await this.spotifyApi.setVolume(volume);
+    this.spotifyApi.resetAccessToken();
+    return true;
   }
 
   // only 'before' is specified because we want to display the recently played tracks from the current timestamp
   // we do not need the option 'after' in our case
-  getMyRecentlyPlayedTracks = async (before:number, limit:number) => {
+  getMyRecentlyPlayedTracks = async (accessToken: string, before:number, limit:number) => {
     const options: any = { limit, before };
+    this.spotifyApi.setAccessToken(accessToken);
     const result = await this.spotifyApi.getMyRecentlyPlayedTracks(options);
+    this.spotifyApi.resetAccessToken();
     return result.body;
   }
 
-  getNewReleases = async (country: string, limit: number, offset:number) => {
+  getNewReleases = async (accessToken: string, country: string, limit: number, offset:number) => {
     const options: any = { country, limit, offset };
+    this.spotifyApi.setAccessToken(accessToken);
     const result = await this.spotifyApi.getNewReleases(options);
+    this.spotifyApi.resetAccessToken();
     return result.body;
   }
 
-  getMyTopArtists = async (limit: number, offset:number, time_range: string) => {
+  getMyTopArtists = async (accessToken: string, limit: number, offset:number, time_range: string) => {
     const options: any = { limit, offset, time_range };
+    this.spotifyApi.setAccessToken(accessToken);
     const result = await this.spotifyApi.getMyTopArtists(options);
+    this.spotifyApi.resetAccessToken();
     return result.body;
   }
 
-  getArtist = async (artistId: string) => {
+  getArtist = async (accessToken: string, artistId: string) => {
+    this.spotifyApi.setAccessToken(accessToken);
     const result = await this.spotifyApi.getArtist(artistId);
+    this.spotifyApi.resetAccessToken();
     return result.body;
   }
 
-  getArtistRelatedArtists = async (artistId: string) => {
+  getArtistRelatedArtists = async (accessToken: string, artistId: string) => {
+    this.spotifyApi.setAccessToken(accessToken);
     const result = await this.spotifyApi.getArtistRelatedArtists(artistId);
+    this.spotifyApi.resetAccessToken();
     return result.body;
   }
 
-  getAccessToken = async () => this.spotifyApi.getAccessToken();
+  getDevices = async (accessToken: string) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    const result = await this.spotifyApi.getMyDevices();
+    this.spotifyApi.resetAccessToken();
+    return result.body;
+  };
 
-  getDevices = async () => this.spotifyApi.getMyDevices();
+  getPlaybackState = async (accessToken: string) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    const result = await this.spotifyApi.getMyCurrentPlaybackState();
+    this.spotifyApi.resetAccessToken();
+    return result.body;
+  };
 
-  getPlaybackState = async () => this.spotifyApi.getMyCurrentPlaybackState();
+  pause = async (accessToken: string) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    this.spotifyApi.pause();
+    this.spotifyApi.resetAccessToken();
+  };
 
-  pause = async () => this.spotifyApi.pause();
+  play = async (accessToken: string, options: PlayOptions) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    this.spotifyApi.play(options);
+    this.spotifyApi.resetAccessToken();
+  };
 
-  play = async (options: PlayOptions) => this.spotifyApi.play(options);
+  previous = async (accessToken: string) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    this.spotifyApi.skipToPrevious();
+    this.spotifyApi.resetAccessToken();
+  };
 
-  previous = async () => this.spotifyApi.skipToPrevious();
+  next = async (accessToken: string) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    this.spotifyApi.skipToNext();
+    this.spotifyApi.resetAccessToken();
+  };
 
-  next = async () => this.spotifyApi.skipToNext();
-
-  removeTracks = async (trackIds: ReadonlyArray<string>) => {
+  removeTracks = async (accessToken: string, trackIds: ReadonlyArray<string>) => {
+    this.spotifyApi.setAccessToken(accessToken);
     this.spotifyApi.removeFromMySavedTracks(trackIds);
+    this.spotifyApi.resetAccessToken();
   }
 
-  saveTracks = async (trackIds: ReadonlyArray<string>) => {
+  saveTracks = async (accessToken: string, trackIds: ReadonlyArray<string>) => {
+    this.spotifyApi.setAccessToken(accessToken);
     this.spotifyApi.addToMySavedTracks(trackIds);
+    this.spotifyApi.resetAccessToken();
   }
 
-  seek = async (position: number) => this.spotifyApi.seek(position);
+  seek = async (accessToken: string, position: number) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    this.spotifyApi.seek(position);
+    this.spotifyApi.resetAccessToken();
+  };
 
-  setDevice = async (deviceIds: ReadonlyArray<string>, options: TransferPlaybackOptions) => {
+  setDevice = async (accessToken: string,
+    deviceIds: ReadonlyArray<string>,
+    options: TransferPlaybackOptions) => {
+    this.spotifyApi.setAccessToken(accessToken);
     this.spotifyApi.transferMyPlayback(deviceIds, options);
+    this.spotifyApi.resetAccessToken();
   }
 }

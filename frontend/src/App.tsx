@@ -5,7 +5,7 @@ import Albums from "./components/Albums/Albums";
 import Playlists from "./components/Playlists/Playlists";
 import SavedTracks from "./components/SavedTracks/SavedTracks";
 import Player from "./components/Player/Player";
-import { API_URL } from "./utils/constants";
+import { API_URL, AUTH_LOCAL_STORAGE_KEY } from "./utils/constants";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Dashboard from "./components/Dashboard/Dashboard";
 import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
@@ -20,7 +20,6 @@ import SongHistory from "./components/SongHistory/SongHistory";
 import Releases from "./components/Releases/Releases";
 import RelatedArtistsPage from "./pages/RelatedArtistsPage/RelatedArtistsPage";
 
-const AUTH_LOCAL_STORAGE_KEY = 'authorization';
 
 function authorize() {
   fetch(`${API_URL}api/spotify/get-auth-url`)
@@ -31,15 +30,24 @@ function authorize() {
       });
 }
 
+function getInitialAuth() {
+  let initialAuth = {
+    accessToken: '',
+    refreshToken: '',
+    expiresIn: ''
+  };
+  const localAuth = localStorage.getItem(AUTH_LOCAL_STORAGE_KEY);
+  if (localAuth === null) return initialAuth;
+  const parsedAuth = JSON.parse(localAuth);
+  if (parsedAuth.accessToken === '') return initialAuth;
+  return parsedAuth;
+}
+
 function App() {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [editable, setEditable] = useState(false);
   const [miniMenu, setMiniMenu] = useState(false);
-  const [authorization, setAuthorization] = useState({
-    accessToken: '',
-    refreshToken: '',
-    expiresIn: '',
-  });
+  const [authorization, setAuthorization] = useState(getInitialAuth());
 
   const menuToggle = () => { setMiniMenu(!miniMenu)};
 
@@ -50,24 +58,26 @@ function App() {
   }, [authorization]);
 
   useEffect(() => {
-    const refreshInterval = setInterval(async () => {
-      const bearerToken = `Bearer ${authorization.refreshToken}`;
-      fetch(`${API_URL}api/spotify/refresh-token`, {
-        headers: {
-          'Authorization': bearerToken
-        }
-      })
-          .then(res => res.json())
-          .then(res => res.body)
-          .then(res => {
-        setAuthorization({
-          accessToken: res.access_token,
-          refreshToken: authorization.refreshToken,
-          expiresIn: res.expiresIn,
+    if (authorization.refreshToken != '') {
+      const refreshInterval = setInterval(async () => {
+        const bearerToken = `Bearer ${authorization.refreshToken}`;
+        fetch(`${API_URL}api/spotify/refresh-token`, {
+          headers: {
+            'Authorization': bearerToken
+          }
         })
-      });
-    }, parseInt(authorization.expiresIn) * 1000 - 10000);
-    return () => clearInterval(refreshInterval);
+            .then(res => res.json())
+            .then(res => res.body)
+            .then(res => {
+              setAuthorization({
+                accessToken: res.access_token,
+                refreshToken: authorization.refreshToken,
+                expiresIn: res.expiresIn,
+              })
+            });
+      }, parseInt(authorization.expiresIn) * 1000 - 10000);
+      return () => clearInterval(refreshInterval);
+    }
   }, [authorization]);
 
   useEffect(() => {

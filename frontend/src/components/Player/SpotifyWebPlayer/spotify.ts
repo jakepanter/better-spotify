@@ -1,21 +1,37 @@
 /* eslint-disable camelcase */
 import { SpotifyPlayOptions } from './types';
 import { API_URL } from '../../../utils/constants';
+import { getAuthHeader } from '../../../helpers/api-helpers';
 
 export async function checkTracksStatus(tracks: string | string[]) {
   const trackIds = Array.isArray(tracks) ? tracks : [tracks];
 
-  return fetch(`${API_URL}api/spotify/me/tracks/contains?trackIds=${trackIds}`)
+  const authHeader = getAuthHeader();
+  return fetch(`${API_URL}api/spotify/me/tracks/contains?trackIds=${trackIds}`, {
+    headers: {
+      'Authorization': authHeader
+    }
+  })
       .then(res => res.json()).then(data => data.body);
 }
 
 export async function getDevices() {
-  return fetch(`${API_URL}api/spotify/me/player/devices`)
+  const authHeader = getAuthHeader();
+  return fetch(`${API_URL}api/spotify/me/player/devices`, {
+    headers: {
+      'Authorization': authHeader
+    }
+  })
       .then(res => res.json()).then(data => data.body);
 }
 
 export async function getPlaybackState() {
-  return fetch(`${API_URL}api/spotify/me/player`)
+  const authHeader = getAuthHeader();
+  return fetch(`${API_URL}api/spotify/me/player`, {
+    headers: {
+      'Authorization': authHeader
+    }
+  })
       .then(d => {
         if (d.status === 204) return null;
         return d.json();
