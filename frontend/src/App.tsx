@@ -19,6 +19,8 @@ import Discover from "./components/Discover/Discover";
 import SongHistory from "./components/SongHistory/SongHistory";
 import Releases from "./components/Releases/Releases";
 import RelatedArtistsPage from "./pages/RelatedArtistsPage/RelatedArtistsPage";
+import { useSelector, useDispatch } from 'react-redux'
+import { updateAuthentication } from './utils/authenticationSlice'
 
 
 function authorize() {
@@ -48,6 +50,9 @@ function App() {
   const [editable, setEditable] = useState(false);
   const [miniMenu, setMiniMenu] = useState(false);
   const [authorization, setAuthorization] = useState(getInitialAuth());
+
+  const authentication = useSelector((state) => state.authentication.accessToken)
+  const dispatch = useDispatch()
 
   const menuToggle = () => { setMiniMenu(!miniMenu)};
 
