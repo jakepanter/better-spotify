@@ -8,6 +8,7 @@ import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import {Link} from "react-router-dom";
 import "./Releases.scss";
 import {formatTimeDiff} from "../../utils/functions";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 const limit = 24;
 let country: string;
@@ -26,12 +27,21 @@ export default function Releases() {
 
     async function fetchTrackData(offset: number) {
         //get users country
+        const authHeader = getAuthHeader();
         const me = await fetch(
-            `${API_URL}api/spotify/me`
+            `${API_URL}api/spotify/me`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         ).then((res) => res.json());
         country = me.country;
 
-        const data: ListOfNewReleasesResponse = await fetch(`${API_URL}api/spotify/browse/new-releases?limit=${limit}&country=${country}&offset=${offset}`).then((res) => res.json());
+        const data: ListOfNewReleasesResponse = await fetch(`${API_URL}api/spotify/browse/new-releases?limit=${limit}&country=${country}&offset=${offset}`, {
+            headers: {
+                'Authorization': authHeader
+            }
+        }).then((res) => res.json());
         setReleases(data);
         // Save new tracks
         const arr: AlbumObjectSimplified[] = [...albums, ...data.albums.items];

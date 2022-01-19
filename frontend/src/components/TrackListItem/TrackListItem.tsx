@@ -13,6 +13,7 @@ import "./TrackListItem.scss";
 import {API_URL} from "../../utils/constants";
 import {TagWithId} from "../../utils/tags-system";
 import {Link} from "react-router-dom";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 type Body = {
     context_uri: string | undefined,
@@ -76,12 +77,14 @@ function TrackListItem(props: Props) {
                 uri: track_uri
             }
         }
+        const authHeader = getAuthHeader();
         fetch(`${API_URL}api/spotify/me/player/play`, {
             method: 'PUT',
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': authHeader},
             body: JSON.stringify(body)
-        })
-            .then(response => response.json())
+        });
     }, []);
 
     useEffect(() => {
@@ -111,20 +114,33 @@ function TrackListItem(props: Props) {
     };
 
     const fetchUserId = async () => {
-        return await fetch(`${API_URL}api/spotify/me`).then(res => res.json()).then(data => data.uri)
+        const authHeader = getAuthHeader();
+        return await fetch(`${API_URL}api/spotify/me`, {
+            headers: {
+                'Authorization': authHeader
+            }
+        }).then(res => res.json()).then(data => data.uri)
     };
 
     const handleLikeButton = async (e: any) => {
         e.stopPropagation();
         if (!liked) {
             // add
-            await fetch(`${API_URL}api/spotify/me/tracks/add?trackIds=${track.track.id}`)
-                .then((res) => res.json());
+            const authHeader = getAuthHeader();
+            await fetch(`${API_URL}api/spotify/me/tracks/add?trackIds=${track.track.id}`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }).then((res) => res.json());
             setLiked(true);
         } else {
             // remove
-            await fetch(`${API_URL}api/spotify/me/tracks/remove?trackIds=${track.track.id}`)
-                .then((res) => res.json());
+            const authHeader = getAuthHeader();
+            await fetch(`${API_URL}api/spotify/me/tracks/remove?trackIds=${track.track.id}`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }).then((res) => res.json());
             setLiked(false);
         }
     };

@@ -4,8 +4,8 @@ import {
     PlayHistoryObject, UsersRecentlyPlayedTracksResponse
 } from "spotify-types";
 import TrackList from "../TrackList/TrackList";
-
 import {API_URL} from '../../utils/constants';
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 // The fetching limit, can be adjusted by changing this value
 const defaultLimit = 50;
@@ -23,8 +23,13 @@ export default function SongHistory() {
 
     async function fetchRecentTracksData(before: Number) {
         // Fetch recently played tracks
+        const authHeader = getAuthHeader();
         const recentPlayedTracksData: UsersRecentlyPlayedTracksResponse = await fetch(
-            `${API_URL}api/spotify/player/recently-played?before=${before}&limit=${defaultLimit}`
+            `${API_URL}api/spotify/player/recently-played?before=${before}&limit=${defaultLimit}`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         ).then((res) => res.json());
 
         // Save whether tracks are saved or not
@@ -44,8 +49,13 @@ export default function SongHistory() {
     }
 
     async function fetchIsSavedData(trackIds: string[]){
+        const authHeader = getAuthHeader();
         const data: CheckUsersSavedTracksResponse = await fetch(
-            `${API_URL}api/spotify/me/tracks/contains?trackIds=${trackIds}`
+            `${API_URL}api/spotify/me/tracks/contains?trackIds=${trackIds}`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         ).then((res) => res.json());
         return data;
     }

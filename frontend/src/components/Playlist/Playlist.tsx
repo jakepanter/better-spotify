@@ -10,6 +10,7 @@ import {
 } from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 // The fetching limit, can be adjusted by changing this value
 const limit = 50;
@@ -35,8 +36,13 @@ export default function Playlist(props: IProps) {
 
   async function fetchPlaylistData() {
     //this only fetches the total number of tracks, cover image and owner of the playlist, not the actual tracks
+    const authHeader = getAuthHeader();
     const data: SinglePlaylistResponse = await fetch(
-      `${API_URL}api/spotify/playlist/${id}?fields=tracks(total)&fields=images&fields=owner&fields=name`
+      `${API_URL}api/spotify/playlist/${id}?fields=tracks(total)&fields=images&fields=owner&fields=name`, {
+          headers: {
+            'Authorization': authHeader
+          }
+        }
     ).then((res) => res.json());
 
     // Save album data
@@ -53,8 +59,13 @@ export default function Playlist(props: IProps) {
     )
       return;
 
+    const authHeader = getAuthHeader();
     const data: PlaylistTrackResponse = await fetch(
-      `${API_URL}api/spotify/playlist/${id}/tracks?offset=${newOffset}&limit=${limit}`
+      `${API_URL}api/spotify/playlist/${id}/tracks?offset=${newOffset}&limit=${limit}`, {
+          headers: {
+            'Authorization': authHeader
+          }
+        }
     ).then((res) => res.json());
 
     // Save new tracks
@@ -73,8 +84,13 @@ export default function Playlist(props: IProps) {
   }
 
   async function fetchIsSavedData(trackIds: string[]) {
+    const authHeader = getAuthHeader();
     const data: CheckUsersSavedTracksResponse = await fetch(
-      `${API_URL}api/spotify/me/tracks/contains?trackIds=${trackIds}`
+      `${API_URL}api/spotify/me/tracks/contains?trackIds=${trackIds}`, {
+          headers: {
+            'Authorization': authHeader
+          }
+        }
     ).then((res) => res.json());
 
     return data;

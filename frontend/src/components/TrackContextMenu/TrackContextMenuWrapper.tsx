@@ -16,6 +16,7 @@ import "@szhsin/react-menu/dist/index.css";
 import { API_URL } from "../../utils/constants";
 import { createNewPlaylist } from "../../helpers/api-helpers";
 import TagsSystem from "../../utils/tags-system";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 type Props = {
   tracks: String[];
@@ -39,13 +40,22 @@ function TrackContextMenuWrapper(props: Props) {
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
 
   const fetchMyPlaylists = async () => {
+    const authHeader = getAuthHeader();
     const playlistsRequest: Promise<ListOfUsersPlaylistsResponse> = fetch(
-      `${API_URL}api/spotify/playlists`
+      `${API_URL}api/spotify/playlists`, {
+          headers: {
+            'Authorization': authHeader
+          }
+        }
     ).then(async (res) => {
       return await res.json();
     });
     const meRequest: Promise<CurrentUsersProfileResponse> = fetch(
-      `${API_URL}api/spotify/me`
+      `${API_URL}api/spotify/me`, {
+          headers: {
+            'Authorization': authHeader
+          }
+        }
     ).then(async (res) => {
       return await res.json();
     });
@@ -68,9 +78,12 @@ function TrackContextMenuWrapper(props: Props) {
     props.onClose();
     //HACKY: because props.tracks contains the trackUniqueId[] we have to remove the -id at the end from each track
     const tracks = props.tracks.map((track) => track.split("-")[0]);
+    const authHeader = getAuthHeader();
     await fetch(`${API_URL}api/spotify/playlist/${playlistId}/add`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': authHeader},
       body: JSON.stringify(tracks),
     });
   };

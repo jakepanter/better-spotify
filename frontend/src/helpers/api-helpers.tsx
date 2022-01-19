@@ -9,9 +9,13 @@ export const createNewPlaylist = async (
     playlistName: name,
     options: options,
   };
+  const authHeader = getAuthHeader();
   return fetch(`${API_URL}api/spotify/playlists`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      'Authorization': authHeader
+    },
     body: JSON.stringify(data),
   }).then((value) => {
     return value.json().then((value) => value as CreatePlaylistResponse);

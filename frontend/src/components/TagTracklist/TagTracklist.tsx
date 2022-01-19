@@ -4,6 +4,7 @@ import {API_URL} from "../../utils/constants";
 import {CheckUsersSavedTracksResponse, MultipleTracksResponse, TrackObjectFull} from "spotify-types";
 import TrackList from "../TrackList/TrackList";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 interface IProps {
   id: string;
@@ -30,8 +31,13 @@ function TagTracklist(props: IProps) {
 
     if (ids.length <= 0) return;
 
+    const authHeader = getAuthHeader();
     const data: MultipleTracksResponse = await fetch(
-      `${API_URL}api/spotify/tracks?trackIds=${ids}`
+      `${API_URL}api/spotify/tracks?trackIds=${ids}`, {
+          headers: {
+            'Authorization': authHeader
+          }
+        }
     ).then((res) => res.json());
 
     const saved: CheckUsersSavedTracksResponse = await fetchIsSavedData(
@@ -50,8 +56,13 @@ function TagTracklist(props: IProps) {
   }
 
   async function fetchIsSavedData(trackIds: string[]) {
+    const authHeader = getAuthHeader();
     const data: CheckUsersSavedTracksResponse = await fetch(
-      `${API_URL}api/spotify/me/tracks/contains?trackIds=${trackIds}`
+      `${API_URL}api/spotify/me/tracks/contains?trackIds=${trackIds}`, {
+          headers: {
+            'Authorization': authHeader
+          }
+        }
     ).then((res) => res.json());
 
     return data;

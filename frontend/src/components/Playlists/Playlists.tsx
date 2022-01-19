@@ -10,6 +10,7 @@ import { API_URL } from "../../utils/constants";
 import "../../cards.scss";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import { createNewPlaylist } from "../../helpers/api-helpers";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 interface IProps {}
 
@@ -30,8 +31,13 @@ class Playlists extends Component<IProps, IState> {
 
   async componentDidMount() {
     // Fetch playlists
+    const authHeader = getAuthHeader();
     const data: ListOfUsersPlaylistsResponse = await fetch(
-      `${API_URL}api/spotify/playlists`
+      `${API_URL}api/spotify/playlists`, {
+          headers: {
+            'Authorization': authHeader
+          }
+        }
     ).then((res) => res.json());
     // Save to state
     this.setState((state) => ({ ...state, results: data.items }));
