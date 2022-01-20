@@ -18,8 +18,9 @@ export default function Discography (props: IProps) {
 
     const [albums, setAlbums] = useState<ArtistsAlbumsResponse>();
     const [albumItems, setAlbumItems] = useState<AlbumObjectSimplified[]>([]);
+    //TODO country is hardcoded
     const [next, setNext] = useState<string>(
-        `${API_URL}api/spotify/artist/${id}/albums?limit=${limit}&include_groups=album,single`
+        `${API_URL}api/spotify/artist/${id}/albums?country="DE"&limit=${limit}&include_groups=album,single`
     );
     //const [albumIds, setAlbumIds] = useState<string[]>();
 
@@ -30,7 +31,7 @@ export default function Discography (props: IProps) {
         setAlbumItems(arr);
     }
 
-    //if (!albums || ! albumItems) return <p>loading...</p>;
+    if (!albums && !albumItems) return <p>loading...</p>;
     const allAlbums = albumItems.map((album) => {
         return(
             <Album id={album.id} headerStyle={"full"} key={album.id}/>
@@ -41,10 +42,9 @@ export default function Discography (props: IProps) {
         const bottom =
             e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
         if (bottom && albums && (albums.next !== null)) {
-            console.log(albums.offset)
             const limit = albums.limit;
             const offset = albums.offset + limit;
-            const url = `${API_URL}api/spotify/artist/${id}/albums?offset=${offset}&limit=${limit}&market=DE&include_groups=album,single`;
+            const url = `${API_URL}api/spotify/artist/${id}/albums?country="DE"&offset=${offset}&limit=${limit}&market=DE&include_groups=album,single`;
             setNext(url);
         }
     };

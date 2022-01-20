@@ -36,7 +36,7 @@ class RelatedArtists extends Component<IProps, IState> {
 
 
         const artist: SingleArtistResponse = await fetch(
-            `${API_URL}api/spotify/artists/${this.props.id}`
+            `${API_URL}api/spotify/artist/${this.props.id}`
         ).then((res) => res.json());
         // Save to state
         this.setState((state) => ({...state, artistName: artist.name}));

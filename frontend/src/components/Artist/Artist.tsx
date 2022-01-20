@@ -11,7 +11,7 @@ import {API_URL} from "../../utils/constants";
 import {NavLink, Link} from "react-router-dom";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import "./Artist.scss"
-import "../../cards.scss";
+//import "../../cards.scss";
 import TrackList from "../TrackList/TrackList";
 
 
@@ -26,6 +26,7 @@ interface IState {
     singles: AlbumObjectSimplified[];
     appearsOn: AlbumObjectSimplified[];
     compilations: AlbumObjectSimplified[];
+    relatedArtists: ArtistObjectFull[];
     showAlbums: boolean,
     showDiscography: boolean,
     showSingles: boolean,
@@ -43,13 +44,14 @@ class Artist extends Component<IProps, IState> {
             singles: [],
             appearsOn: [],
             compilations: [],
+            relatedArtists: [],
             showAlbums: true,
             showDiscography: true,
             showSingles: true,
             showAppearsOn: true,
             showCompilations: true
         };
-        //this.hideSection = this.hideSection.bind(this);
+        this.hideSection = this.hideSection.bind(this);
     }
 
 
@@ -74,6 +76,7 @@ class Artist extends Component<IProps, IState> {
         if (allAlbums === undefined || !(allAlbums.items.length > 0)) {
             this.setState({showAlbums: false});
         }
+        console.log(this.state.albums)
 
         // fetch singles
         const allSingles: ArtistsAlbumsResponse = await fetch(
@@ -103,9 +106,16 @@ class Artist extends Component<IProps, IState> {
         if (allCompilations === undefined || !(allCompilations.items.length > 0)) {
             this.setState({showCompilations: false});
         }
+
+        //fet related artists
+        const allRelatedArtists = await fetch(
+            `${API_URL}api/spotify/artists/${this.props.id}/related-artists`
+        ).then((res) => res.json());
+        this.setState((state) => ({...state, relatedArtists: allRelatedArtists.artists}))
+
     }
 
-    /*hideSection(value: string){
+    hideSection(value: string){
         const index = Number(value) -1;
         if(index === 0){
             this.setState({showDiscography: true});
@@ -115,8 +125,8 @@ class Artist extends Component<IProps, IState> {
             this.setState({showCompilations: false});
         }
         else if(index === 1){
-            this.setState({showAlbums: true});
             this.setState({showDiscography: false});
+            this.setState({showAlbums: true});
             this.setState({showSingles: false});
             this.setState({showAppearsOn: false});
             this.setState({showCompilations: false});
@@ -149,7 +159,7 @@ class Artist extends Component<IProps, IState> {
             this.setState({showAppearsOn: true});
             this.setState({showCompilations: true});
         }
-    }*/
+    }
 
     render() {
 
@@ -188,26 +198,27 @@ class Artist extends Component<IProps, IState> {
             );
         });
 
-        const singles = this.state.singles.map((single, index) => {
-            return (
-                <li className={"column"} key={single.id + index}>
-                    <Link to={`/album/${single.id}`}>
-                        {single.images.length > 0 ? (
-                            <div
-                                className={"cover"}
-                                style={{backgroundImage: `url(${single.images[0].url}`}}
-                            />
-                        ) : (
-                            <CoverPlaceholder/>
-                        )}
-                        <span className={"title"}>{single.name}</span>
-                        <span className={"artists-name"}>
+            const singles = this.state.singles.map((single, index) => {
+                return (
+                    <li className={"column"} key={single.id + index}>
+                        <Link to={`/album/${single.id}`}>
+                            {single.images.length > 0 ? (
+                                <div
+                                    className={"cover"}
+                                    style={{backgroundImage: `url(${single.images[0].url}`}}
+                                />
+                            ) : (
+                                <CoverPlaceholder/>
+                            )}
+                            <span className={"title"}>{single.name}</span>
+                            <span className={"artists-name"}>
                                     {single.artists.map((a) => a.name).join(", ")}
                                 </span>
-                    </Link>
-                </li>
-            );
-        });
+                        </Link>
+                    </li>
+                );
+            });
+
 
         const appearsOnAlbum = this.state.appearsOn.map((album, index) => {
             return (
@@ -229,7 +240,6 @@ class Artist extends Component<IProps, IState> {
                 </li>
             );
         });
-
         const compilations = this.state.compilations.map((compilation, index) => {
             return (
                 <li className={"column"} key={compilation.id + index}>
@@ -251,10 +261,31 @@ class Artist extends Component<IProps, IState> {
             );
         });
 
+        //for related artists
+        if (this.state.relatedArtists.length === 0) return <p>loading...</p>;
+        const relatedArtists = this.state.relatedArtists.map((relatedArtist) => {
+            return (
+                <li className="column" key={relatedArtist.id}>
+                    <Link to={`/artist/${relatedArtist.id}`}>
+                        {relatedArtist.images[0] !== undefined ? (
+                            <div className={"cover"} style={{
+                                backgroundImage: `url(${relatedArtist.images[0].url})`
+                            }}>
+                            </div>
+                        ) : (
+                            <CoverPlaceholder/>
+                        )}
+
+                        <span className="title">{relatedArtist.name}</span>
+                    </Link>
+                </li>
+            );
+        });
+        {/*TODO when there is only one element in ul, the element is hidden on a small screen*/}
         return (
             <div style={{overflow: "hidden auto"}}>
                 {/*Filter*/}
-                {/*  <div className="select">
+                  <div className="select">
                     <select className = {"input-select"} onChange={(e) => {this.hideSection(e.target.value)}}>
                         <option value="0">Filter</option>
                         {albums.length > 0 ? (
@@ -269,7 +300,7 @@ class Artist extends Component<IProps, IState> {
                         <option value="5">Compilations</option>):(<></>)}
 
                     </select>
-                </div>*/}
+                </div>
                 {/*Discography*/}
                 <div className={"artist"}>
                     <h1 className={"titleName"}>Artist</h1>
@@ -332,6 +363,7 @@ class Artist extends Component<IProps, IState> {
                         </div>)
                     : (<></>)}
 
+
                 {/*Compilations*/}
                 {this.state.showCompilations && compilations.length > 0 ? (
                         <div className={"section"} key="compilations">
@@ -346,6 +378,20 @@ class Artist extends Component<IProps, IState> {
                             </div>
                         </div>)
                     : (<></>)}
+
+                <div className={"section"}>
+                    <div className={"header"}>
+                        <h2>More like</h2>
+                        <NavLink to={`/related-artists/${this.props.id}`}>View
+                            More</NavLink>
+                    </div>
+                    <div className={"overview"}>
+                        <ul className={"overview-items"}>
+                            {relatedArtists}
+                        </ul>
+                    </div>
+                </div>
+
             </div>
         );
     }

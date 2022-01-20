@@ -39,7 +39,6 @@ export default function Album(props: IProps) {
 
     // Save album data
     setAlbum(data);
-    console.log(data.name)
     // Save if tracks are saved
     const saved: CheckUsersSavedTracksResponse = await fetchIsSavedData(
       data.tracks.items.map((i) => i.id)
@@ -68,10 +67,14 @@ export default function Album(props: IProps) {
       `${API_URL}api/spotify/album/${id}/tracks?offset=${newOffset}&limit=${limit}`
     ).then((res) => res.json());
 
-    // Save whether tracks are saved or not
-    const saved: CheckUsersSavedTracksResponse = await fetchIsSavedData(
-      data.items.map((i) => i.id)
-    );
+    let saved: CheckUsersSavedTracksResponse = [];
+    const tmp = data.items.map((i) => i.id);
+    if(tmp.length !== 0) {
+      // Save whether tracks are saved or not
+       saved = await fetchIsSavedData(
+        tmp
+      );
+    }
     const fetchedTracks = data.items as AlbumTrack[];
     setTracks((oldTracks) => [
       ...oldTracks,
