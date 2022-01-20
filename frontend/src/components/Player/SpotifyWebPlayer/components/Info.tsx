@@ -20,6 +20,7 @@ interface Props {
   track: SpotifyPlayerTrack;
   // eslint-disable-next-line no-unused-vars
   updateSavedStatus?: (fn: (status: boolean) => any) => any;
+  albumId: any;
 }
 
 interface State {
@@ -230,7 +231,7 @@ export default class Info extends React.PureComponent<Props, State> {
         {image && (
           <a
             aria-label={title}
-            href={getSpotifyLink(uri)}
+            href={`/album/${this.props.albumId}`}
             rel="noreferrer"
             target="_blank"
             title={title}

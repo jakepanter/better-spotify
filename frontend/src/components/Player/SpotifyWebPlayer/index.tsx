@@ -640,6 +640,16 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
     this.updateState({ volume });
   };
 
+  private getCurrentAlbumId = async () => {
+    try {
+      const player: SpotifyPlayerStatus = await getPlaybackState();
+      return player.item.album.id;
+    } catch (error: any) {
+      console.log(error);
+    }
+    return '';
+  }
+
   private syncDevice = async () => {
     if (!this.isActive) {
       return;
@@ -900,6 +910,7 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
             token={token}
             track={track}
             updateSavedStatus={updateSavedStatus}
+            albumId={this.getCurrentAlbumId()}
           />
         );
       }

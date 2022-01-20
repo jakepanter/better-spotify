@@ -312,6 +312,12 @@ export default class App {
       return result;
     });
 
+    // get current song
+    this.server.get('/api/spotify/player/currently-playing', async (req: Request, res: Response) => {
+      const currentlyPlaying = await this.spotifyService.getPlaybackState();
+      return res.json(currentlyPlaying);
+    });
+
     // This must be before this.server.listen(...)
     // Serve static frontend files
     this.server.get('*', (req: Request, res: Response) => res.sendFile(path.join(`${__dirname}/../../frontend/build`)));

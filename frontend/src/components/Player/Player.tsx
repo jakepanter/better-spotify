@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { API_URL } from '../../utils/constants';
 import SpotifyWebPlayer from "./SpotifyWebPlayer";
 import "./Player.scss";
+import {CurrentPlaybackResponse} from "spotify-types";
 
 interface IProps {}
 
@@ -9,8 +10,8 @@ interface IState {
     token: string;
 }
 
-class Player extends Component<IProps, IState> {
 
+class Player extends Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
@@ -21,6 +22,13 @@ class Player extends Component<IProps, IState> {
 
     componentDidMount() {
         this.fetchToken();
+        this.currentPlayingSong();
+    }
+
+    async currentPlayingSong(){
+        const currentPlayingSong:CurrentPlaybackResponse = await fetch(`${API_URL}api/spotify/player/currently-playing`).then(res => res.json());
+        console.log("This is current: ");
+        console.log(currentPlayingSong.item);
     }
 
     async fetchToken() {
@@ -30,6 +38,8 @@ class Player extends Component<IProps, IState> {
                 token: token
             })
         }
+        console.log("This is token: ");
+        console.log(this.state.token);
     }
 
     render() {
