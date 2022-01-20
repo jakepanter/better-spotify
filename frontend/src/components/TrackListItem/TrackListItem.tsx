@@ -148,7 +148,7 @@ function TrackListItem(props: Props) {
         onContextMenu={(e) => handleRightClick(e)}
       >  
         <Link to={`/episode/${props.track.id}`}>
-          <div className={"TabelCell"}>
+        <div className="noTags">
             {track.image !== undefined && track.image !== null ? (
               <div className={"TableCell TableCellArtwork"}>
                 <img
@@ -160,20 +160,21 @@ function TrackListItem(props: Props) {
             ) : (
               <CoverPlaceholder />
             )}
+            <div className="EpisodeContent">
+              <h5 className={"TableCellTitleArtist"}>{track.name}</h5>
+              <p>{track.description}</p>
+              <div>{track.duration_ms}</div>
+              <div onClick={(e) => playClick(e)}>Play Button</div>
+            </div>
           </div>
-          <div className={"TableCell TableCellTitleArtist"}>{track.name}</div>
-          <div>{track.description}</div>
-          <div>{track.duration_ms}</div>
-          <div></div>
-          <div onClick={(e) => playClick(e)}>Play Button</div>
-            {track.tags !== undefined ? (
-          <div className={"TableCell TableCellTags"}>
-            {track.tags.map((t, i) =>
-              <Link key={i}
-                    className={`Tag TagColor${t.color}`}
-                    to={`/tag/${t.id}`}
-              >
-                {t.title}
+          {track.tags !== undefined ? (
+            <div className={"TableCell TableCellTags"}>
+              {track.tags.map((t, i) =>
+                <Link key={i}
+                  className={`Tag TagColor${t.color}`}
+                  to={`/tag/${t.id}`}
+                >
+                  {t.title}
               </Link>
             )}
           </div>
