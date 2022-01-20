@@ -1,5 +1,15 @@
 @import "./src/boilerplate.scss";
 
+.albumLink {
+  text-decoration: none!important;
+  color: $color-default;
+
+  &:hover {
+    text-decoration: underline !important;
+    color: $color-default;
+  }
+}
+
 .Pointer {
   cursor: pointer;
 }

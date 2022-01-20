@@ -1,6 +1,6 @@
 @import './src/boilerplate.scss';
 
-.Albums {
+.Releases {
   display: flex;
   flex-flow: column nowrap;
   height: 100%;
@@ -76,6 +76,12 @@
     &Artist {
       font-family: $font-special;
       font-size: 18px;
+      color: $color-default;
+    }
+
+    &AddedAt {
+      font-family: $font-special;
+      font-size: 16px;
       color: $color-default;
     }
   }

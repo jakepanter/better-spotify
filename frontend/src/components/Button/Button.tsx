@@ -1,11 +1,14 @@
-import React, {Component} from 'react';
-import './Button.scss';
+import React, { Component } from "react";
+import "./Button.scss";
 
-interface IProps {
+interface IProps
+  extends React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  > {
   label?: string;
   icon?: string;
-  style?: string;
-  onClick?: () => void;
+  simple?: boolean;
 }
 
 interface IState {}
@@ -16,12 +19,24 @@ class Button extends Component<IProps, IState> {
   }
 
   render() {
-    const className = `button Button ${this.props.icon ? 'has-icon' : ''} ${this.props.label ? 'has-label' : ''}`;
+    const className = `Button ${this.props.icon ? "has-icon" : ""} ${
+      this.props.label ? "has-label" : ""
+    } ${this.props.simple ? "simple" : "button"}`;
 
-    return (<button className={className} title={this.props.label} onClick={this.props.onClick}>
-      {this.props.icon ? <span className={'material-icons'}>{this.props.icon}</span> : ''}
-      {this.props.children ? this.props.children : this.props.label}
-    </button>);
+    return (
+      <button
+        className={className}
+        title={this.props.label}
+        onClick={this.props.onClick}
+      >
+        {this.props.icon ? (
+          <span className={"material-icons"}>{this.props.icon}</span>
+        ) : (
+          ""
+        )}
+        {this.props.children ? this.props.children : this.props.label}
+      </button>
+    );
   }
 }
 
