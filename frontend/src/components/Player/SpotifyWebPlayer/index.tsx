@@ -656,6 +656,7 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
   };
 
   //TODO get currents tracks albumId
+  // what happens to episodes?
    private getCurrentAlbumId = async () => {
     try {
         const  player = await getPlaybackState();
@@ -665,8 +666,13 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
         }
         /* istanbul ignore else */
         if (player.item) {
-            this.setState({albumId: player.item.album.id});
-            return player.item.album.id;
+            if(player.item.currently_playing_type === "track") {
+                this.setState({albumId: player.item.album.id});
+                return player.item.album.id;
+            }
+            else{
+                return '';
+            }
         }
     } catch (error: any) {
       console.log(error);

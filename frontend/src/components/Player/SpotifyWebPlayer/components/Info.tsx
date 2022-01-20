@@ -230,6 +230,7 @@ export default class Info extends React.PureComponent<Props, State> {
     //TODO
     // changed anchor to Link
     // changes to-attribute
+    // Link has to be changed for episodes --> check type for "track" and "episode"
     return (
       <Wrapper className={classes.join(' ')} style={{ h: height }}>
         {image && (
