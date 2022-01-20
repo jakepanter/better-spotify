@@ -27,7 +27,7 @@ class Player extends Component<IProps, IState> {
 
     async currentPlayingSong(){
         const currentPlayingSong:CurrentPlaybackResponse = await fetch(`${API_URL}api/spotify/player/currently-playing`).then(res => res.json());
-        console.log("This is current: ");
+        //console.log("This is current: ");
         console.log(currentPlayingSong.item);
     }
 
@@ -38,8 +38,8 @@ class Player extends Component<IProps, IState> {
                 token: token
             })
         }
-        console.log("This is token: ");
-        console.log(this.state.token);
+        //console.log("This is token: ");
+        //console.log(this.state.token);
     }
 
     render() {

@@ -131,6 +131,8 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
       status: STATUS.IDLE,
       track: this.emptyTrack,
       volume: parseVolume(props.initialVolume) || 1,
+        //TODO added albumId to state
+        albumId: '',
     };
 
     this.styles = getMergedStyles(props.styles);
@@ -147,6 +149,7 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
   };
 
   public async componentDidMount() {
+    console.log("HIER")
     this.isActive = true;
     const { top = 0 } = this.ref.current?.getBoundingClientRect() || {};
 
@@ -162,6 +165,9 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
     } else {
       this.initializePlayer();
     }
+    //TODO maybe it will work even when the two following lines are deleted
+    //const albumId = await this.getCurrentAlbumId();
+    //this.setState({albumId: albumId})
 
     await loadSpotifyPlayer();
   }
@@ -233,6 +239,9 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
       if (showSaveIcon) {
         this.updateState({ isSaved: false });
       }
+
+      //TODO when the track.id changes, get the album id of the new track
+        this.getCurrentAlbumId()
     }
 
     if (previousState.isPlaying !== isPlaying) {
@@ -278,6 +287,12 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
         }
       }
     }
+
+    //TODO check if albumId changed, this may can be removed
+      if (previousState.albumId !== this.state.albumId) {
+          console.log("----------------------------------")
+          console.log(this.state.albumId);
+      }
   }
 
   public componentWillUnmount() {
@@ -640,10 +655,19 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
     this.updateState({ volume });
   };
 
-  private getCurrentAlbumId = async () => {
+  //TODO get currents tracks albumId
+   private getCurrentAlbumId = async () => {
     try {
-      const player: SpotifyPlayerStatus = await getPlaybackState();
-      return player.item.album.id;
+        const  player = await getPlaybackState();
+
+        if (!player) {
+            throw new Error('No player');
+        }
+        /* istanbul ignore else */
+        if (player.item) {
+            this.setState({albumId: player.item.album.id});
+            return player.item.album.id;
+        }
     } catch (error: any) {
       console.log(error);
     }
@@ -910,7 +934,8 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
             token={token}
             track={track}
             updateSavedStatus={updateSavedStatus}
-            albumId={this.getCurrentAlbumId()}
+            //TODO pass albumId as prop to Info Component
+            albumId={this.state.albumId}
           />
         );
       }

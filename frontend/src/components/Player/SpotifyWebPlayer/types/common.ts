@@ -51,7 +51,8 @@ export interface State {
   status: string;
   track: SpotifyPlayerTrack;
   volume: number;
-  albumId: st
+  //TODO added albumId
+  albumId: string;
 }
 
 export interface ComponentsProps {
