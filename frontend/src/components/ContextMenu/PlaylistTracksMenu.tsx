@@ -6,6 +6,7 @@ import {
   CreatePlaylistResponse,
   CurrentUsersProfileResponse,
   ListOfUsersPlaylistsResponse,
+  PlaylistObjectFull,
 } from "spotify-types";
 import AppContext from "../../AppContext";
 import useSWR, { mutate } from "swr";
@@ -15,16 +16,16 @@ import { API_URL } from "../../utils/constants";
 import TagsSystem from "../../utils/tags-system";
 
 type Props = {
-  data: String[];
+  data: { tracks: String[]; playlist: PlaylistObjectFull };
   anchorPoint: { x: number; y: number };
 };
 
 const fetcher = (url: any) => fetch(url).then((r) => r.json());
 
-function TracksMenu(props: Props) {
+function PlaylistTracksMenu(props: Props) {
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
 
-  const trackId = props.data.map((track) => track.split("-")[0].split(":")[2])[0];
+  const trackId = props.data.tracks.map((track) => track.split("-")[0].split(":")[2])[0];
   const tags = TagsSystem.getTags();
   const [tagsForTrack, setTagsForTrack] = useState<string[]>(TagsSystem.getTagsOfElement(trackId));
 
@@ -56,12 +57,27 @@ function TracksMenu(props: Props) {
   const addToPlaylist = async (playlistId: String) => {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
     //HACKY: because props.tracks contains the trackUniqueId[] we have to remove the -id at the end from each track
-    const tracks = props.data.map((track) => track.split("-")[0]);
+    const tracks = props.data.tracks.map((track) => track.split("-")[0]);
     await fetch(`${API_URL}api/spotify/playlist/${playlistId}/add`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(tracks),
     });
+  };
+
+  const removeFromPlaylist = async () => {
+    state.setContextMenu({ ...state.contextMenu, isOpen: false });
+    //HACKY: because props.tracks contains the trackUniqueId[] we have to remove the -id at the end from each track
+    const data = props.data.tracks.map((track) => track.split("-"));
+    const tracks = data.map((track) => {
+      return { uri: track[0], positions: [parseInt(track[1])] };
+    });
+    await fetch(`${API_URL}api/spotify/playlist/${props.data.playlist.id}/remove`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(tracks),
+    });
+    history.push(history.location.pathname, { removed: tracks });
   };
 
   const addToNewPlaylist = async () => {
@@ -84,7 +100,7 @@ function TracksMenu(props: Props) {
   const showAlbum = async () => {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
     //extract track id
-    const trackId = props.data.map((track) => track.split("track:")[1].split("-")[0])[0];
+    const trackId = props.data.tracks.map((track) => track.split("track:")[1].split("-")[0])[0];
     const track: any = await fetch(`${API_URL}api/spotify/track/${trackId}`).then((r) => r.json());
     history.push(`/album/${track.album.id}`);
   };
@@ -92,7 +108,7 @@ function TracksMenu(props: Props) {
   const showArtist = async () => {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
     //extract track id
-    const trackId = props.data.map((track) => track.split("track:")[1].split("-")[0])[0];
+    const trackId = props.data.tracks.map((track) => track.split("track:")[1].split("-")[0])[0];
     const track: any = await fetch(`${API_URL}api/spotify/track/${trackId}`).then((r) => r.json());
     history.push(`/artist/${track.artists[0].id}`);
   };
@@ -108,7 +124,7 @@ function TracksMenu(props: Props) {
 
   if (playlistsError || meError) return <p>error</p>;
 
-  if (props.data.length === 1) {
+  if (props.data.tracks.length === 1) {
     return (
       <ControlledMenu
         {...menuProps}
@@ -137,6 +153,9 @@ function TracksMenu(props: Props) {
             <MenuItem>Fetching Playlists...</MenuItem>
           )}
         </SubMenu>
+        {props.data.playlist.owner.id === me?.id && (
+          <MenuItem onClick={removeFromPlaylist}>Remove from Playlist</MenuItem>
+        )}
         <SubMenu
           label={"Tags"}
           overflow={"auto"}
@@ -192,10 +211,13 @@ function TracksMenu(props: Props) {
             <MenuItem>Fetching Playlists...</MenuItem>
           )}
         </SubMenu>
+        {props.data.playlist.owner.id === me?.id && (
+          <MenuItem onClick={removeFromPlaylist}>Remove from Playlist</MenuItem>
+        )}
         <MenuItem disabled>Like</MenuItem>
       </ControlledMenu>
     );
   }
 }
 
-export default TracksMenu;
+export default PlaylistTracksMenu;
