@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {NavLink} from "react-router-dom";
-import { EpisodeObjectFull, SingleEpisodeResponse } from "spotify-types";
+import { EpisodeObject, SingleEpisodeResponse } from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import "./Episode.scss";
@@ -20,22 +20,30 @@ type Body = {
 
 export default function Episode(props: IProps) {
   const { id } = props;
-  const [episode, setEpisode] = useState<EpisodeObjectFull>();
+  const [episode, setEpisode] = useState<EpisodeObject>();
+  var body: Body;
 
-  const sendRequest = useCallback(async () => {
-    // POST request using fetch inside useEffect React hook
-    let context_uri;
-    context_uri = "spotify:show:" + episode?.show.id;
-    var track_uri = "spotify:episode:" + id;
+  async function fetchEpisodeData() {
+    const data: SingleEpisodeResponse = await fetch(
+      `${API_URL}api/spotify/episode/${id}`
+    ).then((res) => res.json());
     
-    const body: Body = {
+    var context_uri = "spotify:show:" + data.show.id;
+    var track_uri = "spotify:episode:" + id;
+
+    body = {
       context_uri: context_uri,
-      position_ms: 0,
-      offset: {
-        uri: track_uri,
-      }
+      position_ms: 0
     }
 
+    body.offset = {
+      uri: track_uri
+    }
+
+    setEpisode(data);
+  }
+
+  const sendRequest = useCallback(async () => {
     fetch(`${API_URL}api/spotify/me/player/play`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -43,14 +51,6 @@ export default function Episode(props: IProps) {
     })
         .then(response => response.json())
   }, []);
-
-  async function fetchEpisodeData() {
-    const data: SingleEpisodeResponse = await fetch(
-      `${API_URL}api/spotify/episode/${id}`
-    ).then((res) => res.json());
-
-    setEpisode(data);
-  }
 
   useEffect(() => {
     fetchEpisodeData();
