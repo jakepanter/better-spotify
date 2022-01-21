@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import {NavLink} from "react-router-dom";
 import { EpisodeObjectFull, SingleEpisodeResponse } from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
@@ -9,9 +10,39 @@ interface IProps {
   id: string;
 }
 
+type Body = {
+  context_uri: string | undefined,
+  position_ms: number | undefined,
+  offset?: {
+    uri: string | undefined
+  }
+};
+
 export default function Episode(props: IProps) {
   const { id } = props;
   const [episode, setEpisode] = useState<EpisodeObjectFull>();
+
+  const sendRequest = useCallback(async () => {
+    // POST request using fetch inside useEffect React hook
+    let context_uri;
+    context_uri = "spotify:show:" + episode?.show.id;
+    var track_uri = "spotify:episode:" + id;
+    
+    const body: Body = {
+      context_uri: context_uri,
+      position_ms: 0,
+      offset: {
+        uri: track_uri,
+      }
+    }
+
+    fetch(`${API_URL}api/spotify/me/player/play`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    })
+        .then(response => response.json())
+  }, []);
 
   async function fetchEpisodeData() {
     const data: SingleEpisodeResponse = await fetch(
@@ -48,6 +79,14 @@ export default function Episode(props: IProps) {
           </p>
         </div>
         <div className={"PlaylistHeaderFilter"}>{/* Filter */}</div>
+      </div>
+      <div>
+      <div className="EpisodeControl">
+        <div className={"PlayEpisode"} onClick={() => sendRequest()}/>
+        <NavLink title={"All Episodes"} className="AllEpisodes button" to={`/show/${episode.show.id}`} exact>
+            <span className="left-side-panel--text">All Episodes</span>
+        </NavLink>
+      </div>
       </div>
       <div className="EpisodeDescription">
         <h4>Description</h4>

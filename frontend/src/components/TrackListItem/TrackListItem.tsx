@@ -15,7 +15,8 @@ import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import "./TrackListItem.scss";
 import {API_URL} from "../../utils/constants";
 import {TagWithId} from "../../utils/tags-system";
-import { Link } from "react-router-dom";
+import { Link, Route } from "react-router-dom";
+import EpisodePage from "../../pages/EpisodePage/EpisodePage";
 
 type Body = {
   context_uri: string | undefined,
@@ -101,23 +102,27 @@ function TrackListItem(props: Props) {
   }, [props.selected]);
 
   const handleClick = (e: any) => {
+
     if(type != "show") {
       if (e.shiftKey) {
         setSpecialKey("shift");
       } else if (e.ctrlKey) {
         setSpecialKey("ctrl");
+      } else if (e.target.className == "TableCellPlayEpisode") {
+        sendRequest()
       } else {
         setSpecialKey(null);
-      }
+      } 
       setSelected(!selected); 
 
       if (e.detail === 2) sendRequest()
     }
   };
 
-  const playClick =(e: any) => {
-    sendRequest()
-  }
+  const handlePlayButton= (e: any) => {
+    e.preventDefault();
+    sendRequest();
+  };
 
   const handleRightClick = (e: any) => {
     e.preventDefault();
@@ -141,10 +146,10 @@ function TrackListItem(props: Props) {
       setLiked(false);
     }
   };
+  
   if(type === "show") {
     return (
       <div className={`Pointer EpisodeRow ${selected ? "Selected" : ""}`}
-        onClick={(e) => handleClick(e)}
         onContextMenu={(e) => handleRightClick(e)}
       >  
         <Link to={`/episode/${props.track.id}`}>
@@ -160,11 +165,10 @@ function TrackListItem(props: Props) {
             ) : (
               <CoverPlaceholder />
             )}
-            <div className="EpisodeContent">
+            <div className={"EpisodeContent"}>
               <h5 className={"TableCellTitleArtist"}>{track.name}</h5>
               <p>{track.description}</p>
-              <div>{track.duration_ms}</div>
-              <div onClick={(e) => playClick(e)}>Play Button</div>
+              <div className={"TableCellPlayEpisode"} onClick={(e) => handlePlayButton(e)}/>
             </div>
           </div>
           {track.tags !== undefined ? (
@@ -181,7 +185,7 @@ function TrackListItem(props: Props) {
       ) : (
         <></>
       )}
-        </Link>
+      </Link>
       </div>
     );
   }

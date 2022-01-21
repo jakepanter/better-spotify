@@ -78,9 +78,33 @@
           text-align: justify;
         }
       }
+
+      .TableCellPlayEpisode {
+        margin-top: 8px;
+        flex: 0 0 42px;
+        width: 52px;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+
+        &:hover::before {
+          color: rgba($white, 1.0);
+        }
+        &:before {
+          content: "\e038";
+          font-family: "Material Icons";
+          width: 50px;
+          display: inline-block;
+          font-size: 50px;
+          text-align: center;
+          color: rgba($white, 0.45);     
+        }
+      }
     }
   }
 }
+
 
 .Selected {
   background-color: $color-primary;
