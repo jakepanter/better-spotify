@@ -1,8 +1,6 @@
 /* eslint-disable no-unused-vars */
 //anyone know how to satisfy eslint and the unused prop function variables????
-import "./TrackListItem.scss";
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   AlbumObjectSimplified,
   EpisodeObject,
@@ -13,42 +11,33 @@ import {
   TrackObjectSimplified,
 } from "spotify-types";
 import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
-import { API_URL } from "../../utils/constants";
-import { Tag } from "../../utils/tags-system";
-import { TagWithId } from "../../utils/tags-system";
-
-import Button from "../Button/Button";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 <<<<<<< HEAD
 import "./TrackListItem.scss";
-import { API_URL } from "../../utils/constants";
-import { TagWithId } from "../../utils/tags-system";
-import { Link } from "react-router-dom";
+import {API_URL} from "../../utils/constants";
+import {TagWithId} from "../../utils/tags-system";
+import { Link, Route } from "react-router-dom";
+import EpisodePage from "../../pages/EpisodePage/EpisodePage";
 =======
->>>>>>> 55b13415236a7d190e6d0d96c982d2cebab2860f
+import AppContext from "../../AppContext";
+>>>>>>> 4686333463dd41a71f87a072efd4fb5c1bdd9173
 
 type Body = {
-  context_uri: string | undefined;
-  position_ms: number | undefined;
+  context_uri: string | undefined,
+  position_ms: number | undefined,
   offset?: {
-    uri: string | undefined;
-  };
+    uri: string | undefined
+  }
 };
 
 type Props = {
-<<<<<<< HEAD
-  track: TrackObjectFull | TrackObjectSimplified | EpisodeObject;
+  track: TrackObjectFull | TrackObjectSimplified| EpisodeObject;
   name: string;
   artists: string[];
-=======
-  track: TrackObjectFull | TrackObjectSimplified;
-  name?: string;
-  artists: ArtistObjectSimplified[];
->>>>>>> 55b13415236a7d190e6d0d96c982d2cebab2860f
   duration_ms: number;
   added_at?: string;
   liked?: boolean;
-  album?: AlbumObjectSimplified | ShowObjectSimplified;
+  album?: AlbumObjectSimplified| ShowObjectSimplified;
   image?: ImageObject;
   description?: string;
   listIndex: number;
@@ -70,53 +59,43 @@ function TrackListItem(props: Props) {
   const [selected, setSelected] = useState<boolean>(props.selected);
   const [specialKey, setSpecialKey] = useState<String | null>(null);
   const [liked, setLiked] = useState<boolean>(!!props.liked);
+  const state = useContext(AppContext);
 
-  const id_tracklist = props.id_tracklist;
+  const id_tracklist= props.id_tracklist;
   const type = props.type;
   var track_uri = "spotify:track:" + props.track.id;
 
   const sendRequest = useCallback(async () => {
     // POST request using fetch inside useEffect React hook
     let context_uri;
-    if (type === "album") {
+    if (type === "album"){
       context_uri = "spotify:album:" + id_tracklist;
-    } else if (type == "playlist") {
+    } else if (type=="playlist") {
       context_uri = "spotify:playlist:" + id_tracklist;
-    } else if (type === "saved" || type === "tags") {
+    } else if (type === 'saved' || type === 'tags') {
       const userId = await fetchUserId();
-<<<<<<< HEAD
       context_uri = userId + ':collection:'
     } else if (type === 'show') {
       context_uri = "spotify:show:" + id_tracklist;
       track_uri = "spotify:episode:" + props.track.id;
-=======
-      context_uri = userId + ":collection:";
->>>>>>> 55b13415236a7d190e6d0d96c982d2cebab2860f
     } else if (type === "search") {
       context_uri = "spotify:album:" + track.album?.id;
     }
     const body: Body = {
       context_uri: context_uri,
-      position_ms: 0,
-    };
-    if (type !== "saved" && type !== "tags") {
+      position_ms: 0
+    }
+    if (type !== 'saved' && type !== 'tags') {
       body.offset = {
-        uri: track_uri,
-      };
+        uri: track_uri
+      }
     }
     fetch(`${API_URL}api/spotify/me/player/play`, {
-<<<<<<< HEAD
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     })
-      .then(response => response.json())
-=======
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    }).then((response) => response.json());
->>>>>>> 55b13415236a7d190e6d0d96c982d2cebab2860f
+        .then(response => response.json())
   }, []);
 
   useEffect(() => {
@@ -128,27 +107,27 @@ function TrackListItem(props: Props) {
   }, [props.selected]);
 
   const handleClick = (e: any) => {
-    if (type != "show") {
+
+    if(type != "show") {
       if (e.shiftKey) {
         setSpecialKey("shift");
       } else if (e.ctrlKey) {
         setSpecialKey("ctrl");
+      } else if (e.target.className == "TableCellPlayEpisode") {
+        sendRequest()
       } else {
         setSpecialKey(null);
-      }
-      setSelected(!selected);
+      } 
+      setSelected(!selected); 
 
-<<<<<<< HEAD
       if (e.detail === 2) sendRequest()
     }
-=======
-    if (e.detail === 2) sendRequest();
->>>>>>> 55b13415236a7d190e6d0d96c982d2cebab2860f
   };
 
-  const playClick = (e: any) => {
-    sendRequest()
-  }
+  const handlePlayButton= (e: any) => {
+    e.preventDefault();
+    sendRequest();
+  };
 
   const handleRightClick = (e: any) => {
     e.preventDefault();
@@ -156,51 +135,41 @@ function TrackListItem(props: Props) {
   };
 
   const fetchUserId = async () => {
-<<<<<<< HEAD
-    return await fetch(`${API_URL}api/spotify/me`).then(res => res.json()).then(data => data.uri)
-=======
-    return await fetch(`${API_URL}api/spotify/me`)
-      .then((res) => res.json())
-      .then((data) => data.uri);
->>>>>>> 55b13415236a7d190e6d0d96c982d2cebab2860f
+    return await fetch(`${API_URL}api/spotify/me`).then(res => res.json()).then(data => data.uri)};
+
+  const handleAddToPlaylist = (e: any) => {
+    e.stopPropagation();
+    state.setContextMenu({
+      isOpen: true,
+      data: [trackUniqueId],
+      x: e.clientX,
+      y: e.clientY,
+      type: "addToPlaylist",
+    });
   };
 
   const handleLikeButton = async (e: any) => {
     e.stopPropagation();
     if (!liked) {
       // add
-<<<<<<< HEAD
       await fetch(`${API_URL}api/spotify/me/tracks/add?trackIds=${track.track.id}`)
-        .then((res) => res.json());
+          .then((res) => res.json());
       setLiked(true);
     } else {
       // remove
       await fetch(`${API_URL}api/spotify/me/tracks/remove?trackIds=${track.track.id}`)
-        .then((res) => res.json());
-=======
-      await fetch(`${API_URL}api/spotify/me/tracks/add?trackIds=${track.track.id}`).then((res) =>
-        res.json()
-      );
-      setLiked(true);
-    } else {
-      // remove
-      await fetch(`${API_URL}api/spotify/me/tracks/remove?trackIds=${track.track.id}`).then((res) =>
-        res.json()
-      );
->>>>>>> 55b13415236a7d190e6d0d96c982d2cebab2860f
+          .then((res) => res.json());
       setLiked(false);
     }
   };
-  if (type === "show") {
+  
+  if(type === "show") {
     return (
       <div className={`Pointer EpisodeRow ${selected ? "Selected" : ""}`}
-        onClick={(e) => handleClick(e)}
         onContextMenu={(e) => handleRightClick(e)}
-      >
-
-<<<<<<< HEAD
+      >  
         <Link to={`/episode/${props.track.id}`}>
-          <div className="noTags">
+        <div className="noTags">
             {track.image !== undefined && track.image !== null ? (
               <div className={"TableCell TableCellArtwork"}>
                 <img
@@ -212,11 +181,10 @@ function TrackListItem(props: Props) {
             ) : (
               <CoverPlaceholder />
             )}
-            <div className="EpisodeContent">
+            <div className={"EpisodeContent"}>
               <h5 className={"TableCellTitleArtist"}>{track.name}</h5>
               <p>{track.description}</p>
-              <div>{track.duration_ms}</div>
-              <div onClick={(e) => playClick(e)}>Play Button</div>
+              <div className={"TableCellPlayEpisode"} onClick={(e) => handlePlayButton(e)}/>
             </div>
           </div>
           {track.tags !== undefined ? (
@@ -227,93 +195,50 @@ function TrackListItem(props: Props) {
                   to={`/tag/${t.id}`}
                 >
                   {t.title}
-                </Link>
-              )}
-            </div>
-          ) : (
-            <></>
-          )}
-        </Link>
-      </div >
+              </Link>
+            )}
+          </div>
+      ) : (
+        <></>
+      )}
+      </Link>
+      </div>
     );
   }
 
   else {
-    return (
-      <div
-        className={`Pointer TableRow ${selected ? "Selected" : ""}`}
-        onClick={(e) => handleClick(e)}
-        onContextMenu={(e) => handleRightClick(e)}
-      >
-        {track.album !== undefined &&
-          track.album.available_markets !== undefined ? (
-          <div className={"TableCell TableCellArtwork"}>
-            <img
-              src={track.album.images[2].url}
-              alt=""
-              style={{ width: "40px", height: "40px" }}
-            />
-          </div>
-        ) : (
-          <div className={"TableCellCoverPlaceholder"}>
-            <CoverPlaceholder />
-          </div>
-        )}
-
-        <div className={"TableCell TableCellTitleArtist"}>
-          <span className={"TableCellTitle"}>{track.name}</span>
-          <span className={"TableCellArtist"}>
-            {track.artists.map((artist) => artist) + (", ")}
-          </span>
-        </div>
-        {track.album !== undefined ? (
-          <div className={"TableCell TableCellAlbum"}>{track.album.name}</div>
-        ) : (
-          <></>
-        )}
-        {track.added_at !== undefined ? (
-          <div className={"TableCell TableCellAddedAt"}>
-            {formatTimeDiff(new Date(track.added_at).getTime(), Date.now())}
-          </div>
-        ) : (
-          <></>
-        )}
-        <div className={"TableCell TableCellDuration"}>
-          {formatTimestamp(track.duration_ms)}
-=======
-  return (
+      return (
     <div
       className={`Pointer TableRow ${selected ? "Selected" : ""}`}
       onClick={(e) => handleClick(e)}
       onContextMenu={(e) => handleRightClick(e)}
     >
-      {track.album !== undefined && track.album.available_markets !== undefined ? (
+      {track.album !== undefined &&
+      track.album.available_markets !== undefined ? (
         <div className={"TableCell TableCellArtwork"}>
-          <img src={track.album.images[2].url} alt="" style={{ width: "40px", height: "40px" }} />
+          <img
+            src={track.album.images[2].url}
+            alt=""
+            style={{ width: "40px", height: "40px" }}
+          />
         </div>
       ) : (
-        <div className={"TableCellCoverPlaceholder"}>
-          <CoverPlaceholder />
-        </div>
+          <div className={"TableCellCoverPlaceholder"}>
+            <CoverPlaceholder />
+          </div>
       )}
 
       <div className={"TableCell TableCellTitleArtist"}>
         <span className={"TableCellTitle"}>{track.name}</span>
         <span className={"TableCellArtist"}>
-          {track.artists.map((artist) => artist.name).join(", ")}
+          {track.artists.map((artist) => artist) + (", ")}
         </span>
       </div>
-
       {track.album !== undefined ? (
-        <div className={"TableCell TableCellAlbum"}>
-          <Link to={`/album/${track.album.id}`} className={"albumLink"} key={trackUniqueId}>
-            {track.album.name}
-          </Link>
-        </div>
+        <div className={"TableCell TableCellAlbum"}>{track.album.name}</div>
       ) : (
         <></>
       )}
-
       {track.added_at !== undefined ? (
         <div className={"TableCell TableCellAddedAt"}>
           {formatTimeDiff(new Date(track.added_at).getTime(), Date.now())}
@@ -321,12 +246,13 @@ function TrackListItem(props: Props) {
       ) : (
         <></>
       )}
-
-      <div className={"TableCell TableCellDuration"}>{formatTimestamp(track.duration_ms)}</div>
+      <div className={"TableCell TableCellDuration"}>
+        {formatTimestamp(track.duration_ms)}
+      </div>
       {track.liked !== undefined ? (
         <div className={"TableCell TableCellLiked"}>
-          <button className={`checkbox ${liked ? "checked" : ""}`} onClick={handleLikeButton}>
-            <span className={"material-icons"}>{liked ? "favorite" : "favorite_border"}</span>
+          <button className={`checkbox ${liked ? 'checked' : ''}`} onClick={handleLikeButton}>
+            <span className={'material-icons'}>{liked ? 'favorite' : 'favorite_border'}</span>
           </button>
         </div>
       ) : (
@@ -334,39 +260,29 @@ function TrackListItem(props: Props) {
       )}
       {track.tags !== undefined ? (
         <div className={"TableCell TableCellTags"}>
-          {track.tags.map((t, i) => (
-            <Link key={i} className={`Tag TagColor${t.color}`} to={`/tag/${t.id}`}>
+          {track.tags.map((t, i) =>
+            <Link key={i}
+                  className={`Tag TagColor${t.color}`}
+                  to={`/tag/${t.id}`}
+            >
               {t.title}
             </Link>
-          ))}
->>>>>>> 55b13415236a7d190e6d0d96c982d2cebab2860f
+          )}
         </div>
-        {track.liked !== undefined ? (
-          <div className={"TableCell TableCellLiked"}>
-            <button className={`checkbox ${liked ? 'checked' : ''}`} onClick={handleLikeButton}>
-              <span className={'material-icons'}>{liked ? 'favorite' : 'favorite_border'}</span>
-            </button>
-          </div>
-        ) : (
-          <></>
-        )}
-        {track.tags !== undefined ? (
-          <div className={"TableCell TableCellTags"}>
-            {track.tags.map((t, i) =>
-              <Link key={i}
-                className={`Tag TagColor${t.color}`}
-                to={`/tag/${t.id}`}
-              >
-                {t.title}
-              </Link>
-            )}
-          </div>
-        ) : (
-          <></>
-        )}
+      ) : (
+        <></>
+      )}
+      <div className="TableCell TableCellActions">
+        <Button
+          simple
+          icon="playlist_add"
+          className="material-icons"
+          onClick={handleAddToPlaylist}
+        />
       </div>
-    );
-  }
+    </div>
+  );
+}
 }
 
 export default TrackListItem;

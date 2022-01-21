@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 //anyone know how to satisfy eslint and the unused prop function variables????
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   AlbumObjectSimplified,
   EpisodeObject,
@@ -17,6 +17,8 @@ import {API_URL} from "../../utils/constants";
 import {TagWithId} from "../../utils/tags-system";
 import { Link, Route } from "react-router-dom";
 import EpisodePage from "../../pages/EpisodePage/EpisodePage";
+import AppContext from "../../AppContext";
+import Button from "../Button/Button";
 
 type Body = {
   context_uri: string | undefined,
@@ -55,6 +57,7 @@ function TrackListItem(props: Props) {
   const [selected, setSelected] = useState<boolean>(props.selected);
   const [specialKey, setSpecialKey] = useState<String | null>(null);
   const [liked, setLiked] = useState<boolean>(!!props.liked);
+  const state = useContext(AppContext);
 
   const id_tracklist= props.id_tracklist;
   const type = props.type;
@@ -131,6 +134,17 @@ function TrackListItem(props: Props) {
 
   const fetchUserId = async () => {
     return await fetch(`${API_URL}api/spotify/me`).then(res => res.json()).then(data => data.uri)};
+
+  const handleAddToPlaylist = (e: any) => {
+    e.stopPropagation();
+    state.setContextMenu({
+      isOpen: true,
+      data: [trackUniqueId],
+      x: e.clientX,
+      y: e.clientY,
+      type: "addToPlaylist",
+    });
+  };
 
   const handleLikeButton = async (e: any) => {
     e.stopPropagation();
@@ -256,6 +270,14 @@ function TrackListItem(props: Props) {
       ) : (
         <></>
       )}
+      <div className="TableCell TableCellActions">
+        <Button
+          simple
+          icon="playlist_add"
+          className="material-icons"
+          onClick={handleAddToPlaylist}
+        />
+      </div>
     </div>
   );
 }

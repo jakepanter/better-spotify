@@ -170,6 +170,7 @@
       &Album,
       &AddedAt,
       &Liked,
+      &Actions,
       &Tags {
         display: none;
       }
@@ -179,6 +180,7 @@
   &Medium {
     .TableCell {
       &AddedAt,
+      &Actions,
       &Tags {
         display: none;
       }
