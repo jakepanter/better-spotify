@@ -1,5 +1,6 @@
 import { CreatePlaylistResponse } from "spotify-types";
-import { API_URL, AUTH_LOCAL_STORAGE_KEY } from "../utils/constants";
+import { API_URL } from "../utils/constants";
+import store from '../utils/store';
 
 export const createNewPlaylist = async (
   name: string,
@@ -22,12 +23,6 @@ export const createNewPlaylist = async (
   });
 };
 
-export const getAccessToken = () => {
-  const localAuth = localStorage.getItem(AUTH_LOCAL_STORAGE_KEY) as string;
-  return JSON.parse(localAuth).accessToken;
-};
+export const getAccessToken = () => store.getState().authentication.accessToken;
 
-export const getAuthHeader = () => {
-  const localAuth = localStorage.getItem(AUTH_LOCAL_STORAGE_KEY) as string;
-  return `Bearer ${JSON.parse(localAuth).accessToken}`;
-};
+export const getAuthHeader = () => `Bearer ${store.getState().authentication.accessToken}`;

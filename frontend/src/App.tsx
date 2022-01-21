@@ -5,7 +5,7 @@ import Albums from "./components/Albums/Albums";
 import Playlists from "./components/Playlists/Playlists";
 import SavedTracks from "./components/SavedTracks/SavedTracks";
 import Player from "./components/Player/Player";
-import { API_URL, AUTH_LOCAL_STORAGE_KEY } from "./utils/constants";
+import { API_URL } from "./utils/constants";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Dashboard from "./components/Dashboard/Dashboard";
 import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
@@ -19,9 +19,16 @@ import Discover from "./components/Discover/Discover";
 import SongHistory from "./components/SongHistory/SongHistory";
 import Releases from "./components/Releases/Releases";
 import RelatedArtistsPage from "./pages/RelatedArtistsPage/RelatedArtistsPage";
-import { useSelector, useDispatch } from 'react-redux'
-import { updateAuthentication } from './utils/authenticationSlice'
+import { useSelector, useDispatch } from 'react-redux';
+import { getAuthentication, refreshAuthentication } from './utils/authenticationSlice';
 
+type AuthState = {
+  authentication: {
+    accessToken: string;
+    refreshToken: string;
+    expiresIn: string;
+  }
+}
 
 function authorize() {
   fetch(`${API_URL}api/spotify/get-auth-url`)
@@ -32,26 +39,11 @@ function authorize() {
       });
 }
 
-function getInitialAuth() {
-  let initialAuth = {
-    accessToken: '',
-    refreshToken: '',
-    expiresIn: ''
-  };
-  const localAuth = localStorage.getItem(AUTH_LOCAL_STORAGE_KEY);
-  if (localAuth === null) return initialAuth;
-  const parsedAuth = JSON.parse(localAuth);
-  if (parsedAuth.accessToken === '') return initialAuth;
-  return parsedAuth;
-}
-
 function App() {
-  const [isAuthorized, setIsAuthorized] = useState(false);
   const [editable, setEditable] = useState(false);
   const [miniMenu, setMiniMenu] = useState(false);
-  const [authorization, setAuthorization] = useState(getInitialAuth());
 
-  const authentication = useSelector((state) => state.authentication.accessToken)
+  const authentication = useSelector((state: AuthState) => state.authentication)
   const dispatch = useDispatch()
 
   const menuToggle = () => { setMiniMenu(!miniMenu)};
@@ -59,57 +51,18 @@ function App() {
   const toggleEditable = () => setEditable(!editable);
 
   useEffect(() => {
-    localStorage.setItem(AUTH_LOCAL_STORAGE_KEY, JSON.stringify(authorization));
-  }, [authorization]);
+    dispatch(getAuthentication());
+  });
 
   useEffect(() => {
-    if (authorization.refreshToken != '') {
-      const refreshInterval = setInterval(async () => {
-        const bearerToken = `Bearer ${authorization.refreshToken}`;
-        fetch(`${API_URL}api/spotify/refresh-token`, {
-          headers: {
-            'Authorization': bearerToken
-          }
-        })
-            .then(res => res.json())
-            .then(res => res.body)
-            .then(res => {
-              setAuthorization({
-                accessToken: res.access_token,
-                refreshToken: authorization.refreshToken,
-                expiresIn: res.expiresIn,
-              })
-            });
-      }, parseInt(authorization.expiresIn) * 1000 - 10000);
-      return () => clearInterval(refreshInterval);
-    }
-  }, [authorization]);
-
-  useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const localAuthorization = localStorage.getItem(AUTH_LOCAL_STORAGE_KEY);
-
-    const accessToken = queryParams.get('access_token') ? queryParams.get('access_token') as string : '';
-    const refreshToken = queryParams.get('refresh_token') ? queryParams.get('refresh_token') as string : '';
-    const expiresIn = queryParams.get('expires_in') ? queryParams.get('expires_in') as string : '';
-    if (accessToken != '' && refreshToken != '' && expiresIn != '') {
-      setAuthorization({
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-        expiresIn: expiresIn,
-      });
-      setIsAuthorized(true);
-    } else if (localAuthorization != null && JSON.parse(localAuthorization).accessToken != '') {
-      setAuthorization(JSON.parse(localAuthorization));
-      setIsAuthorized(true);
-    } else {
-      console.log('Could not authorize!');
-    }
+    const refreshInterval = setInterval(() => {
+      dispatch(refreshAuthentication())
+    }, 3600 * 1000 - 10000);
+    return () => clearInterval(refreshInterval);
   }, []);
 
 
-  if (!isAuthorized) {
-    //possible TODO: Login Page
+  if (!authentication.accessToken || authentication.accessToken === '') {
     return (
       <button className="button" onClick={authorize}>
         Log in with Spotify
@@ -176,7 +129,7 @@ function App() {
                     <RelatedArtistsPage />
                 </Route>
             </Switch>
-            <Player token={authorization.accessToken} />
+            <Player token={authentication.accessToken} />
           </div>
         </div>
       </Router>
