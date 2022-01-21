@@ -202,8 +202,8 @@ export default class App {
       const accessToken = getToken(req);
       const { playlistId } = req.params;
       const tracks = req.body;
-      await this.spotifyService.addTracksToPlaylist(accessToken, playlistId, tracks);
-      return res.status(200);
+      const response = await this.spotifyService.addTracksToPlaylist(accessToken, playlistId, tracks);
+      return res.json(response);
     });
 
     this.server.get('/api/spotify/playlist/:playlistId/tracks', async (req: Request, res: Response) => {
@@ -213,6 +213,29 @@ export default class App {
       const playlistId = req.params.playlistId as string;
       const album = await this.spotifyService.getPlaylistTracks(accessToken, playlistId, limit, offset);
       return res.json(album);
+    });
+
+    this.server.get('/api/spotify/playlist/:playlistId/unfollow', async (req: Request, res: Response) => {
+      const accessToken = getToken(req);
+      const playlistId = req.params.playlistId as string;
+      const response = await this.spotifyService.unfollowPlaylist(accessToken, playlistId);
+      return res.json(response);
+    });
+
+    this.server.post('/api/spotify/playlist/:playlistId/edit', async (req: Request, res: Response) => {
+      const accessToken = getToken(req);
+      const playlistId = req.params.playlistId as string;
+      const options = req.body;
+      const response = await this.spotifyService.editPlaylistDetails(accessToken, playlistId, options);
+      return res.json(response);
+    });
+
+    this.server.post('/api/spotify/playlist/:playlistId/image', async (req: Request, res: Response) => {
+      const accessToken = getToken(req);
+      const playlistId = req.params.playlistId as string;
+      const imgData = req.body.image;
+      const response = await this.spotifyService.addPlaylistImage(accessToken, playlistId, imgData);
+      return res.json(response);
     });
 
     this.server.put('/api/spotify/volume', async (req: Request, res: Response) => {

@@ -1,6 +1,16 @@
 .Button {
+  span {
+    vertical-align: middle;
+  }
 
-  .has-icon {}
+  &.simple {
+    background-color: transparent;
+    border: none;
+  }
 
-  .has-label {}
+  &.has-icon {
+  }
+
+  &.has-label {
+  }
 }

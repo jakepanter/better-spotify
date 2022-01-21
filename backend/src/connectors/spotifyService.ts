@@ -224,8 +224,9 @@ export default class SpotifyService {
   addTracksToPlaylist = async (accessToken: string, playlistId: string, tracks: string[]) => {
     // TODO: error handling
     this.spotifyApi.setAccessToken(accessToken);
-    await this.spotifyApi.addTracksToPlaylist(playlistId, tracks);
+    const res = await this.spotifyApi.addTracksToPlaylist(playlistId, tracks);
     this.spotifyApi.resetAccessToken();
+    return res.body;
   }
 
   getPlaylist = async (accessToken: string, playlistId: string, fields: string) => {
@@ -241,6 +242,27 @@ export default class SpotifyService {
     const album = await this.spotifyApi.getPlaylistTracks(id, options);
     this.spotifyApi.resetAccessToken();
     return album.body;
+  }
+
+  unfollowPlaylist = async (accessToken: string, playlistId: string) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    const res = await this.spotifyApi.unfollowPlaylist(playlistId);
+    this.spotifyApi.resetAccessToken();
+    return res.body;
+  }
+
+  editPlaylistDetails = async (accessToken: string, playlistId: string, options: Object) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    const res = await this.spotifyApi.changePlaylistDetails(playlistId, options);
+    this.spotifyApi.resetAccessToken();
+    return res.body;
+  }
+
+  addPlaylistImage = async (accessToken: string, playlistId: string, imgData: string) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    const res = await this.spotifyApi.uploadCustomPlaylistCoverImage(playlistId, imgData);
+    this.spotifyApi.resetAccessToken();
+    return res.body;
   }
 
   createPlaylist = async (accessToken: string,
