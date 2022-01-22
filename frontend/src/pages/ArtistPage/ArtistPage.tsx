@@ -6,7 +6,7 @@ function ArtistPage() {
     //get route params (:albumId)
     let params = useParams() as { id: string };
 
-    return <Artist id={params.id} />
+    return <Artist id={params.id} key={params.id}/>
 }
 
 export default ArtistPage;

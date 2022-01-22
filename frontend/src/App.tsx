@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import { API_URL } from "./utils/constants";
 import Albums from "./components/Albums/Albums";
 import Playlists from "./components/Playlists/Playlists";
@@ -42,6 +42,7 @@ function App() {
     data: null,
   });
 
+
   const state = {
     contextMenu: contextMenu,
     setContextMenu,
@@ -60,6 +61,7 @@ function App() {
         <AuthorizePage />
     );
   }
+
 
   return (
     <AppContext.Provider value={state}>
@@ -97,12 +99,13 @@ function App() {
               <Route exact path="/">
                 <Dashboard editable={editable} />
               </Route>
+              <Route path="/artist/:id/albums/:type">
+                <ArtistAlbums />
+              </Route>
               <Route path="/artist/:id">
                 <ArtistPage />
               </Route>
-              <Route path="/artist2/:id/albums/:type">
-                <ArtistAlbums />
-              </Route>
+
               <Route path="/playlists">
                 <Playlists />
               </Route>
