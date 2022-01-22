@@ -44,8 +44,6 @@ export default class SpotifyService {
 
   private spotifyApi: SpotifyWebApi;
 
-  private tokenRefresher: any = null;
-
   constructor() {
     // Init Spotify API
     this.spotifyApi = new SpotifyWebApi(Config.spotify);
@@ -149,10 +147,14 @@ export default class SpotifyService {
   }
 
   getMe = async (accessToken: string) => {
-    this.spotifyApi.setAccessToken(accessToken);
-    const me = await this.spotifyApi.getMe();
-    this.spotifyApi.resetAccessToken();
-    return me.body;
+    try {
+      this.spotifyApi.setAccessToken(accessToken);
+      const me = await this.spotifyApi.getMe();
+      this.spotifyApi.resetAccessToken();
+      return me.body;
+    } catch (e) {
+      return e;
+    }
   }
 
   getTrack = async (accessToken: string, id: string) => {

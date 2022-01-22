@@ -31,7 +31,6 @@ type AuthState = {
   }
 }
 
-
 function App() {
   const [editable, setEditable] = useState(false);
   const [miniMenu, setMiniMenu] = useState(false);
