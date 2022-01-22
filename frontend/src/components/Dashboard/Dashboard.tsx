@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, {ChangeEvent, Component} from 'react';
 import './Dashboard.scss';
 import {Layout, Layouts, Responsive, WidthProvider} from 'react-grid-layout';
@@ -10,6 +9,7 @@ import Albums from "../Albums/Albums";
 import Playlists from "../Playlists/Playlists";
 import TagTracklist from "../TagTracklist/TagTracklist";
 import TagsSystem from "../../utils/tags-system";
+import Dialog, { IProps as DialogOptions } from "../Dialog/Dialog";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -53,6 +53,7 @@ interface IState {
   };
   tagTracklistsSelection: string;
   width: number;
+  dialog: DialogOptions | null;
 }
 
 /**
@@ -131,6 +132,7 @@ const DEFAULT_DASHBOARD_STATE: IState = {
   },
   tagTracklistsSelection: '',
   width: 0,
+  dialog: null,
 };
 
 class Dashboard extends Component<IProps, IState> {
@@ -279,23 +281,23 @@ class Dashboard extends Component<IProps, IState> {
     );
   }
 
-  private showFavorites(e: ChangeEvent<HTMLInputElement>) {
+  private showFavorites(value: boolean) {
     this.setState(
-      (state) => ({...state, showFavorites: e.target.checked}),
+      (state) => ({...state, showFavorites: value}),
       () => this.saveState(),
     );
   }
 
-  private showAlbums(e: ChangeEvent<HTMLInputElement>) {
+  private showAlbums(value: boolean) {
     this.setState(
-      (state) => ({...state, showAlbums: e.target.checked}),
+      (state) => ({...state, showAlbums: value}),
       () => this.saveState(),
     );
   }
 
-  private showPlaylists(e: ChangeEvent<HTMLInputElement>) {
+  private showPlaylists(value: boolean) {
     this.setState(
-      (state) => ({...state, showPlaylists: e.target.checked}),
+      (state) => ({...state, showPlaylists: value}),
       () => this.saveState(),
     );
   }
@@ -328,7 +330,8 @@ class Dashboard extends Component<IProps, IState> {
       showPlaylists,
       chartSelection,
       tagTracklistsSelection,
-      width
+      width,
+      dialog
     } = this.state;
     const { editable } = this.props;
     const tags = TagsSystem.getTags();
@@ -344,7 +347,7 @@ class Dashboard extends Component<IProps, IState> {
                   value={tagTracklistsSelection}
                   onChange={(e) => this.updateTagTracklistSelection(e)}
                 >
-                  {Object.entries(tags.availableTags).map((t) => <option value={t[0]}>{t[1].title}</option>)}
+                  {Object.entries(tags.availableTags).map((t) => <option key={t[0]} value={t[0]}>{t[1].title}</option>)}
                 </select>
               </div>
               <div className={'DashboardTagTracklistsFormButtons'}>
@@ -407,24 +410,24 @@ class Dashboard extends Component<IProps, IState> {
               <Checkbox
                 checked={showFavorites}
                 label={'Show Favorites'}
-                onChange={(e) => this.showFavorites(e)}
+                onChange={(value) => this.showFavorites(value)}
               />
               <Checkbox
                 checked={showAlbums}
                 label={'Show Albums'}
-                onChange={(e) => this.showAlbums(e)}
+                onChange={(value) => this.showAlbums(value)}
               />
               <Checkbox
                 checked={showPlaylists}
                 label={'Show Playlists'}
-                onChange={(e) => this.showPlaylists(e)}
+                onChange={(value) => this.showPlaylists(value)}
               />
             </div>
           </div>
           : <></>
         }
         <ResponsiveGridLayout
-          className={'Dashboard'}
+          className={`Dashboard ${editable ? 'editable' : ''}`}
           layouts={layouts}
           breakpoints={{xl: 1600, md: 768, sm: 0}}
           cols={{xl: 4, md: 2, sm: 1}}
@@ -438,32 +441,50 @@ class Dashboard extends Component<IProps, IState> {
         >
           {showFavorites ?
             <div key={'favorites'} className={'DashboardItem'}>
+              <button className={'RemoveButton'} onClick={() => this.showFavorites(false)}>
+                <span className={'material-icons'}>close</span>
+              </button>
               <SavedTracks headerStyle={'compact'}/>
             </div>
             : <></>
           }
           {showAlbums ?
             <div key={'albums'} className={'DashboardItem'}>
+              <button className={'RemoveButton'} onClick={() => this.showAlbums(false)}>
+                <span className={'material-icons'}>close</span>
+              </button>
               <Albums />
             </div>
             : <></>
           }
           {showPlaylists ?
             <div key={'playlists'} className={'DashboardItem'}>
+              <button className={'RemoveButton'} onClick={() => this.showPlaylists(false)}>
+                <span className={'material-icons'}>close</span>
+              </button>
               <Playlists />
             </div>
             : <></>
           }
           {albums.map((a) => <div key={a.id} className={'DashboardItem'}>
+            <button className={'RemoveButton'} onClick={() => this.removeAlbum(a.id)}>
+              <span className={'material-icons'}>close</span>
+            </button>
             <Album id={a.id} headerStyle={'compact'}/>
           </div>)}
           {playlists.map((p) => <div key={p.id} className={'DashboardItem'}>
+            <button className={'RemoveButton'} onClick={() => this.removePlaylist(p.id)}>
+              <span className={'material-icons'}>close</span>
+            </button>
             <Playlist id={p.id} headerStyle={'compact'}/>
           </div>)}
           {charts.map((c) => {
             const chartCode = `${c.chartType}-${c.period}-${c.countryCode}`;
             return (
               <div key={chartCode} className={'DashboardItem'}>
+                <button className={'RemoveButton'} onClick={() => this.removeChart(c.countryCode, c.chartType, c.period)}>
+                  <span className={'material-icons'}>close</span>
+                </button>
                 <Playlist id={getChartCode(c.countryCode, c.chartType, c.period)} headerStyle={'compact'}/>
               </div>
             );
@@ -475,7 +496,32 @@ class Dashboard extends Component<IProps, IState> {
               </div>
             ))}
         </ResponsiveGridLayout>
+        {dialog !== null ? (
+          <Dialog title={'Confirm'} open={true} onClose={() => this.closeDialog()}>
+            <h3>Remove this widget?</h3>
+            <button className={'button'}>
+              Yes
+            </button>
+            <button className={'button'} onClick={() => this.closeDialog()}>
+              No
+            </button>
+          </Dialog>
+        ) : ''}
       </div>
+    );
+  }
+
+  openDialog(options: DialogOptions) {
+    this.setState(
+      (state) => ({...state, dialog: options}),
+    () => this.saveState(),
+    );
+  }
+
+  closeDialog() {
+    this.setState(
+      (state) => ({...state, dialog: null}),
+      () => this.saveState(),
     );
   }
 }

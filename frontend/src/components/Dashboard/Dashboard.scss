@@ -88,6 +88,36 @@
     // }
   }
 
+  .RemoveButton {
+    background-color: lighten($color-accent-dark, 0.5);
+    border: none;
+    color: $color-default;
+    display: none;
+    opacity: 0;
+    margin: 0;
+    padding: $spacer / 2;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .DashboardItem:hover .RemoveButton {
+    opacity: 1;
+  }
+
+  &.editable {
+    .DashboardItem {
+      cursor: move;
+      &>*:not(.react-resizable-handle):not(.RemoveButton) {
+        pointer-events: none;
+      }
+    }
+
+    .RemoveButton {
+      display: inline-flex;
+    }
+  }
+
   .react-grid-item {
     &.react-grid-placeholder {
       border-radius: $border-radius;
