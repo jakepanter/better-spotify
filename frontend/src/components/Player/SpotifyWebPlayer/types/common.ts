@@ -28,6 +28,8 @@ export interface Props {
   // eslint-disable-next-line no-unused-vars
   updateSavedStatus?: (fn: (status: boolean) => any) => any;
   uris?: string | string[];
+  //TODO any or Funtion?
+  handlePlayingTrack: any
 }
 
 export interface State {
@@ -51,8 +53,6 @@ export interface State {
   status: string;
   track: SpotifyPlayerTrack;
   volume: number;
-  //TODO added albumId
-  albumId: string;
 }
 
 export interface ComponentsProps {

@@ -8,7 +8,6 @@ import { px, styled } from '../styles';
 import { Locale, StyledProps, StylesOptions } from '../types/common';
 import { SpotifyPlayerTrack } from '../types/spotify';
 import { getSpotifyLink, getSpotifyLinkTitle } from '../utils';
-import {Link} from "react-router-dom";
 
 interface Props {
   isActive: boolean;
@@ -21,7 +20,6 @@ interface Props {
   track: SpotifyPlayerTrack;
   // eslint-disable-next-line no-unused-vars
   updateSavedStatus?: (fn: (status: boolean) => any) => any;
-  albumId: string;
 }
 
 interface State {
@@ -227,22 +225,19 @@ export default class Info extends React.PureComponent<Props, State> {
       classes.push('rswp__active');
     }
 
-    //TODO
-    // changed anchor to Link
-    // changes to-attribute
-    // Link has to be changed for episodes --> check type for "track" and "episode"
+    //TODO modified anchor
     return (
       <Wrapper className={classes.join(' ')} style={{ h: height }}>
         {image && (
-          <Link
+          <a
             aria-label={title}
-            to={`/album/${this.props.albumId}`}
+            //href={getSpotifyLink(uri)}
             //rel="noreferrer"
             //target="_blank"
             title={title}
           >
             <img alt={name} src={image} />
-          </Link>
+          </a>
         )}
         {!!name && (
           <Title style={{ c: color, h: height, activeColor, trackArtistColor, trackNameColor }}>

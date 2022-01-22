@@ -279,7 +279,11 @@ export default class SpotifyService {
 
   getDevices = async () => this.spotifyApi.getMyDevices();
 
-  getPlaybackState = async () => this.spotifyApi.getMyCurrentPlaybackState();
+  //TODO added return result.body
+  getPlaybackState = async () => {
+    const result = await this.spotifyApi.getMyCurrentPlaybackState();
+    return result.body
+  }
 
   pause = async () => this.spotifyApi.pause();
 
