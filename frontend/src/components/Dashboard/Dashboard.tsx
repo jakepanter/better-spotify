@@ -9,7 +9,6 @@ import Albums from "../Albums/Albums";
 import Playlists from "../Playlists/Playlists";
 import TagTracklist from "../TagTracklist/TagTracklist";
 import TagsSystem from "../../utils/tags-system";
-import Dialog, { IProps as DialogOptions } from "../Dialog/Dialog";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -53,7 +52,6 @@ interface IState {
   };
   tagTracklistsSelection: string;
   width: number;
-  dialog: DialogOptions | null;
 }
 
 /**
@@ -132,7 +130,6 @@ const DEFAULT_DASHBOARD_STATE: IState = {
   },
   tagTracklistsSelection: '',
   width: 0,
-  dialog: null,
 };
 
 class Dashboard extends Component<IProps, IState> {
@@ -160,6 +157,8 @@ class Dashboard extends Component<IProps, IState> {
   }
 
   private removeAlbum(id: string) {
+    if (!confirm('Do you want to remove this widget?')) return;
+
     const {albums} = this.state;
     const newAlbums = albums.filter((a) => a.id !== id);
     this.updateAlbums(newAlbums);
@@ -182,6 +181,8 @@ class Dashboard extends Component<IProps, IState> {
   }
 
   private removePlaylist(id: string) {
+    if (!confirm('Do you want to remove this widget?')) return;
+
     const {playlists} = this.state;
     const newPlaylists = playlists.filter((p) => p.id !== id);
     this.updatePlaylists(newPlaylists);
@@ -207,6 +208,8 @@ class Dashboard extends Component<IProps, IState> {
   }
 
   private removeChart(countryCode: CountryCode, type: ChartType, period: ChartPeriod) {
+    if (!confirm('Do you want to remove this widget?')) return;
+
     const {charts} = this.state;
     const newCharts = charts.filter((c) => !(c.countryCode === countryCode && c.chartType === type && c.period === period));
     this.updateCharts(newCharts);
@@ -228,6 +231,8 @@ class Dashboard extends Component<IProps, IState> {
   }
 
   private removeTagTracklist(id: string) {
+    if (!confirm('Do you want to remove this widget?')) return;
+
     const { tagTracklists } = this.state;
     const newTagTracklists = tagTracklists.filter((t) => t.id !== id);
     this.updateTagTracklist(newTagTracklists);
@@ -331,7 +336,6 @@ class Dashboard extends Component<IProps, IState> {
       chartSelection,
       tagTracklistsSelection,
       width,
-      dialog
     } = this.state;
     const { editable } = this.props;
     const tags = TagsSystem.getTags();
@@ -445,7 +449,7 @@ class Dashboard extends Component<IProps, IState> {
         >
           {showFavorites ?
             <div key={'favorites'} className={'DashboardItem'}>
-              <button className={'RemoveButton'} onClick={() => this.showFavorites(false)}>
+              <button className={'RemoveButton'} onClick={() => confirm('Do you want to remove this widget?') ? this.showFavorites(false) : undefined}>
                 <span className={'material-icons'}>close</span>
               </button>
               <SavedTracks headerStyle={'compact'}/>
@@ -454,7 +458,7 @@ class Dashboard extends Component<IProps, IState> {
           }
           {showAlbums ?
             <div key={'albums'} className={'DashboardItem'}>
-              <button className={'RemoveButton'} onClick={() => this.showAlbums(false)}>
+              <button className={'RemoveButton'} onClick={() => confirm('Do you want to remove this widget?') ? this.showAlbums(false) : undefined}>
                 <span className={'material-icons'}>close</span>
               </button>
               <Albums />
@@ -463,7 +467,7 @@ class Dashboard extends Component<IProps, IState> {
           }
           {showPlaylists ?
             <div key={'playlists'} className={'DashboardItem'}>
-              <button className={'RemoveButton'} onClick={() => this.showPlaylists(false)}>
+              <button className={'RemoveButton'} onClick={() => confirm('Do you want to remove this widget?') ? this.showPlaylists(false) : undefined}>
                 <span className={'material-icons'}>close</span>
               </button>
               <Playlists />
@@ -503,32 +507,7 @@ class Dashboard extends Component<IProps, IState> {
               </div>
             ))}
         </ResponsiveGridLayout>
-        {dialog !== null ? (
-          <Dialog title={'Confirm'} open={true} onClose={() => this.closeDialog()}>
-            <h3>Remove this widget?</h3>
-            <button className={'button'}>
-              Yes
-            </button>
-            <button className={'button'} onClick={() => this.closeDialog()}>
-              No
-            </button>
-          </Dialog>
-        ) : ''}
       </div>
-    );
-  }
-
-  openDialog(options: DialogOptions) {
-    this.setState(
-      (state) => ({...state, dialog: options}),
-    () => this.saveState(),
-    );
-  }
-
-  closeDialog() {
-    this.setState(
-      (state) => ({...state, dialog: null}),
-      () => this.saveState(),
     );
   }
 }
