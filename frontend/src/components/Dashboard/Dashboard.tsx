@@ -336,6 +336,8 @@ class Dashboard extends Component<IProps, IState> {
     const { editable } = this.props;
     const tags = TagsSystem.getTags();
 
+    const tagSelection = tagTracklistsSelection === '' ? (Object.keys(tags.availableTags).length === 0 ? '' : Object.entries(tags.availableTags)[0][0]) : tagTracklistsSelection;
+
     return (
       <div className={`DashboardContainer ${editable ? 'editable' : ''}`} ref={this.containerRef}>
         {editable ?
@@ -344,7 +346,7 @@ class Dashboard extends Component<IProps, IState> {
               <div className={'DashboardTagTracklistsFormSelects'}>
                 <select
                   className={'input-select'}
-                  value={tagTracklistsSelection}
+                  value={tagSelection}
                   onChange={(e) => this.updateTagTracklistSelection(e)}
                 >
                   {Object.entries(tags.availableTags).map((t) => <option key={t[0]} value={t[0]}>{t[1].title}</option>)}
@@ -353,13 +355,15 @@ class Dashboard extends Component<IProps, IState> {
               <div className={'DashboardTagTracklistsFormButtons'}>
                 <button
                   className={'button'}
-                  onClick={() => this.addTagTracklist(tagTracklistsSelection)}
+                  disabled={tagSelection === ''}
+                  onClick={() => this.addTagTracklist(tagSelection)}
                 >
                   Add Tag Tracklist
                 </button>
                 <button
                   className={'button'}
-                  onClick={() => this.removeTagTracklist(tagTracklistsSelection)}
+                  disabled={tagSelection === ''}
+                  onClick={() => this.removeTagTracklist(tagSelection)}
                 >
                   Remove Tag Tracklist
                 </button>
@@ -492,6 +496,9 @@ class Dashboard extends Component<IProps, IState> {
           {tagTracklists &&
             tagTracklists.map((t) => (
               <div key={t.id} className={"DashboardItem"}>
+                <button className={'RemoveButton'} onClick={() => this.removeTagTracklist(t.id)}>
+                  <span className={'material-icons'}>close</span>
+                </button>
                 <TagTracklist id={t.id} headerStyle={"compact"} />
               </div>
             ))}
