@@ -5,7 +5,7 @@ import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import TrackList from "../TrackList/TrackList";
 
 // The fetching limit, can be adjusted by changing this value
-const limit = 20;
+const limit = 0;
 
 // The show id
 interface IProps {
