@@ -92,11 +92,6 @@ export default function Episode(props: IProps) {
         <h4>Description</h4>
         {episode.description}
       </div>
-
-      )
-      ) : (
-      <></>
-      )
     </div>
   )
 }
