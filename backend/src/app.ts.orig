@@ -197,7 +197,6 @@ export default class App {
       return res.json(album);
     });
 
-<<<<<<< HEAD
     this.server.get('/api/spotify/me/shows', async (req: Request, res: Response) => {
       const shows = await this.spotifyService.getSavedShows();
       return res.json(shows);
@@ -230,8 +229,6 @@ export default class App {
       return res.json(episode);
     })
 
-    this.server.put('/api/spotify/volume', async (req: Request, res: Response) => {
-=======
     this.server.get('/api/spotify/playlist/:playlistId/unfollow', async (req: Request, res: Response) => {
       const playlistId = req.params.playlistId as string;
       const response = await this.spotifyService.unfollowPlaylist(playlistId);
