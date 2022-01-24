@@ -72,7 +72,7 @@ function TrackList(props: Props) {
     if (selectedTracks.length === 0)
       state.setContextMenu({ ...state.contextMenu, isOpen: false, data: [], x: null, y: null });
     else if (selectedTracks.length === 1) {
-      if (props.type === "playlist") {
+      if (props.type === "playlist" && state.contextMenu.data.tracks) {
         if (selectedTracks[0] !== state.contextMenu.data.tracks[0]) {
           state.setContextMenu({
             ...state.contextMenu,

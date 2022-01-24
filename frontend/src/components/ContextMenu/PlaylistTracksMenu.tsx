@@ -122,6 +122,11 @@ function PlaylistTracksMenu(props: Props) {
     setTagsForTrack(TagsSystem.getTagsOfElement(trackId));
   };
 
+  const navigateToTags = () => {
+    state.setContextMenu({ ...state.contextMenu, isOpen: false });
+    history.push(`/settings`);
+  };
+
   if (playlistsError || meError) return <p>error</p>;
 
   if (props.data.tracks.length === 1) {
@@ -156,12 +161,9 @@ function PlaylistTracksMenu(props: Props) {
         {props.data.playlist.owner.id === me?.id && (
           <MenuItem onClick={removeFromPlaylist}>Remove from Playlist</MenuItem>
         )}
-        <SubMenu
-          label={"Tags"}
-          overflow={"auto"}
-          position={"anchor"}
-          disabled={Object.keys(tags.availableTags).length === 0}
-        >
+        <SubMenu label={"Tags"} overflow={"auto"} position={"anchor"}>
+          <MenuItem onClick={navigateToTags}>New Tag</MenuItem>
+          {Object.keys(tags.availableTags).length > 0 && <MenuDivider />}
           {Object.entries(tags.availableTags).map((e) => (
             <MenuItem
               key={e[0]}
