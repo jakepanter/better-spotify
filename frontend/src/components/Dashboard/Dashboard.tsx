@@ -99,7 +99,7 @@ export class DashboardService {
   }
 
   // Helper methods
-  private static getCurrentDashboardState() {
+  static getCurrentDashboardState() {
     const currentDashboardString = localStorage.getItem('dashboardState')?.toString();
     if (currentDashboardString !== undefined) {
       return JSON.parse(currentDashboardString) as IState;
@@ -134,6 +134,9 @@ const DEFAULT_DASHBOARD_STATE: IState = {
 
 class Dashboard extends Component<IProps, IState> {
   private readonly containerRef = React.createRef<HTMLDivElement>();
+
+  private pollStorage: any;
+
   constructor(props: IProps) {
     super(props);
 
@@ -316,10 +319,21 @@ class Dashboard extends Component<IProps, IState> {
   };
   componentDidMount() {
     this.updateWidth();
+    // Resize listener
     window.addEventListener('resize', this.updateWidth);
+
+    // Detect updates from DashboardService
+    this.pollStorage = setInterval(() => {
+      const {albums, playlists} = this.state;
+      const savedState = DashboardService.getCurrentDashboardState();
+      if (albums.length !== savedState.albums.length || playlists.length !== savedState.playlists.length) {
+        this.setState((state) => ({...state, albums: savedState.albums, playlists: savedState.playlists}));
+      }
+    }, 50);
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateWidth);
+    clearInterval(this.pollStorage);
   }
 
   // Render
