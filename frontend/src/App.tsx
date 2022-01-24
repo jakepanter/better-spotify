@@ -22,7 +22,6 @@ import RelatedArtistsPage from "./pages/RelatedArtistsPage/RelatedArtistsPage";
 import AuthorizePage from "./components/AuthorizePage/AuthorizePage";
 import AppContext, { ContextMenu } from "./AppContext";
 
-
 function App() {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [editable, setEditable] = useState(false);
@@ -45,6 +44,9 @@ function App() {
   };
 
   useEffect(() => {
+    // disables default context menu
+    document.addEventListener("contextmenu", (e) => e.preventDefault(), true);
+
     async function getAccessToken() {
       const res = await fetch(`${API_URL}api/spotify/access-token`).then((res) => res.json());
       setIsAuthorized(res !== undefined);
@@ -53,9 +55,7 @@ function App() {
   }, []);
 
   if (!isAuthorized) {
-    return (
-        <AuthorizePage />
-    );
+    return <AuthorizePage />;
   }
 
   return (
