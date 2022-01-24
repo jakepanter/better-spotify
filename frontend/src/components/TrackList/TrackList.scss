@@ -25,7 +25,7 @@
     width: 100%;
     transition: $transition-base;
 
-    &:hover:not(.TableHeader) {
+    &:hover:not(.TableHeader):not(.Selected) {
       user-select: none;
       background-color: $color-secondary;
       color: $color-default;
