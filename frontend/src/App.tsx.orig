@@ -19,16 +19,13 @@ import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import SettingsPage from "./pages/SettingsPage/SettingsPage";
 import TagTracklistPage from "./pages/TagTracklistPage/TagTracklistPage";
-<<<<<<< HEAD
 import SearchPage from "./components/SearchPage/SearchPage";
 import SearchPageCustom from "./components/SearchPage/Custom/SearchPageCustom";
 import ShowPage from "./pages/ShowPage/ShowPage";
 import EpisodePage from "./pages/EpisodePage/EpisodePage";
-=======
 import RelatedArtistsPage from "./pages/RelatedArtistsPage/RelatedArtistsPage";
 import AuthorizePage from "./components/AuthorizePage/AuthorizePage";
 import AppContext, { ContextMenu } from "./AppContext";
->>>>>>> 55b13415236a7d190e6d0d96c982d2cebab2860f
 
 
 function App() {
