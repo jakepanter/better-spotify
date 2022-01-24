@@ -12,15 +12,12 @@ import {
 } from "spotify-types";
 import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
-<<<<<<< HEAD
 import "./TrackListItem.scss";
 import {API_URL} from "../../utils/constants";
 import {TagWithId} from "../../utils/tags-system";
 import { Link, Route } from "react-router-dom";
 import EpisodePage from "../../pages/EpisodePage/EpisodePage";
-=======
 import AppContext from "../../AppContext";
->>>>>>> 4686333463dd41a71f87a072efd4fb5c1bdd9173
 
 type Body = {
   context_uri: string | undefined,
