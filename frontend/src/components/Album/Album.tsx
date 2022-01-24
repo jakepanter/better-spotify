@@ -33,8 +33,13 @@ export default function Album(props: IProps) {
   const [offset, setOffset] = useState<number>(limit);
 
   async function fetchAlbumData() {
+    const authHeader = getAuthHeader();
     const data: SingleAlbumResponse = await fetch(
-      `${API_URL}api/spotify/album/${id}?limit=${limit}`
+      `${API_URL}api/spotify/album/${id}?limit=${limit}`,{
+      headers: {
+        'Authorization': authHeader
+      }
+    }
     ).then((res) => res.json());
 
     // Save album data
