@@ -148,78 +148,85 @@ function TrackListItem(props: Props) {
     }
   };
 
-  return (
-    <div
-      className={`Pointer TableRow ${selected ? "Selected" : ""}`}
-      onClick={(e) => handleClick(e)}
-      onContextMenu={(e) => handleRightClick(e)}
-    >
-      {track.album !== undefined && track.album.available_markets !== undefined ? (
-        <div className={"TableCell TableCellArtwork"}>
-          <img src={track.album.images[2].url} alt="" style={{ width: "40px", height: "40px" }} />
-        </div>
-      ) : (
-        <div className={"TableCellCoverPlaceholder"}>
-          <CoverPlaceholder />
-        </div>
-      )}
+  if(!liked && type==="saved") {
+    return(
+      <div className="hidden"></div>
+    )
+  }
+  else {
+    return (
+      <div
+        className={`Pointer TableRow ${selected ? "Selected" : ""}`}
+        onClick={(e) => handleClick(e)}
+        onContextMenu={(e) => handleRightClick(e)}
+      >
+        {track.album !== undefined && track.album.available_markets !== undefined ? (
+          <div className={"TableCell TableCellArtwork"}>
+            <img src={track.album.images[2].url} alt="" style={{ width: "40px", height: "40px" }} />
+          </div>
+        ) : (
+          <div className={"TableCellCoverPlaceholder"}>
+            <CoverPlaceholder />
+          </div>
+        )}
 
-      <div className={"TableCell TableCellTitleArtist"}>
-        <span className={"TableCellTitle"}>{track.name}</span>
-        <span className={"TableCellArtist"}>
-          {track.artists.map((artist) => artist.name).join(", ")}
-        </span>
-      </div>
-
-      {track.album !== undefined ? (
-        <div className={"TableCell TableCellAlbum"}>
-          <Link to={`/album/${track.album.id}`} className={"albumLink"} key={trackUniqueId}>
-            {track.album.name}
-          </Link>
+        <div className={"TableCell TableCellTitleArtist"}>
+          <span className={"TableCellTitle"}>{track.name}</span>
+          <span className={"TableCellArtist"}>
+            {track.artists.map((artist) => artist.name).join(", ")}
+          </span>
         </div>
-      ) : (
-        <></>
-      )}
 
-      {track.added_at !== undefined ? (
-        <div className={"TableCell TableCellAddedAt"}>
-          {formatTimeDiff(new Date(track.added_at).getTime(), Date.now())}
-        </div>
-      ) : (
-        <></>
-      )}
-
-      <div className={"TableCell TableCellDuration"}>{formatTimestamp(track.duration_ms)}</div>
-      {track.liked !== undefined ? (
-        <div className={"TableCell TableCellLiked"}>
-          <button className={`checkbox ${liked ? "checked" : ""}`} onClick={handleLikeButton}>
-            <span className={"material-icons"}>{liked ? "favorite" : "favorite_border"}</span>
-          </button>
-        </div>
-      ) : (
-        <></>
-      )}
-      {track.tags !== undefined ? (
-        <div className={"TableCell TableCellTags"}>
-          {track.tags.map((t, i) => (
-            <Link key={i} className={`Tag TagColor${t.color}`} to={`/tag/${t.id}`}>
-              {t.title}
+        {track.album !== undefined ? (
+          <div className={"TableCell TableCellAlbum"}>
+            <Link to={`/album/${track.album.id}`} className={"albumLink"} key={trackUniqueId}>
+              {track.album.name}
             </Link>
-          ))}
+          </div>
+        ) : (
+          <></>
+        )}
+
+        {track.added_at !== undefined ? (
+          <div className={"TableCell TableCellAddedAt"}>
+            {formatTimeDiff(new Date(track.added_at).getTime(), Date.now())}
+          </div>
+        ) : (
+          <></>
+        )}
+
+        <div className={"TableCell TableCellDuration"}>{formatTimestamp(track.duration_ms)}</div>
+        {track.liked !== undefined ? (
+          <div className={"TableCell TableCellLiked"}>
+            <button className={`checkbox ${liked ? "checked" : ""}`} onClick={handleLikeButton}>
+              <span className={"material-icons"}>{liked ? "favorite" : "favorite_border"}</span>
+            </button>
+          </div>
+        ) : (
+          <></>
+        )}
+        {track.tags !== undefined ? (
+          <div className={"TableCell TableCellTags"}>
+            {track.tags.map((t, i) => (
+              <Link key={i} className={`Tag TagColor${t.color}`} to={`/tag/${t.id}`}>
+                {t.title}
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <></>
+        )}
+        <div className="TableCell TableCellActions">
+          <Button
+            simple
+            icon="playlist_add"
+            className="material-icons"
+            onClick={handleAddToPlaylist}
+          />
         </div>
-      ) : (
-        <></>
-      )}
-      <div className="TableCell TableCellActions">
-        <Button
-          simple
-          icon="playlist_add"
-          className="material-icons"
-          onClick={handleAddToPlaylist}
-        />
       </div>
-    </div>
-  );
+    );
+  } 
 }
 
 export default TrackListItem;

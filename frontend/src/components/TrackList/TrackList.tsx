@@ -334,6 +334,7 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellAlbum"}>Album</div>
             <div className={"TableCell TableCellAddedAt"}>Added</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
+            <div className={"TableCell TableCellLiked"}>Liked</div>
             <div className={"TableCell TableCellTags"}>Tags</div>
             <div className={"TableCell TableCellActions"}></div>
           </div>
@@ -351,6 +352,7 @@ function TrackList(props: Props) {
                   name={track.name}
                   artists={track.artists}
                   duration_ms={track.duration_ms}
+                  liked={true}
                   album={track.album}
                   added_at={item.added_at}
                   key={type + "-track-" + track.id + "-" + index}

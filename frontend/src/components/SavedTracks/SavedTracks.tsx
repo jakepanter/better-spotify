@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
-import {PlaylistTrackResponse, SavedTrackObject} from "spotify-types";
+import {CheckUsersSavedTracksResponse, PlaylistTrackResponse, SavedTrackObject} from "spotify-types";
 import {API_URL} from "../../utils/constants";
+import { PlaylistTrack } from "../Playlist/Playlist";
 import TrackList from "../TrackList/TrackList";
 
 const limit = 50;
@@ -27,12 +28,30 @@ export default function SavedTracks(props: IProps) {
             `${API_URL}api/spotify/me/tracks?offset=${newOffset}&limit=${limit}`
         ).then((res) => res.json());
 
+        const saved: CheckUsersSavedTracksResponse = await fetchIsSavedData(
+            data.items.map((i) => i.track.id)
+        );
         // Save new tracks
-        setTracks((oldTracks) => [...oldTracks, ...data.items]);
+        const fetchedTracks = data.items as PlaylistTrack[]
+        setTracks((oldTracks) => [
+            ...oldTracks,
+            ...fetchedTracks.map((t, i) => {
+                t.is_saved = saved[i];
+                return t;
+            }),
+        ]);
 
         if (total < 0) {
             setTotal(data.total);
         }
+    }
+
+    async function fetchIsSavedData(trackIds: string[]) {
+        const data: CheckUsersSavedTracksResponse = await fetch(
+            `${API_URL}api/spotify/me/tracks/contains?trackIds=${trackIds}`
+          ).then((res) => res.json());
+      
+          return data;
     }
 
     // Fetch more album tracks if necessary
