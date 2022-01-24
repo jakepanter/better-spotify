@@ -93,7 +93,7 @@ export default function ArtistAlbums() {
             {albumItems.length > 0 ? (
                     <div style={{overflow: "hidden auto"}}>
                         <h2>{header}</h2>
-                        <div className={"overview"} >
+                        <div className={"overview artist-section"} >
                             <ul className={"overview-items"} onScroll={onScrollAlbums}>{allAlbums}</ul>
                         </div>
                     </div>)

@@ -276,7 +276,7 @@ class Artist extends Component<IProps, IState> {
                                 <NavLink to={`/artist/${this.props.id}/albums/album`} className={"viewMoreLink"}>View
                                     All</NavLink>
                             </div>
-                            <div className={"overview"}>
+                            <div className={"overview artist-section"}>
                                 <ul className={"overview-items"} style={{height: '40vh', overflow: 'hidden'}}>{albums}</ul>
                             </div>
                         </div>)
@@ -290,7 +290,7 @@ class Artist extends Component<IProps, IState> {
                                 <NavLink to={`/artist/${this.props.id}/albums/single`} className={"viewMoreLink"}>View
                                     All</NavLink>
                             </div>
-                            <div className={"overview"}>
+                            <div className={"overview artist-section"}>
                                 <ul className={"overview-items"} style={{height: '40vh', overflow: 'hidden'}}>{singles}</ul>
                             </div>
                         </div>)
@@ -304,7 +304,7 @@ class Artist extends Component<IProps, IState> {
                                 <NavLink to={`/artist/${this.props.id}/albums/appears_on`} className={"viewMoreLink"}>View
                                     All</NavLink>
                             </div>
-                            <div className={"overview"}>
+                            <div className={"overview artist-section"}>
                                 <ul className={"overview-items"}
                                     style={{height: '40vh', overflow: 'hidden'}}>{appearsOnAlbum}</ul>
                             </div>
@@ -319,7 +319,7 @@ class Artist extends Component<IProps, IState> {
                                 <NavLink to={`/artist/${this.props.id}/albums/compilation`} className={"viewMoreLink"}>View
                                     All</NavLink>
                             </div>
-                            <div className={"overview"}>
+                            <div className={"overview artist-section"}>
                                 <ul className={"overview-items"}
                                     style={{height: '40vh', overflow: 'hidden'}}>{compilations}</ul>
                             </div>
@@ -334,7 +334,7 @@ class Artist extends Component<IProps, IState> {
                                 <NavLink to={`/related-artists/${this.props.id}`}>View
                                     More</NavLink>
                             </div>
-                            <div className={"overview"}>
+                            <div className={"overview artist-section"}>
                                 <ul className={"overview-items"}>
                                     {relatedArtists}
                                 </ul>

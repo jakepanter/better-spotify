@@ -22,9 +22,7 @@
 }
 
 
-.header{
-
-  .viewMoreLink{
+.header .viewMoreLink{
     //margin-right: 2rem;
     float: right;
     color: $gray-dark;
@@ -33,8 +31,11 @@
     &:hover {
       color: $color-primary;
     }
-  }
 }
+.artist-section ul{
+  height: auto !important;
+}
+
 .artist {
   .cover {
     width: 20%;
