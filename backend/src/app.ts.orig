@@ -250,7 +250,6 @@ export default class App {
     });
 
     this.server.get('/api/spotify/volume', async (req: Request, res: Response) => {
->>>>>>> 55b13415236a7d190e6d0d96c982d2cebab2860f
       const volume: any = req.query?.volume ?? 100;
       const result = await this.spotifyService.setVolume(volume);
       return res.json(result);
