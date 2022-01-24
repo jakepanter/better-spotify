@@ -2,13 +2,11 @@
 
 .Checkbox {
   align-items: center;
+  border: none;
+  background-color: transparent;
   cursor: pointer;
   display: inline-flex;
   user-select: none;
-
-  .CheckboxElement {
-    display: none;
-  }
 
   .CheckboxIcon {
     color: $gray-dark;

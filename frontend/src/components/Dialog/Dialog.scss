@@ -32,6 +32,7 @@
   max-width: 720px;
 
   .button {
+    color: $color-default;
     display: inline-flex;
     flex-flow: row nowrap;
 
@@ -43,6 +44,7 @@
   &Header {
     align-items: center;
     border-bottom: $border-width $border-style rgba(224, 224, 224, 0.1);
+    color: $color-default;
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
