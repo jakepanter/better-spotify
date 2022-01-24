@@ -31,12 +31,6 @@ export default function Show(props: IProps) {
         ).then((res) => res.json());
 
         setShow(data);
-        // Save if tracks are saved
-        /*
-        const saved: UsersSavedShowsResponse = await fetchIsSavedData(
-            data.tracks.items.map((i) => i.id)
-        );
-        */
 
         const fetchedEpisodes = data.episodes.items as ShowEpisodes[];
         setEpisodes((oldEpisodes) => [
