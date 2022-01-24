@@ -112,9 +112,6 @@ function App() {
               <Route path="/episode/:id">
                 <EpisodePage/>
               </Route>
-              <Route path="/episode/:id">
-                <AlbumPage />
-              </Route>
               <Route path="/collections/albums">
                 <Albums />
               </Route>
