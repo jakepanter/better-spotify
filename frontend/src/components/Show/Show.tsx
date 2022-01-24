@@ -20,9 +20,9 @@ export interface ShowEpisodes extends EpisodeObject {
 export default function Show(props: IProps) {
     const { id, headerStyle } = props;
     const [show, setShow] = useState<ShowObjectFull>();
-    // The list of tracks of the album
+    // The list of episodes of the album
     const [episodes, setEpisodes] = useState<ShowEpisodes[]>([]);
-    // The current offset for fetching new tracks
+    // The current offset for fetching new episodes
     const [offset, setOffset] = useState<number>(limit);
 
     async function fetchShowData() {
@@ -42,7 +42,7 @@ export default function Show(props: IProps) {
     }
 
     async function fetchShowEpisodeData(newOffset: number) {
-        // Only fetch if there are tracks left to fetch
+        // Only fetch if there are episodes left to fetch
         if (
             show &&
             show.episodes &&
