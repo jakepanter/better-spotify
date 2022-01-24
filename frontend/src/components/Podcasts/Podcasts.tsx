@@ -30,6 +30,8 @@ class Podcasts extends Component<IProps, IState> {
     async componentDidMount() {
         // Fetch playlists
         var shows: ShowObjectSimplified[] = []
+        
+        // fetching saved Shows of Users
         const data: UsersSavedShowsResponse = await fetch(
             `${API_URL}api/spotify/me/shows`
         ).then((res) => res.json());
