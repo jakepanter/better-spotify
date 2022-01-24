@@ -52,7 +52,6 @@
   &Color5 {
     color: $color-tag-5;
   }
-<<<<<<< HEAD
 }
 
 .row {
@@ -61,6 +60,4 @@
 .col {
   min-height: 100px;
 }
-=======
-}
->>>>>>> 988dab8a151836072d2e83c1a5236e5886fba735
+
