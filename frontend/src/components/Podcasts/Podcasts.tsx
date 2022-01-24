@@ -76,7 +76,7 @@ class Podcasts extends Component<IProps, IState> {
 
         return (
             <div className={"Shows"}>
-                <h2 className={"Header"}>Albums</h2>
+                <h2 className={"Header"}>Podcasts</h2>
                 <div className={"Content"}>
                     <div className={"CoverList"}>{shows}</div>
                 </div>
