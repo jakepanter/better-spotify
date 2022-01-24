@@ -23,7 +23,7 @@ function TagTracklist(props: IProps) {
 
   const [tracks, setTracks] = useState<TagsTrack[]>([]);
   // The current offset for fetching new tracks
-  const [offset, setOffset] = useState<number>(0);
+  const [offset, setOffset] = useState<number>(-50);
 
   async function fetchTracks() {
     const ids = trackIds.slice(offset, offset + limit);
@@ -60,7 +60,10 @@ function TagTracklist(props: IProps) {
   useEffect(() => {
     setTracks([]);
     setOffset(0);
-    fetchTracks();
+
+    if (offset === 0) {
+      setTimeout(() => fetchTracks(), 0);
+    }
   }, [id]);
 
   useEffect(() => {

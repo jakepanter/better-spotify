@@ -1,6 +1,6 @@
 import "./TrackList.scss";
 import React, { useContext, useEffect, useState, useRef } from "react";
-import { EpisodeObjectFull, SavedTrackObject, TrackObjectFull } from "spotify-types";
+import { EpisodeObjectFull, PlaylistObjectFull, SavedTrackObject, TrackObjectFull } from "spotify-types";
 import { AlbumTrack } from "../Album/Album";
 import { PlaylistTrack } from "../Playlist/Playlist";
 import TrackListItem from "../TrackListItem/TrackListItem";
@@ -20,6 +20,7 @@ type Props =
     }
   | {
       type: "playlist";
+      playlist: PlaylistObjectFull;
       tracks: PlaylistTrack[];
       loadMoreCallback: () => void;
       fullyLoaded: boolean;
@@ -79,20 +80,34 @@ function TrackList(props: Props) {
     if (selectedTracks.length === 0)
       state.setContextMenu({ ...state.contextMenu, isOpen: false, data: [], x: null, y: null });
     else if (selectedTracks.length === 1) {
-      if (selectedTracks[0] !== state.contextMenu.data[0]) {
-        state.setContextMenu({
-          ...state.contextMenu,
-          type: "tracks",
-          isOpen: false,
-          data: selectedTracks,
-        });
+      if (props.type === "playlist" && state.contextMenu.data.tracks) {
+        if (selectedTracks[0] !== state.contextMenu.data.tracks[0]) {
+          state.setContextMenu({
+            ...state.contextMenu,
+            type: `tracklist-${props.type}`,
+            isOpen: false,
+            data: { tracks: selectedTracks, playlist: props.playlist },
+          });
+        }
+      } else {
+        if (selectedTracks[0] !== state.contextMenu.data[0]) {
+          state.setContextMenu({
+            ...state.contextMenu,
+            type: `tracklist-${props.type}`,
+            isOpen: false,
+            data: selectedTracks,
+          });
+        }
       }
     } else {
       state.setContextMenu({
         ...state.contextMenu,
-        type: "tracks",
+        type: `tracklist-${props.type}`,
         isOpen: false,
-        data: selectedTracks,
+        data:
+          props.type === "playlist"
+            ? { tracks: selectedTracks, playlist: props.playlist }
+            : selectedTracks,
       });
     }
   }, [selectedTracks]);
@@ -111,22 +126,26 @@ function TrackList(props: Props) {
   const handleContextMenuOpen = (trackUniqueId: String, x: number, y: number) => {
     if (!selectedTracks.some((track) => track === trackUniqueId)) {
       state.setContextMenu({
-        ...state.contextMenu,
-        type: "tracks",
+        type: `tracklist-${props.type}`,
         isOpen: true,
         x: x,
         y: y,
-        data: [trackUniqueId],
+        data:
+          props.type === "playlist"
+            ? { tracks: [trackUniqueId], playlist: props.playlist }
+            : [trackUniqueId],
       });
       setSelected([trackUniqueId]);
     } else {
       state.setContextMenu({
-        ...state.contextMenu,
-        type: "tracks",
+        type: `tracklist-${props.type}`,
         isOpen: true,
         x: x,
         y: y,
-        data: selectedTracks,
+        data:
+          props.type === "playlist"
+            ? { tracks: selectedTracks, playlist: props.playlist }
+            : selectedTracks,
       });
     }
   };
@@ -138,11 +157,6 @@ function TrackList(props: Props) {
     const arr: String[] = selectedTracks.filter((track) => track !== trackUniqueId);
     setSelected(arr);
   };
-  /*
-  const resetSelected = () => {
-    setSelected([]);
-  };
-  */
 
   const isTrackSelected = (track: TrackObjectFull | AlbumTrack | EpisodeObjectFull, index: number) => {
     const trackUniqueId = `${track.uri}-${index}`;

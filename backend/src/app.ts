@@ -189,6 +189,14 @@ export default class App {
       return res.json(response);
     });
 
+    this.server.post('/api/spotify/playlist/:playlistId/remove', async (req: Request, res: Response) => {
+      const { playlistId } = req.params;
+      const tracks = req.body;
+      console.log(playlistId, tracks);
+      const response = await this.spotifyService.removeTracksFromPlaylist(playlistId, tracks);
+      return res.json(response);
+    });
+
     this.server.get('/api/spotify/playlist/:playlistId/tracks', async (req: Request, res: Response) => {
       const limit = Number(req.query?.limit ?? 50);
       const offset = Number(req.query?.offset ?? 0);

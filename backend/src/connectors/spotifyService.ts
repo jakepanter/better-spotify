@@ -211,6 +211,14 @@ export default class SpotifyService {
     return res.body;
   }
 
+  removeTracksFromPlaylist = async (
+    playlistId: string,
+    tracks: ReadonlyArray<{uri: string, positions: number[]}>,
+  ) => {
+    const res = await this.spotifyApi.removeTracksFromPlaylist(playlistId, tracks);
+    return res.body;
+  }
+
   getPlaylist = async (playlistId: string, fields: string) => {
     const result = await this.spotifyApi.getPlaylist(playlistId, { fields });
     return result.body;
@@ -276,7 +284,8 @@ export default class SpotifyService {
     return result;
   }
 
-  // only 'before' is specified because we want to display the recently played tracks from the current timestamp
+  // only 'before' is specified because we want to display the
+  // recently played tracks from the current timestamp
   // we do not need the option 'after' in our case
   getMyRecentlyPlayedTracks = async (before: number, limit: number) => {
     const options: any = { limit, before };
@@ -290,8 +299,8 @@ export default class SpotifyService {
     return result.body;
   }
 
-  getMyTopArtists = async (limit: number, offset: number, time_range: string) => {
-    const options: any = { limit, offset, time_range };
+  getMyTopArtists = async (limit: number, offset: number, timeRange: string) => {
+    const options: any = { limit, offset, time_range: timeRange };
     const result = await this.spotifyApi.getMyTopArtists(options);
     return result.body;
   }
