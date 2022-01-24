@@ -11,7 +11,6 @@ import {API_URL} from "../../utils/constants";
 import {NavLink, Link} from "react-router-dom";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import "./Artist.scss"
-//import "../../cards.scss";
 import TrackList from "../TrackList/TrackList";
 
 
@@ -54,7 +53,6 @@ class Artist extends Component<IProps, IState> {
             `${API_URL}api/spotify/artist/${this.props.id}`
         ).then((res) => res.json());
         this.setState({artist: artistData});
-        console.log(this.state.artist)
 
         //fetch artist top tracks
         const topTracks: ArtistsTopTracksResponse = await fetch(
@@ -98,26 +96,16 @@ class Artist extends Component<IProps, IState> {
 
     }
 
-
-    componentDidUpdate(prevProps: Readonly<IProps>): void {
-        if (prevProps.id !== this.props.id) {
-            console.log(prevProps.id)
-            console.log("ID hat sich geändert")
-            //window.location.reload();
-        }
-    }
-
-
+    //this function will be called, when the user clicks on a filter
     handleFilterChange(value: string) {
+        //the value of the filter-option will be set
         this.setState({filter: value});
     }
 
 
     render() {
-
         //TODO
         if (Object.keys(this.state.artist).length === 0) return <p>Artist not found</p>;
-        console.log(this.state.artist.name)
         const artist = <div>
             {this.state.artist.images.length > 0 ? (
                 <div
@@ -130,7 +118,7 @@ class Artist extends Component<IProps, IState> {
             <p className={"artists-name"}>{this.state.artist.name}</p>
         </div>;
 
-
+        // for albums
         const albums = this.state.albums.map((album, index) => {
             return (
                 <li className={"column"} key={album.id + index}>
@@ -152,6 +140,7 @@ class Artist extends Component<IProps, IState> {
             );
         });
 
+        //for singles
         const singles = this.state.singles.map((single, index) => {
             return (
                 <li className={"column"} key={single.id + index}>
@@ -173,7 +162,7 @@ class Artist extends Component<IProps, IState> {
             );
         });
 
-
+        //for compilations
         const appearsOnAlbum = this.state.appearsOn.map((album, index) => {
             return (
                 <li className={"column"} key={album.id + index}>
@@ -194,6 +183,8 @@ class Artist extends Component<IProps, IState> {
                 </li>
             );
         });
+
+        //for compilations
         const compilations = this.state.compilations.map((compilation, index) => {
             return (
                 <li className={"column"} key={compilation.id + index}>
@@ -216,7 +207,6 @@ class Artist extends Component<IProps, IState> {
         });
 
         //for related artists
-        //if (this.state.relatedArtists.length === 0) return <p>loading...</p>;
         const relatedArtists = this.state.relatedArtists.map((relatedArtist) => {
             return (
                 <li className="column" key={relatedArtist.id}>
@@ -234,8 +224,7 @@ class Artist extends Component<IProps, IState> {
                 </li>
             );
         });
-        {/*TODO when there is only one element in ul, the element is hidden on a small screen*/
-        }
+
         return (
             <div style={{overflow: "hidden auto"}} key={this.props.id}>
                 {/*Filter*/}
@@ -277,7 +266,7 @@ class Artist extends Component<IProps, IState> {
                             <TrackList type={"topTracks"} tracks={this.state.artistTopTracks} loadMoreCallback={() => {
                             }} fullyLoaded={true} id_tracklist={''}/>
                         </div>)
-                    : (<p>Haalloo</p>)}
+                    : (<></>)}
 
                 {/*Albums*/}
                 {(this.state.filter === "Albums" || this.state.filter == "All") && albums.length > 0 ? (
@@ -298,7 +287,6 @@ class Artist extends Component<IProps, IState> {
                         <div className={"section"} key={"singles"}>
                             <div className={"header"}>
                                 <h2>Singles</h2>
-                                {/*TODO change url artist2*/}
                                 <NavLink to={`/artist/${this.props.id}/albums/single`} className={"viewMoreLink"}>View
                                     All</NavLink>
                             </div>
@@ -322,7 +310,6 @@ class Artist extends Component<IProps, IState> {
                             </div>
                         </div>)
                     : (<></>)}
-
 
                 {/*Compilations*/}
                 {(this.state.filter === "Compilations" || this.state.filter == "All") && compilations.length > 0 ? (
@@ -354,11 +341,9 @@ class Artist extends Component<IProps, IState> {
                             </div>
                         </div>)
                     : (<></>)}
-
             </div>
         );
     }
-
 }
 
 export default Artist;

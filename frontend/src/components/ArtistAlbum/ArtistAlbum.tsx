@@ -14,6 +14,8 @@ export default function ArtistAlbums() {
     let params = useParams() as { id: string, type?: string };
     const id = params.id;
     const type = params.type;
+
+    //for header - which type of album should be shown in this page
     if(type === "album"){
         header = "Albums";
     }
@@ -26,6 +28,7 @@ export default function ArtistAlbums() {
     else{
         header = "Compilations"
     }
+
     // for albums
     const [albums, setAlbums] = useState<ArtistsAlbumsResponse>();
     const [albumItems, setAlbumItems] = useState<AlbumObjectSimplified[]>([]);
@@ -79,6 +82,7 @@ export default function ArtistAlbums() {
     });
 
 
+    // when the value of nextAlbumURL changes, call fetchAlbums(nextAlbumURL)
     useEffect(() => {
         fetchAlbums(nextAlbumURL);
     }, [nextAlbumURL]);
