@@ -228,9 +228,13 @@ function TrackListItem(props: Props) {
 
       <div className={"TableCell TableCellTitleArtist"}>
         <span className={"TableCellTitle"}>{track.name}</span>
-        <span className={"TableCellArtist"}>
+        {track.artists !== undefined ? (
+            <span className={"TableCellArtist"}>
           {track.artists?.map((artist) => artist.name).join(", ")}
-        </span>
+            </span>
+        ) : (
+            <></>
+        )
       </div>
       {track.album !== undefined ? (
         <div className={"TableCell TableCellAlbum"}>{track.album.name}</div>
