@@ -23,7 +23,7 @@ export default function Show(props: IProps) {
     // The list of episodes of the Show
     const [episodes, setEpisodes] = useState<ShowEpisodes[]>([]);
     // The current offset for fetching new episodes
-    const [offset, setOffset] = useState<number>(limit);
+    const [offset, setOffset] = useState<number>(0);
 
     async function fetchShowData() {
         const data: SingleShowResponse = await fetch(
