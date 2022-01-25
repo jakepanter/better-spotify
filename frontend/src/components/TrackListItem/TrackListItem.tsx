@@ -61,7 +61,7 @@ function TrackListItem(props: Props) {
 
   const id_tracklist= props.id_tracklist;
   const type = props.type;
-  const track_uri = "spotify:track:" + props.track.id;
+  let track_uri = "spotify:track:" + props.track.id;
 
   const sendRequest = useCallback(async () => {
     // POST request using fetch inside useEffect React hook
@@ -234,7 +234,7 @@ function TrackListItem(props: Props) {
             </span>
         ) : (
             <></>
-        )
+        )}
       </div>
       {track.album !== undefined ? (
         <div className={"TableCell TableCellAlbum"}>{track.album.name}</div>
