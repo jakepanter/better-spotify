@@ -177,11 +177,12 @@ function TrackList(props: Props) {
           ref={container}
         >
           <div className={"TableHeader TableRow"}>
+            <div className={"TableCell TableCellArtwork"} />
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
             <div className={"TableCell TableCellLiked"}>Liked</div>
             <div className={"TableCell TableCellTags"}>Tags</div>
-            <div className={"TableCell TableCellActions"}></div>
+            <div className={"TableCell TableCellActions"}>Playlist</div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
@@ -234,7 +235,7 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellDuration"}>Duration</div>
             <div className={"TableCell TableCellLiked"}>Liked</div>
             <div className={"TableCell TableCellTags"}>Tags</div>
-            <div className={"TableCell TableCellActions"}></div>
+            <div className={"TableCell TableCellActions"}>Playlist</div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
@@ -335,7 +336,7 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellAddedAt"}>Added</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
             <div className={"TableCell TableCellTags"}>Tags</div>
-            <div className={"TableCell TableCellActions"}></div>
+            <div className={"TableCell TableCellActions"}>Playlist</div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
@@ -438,6 +439,7 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellDuration"}>Duration</div>
             <div className={"TableCell TableCellLiked"}>Liked</div>
             <div className={"TableCell TableCellTags"}>Tags</div>
+            <div className={"TableCell TableCellActions"}>Playlist</div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {

@@ -417,18 +417,18 @@ class Dashboard extends Component<IProps, IState> {
             <div className={'DashboardSettingsForm'}>
               <Checkbox
                 checked={showFavorites}
-                label={'Show Favorites'}
+                label={'Show liked songs'}
                 onChange={(value) => this.showFavorites(value)}
-              />
-              <Checkbox
-                checked={showAlbums}
-                label={'Show Albums'}
-                onChange={(value) => this.showAlbums(value)}
               />
               <Checkbox
                 checked={showPlaylists}
                 label={'Show Playlists'}
                 onChange={(value) => this.showPlaylists(value)}
+              />
+              <Checkbox
+                  checked={showAlbums}
+                  label={'Show Albums'}
+                  onChange={(value) => this.showAlbums(value)}
               />
             </div>
           </div>

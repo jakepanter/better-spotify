@@ -7,6 +7,7 @@
 
     .Header {
         align-items: center;
+        justify-content: space-between;
         box-sizing: border-box;
         display: flex;
         flex-flow: row wrap;
@@ -84,12 +85,13 @@
 
 .add-button {
     border-radius: $border-radius;
-    padding: 0 10px;
+    padding: 4px 10px 1px 10px;
     background: $color-accent-dark;
     border: none;
     margin-left: 20px;
     font-size: 14px;
-    font-family: 'Roboto';
+    font-family: $font-default;
+    transition: $transition-base;
     &:hover {
         background-color: $color-primary;
     }
@@ -98,6 +100,8 @@
     }
     .material-icons {
       color: $gray-light;
-      vertical-align: sub;
+        vertical-align: baseline;
+        font-size: 20px;
+        margin-right: 5px;
     }
   }
