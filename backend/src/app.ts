@@ -189,6 +189,14 @@ export default class App {
       return res.json(response);
     });
 
+    this.server.post('/api/spotify/playlist/:playlistId/remove', async (req: Request, res: Response) => {
+      const { playlistId } = req.params;
+      const tracks = req.body;
+      console.log(playlistId, tracks);
+      const response = await this.spotifyService.removeTracksFromPlaylist(playlistId, tracks);
+      return res.json(response);
+    });
+
     this.server.get('/api/spotify/artist/:artistId', async (req: Request, res: Response) => {
       const artistId = req.params.artistId as string;
       const artist = await this.spotifyService.getArtist(artistId);

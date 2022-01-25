@@ -16,6 +16,7 @@ import { TagWithId } from "../../utils/tags-system";
 
 import Button from "../Button/Button";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
+import AppContext from "../../AppContext";
 
 type Body = {
   context_uri: string | undefined;
@@ -52,6 +53,7 @@ function TrackListItem(props: Props) {
   const [selected, setSelected] = useState<boolean>(props.selected);
   const [specialKey, setSpecialKey] = useState<String | null>(null);
   const [liked, setLiked] = useState<boolean>(!!props.liked);
+  const state = useContext(AppContext);
 
   const id_tracklist = props.id_tracklist;
   const type = props.type;
@@ -115,6 +117,17 @@ function TrackListItem(props: Props) {
     return await fetch(`${API_URL}api/spotify/me`)
       .then((res) => res.json())
       .then((data) => data.uri);
+  };
+
+  const handleAddToPlaylist = (e: any) => {
+    e.stopPropagation();
+    state.setContextMenu({
+      isOpen: true,
+      data: [trackUniqueId],
+      x: e.clientX,
+      y: e.clientY,
+      type: "addToPlaylist",
+    });
   };
 
   const handleLikeButton = async (e: any) => {
@@ -197,6 +210,14 @@ function TrackListItem(props: Props) {
       ) : (
         <></>
       )}
+      <div className="TableCell TableCellActions">
+        <Button
+          simple
+          icon="playlist_add"
+          className="material-icons"
+          onClick={handleAddToPlaylist}
+        />
+      </div>
     </div>
   );
 }

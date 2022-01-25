@@ -23,6 +23,7 @@ export default class SpotifyService {
   private static readonly scopes: string[] = [
     'ugc-image-upload',
     'playlist-modify-private',
+    'playlist-modify-public',
     'playlist-read-private',
     'playlist-modify-public',
     'playlist-read-collaborative',
@@ -36,11 +37,12 @@ export default class SpotifyService {
     'user-read-playback-position',
     'user-read-recently-played',
     'user-top-read',
-    'app-remote-control',
     'streaming',
-    'user-follow-modify',
-    'user-follow-read',
-  ]; // TODO
+    // Currently we do not use these 3:
+    // 'app-remote-control',
+    // 'user-follow-modify',
+    // 'user-follow-read',
+  ];
 
   private spotifyApi: SpotifyWebApi;
 
@@ -206,6 +208,14 @@ export default class SpotifyService {
     return res.body;
   }
 
+  removeTracksFromPlaylist = async (
+    playlistId: string,
+    tracks: ReadonlyArray<{uri: string, positions: number[]}>,
+  ) => {
+    const res = await this.spotifyApi.removeTracksFromPlaylist(playlistId, tracks);
+    return res.body;
+  }
+
   getPlaylist = async (playlistId: string, fields: string) => {
     const result = await this.spotifyApi.getPlaylist(playlistId, { fields });
     return result.body;
@@ -261,7 +271,8 @@ export default class SpotifyService {
     return result;
   }
 
-  // only 'before' is specified because we want to display the recently played tracks from the current timestamp
+  // only 'before' is specified because we want to display the
+  // recently played tracks from the current timestamp
   // we do not need the option 'after' in our case
   getMyRecentlyPlayedTracks = async (before: number, limit: number) => {
     const options: any = { limit, before };
@@ -275,8 +286,8 @@ export default class SpotifyService {
     return result.body;
   }
 
-  getMyTopArtists = async (limit: number, offset: number, time_range: string) => {
-    const options: any = { limit, offset, time_range };
+  getMyTopArtists = async (limit: number, offset: number, timeRange: string) => {
+    const options: any = { limit, offset, time_range: timeRange };
     const result = await this.spotifyApi.getMyTopArtists(options);
     return result.body;
   }

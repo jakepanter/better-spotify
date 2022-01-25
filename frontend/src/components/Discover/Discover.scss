@@ -14,6 +14,9 @@
     text-decoration: none;
   }
 }
+.discover-font-adjustment h3{
+  font-size: 20px;
+}
 .discover {
 
   .overview-items {
@@ -41,7 +44,6 @@
       //5 columns when widescreen
       @media screen and(min-width: $breakpoint-xl) {
         width: calc(100% / 5 - 2rem);
-
       }
     }
   }

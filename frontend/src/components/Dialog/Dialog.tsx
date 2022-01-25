@@ -1,7 +1,7 @@
 import React from "react";
 import "./Dialog.scss";
 
-interface IProps {
+export interface IProps {
   title: string;
   open: boolean;
   onClose: () => void;

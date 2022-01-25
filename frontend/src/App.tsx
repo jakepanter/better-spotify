@@ -25,7 +25,6 @@ import ArtistPage from "./pages/ArtistPage/ArtistPage";
 import DiscographyPage from "./pages/DiscographyPage/DiscographyPage";
 import ArtistAlbums from "./components/ArtistAlbum/ArtistAlbum";
 
-
 function App() {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [editable, setEditable] = useState(false);
@@ -48,6 +47,9 @@ function App() {
   };
 
   useEffect(() => {
+    // disables default context menu
+    document.addEventListener("contextmenu", (e) => e.preventDefault(), true);
+
     async function getAccessToken() {
       const res = await fetch(`${API_URL}api/spotify/access-token`).then((res) => res.json());
       setIsAuthorized(res !== undefined);
@@ -56,9 +58,7 @@ function App() {
   }, []);
 
   if (!isAuthorized) {
-    return (
-        <AuthorizePage />
-    );
+    return <AuthorizePage />;
   }
 
   return (

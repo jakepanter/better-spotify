@@ -6,6 +6,7 @@ import AddToPlaylistsMenu from "./AddToPlaylistsMenu";
 import PlaylistMenu from "./PlaylistMenu";
 import PlaylistsMenu from "./PlaylistsMenu";
 import AlbumsMenu from "./AlbumsMenu";
+import PlaylistTracksMenu from "./PlaylistTracksMenu";
 
 type MenuProps = {
   type: String;
@@ -26,7 +27,19 @@ function ContextMenuWrapper(props: MenuProps) {
   }, [props.positionX, props.positionY]);
 
   if (!state.contextMenu.isOpen) return null;
-  if (props.type === "tracks") return <TracksMenu data={props.data} anchorPoint={anchorPoint} />;
+
+  if (props.type === "tracklist-album")
+    return <TracksMenu data={props.data} anchorPoint={anchorPoint} />;
+  else if (props.type === "tracklist-playlist")
+    return <PlaylistTracksMenu data={props.data} anchorPoint={anchorPoint} />;
+  else if (props.type === "tracklist-saved")
+    return <TracksMenu data={props.data} anchorPoint={anchorPoint} />;
+  else if (props.type === "tracklist-tags")
+    return <TracksMenu data={props.data} anchorPoint={anchorPoint} />;
+  else if (props.type === "tracklist-search")
+    return <TracksMenu data={props.data} anchorPoint={anchorPoint} />;
+  else if (props.type === "tracklist-songhistory")
+    return <TracksMenu data={props.data} anchorPoint={anchorPoint} />;
   else if (props.type === "addToPlaylist")
     return <AddToPlaylistsMenu data={props.data} anchorPoint={anchorPoint} />;
   else if (props.type === "playlist")
