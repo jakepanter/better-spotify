@@ -81,14 +81,14 @@ class Artist extends Component<IProps, IState> {
         this.setState((state) => ({...state, appearsOn: allAppearsOn.items}));
 
 
-        // fetch albums where the artist appears on
+        // fetch compilations
         const allCompilations: ArtistsAlbumsResponse = await fetch(
             `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=compilation`
         ).then((res) => res.json());
         this.setState((state) => ({...state, compilations: allCompilations.items}));
 
 
-        //fet related artists
+        // fet related artists
         const allRelatedArtists = await fetch(
             `${API_URL}api/spotify/artists/${this.props.id}/related-artists`
         ).then((res) => res.json());
@@ -96,7 +96,7 @@ class Artist extends Component<IProps, IState> {
 
     }
 
-    //this function will be called, when the user clicks on a filter
+    // this function will be called, when the user clicks on a filter
     handleFilterChange(value: string) {
         //the value of the filter-option will be set
         this.setState({filter: value});
@@ -104,7 +104,6 @@ class Artist extends Component<IProps, IState> {
 
 
     render() {
-        //TODO
         if (Object.keys(this.state.artist).length === 0) return <p>Artist not found</p>;
         const artist = <div>
             {this.state.artist.images.length > 0 ? (
@@ -140,7 +139,7 @@ class Artist extends Component<IProps, IState> {
             );
         });
 
-        //for singles
+        // for singles
         const singles = this.state.singles.map((single, index) => {
             return (
                 <li className={"column"} key={single.id + index}>
@@ -162,7 +161,7 @@ class Artist extends Component<IProps, IState> {
             );
         });
 
-        //for compilations
+        // fetch albums where the artist appears on
         const appearsOnAlbum = this.state.appearsOn.map((album, index) => {
             return (
                 <li className={"column"} key={album.id + index}>
@@ -184,7 +183,7 @@ class Artist extends Component<IProps, IState> {
             );
         });
 
-        //for compilations
+        // for compilations
         const compilations = this.state.compilations.map((compilation, index) => {
             return (
                 <li className={"column"} key={compilation.id + index}>
@@ -206,7 +205,7 @@ class Artist extends Component<IProps, IState> {
             );
         });
 
-        //for related artists
+        // for related artists
         const relatedArtists = this.state.relatedArtists.map((relatedArtist) => {
             return (
                 <li className="column" key={relatedArtist.id}>
@@ -227,6 +226,7 @@ class Artist extends Component<IProps, IState> {
 
         return (
             <div style={{overflow: "hidden auto"}} key={this.props.id}>
+
                 {/*Filter*/}
                 <div className="select">
                     <select className={"input-select"} onChange={(e) => {
@@ -248,13 +248,13 @@ class Artist extends Component<IProps, IState> {
                     </select>
                 </div>
 
-                {/*Artist*/}
+                {/*Artist information*/}
                 <div className={"artist"}>
                     <h1 className={"titleName"}>Artist</h1>
                     {artist}
                 </div>
 
-                {/*Discography*/}
+                {/*Discography - top tracks*/}
                 {(this.state.filter === "Discography" || this.state.filter == "All") && this.state.artistTopTracks ? (
                         <div className={"section"}>
                             <div className={"header"}>

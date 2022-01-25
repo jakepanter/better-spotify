@@ -67,13 +67,12 @@ export default function Album(props: IProps) {
       `${API_URL}api/spotify/album/${id}/tracks?offset=${newOffset}&limit=${limit}`
     ).then((res) => res.json());
 
-    //TODO
     let saved: CheckUsersSavedTracksResponse = [];
-    const tmp = data.items.map((i) => i.id);
-    if(tmp.length !== 0) {
+    const savedAlbums = data.items.map((i) => i.id);
+    if(savedAlbums.length !== 0) {
       // Save whether tracks are saved or not
        saved = await fetchIsSavedData(
-        tmp
+           savedAlbums
       );
     }
     const fetchedTracks = data.items as AlbumTrack[];

@@ -15,7 +15,7 @@ export default function ArtistAlbums() {
     const id = params.id;
     const type = params.type;
 
-    //for header - which type of album should be shown in this page
+    // for displaying correct header on the page
     if(type === "album"){
         header = "Albums";
     }
@@ -29,9 +29,9 @@ export default function ArtistAlbums() {
         header = "Compilations"
     }
 
-    // for albums
     const [albums, setAlbums] = useState<ArtistsAlbumsResponse>();
     const [albumItems, setAlbumItems] = useState<AlbumObjectSimplified[]>([]);
+    // TODO market DE harcoded
     const [nextAlbumURL, setNextAlbumURL] = useState<string>(
         `${API_URL}api/spotify/artist/${id}/albums?market=DE&include_groups=${type}`
     );
@@ -44,21 +44,16 @@ export default function ArtistAlbums() {
         setAlbumItems(arr);
     }
 
-
-    //TODO
-    // check if all onScrolls are implemented corrected
-    // especially check if the checked conditions makes sense
     const onScrollAlbums = (e: any) => {
         const bottom =
             e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-        if (albums && bottom && albums.next !== null) {
+        if (albums && bottom && (albums.next !== null)) {
             const limit = albums.limit;
             const offset = albums.offset + limit;
             const url = `${API_URL}api/spotify/artist/${id}/albums?market=DE&include_groups=${type}&offset=${offset}&limit=${limit}`;
             setNextAlbumURL(url);
         }
     };
-
 
     const allAlbums = albumItems.map((album) => {
         return (

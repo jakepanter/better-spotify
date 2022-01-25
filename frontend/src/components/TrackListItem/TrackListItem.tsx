@@ -56,7 +56,6 @@ function TrackListItem(props: Props) {
   const id_tracklist = props.id_tracklist;
   const type = props.type;
   const track_uri = "spotify:track:" + props.track.id;
-// TODO check if topTracks are playable and add to following
   const sendRequest = useCallback(async () => {
     // POST request using fetch inside useEffect React hook
     let context_uri;
@@ -67,7 +66,7 @@ function TrackListItem(props: Props) {
     } else if (type === "saved" || type === "tags") {
       const userId = await fetchUserId();
       context_uri = userId + ":collection:";
-    } else if (type === "search") {
+    } else if (type === "search" || type === "topTracks") {
       context_uri = "spotify:album:" + track.album?.id;
     }
     const body: Body = {

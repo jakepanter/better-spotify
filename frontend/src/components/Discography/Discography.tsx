@@ -11,15 +11,13 @@ interface IProps {
     id: string;
 }
 
-
 export default function Discography (props: IProps) {
 
     const { id } = props;
-
     const [albums, setAlbums] = useState<ArtistsAlbumsResponse>();
     const [albumItems, setAlbumItems] = useState<AlbumObjectSimplified[]>([]);
     //TODO country is hardcoded
-    const [next, setNext] = useState<string>(
+    const [nextAlbumURL, setNextAlbumURL] = useState<string>(
         `${API_URL}api/spotify/artist/${id}/albums?country="DE"&limit=${limit}&include_groups=album,single`
     );
 
@@ -31,6 +29,7 @@ export default function Discography (props: IProps) {
     }
 
     if (!albums && !albumItems) return <p>loading...</p>;
+
     const allAlbums = albumItems.map((album) => {
         return(
             <Album id={album.id} headerStyle={"full"} key={album.id}/>
@@ -44,14 +43,14 @@ export default function Discography (props: IProps) {
             const limit = albums.limit;
             const offset = albums.offset + limit;
             const url = `${API_URL}api/spotify/artist/${id}/albums?country="DE"&offset=${offset}&limit=${limit}&market=DE&include_groups=album,single`;
-            setNext(url);
+            setNextAlbumURL(url);
         }
     };
 
-
+    // when the value of nextAlbumURL changes, call fetchAlbums(nextAlbumURL)
     useEffect(() => {
-        fetchAlbums(next)
-    }, [next]);
+        fetchAlbums(nextAlbumURL)
+    }, [nextAlbumURL]);
 
 
 
