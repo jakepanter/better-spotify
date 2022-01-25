@@ -23,6 +23,7 @@ export default class SpotifyService {
   private static readonly scopes: string[] = [
     'ugc-image-upload',
     'playlist-modify-private',
+    'playlist-modify-public',
     'playlist-read-private',
     'playlist-modify-public',
     'playlist-read-collaborative',
@@ -36,11 +37,12 @@ export default class SpotifyService {
     'user-read-playback-position',
     'user-read-recently-played',
     'user-top-read',
-    'app-remote-control',
     'streaming',
-    'user-follow-modify',
-    'user-follow-read',
-  ]; // TODO
+    // Currently we do not use these 3:
+    // 'app-remote-control',
+    // 'user-follow-modify',
+    // 'user-follow-read',
+  ];
 
   private spotifyApi: SpotifyWebApi;
 
