@@ -34,6 +34,12 @@
           color: $white;
         }
       }
+
+      &:disabled,
+      &[disabled]{
+        border-color: $gray;
+        pointer-events: none;
+      }
     }
   }
 }
