@@ -42,7 +42,6 @@ function App() {
     data: null,
   });
 
-
   const state = {
     contextMenu: contextMenu,
     setContextMenu,
@@ -61,7 +60,6 @@ function App() {
         <AuthorizePage />
     );
   }
-
 
   return (
     <AppContext.Provider value={state}>
@@ -105,7 +103,10 @@ function App() {
               <Route path="/artist/:id">
                 <ArtistPage />
               </Route>
-
+              {/*TODO path verbessern*/}
+              <Route path="/discography/:id">
+                <DiscographyPage />
+              </Route>
               <Route path="/playlists">
                 <Playlists />
               </Route>
@@ -114,10 +115,6 @@ function App() {
               </Route>
               <Route path="/album/:id">
                 <AlbumPage />
-              </Route>
-              {/*TODO path verbessern*/}
-              <Route path="/discography/:id">
-                <DiscographyPage />
               </Route>
               <Route path="/collections/albums">
                 <Albums />

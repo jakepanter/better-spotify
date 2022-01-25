@@ -45,6 +45,9 @@ export default function ArtistAlbums() {
     }
 
 
+    //TODO
+    // check if all onScrolls are implemented corrected
+    // especially check if the checked conditions makes sense
     const onScrollAlbums = (e: any) => {
         const bottom =
             e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
@@ -56,9 +59,6 @@ export default function ArtistAlbums() {
         }
     };
 
-    //TODO
-    // check if all onScrolls are implemented corrected
-    // especially check if the checked conditions makes sense
 
     const allAlbums = albumItems.map((album) => {
         return (

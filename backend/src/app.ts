@@ -197,7 +197,6 @@ export default class App {
 
     this.server.get('/api/spotify/artist/:artistId/albums', async (req: Request, res: Response) => {
       const artistId = req.params.artistId as string;
-
       const include_groups = req.query?.include_groups as string ?? undefined;
       const limit = Number(req.query?.limit ?? 20);
       const market = req.query?.market as string ?? "DE";

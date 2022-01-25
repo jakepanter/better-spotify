@@ -22,7 +22,6 @@ export default function Discography (props: IProps) {
     const [next, setNext] = useState<string>(
         `${API_URL}api/spotify/artist/${id}/albums?country="DE"&limit=${limit}&include_groups=album,single`
     );
-    //const [albumIds, setAlbumIds] = useState<string[]>();
 
     async function fetchAlbums(url: string) {
         const allAlbums: ArtistsAlbumsResponse = await fetch(url).then((res) => res.json());

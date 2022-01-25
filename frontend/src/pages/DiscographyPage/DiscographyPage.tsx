@@ -8,7 +8,7 @@ function DiscographyPage() {
     //get route params (:albumId)
     let params = useParams() as { id: string };
 
-    return <Discography id={params.id} />
+    return <Discography id={params.id} key={params.id}/>
 }
 
 export default DiscographyPage;
