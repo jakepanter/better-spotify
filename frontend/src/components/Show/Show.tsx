@@ -47,15 +47,14 @@ export default function Show(props: IProps) {
             show &&
             show.episodes &&
             show.episodes.total &&
-            show.episodes.total <= offset
+            show.episodes.total <= newOffset
         )
             return;
 
         const data: ShowEpisodesResponse = await fetch(
             `${API_URL}api/spotify/show/${id}/episodes?offset=${newOffset}&limit=${limit}`
         ).then((res) => res.json());
-
-        const fetchedEpisodes = data.items as ShowEpisodes[]
+        const fetchedEpisodes = data.items as ShowEpisodes[];
         setEpisodes((oldEpisodes) => [
             ...oldEpisodes,
             ...fetchedEpisodes.map((t) => {

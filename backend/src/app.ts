@@ -239,7 +239,8 @@ export default class App {
     this.server.get('/api/spotify/show/:showId/episodes', async (req: Request, res: Response) => {
       const limit = Number(req.query?.limit ?? 50);
       const offset = Number(req.query?.offset ?? 0);
-      const showId = req.params.id as string;
+      console.log(limit, offset);
+      const showId = req.params.showId as string;
 
       const episodes = await this.spotifyService.getShowEpisodes(showId, limit, offset);
       return res.json(episodes);
