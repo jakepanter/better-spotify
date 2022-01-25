@@ -92,7 +92,8 @@ class Artist extends Component<IProps, IState> {
         const allRelatedArtists = await fetch(
             `${API_URL}api/spotify/artists/${this.props.id}/related-artists`
         ).then((res) => res.json());
-        this.setState((state) => ({...state, relatedArtists: allRelatedArtists.artists}))
+        this.setState((state) => ({...state, relatedArtists: allRelatedArtists.artists.slice(0,5)}))
+
 
     }
 
@@ -335,7 +336,7 @@ class Artist extends Component<IProps, IState> {
                                     More</NavLink>
                             </div>
                             <div className={"overview artist-section"}>
-                                <ul className={"overview-items"}>
+                                <ul className={"overview-items"} style={{height: '40vh', overflow: 'hidden'}}>
                                     {relatedArtists}
                                 </ul>
                             </div>
