@@ -31,7 +31,7 @@ type Body = {
 type Props = {
   track: TrackObjectFull | TrackObjectSimplified| EpisodeObject;
   name: string;
-  artists: string[];
+  artists?: ArtistObjectSimplified[];
   duration_ms: number;
   added_at?: string;
   liked?: boolean;
@@ -229,7 +229,7 @@ function TrackListItem(props: Props) {
       <div className={"TableCell TableCellTitleArtist"}>
         <span className={"TableCellTitle"}>{track.name}</span>
         <span className={"TableCellArtist"}>
-          {track.artists.map((artist) => artist) + (", ")}
+          {track.artists?.map((artist) => artist.name).join(", ")}
         </span>
       </div>
       {track.album !== undefined ? (

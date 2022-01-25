@@ -194,10 +194,6 @@ function TrackList(props: Props) {
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
               const track = item;
-              var artistArray: string[];
-              artistArray = [];
-              track.artists.map((artist) => 
-                artistArray.push(artist.name));
               const tagList =
                 TagsSystem.getTagsOfElement(track.id).map((id) => ({
                   id,
@@ -207,7 +203,7 @@ function TrackList(props: Props) {
                 <TrackListItem
                   track={track}
                   name={track.name}
-                  artists={artistArray}
+                  artists={track.artists}
                   duration_ms={track.duration_ms}
                   liked={track.is_saved}
                   key={type + "-track-" + track.id + "-" + index}
@@ -251,10 +247,6 @@ function TrackList(props: Props) {
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
               const { track } = item;
-              var artistArray: string[];
-              artistArray = [];
-              track.artists.map((artist) => 
-                artistArray.push(artist.name));
               const tagList =
                 TagsSystem.getTagsOfElement(track.id).map((id) => ({
                   id,
@@ -264,7 +256,7 @@ function TrackList(props: Props) {
                 <TrackListItem
                   track={track}
                   name={track.name}
-                  artists={artistArray}
+                  artists={track.artists}
                   duration_ms={track.duration_ms}
                   album={track.album}
                   added_at={item.added_at}
@@ -302,10 +294,6 @@ function TrackList(props: Props) {
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
-              var artistArray: string[];
-              artistArray = [];
-              item.artists.map((artist) => 
-                artistArray.push(artist.name));
               const tagList =
                 TagsSystem.getTagsOfElement(item.id).map((id) => ({
                   id,
@@ -316,7 +304,7 @@ function TrackList(props: Props) {
                   <TrackListItem
                     track={item}
                     name={item.name}
-                    artists={artistArray}
+                    artists={item.artists}
                     duration_ms={item.duration_ms}
                     album={item.album}
                     key={type + "-track-" + item.id + "-" + index}
@@ -360,10 +348,6 @@ function TrackList(props: Props) {
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
               const { track } = item;
-              var artistArray: string[];
-              artistArray = [];
-              track.artists.map((artist) => 
-                artistArray.push(artist.name));
               const tagList =
                 TagsSystem.getTagsOfElement(track.id).map((id) => ({
                   id,
@@ -373,7 +357,7 @@ function TrackList(props: Props) {
                 <TrackListItem
                   track={track}
                   name={track.name}
-                  artists={artistArray}
+                  artists={track.artists}
                   duration_ms={track.duration_ms}
                   album={track.album}
                   added_at={item.added_at}
@@ -410,12 +394,10 @@ function TrackList(props: Props) {
             {props.tracks.map((item, index) => {
               const episode = item ;
               const tagList = TagsSystem.getTagsOfElement(episode.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
-              var artistsArray = [""];
               return (
                 <TrackListItem
                   track={episode}
                   name={episode.name}
-                  artists={artistsArray}
                   duration_ms={episode.duration_ms}
                   image={episode.images[0]}
                   description={episode.description}
@@ -458,10 +440,6 @@ function TrackList(props: Props) {
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((track, index) => {
-              var artistArray: string[];
-              artistArray = [];
-              track.artists.map((artist) => 
-                artistArray.push(artist.name));
               const tagList =
                 TagsSystem.getTagsOfElement(track.id)
                   .filter((t) => t !== props.hideTag)
@@ -470,7 +448,7 @@ function TrackList(props: Props) {
                 <TrackListItem
                   track={track}
                   name={track.name}
-                  artists={artistArray}
+                  artists={track.artists}
                   duration_ms={track.duration_ms}
                   album={track.album}
                   key={type + "-track-" + track.id + "-" + index}
@@ -513,10 +491,6 @@ function TrackList(props: Props) {
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
               const track = item.track as TrackObjectFull;
-              var artistArray: string[];
-              artistArray = [];
-              track.artists.map((artist) => 
-                artistArray.push(artist.name));
               const tagList =
                 TagsSystem.getTagsOfElement(track.id).map((id) => ({
                   id,
@@ -526,7 +500,7 @@ function TrackList(props: Props) {
                 <TrackListItem
                   track={track}
                   name={track.name}
-                  artists={artistArray}
+                  artists={track.artists}
                   duration_ms={track.duration_ms}
                   album={track.album}
                   key={type + "-track-" + track.id + "-" + index}
