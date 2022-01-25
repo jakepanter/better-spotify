@@ -28,8 +28,8 @@ export default function Episode(props: IProps) {
       `${API_URL}api/spotify/episode/${id}`
     ).then((res) => res.json());
     
-    var context_uri = "spotify:show:" + data.show.id;
-    var track_uri = "spotify:episode:" + id;
+    const context_uri = "spotify:show:" + data.show.id;
+    const track_uri = "spotify:episode:" + id;
 
     body = {
       context_uri: context_uri,
