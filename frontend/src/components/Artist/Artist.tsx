@@ -260,7 +260,7 @@ class Artist extends Component<IProps, IState> {
                         <div className={"section"}>
                             <div className={"header"}>
                                 <h2>Discography
-                                    <NavLink to={`/discography/${this.props.id}`} className={"viewMoreLink"}>View Entire
+                                    <NavLink to={`/artist/${this.props.id}/discography`} className={"viewMoreLink"}>View Entire
                                         Discography</NavLink>
                                 </h2>
                             </div>

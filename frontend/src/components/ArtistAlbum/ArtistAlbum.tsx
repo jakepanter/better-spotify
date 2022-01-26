@@ -31,9 +31,8 @@ export default function ArtistAlbums() {
 
     const [albums, setAlbums] = useState<ArtistsAlbumsResponse>();
     const [albumItems, setAlbumItems] = useState<AlbumObjectSimplified[]>([]);
-    // TODO market DE harcoded
     const [nextAlbumURL, setNextAlbumURL] = useState<string>(
-        `${API_URL}api/spotify/artist/${id}/albums?market=DE&include_groups=${type}`
+        `${API_URL}api/spotify/artist/${id}/albums?market=${localStorage.getItem("country")}&include_groups=${type}`
     );
 
     // fetch albums
@@ -55,9 +54,9 @@ export default function ArtistAlbums() {
         }
     };
 
-    const allAlbums = albumItems.map((album) => {
+    const allAlbums = albumItems.map((album, index) => {
         return (
-            <li className={"column"} key={album.id}>
+            <li className={"column"} key={album.id + index}>
                 <Link to={`/album/${album.id}`}>
                     {album.images.length > 0 ? (
                         <div

@@ -16,9 +16,8 @@ export default function Discography (props: IProps) {
     const { id } = props;
     const [albums, setAlbums] = useState<ArtistsAlbumsResponse>();
     const [albumItems, setAlbumItems] = useState<AlbumObjectSimplified[]>([]);
-    //TODO country is hardcoded
     const [nextAlbumURL, setNextAlbumURL] = useState<string>(
-        `${API_URL}api/spotify/artist/${id}/albums?country="DE"&limit=${limit}&include_groups=album,single`
+        `${API_URL}api/spotify/artist/${id}/albums?country=${localStorage.getItem("country")}&limit=${limit}&include_groups=album,single`
     );
 
     async function fetchAlbums(url: string) {

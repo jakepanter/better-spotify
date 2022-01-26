@@ -4,7 +4,8 @@ import {
 } from "spotify-types";
 import {API_URL} from '../../utils/constants';
 import {Link} from "react-router-dom";
-import "../../cards.scss";
+//import "../../cards.scss";
+import "./RelatedArtists.scss";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 
 
@@ -46,27 +47,26 @@ class RelatedArtists extends Component<IProps, IState> {
         if (this.state.relatedArtistsList.length === 0) return <p>loading...</p>;
         const relatedArtists = this.state.relatedArtistsList.map((artist) => {
             return (
-                <li className="column" key={artist.id}>
-                    <Link to={`/artist/${artist.id}`}>
+
+                    <Link to={`/artist/${artist.id}`}  className={"Card"} key={artist.id}>
                         {artist.images.length !== 0 ? (
-                            <div className={"cover"} style={{
+                            <div className={"CardCover"} style={{
                                 backgroundImage: `url(${artist.images[0].url})`
                             }}>
                             </div>
                         ) :(
                             <CoverPlaceholder/>
                         )}
-                        <span className="title">{artist.name}</span>
+                        <span className="CardTitle">{artist.name}</span>
                     </Link>
-                </li>
             );
         });
 
         return (
-            <div style={{overflow: 'hidden auto'}}>
-                <h2>More Like &quot;{this.state.artistName}&quot;</h2>
-                <div className={"overview"}>
-                    <ul className={"overview-items"}>{relatedArtists}</ul>
+            <div className={"RelatedArtists"} style={{overflow: 'hidden auto'}}>
+                <h2 className={"Header"}>More Like &quot;{this.state.artistName}&quot;</h2>
+                <div className={"Content"}>
+                    <ul className={"CoverList"}>{relatedArtists}</ul>
                 </div>
             </div>
         );

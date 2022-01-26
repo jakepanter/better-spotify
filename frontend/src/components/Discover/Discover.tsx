@@ -54,14 +54,8 @@ class Discover extends Component<IProps, IState> {
             this.setState((state) => ({...state, recentlyPlayedTracks: recentPlayedTracksData.items}));
         });
 
-        // get users country
-        const me = await fetch(
-            `${API_URL}api/spotify/me`
-        ).then((res) => res.json());
-        const country = me.country;
-
         // fetch new releases
-        this.fetchNewReleases(country).then((newReleasedAlbums) => {
+        this.fetchNewReleases().then((newReleasedAlbums) => {
             this.setState((state) => ({...state, newReleases: newReleasedAlbums.albums.items}));
         });
 
@@ -91,7 +85,8 @@ class Discover extends Component<IProps, IState> {
         return recentPlayedTracksData;
     }
 
-    async fetchNewReleases(country: string) {
+    async fetchNewReleases() {
+        const country = localStorage.getItem("country");
         const res = await fetch(
             `${API_URL}api/spotify/browse/new-releases?country=${country}&limit=${limit}`
         );

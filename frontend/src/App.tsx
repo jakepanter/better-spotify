@@ -97,15 +97,14 @@ function App() {
               <Route exact path="/">
                 <Dashboard editable={editable} />
               </Route>
+              <Route path="/artist/:id/discography">
+                <DiscographyPage />
+              </Route>
               <Route path="/artist/:id/albums/:type">
                 <ArtistAlbums />
               </Route>
               <Route path="/artist/:id">
                 <ArtistPage />
-              </Route>
-              {/*TODO path verbessern*/}
-              <Route path="/discography/:id">
-                <DiscographyPage />
               </Route>
               <Route path="/playlists">
                 <Playlists />
