@@ -1,0 +1,43 @@
+@import "/src/boilerplate";
+
+.NotificationsService {
+  bottom: 0;
+  display: flex;
+  flex-flow: column nowrap;
+  left: 0;
+  position: fixed;
+  width: 320px;
+  z-index: 100;
+
+  .Notification {
+    align-items: center;
+    border-radius: $border-radius;
+    display: flex;
+    flex-flow: row nowrap;
+    color: $color-default;
+    padding: $spacer / 4;
+    margin-bottom: $spacer / 4;
+
+    &Info {
+      background: $color-primary;
+    }
+
+    &Success {
+      background: $color-positive-darker;
+    }
+
+    &Warning {
+      background: $color-waring-dark;
+    }
+
+    &Error {
+      background: $color-waring-darkest;
+    }
+
+    &Icon {
+      margin-right: $spacer / 4;
+    }
+
+    &Message {}
+  }
+}

@@ -21,6 +21,7 @@ import TagTracklistPage from "./pages/TagTracklistPage/TagTracklistPage";
 import RelatedArtistsPage from "./pages/RelatedArtistsPage/RelatedArtistsPage";
 import AuthorizePage from "./components/AuthorizePage/AuthorizePage";
 import AppContext, { ContextMenu } from "./AppContext";
+import { NotificationsDisplay } from "./components/NotificationService/NotificationsService";
 
 function App() {
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -138,6 +139,7 @@ function App() {
             </Switch>
             <Player />
           </div>
+          <NotificationsDisplay/>
         </div>
       </Router>
     </AppContext.Provider>
