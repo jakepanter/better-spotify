@@ -30,6 +30,12 @@ function App() {
   const menuToggle = () => {
     setMiniMenu(!miniMenu);
   };
+  const [lightmode, setLightmode] = useState(localStorage.getItem('lightmode') === 'true' ? true : false);
+  const toggleLightmode = () => setLightmode(!lightmode);
+    useEffect(() => {
+        localStorage.setItem('lightmode', String(lightmode));
+    }, [lightmode]);
+
   const [contextMenu, setContextMenu] = useState<ContextMenu>({
     isOpen: false,
     type: "",
@@ -61,7 +67,7 @@ function App() {
   return (
     <AppContext.Provider value={state}>
       <Router>
-        <div className="structure">
+        <div className={`structure ${lightmode ? " light_mode" : ""}`}>
           {contextMenu.isOpen && contextMenu.x && contextMenu.y && (
             <ContextMenuWrapper
               type={contextMenu.type}
@@ -89,7 +95,7 @@ function App() {
             <Sidebar />
           </div>
           <div className="structure--main">
-            <Topbar editable={editable} onChangeEditable={toggleEditable} />
+            <Topbar editable={editable} onChangeEditable={toggleEditable} lightTheme={lightmode} onChangeLightmode={toggleLightmode}/>
             <Switch>
               <Route exact path="/">
                 <Dashboard editable={editable} />

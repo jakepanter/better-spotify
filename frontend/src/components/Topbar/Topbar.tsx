@@ -17,14 +17,18 @@ function authorize() {
 
 interface IProps {
     onChangeEditable: () => void,
-    editable: boolean
+    editable: boolean,
+    onChangeLightmode: () => void,
+    lightTheme: boolean
 }
 
 const Topbar = (props: IProps) => {
     const toggleEditable = () => {
         props.onChangeEditable();
     }
-
+    const toggleLightmode = () => {
+        props.onChangeLightmode();
+    }
     const [image, setImage] = useState<string>('');
 
     useEffect(() => {
@@ -53,6 +57,9 @@ const Topbar = (props: IProps) => {
             <div className={'top-bar-item settings'}>
                 <button className={'settings-button customize-button'} onClick={toggleEditable} title={"Customize start page"}>
                     <span className={'material-icons'}>{props.editable ? "close" : "edit"}</span>
+                </button>
+                <button title={"Set theme"} className={`settings-button`} onClick={toggleLightmode}>
+                    <span className={'material-icons'}>{props.lightTheme ? "light_mode" : "dark_mode"}</span>
                 </button>
                 <button className={'settings-button'} onClick={authorize} title={"Log out"}>
                     <span className={'material-icons'}>login</span>

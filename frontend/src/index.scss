@@ -99,6 +99,46 @@
       height: calc(100vh - 80px);
     }
   }
+
+  &.light_mode{
+    background: $color-background-light;
+    .minimizeMenuButton {
+      background: $white;
+      border: 0.5px solid $gray-dark;
+    }
+
+    .structure--left-panel {
+      background: $white;
+      border-color: $gray-dark;
+    }
+    .structure--main{
+      scrollbar-width: none; // fix
+    }
+  }
+}
+.light_mode {
+  p {
+    color: $color-default-light;
+  }
+
+  td, th {
+    color: $color-default-light;
+
+  }
+
+  // Button
+  .button {
+    background: $none;
+    color: $button-color-light;
+    border-color: $button-border-color-light;
+
+    &.active:enabled,
+    &:hover:enabled {
+      background: $button-background-active-light;
+      color: $button-color-active-light;
+      border-color: $button-border-color-active-light;
+    }
+  }
 }
 
 p {
