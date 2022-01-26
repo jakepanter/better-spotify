@@ -94,3 +94,34 @@
   // important necessary to overwrite
   visibility: visible !important;
 }
+
+.light_mode {
+  .top-bar {
+    background: $color-background-light;
+
+    .volume {
+      color: $color-default-light;
+
+      .settings-button {
+        background: $none;
+      }
+
+      .rc-slider-track, .rc-slider-handle {
+        background-color: $color-default-light;
+        border-color: $color-default-light;
+      }
+    }
+
+    .settings {
+      .settings-button {
+        border-radius: $border-radius;
+        background: $color-accent-light;
+
+        .material-icons {
+          color: $color-default-light;
+        }
+      }
+    }
+
+  }
+}

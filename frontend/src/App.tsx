@@ -32,8 +32,8 @@ function App() {
   };
   const [lightmode, setLightmode] = useState(localStorage.getItem('lightmode') === 'true' ? true : false);
   const toggleLightmode = () => setLightmode(!lightmode);
-    useEffect(() => {
-        localStorage.setItem('lightmode', String(lightmode));
+  useEffect(() => {
+    localStorage.setItem('lightmode', String(lightmode));
     }, [lightmode]);
 
   const [contextMenu, setContextMenu] = useState<ContextMenu>({

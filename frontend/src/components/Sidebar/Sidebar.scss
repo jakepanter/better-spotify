@@ -133,3 +133,40 @@
     }
   }
 }
+.light_mode {
+  .left-side-panel {
+    .logo {
+      a {
+
+        font-size: 25px;
+        color: $color-primary;
+        text-decoration: none;
+        background: none;
+
+        &:hover {
+          background: none;
+          color: $color-primary;
+
+        }
+      }
+
+      .non-colored-headline, {
+        color: $color-default-light;
+
+      }
+    }
+
+    &--list {
+
+      a {
+        background: none;
+        color: $color-default-light;
+      }
+
+      a:hover, a.active {
+        background: $color-primary;
+        color: $white;
+      }
+    }
+  }
+}

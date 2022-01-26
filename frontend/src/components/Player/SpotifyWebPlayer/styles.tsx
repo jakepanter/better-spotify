@@ -29,6 +29,8 @@ interface NanoExtended extends NanoRenderer {
   ) => React.FunctionComponent<Partial<StyledProps>>;
 }
 
+
+
 const nano = create({ h: React.createElement });
 
 addonRule(nano);
@@ -44,6 +46,28 @@ export const px = (value: string | number): string =>
   typeof value === 'number' ? `${value}px` : value;
 
 export function getMergedStyles(styles: StylesProps | undefined): StylesOptions {
+  if(localStorage.getItem('lightmode') === 'true'){
+    return {
+      activeColor: '#008FF7',
+      altColor: '#1F1F1F',
+      bgColor: '#F2F2F2',
+      color: '#1F1F1F',
+      errorColor: '#D83010',
+      height: 70,
+      loaderColor: '#1F1F1F',
+      loaderSize: 32,
+      sliderColor: '#008FF7',
+      sliderHandleBorderRadius: '50%',
+      sliderHandleColor: '#008FF7',
+      sliderHeight: 4,
+      sliderTrackBorderRadius: 50,
+      sliderTrackColor: '#CDCECD',
+      trackArtistColor: '#1F1F1F',
+      trackNameColor: '#1F1F1F',
+      ...styles,
+    };
+  }
+
   return {
     activeColor: '#008FF7',
     altColor: '#ccc',
