@@ -87,10 +87,14 @@ export default function Playlists() {
 
   const myPlaylists = items.map((playlist) => {
     return (
-      <Link to={`/playlist/${playlist.id}`} className={"Card"} key={playlist.id}>
+      <Link
+        to={`/playlist/${playlist.id}`}
+        className={"Card"}
+        key={playlist.id}
+        onContextMenu={(e) => handleRightClick(e, playlist.id)}
+      >
         {playlist.images.length > 0 ? (
           <div
-            onContextMenu={(e) => handleRightClick(e, playlist.id)}
             className={"CardCover"}
             style={{ backgroundImage: `url(${playlist.images[0].url})` }}
           />

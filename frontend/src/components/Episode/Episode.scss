@@ -1,0 +1,70 @@
+@import "src/boilerplate";
+
+.EpisodeDescription{
+    display: flex;
+    flex-direction: column;
+    color: $gray-dark;
+    border-top: 1px solid rgba(205, 206, 205, 0.11);
+    padding: 32px;
+    font-size: $fz-h6;  
+    opacity: 0.8;  
+    line-height: 140%;
+
+    h4 {
+        padding-bottom: 16px;
+        text-transform: none;
+
+      }
+}
+
+.EpisodeControl{
+    width: 100%;
+    display: flex;
+    padding-bottom: 16px;
+
+    .PlayEpisode {
+        margin-left: 32px;
+        flex: 0 0 42px;
+        width: 62px;
+        position: relative;
+        justify-content: center;
+        align-items: flex-start;
+
+        &:hover::before {
+        color: $color-primary;
+        }
+        &:before {
+        content: "\e038";
+        font-family: "Material Icons";
+        width: 60px;
+        display: inline-block;
+        font-size: 60px;
+        text-align: center;
+        color: rgba($white, 0.45);     
+        }
+    }
+
+    .AllEpisodes {
+        align-items: flex-end;
+        margin-left: auto;
+        margin-right: 32px;
+        margin-top: 16px;
+        background-color: #1C1C23;
+        border-radius: 5px;
+        max-height: 25px;
+        border-color: #1C1C23;
+        margin-bottom: 16px;
+        
+        &:hover {
+            background-color: $color-primary;
+            border-color: $color-primary;
+        }
+    }
+}
+
+.PlaylistHeaderCover {
+    img{
+        width: 123px;
+    }
+}
+

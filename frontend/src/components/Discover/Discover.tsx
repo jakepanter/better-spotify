@@ -215,7 +215,7 @@ class Discover extends Component<IProps, IState> {
                 <div style={{overflow: 'hidden auto'}}>
                     {/*Recently Played Tracks*/}
                     <div className={"section"} key="recentlyPlayed">
-                        <div className={'header'}>
+                        <div className={'header discover-font-adjustment'}>
                             <h3>Recently listened to</h3>
                             <NavLink to={"/song-history"}>View More</NavLink>
                         </div>
@@ -227,7 +227,7 @@ class Discover extends Component<IProps, IState> {
 
                     {/*New Releases*/}
                     <div className={"section"} key="newReleases">
-                        <div className={'header'}>
+                        <div className={'header discover-font-adjustment'}>
                             <h3>New Releases</h3>
                             <NavLink to={"/new-releases"}>View More</NavLink>
                         </div>
@@ -241,7 +241,7 @@ class Discover extends Component<IProps, IState> {
                     {relatedArtists.map((tmp, index) =>
                         <div className={"section"} key={this.state.relatedArtistsList[index].artist.id}>
                             <div className={"overview"} key={this.state.relatedArtistsList[index].artist.id}>
-                                <div className={'header'}>
+                                <div className={'header discover-font-adjustment'}>
                                     <h3>More like &quot;{this.state.relatedArtistsList[index].artist.name}&quot;</h3>
                                     <NavLink to={`/related-artists/${this.state.relatedArtistsList[index].artist.id}`}>View
                                         More</NavLink>

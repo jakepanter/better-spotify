@@ -206,6 +206,14 @@ export default class App {
       return res.json(response);
     });
 
+    this.server.post('/api/spotify/playlist/:playlistId/remove', async (req: Request, res: Response) => {
+      const { playlistId } = req.params;
+      const tracks = req.body;
+      console.log(playlistId, tracks);
+      const response = await this.spotifyService.removeTracksFromPlaylist(playlistId, tracks);
+      return res.json(response);
+    });
+
     this.server.get('/api/spotify/playlist/:playlistId/tracks', async (req: Request, res: Response) => {
       const accessToken = getToken(req);
       const limit = Number(req.query?.limit ?? 50);
@@ -236,6 +244,39 @@ export default class App {
       const imgData = req.body.image;
       const response = await this.spotifyService.addPlaylistImage(accessToken, playlistId, imgData);
       return res.json(response);
+    });
+
+    this.server.get('/api/spotify/me/shows', async (req: Request, res: Response) => {
+      const shows = await this.spotifyService.getSavedShows();
+      return res.json(shows);
+    });
+
+    this.server.get('/api/spotify/shows', async (req: Request, res: Response) => {
+      const showIds: string[] = (req.query.showIds as string ?? ' ').split(',');
+      const shows = await this.spotifyService.getShows(showIds);
+      return res.json(shows);
+    });
+
+    this.server.get('/api/spotify/show/:showId/episodes', async (req: Request, res: Response) => {
+      const limit = Number(req.query?.limit ?? 50);
+      const offset = Number(req.query?.offset ?? 0);
+      console.log(limit, offset);
+      const showId = req.params.showId as string;
+
+      const episodes = await this.spotifyService.getShowEpisodes(showId, limit, offset);
+      return res.json(episodes);
+    });
+
+    this.server.get('/api/spotify/show/:showId', async (req: Request, res: Response) => {
+      const showId = req.params.showId as string;
+      const show = await this.spotifyService.getShow(showId);
+      return res.json(show);
+    });
+
+    this.server.get('/api/spotify/episode/:episodeId', async (req: Request, res: Response) => {
+      const { episodeId } = req.params;
+      const episode = await this.spotifyService.getEpisode(episodeId);
+      return res.json(episode);
     });
 
     this.server.put('/api/spotify/volume', async (req: Request, res: Response) => {

@@ -11,6 +11,7 @@ import {
 import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import AppContext from "../../AppContext";
+import { useLocation } from "react-router-dom";
 import { getAuthHeader } from '../../helpers/api-helpers';
 
 // The fetching limit, can be adjusted by changing this value
@@ -36,6 +37,7 @@ export default function Playlist(props: IProps) {
   // The current offset for fetching new tracks
   const [offset, setOffset] = useState<number>(0);
   const state = useContext(AppContext);
+  const location = useLocation<any>();
 
   async function fetchPlaylistData() {
     //this only fetches the total number of tracks, cover image and owner of the playlist, not the actual tracks
@@ -121,6 +123,14 @@ export default function Playlist(props: IProps) {
     fetchPlaylistTrackData(offset);
   }, [offset]);
 
+  useEffect(() => {
+    // remove removed tracks from items
+    if (location.state && location.state.removed) {
+      const removedIDs: number[] = location.state.removed.map((track: any) => track.positions[0]);
+      setTracks(tracks.filter((item, index) => !removedIDs.includes(index)));
+    }
+  }, [location]);
+
   const changeTitle = (e: any) => {
     const newTitle = e.target.value;
     setTitle(newTitle);
@@ -194,6 +204,7 @@ export default function Playlist(props: IProps) {
         fullyLoaded={playlist.tracks.total <= tracks.length}
         loadMoreCallback={() => setOffset((currentOffset) => currentOffset + limit)}
         type={"playlist"}
+        playlist={playlist}
         tracks={tracks}
         id_tracklist={id}
       />

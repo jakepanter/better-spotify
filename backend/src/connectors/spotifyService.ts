@@ -36,11 +36,12 @@ export default class SpotifyService {
     'user-read-playback-position',
     'user-read-recently-played',
     'user-top-read',
-    'app-remote-control',
     'streaming',
-    'user-follow-modify',
-    'user-follow-read',
-  ]; // TODO
+    // Currently we do not use these 3:
+    // 'app-remote-control',
+    // 'user-follow-modify',
+    // 'user-follow-read',
+  ];
 
   private spotifyApi: SpotifyWebApi;
 
@@ -231,6 +232,14 @@ export default class SpotifyService {
     return res.body;
   }
 
+  removeTracksFromPlaylist = async (
+      playlistId: string,
+      tracks: ReadonlyArray<{uri: string, positions: number[]}>,
+  ) => {
+    const res = await this.spotifyApi.removeTracksFromPlaylist(playlistId, tracks);
+    return res.body;
+  }
+
   getPlaylist = async (accessToken: string, playlistId: string, fields: string) => {
     this.spotifyApi.setAccessToken(accessToken);
     const result = await this.spotifyApi.getPlaylist(playlistId, { fields });
@@ -244,6 +253,32 @@ export default class SpotifyService {
     const album = await this.spotifyApi.getPlaylistTracks(id, options);
     this.spotifyApi.resetAccessToken();
     return album.body;
+  }
+
+  getSavedShows = async () => {
+    const result = await this.spotifyApi.getMySavedShows();
+    return result.body;
+  }
+
+  getShows = async (showIds: string[]) => {
+    const data = await this.spotifyApi.getShows(showIds);
+    return data.body;
+  };
+
+  getShowEpisodes = async (showId: string, limit: number, offset: number) => {
+    const options: any = { limit, offset };
+    const result = await this.spotifyApi.getShowEpisodes(showId, options);
+    return result.body;
+  }
+
+  getShow = async(showId: string) => {
+    const result = await this.spotifyApi.getShow(showId);
+    return result.body;
+  }
+
+  getEpisode = async(episodeId: string) => {
+    const result = await this.spotifyApi.getEpisode(episodeId);
+    return result.body;
   }
 
   unfollowPlaylist = async (accessToken: string, playlistId: string) => {
@@ -301,8 +336,8 @@ export default class SpotifyService {
     return result.body;
   }
 
-  getMyTopArtists = async (accessToken: string, limit: number, offset:number, time_range: string) => {
-    const options: any = { limit, offset, time_range };
+  getMyTopArtists = async (accessToken: string, limit: number, offset:number, timeRange: string) => {
+    const options: any = { limit, offset, time_range: timeRange };
     this.spotifyApi.setAccessToken(accessToken);
     const result = await this.spotifyApi.getMyTopArtists(options);
     this.spotifyApi.resetAccessToken();

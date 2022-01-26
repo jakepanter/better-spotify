@@ -53,7 +53,7 @@ export default function SavedTracks(props: IProps) {
             {headerStyle !== "none" ? (
                 headerStyle === "compact" ? (
                     <div className={"PlaylistHeader PlaylistHeaderCompact"}>
-                        <h2>Saved Tracks</h2>
+                        <h2>Liked songs</h2>
                     </div>
                 ) : (
                     <div className={"PlaylistHeader PlaylistHeaderFull"}>
@@ -62,11 +62,11 @@ export default function SavedTracks(props: IProps) {
                                 src={
                                     "https://t.scdn.co/images/3099b3803ad9496896c43f22fe9be8c4.png"
                                 }
-                                alt={"Saved Tracks"}
+                                alt={"Liked songs"}
                             />
                         </div>
                         <div className={"PlaylistHeaderMeta"}>
-                            <h1>Saved Tracks</h1>
+                            <h1>Liked songs</h1>
                             <p>
                                 {total} Song{total === 1 ? "" : "s"}
                             </p>

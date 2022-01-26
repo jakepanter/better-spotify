@@ -14,6 +14,9 @@
     text-decoration: none;
   }
 }
+.discover-font-adjustment h3{
+  font-size: 20px;
+}
 .overview {
   .overview-items {
     @media screen and(min-width: $breakpoint-sm) and(max-width: $breakpoint-md) {

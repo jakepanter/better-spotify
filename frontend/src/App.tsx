@@ -2,22 +2,25 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Albums from "./components/Albums/Albums";
 import Playlists from "./components/Playlists/Playlists";
+import Podcasts from "./components/Podcasts/Podcasts"
 import SavedTracks from "./components/SavedTracks/SavedTracks";
 import Player from "./components/Player/Player";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Dashboard from "./components/Dashboard/Dashboard";
-import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
-import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import Topbar from "./components/Topbar/Topbar";
-import SettingsPage from "./pages/SettingsPage/SettingsPage";
-import TagTracklistPage from "./pages/TagTracklistPage/TagTracklistPage";
 import SearchPage from "./components/SearchPage/SearchPage";
 import ContextMenuWrapper from "./components/ContextMenu/ContextMenuWrapper";
 import SearchPageCustom from "./components/SearchPage/Custom/SearchPageCustom";
 import Discover from "./components/Discover/Discover";
 import SongHistory from "./components/SongHistory/SongHistory";
 import Releases from "./components/Releases/Releases";
+import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
+import AlbumPage from "./pages/AlbumPage/AlbumPage";
+import SettingsPage from "./pages/SettingsPage/SettingsPage";
+import TagTracklistPage from "./pages/TagTracklistPage/TagTracklistPage";
 import RelatedArtistsPage from "./pages/RelatedArtistsPage/RelatedArtistsPage";
+import ShowPage from "./pages/ShowPage/ShowPage";
+import EpisodePage from "./pages/EpisodePage/EpisodePage";
 import AuthorizePage from "./components/AuthorizePage/AuthorizePage";
 import AppContext, { ContextMenu } from "./AppContext";
 import { useSelector, useDispatch } from 'react-redux';
@@ -63,6 +66,11 @@ function App() {
       dispatch(refreshAuthentication())
     }, 3600 * 1000 - 10000);
     return () => clearInterval(refreshInterval);
+  }, []);
+
+  useEffect(() => {
+    // disables default context menu
+    document.addEventListener("contextmenu", (e) => e.preventDefault(), true);
   }, []);
 
   if (!authentication.accessToken || authentication.accessToken === '') {
@@ -116,8 +124,17 @@ function App() {
               <Route path="/album/:id">
                 <AlbumPage />
               </Route>
+              <Route path="/show/:id">
+                <ShowPage/>
+              </Route>
+              <Route path="/episode/:id">
+                <EpisodePage/>
+              </Route>
               <Route path="/collections/albums">
                 <Albums />
+              </Route>
+              <Route path="/collections/podcasts">
+                <Podcasts/>
               </Route>
               <Route path="/me/tracks">
                 <SavedTracks headerStyle={"full"} />

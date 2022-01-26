@@ -25,7 +25,7 @@
     width: 100%;
     transition: $transition-base;
 
-    &:hover:not(.TableHeader) {
+    &:hover:not(.TableHeader):not(.Selected) {
       user-select: none;
       background-color: $color-secondary;
       color: $color-default;
@@ -142,7 +142,7 @@
 
     &Duration {
       flex: 0 1 90px;
-      text-align: right;
+      text-align: center;
     }
 
     &AddedAt {
@@ -154,13 +154,13 @@
     }
 
     &Actions {
-      flex: 0 0 60px;
+      flex: 0.2 0 0;
     }
 
     &Tags {
       align-items: center;
       display: flex;
-      flex: 0.5 0 0;
+      flex: 0.3 0 0;
       flex-flow: row nowrap;
     }
   }
@@ -207,3 +207,5 @@
     color: rgba($white, 0.45);
   }
 }
+
+

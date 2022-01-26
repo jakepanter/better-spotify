@@ -2,9 +2,12 @@
 //anyone know how to satisfy eslint and the unused prop function variables????
 import "./TrackListItem.scss";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Route } from "react-router-dom";
 import {
   AlbumObjectSimplified,
+  EpisodeObject,
+  ImageObject,
+  ShowObjectSimplified,
   ArtistObjectSimplified,
   TrackObjectFull,
   TrackObjectSimplified,
@@ -13,7 +16,7 @@ import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
 import { API_URL } from "../../utils/constants";
 import { Tag } from "../../utils/tags-system";
 import { TagWithId } from "../../utils/tags-system";
-
+import EpisodePage from "../../pages/EpisodePage/EpisodePage";
 import Button from "../Button/Button";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import AppContext from "../../AppContext";
@@ -28,13 +31,15 @@ type Body = {
 };
 
 type Props = {
-  track: TrackObjectFull | TrackObjectSimplified;
-  name?: string;
-  artists: ArtistObjectSimplified[];
+  track: TrackObjectFull | TrackObjectSimplified| EpisodeObject;
+  name: string;
+  artists?: ArtistObjectSimplified[];
   duration_ms: number;
   added_at?: string;
   liked?: boolean;
-  album?: AlbumObjectSimplified;
+  album?: AlbumObjectSimplified| ShowObjectSimplified;
+  image?: ImageObject;
+  description?: string;
   listIndex: number;
   selected: boolean;
   tags?: TagWithId[];
@@ -58,40 +63,44 @@ function TrackListItem(props: Props) {
 
   const id_tracklist = props.id_tracklist;
   const type = props.type;
-  const track_uri = "spotify:track:" + props.track.id;
+  let track_uri = "spotify:track:" + props.track.id;
 
-    const sendRequest = useCallback(async () => {
-        // POST request using fetch inside useEffect React hook
-        let context_uri;
-        if (type === "album") {
-            context_uri = "spotify:album:" + id_tracklist;
-        } else if (type == "playlist") {
-            context_uri = "spotify:playlist:" + id_tracklist;
-        } else if (type === 'saved' || type === 'tags') {
-            const userId = await fetchUserId();
-            context_uri = userId + ':collection:'
-        } else if (type === "search") {
-            context_uri = "spotify:album:" + track.album?.id;
-        }
-        const body: Body = {
-            context_uri: context_uri,
-            position_ms: 0
-        }
-        if (type !== 'saved' && type !== 'tags') {
-            body.offset = {
-                uri: track_uri
-            }
-        }
-        const authHeader = getAuthHeader();
-        fetch(`${API_URL}api/spotify/me/player/play`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': authHeader},
-            body: JSON.stringify(body)
-        })
-            .then(response => response.json())
-    }, []);
+  const sendRequest = useCallback(async () => {
+    // POST request using fetch inside useEffect React hook
+    let context_uri;
+    if (type === "album"){
+      context_uri = "spotify:album:" + id_tracklist;
+    } else if (type=="playlist") {
+      context_uri = "spotify:playlist:" + id_tracklist;
+    } else if (type === 'saved' || type === 'tags') {
+      const userId = await fetchUserId();
+      context_uri = userId + ':collection:'
+    } else if (type === 'show') {
+      context_uri = "spotify:show:" + id_tracklist;
+      track_uri = "spotify:episode:" + props.track.id;
+    } else if (type === "search") {
+      context_uri = "spotify:album:" + track.album?.id;
+    }
+    const body: Body = {
+      context_uri: context_uri,
+      position_ms: 0
+    }
+    if (type !== 'saved' && type !== 'tags') {
+      body.offset = {
+        uri: track_uri
+      }
+    }
+    const authHeader = getAuthHeader();
+    fetch(`${API_URL}api/spotify/me/player/play`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': authHeader
+      },
+      body: JSON.stringify(body)
+    })
+        .then(response => response.json())
+  }, []);
 
   useEffect(() => {
     props.onSelectionChange(trackUniqueId, selected, specialKey);
@@ -102,16 +111,26 @@ function TrackListItem(props: Props) {
   }, [props.selected]);
 
   const handleClick = (e: any) => {
-    if (e.shiftKey) {
-      setSpecialKey("shift");
-    } else if (e.ctrlKey) {
-      setSpecialKey("ctrl");
-    } else {
-      setSpecialKey(null);
-    }
-    setSelected(!selected);
 
-    if (e.detail === 2) sendRequest();
+    if(type != "show") {
+      if (e.shiftKey) {
+        setSpecialKey("shift");
+      } else if (e.ctrlKey) {
+        setSpecialKey("ctrl");
+      } else if (e.target.className == "TableCellPlayEpisode") {
+        sendRequest()
+      } else {
+        setSpecialKey(null);
+      }
+      setSelected(!selected);
+
+      if (e.detail === 2) sendRequest()
+    }
+  };
+
+  const handlePlayButton= (e: any) => {
+    e.preventDefault();
+    sendRequest();
   };
 
   const handleRightClick = (e: any) => {
@@ -168,39 +187,86 @@ function TrackListItem(props: Props) {
     }
   };
 
-  return (
+  if(type === "show") {
+    return (
+      <div className={`Pointer EpisodeRow ${selected ? "Selected" : ""}`}
+        onContextMenu={(e) => handleRightClick(e)}
+      >
+        <Link to={`/episode/${props.track.id}`}>
+        <div className="noTags">
+            {track.image !== undefined && track.image !== null ? (
+              <div className={"TableCell TableCellArtwork"}>
+                <img
+                  src={track.image.url}
+                  alt=""
+                  style={{ width: "100px", height: "100px" }}
+                />
+              </div>
+            ) : (
+              <CoverPlaceholder />
+            )}
+            <div className={"EpisodeContent"}>
+              <h5 className={"TableCellTitleArtist"}>{track.name}</h5>
+              <p>{track.description}</p>
+              <div className={"TableCellPlayEpisode"} onClick={(e) => handlePlayButton(e)}/>
+            </div>
+          </div>
+          {track.tags !== undefined ? (
+            <div className={"TableCell TableCellTags"}>
+              {track.tags.map((t, i) =>
+                <Link key={i}
+                  className={`Tag TagColor${t.color}`}
+                  to={`/tag/${t.id}`}
+                >
+                  {t.title}
+              </Link>
+            )}
+          </div>
+      ) : (
+        <></>
+      )}
+      </Link>
+      </div>
+    );
+  }
+
+  else {
+      return (
     <div
       className={`Pointer TableRow ${selected ? "Selected" : ""}`}
       onClick={(e) => handleClick(e)}
       onContextMenu={(e) => handleRightClick(e)}
     >
-      {track.album !== undefined && track.album.available_markets !== undefined ? (
+      {track.album !== undefined &&
+      track.album.available_markets !== undefined ? (
         <div className={"TableCell TableCellArtwork"}>
-          <img src={track.album.images[2].url} alt="" style={{ width: "40px", height: "40px" }} />
+          <img
+            src={track.album.images[2].url}
+            alt=""
+            style={{ width: "40px", height: "40px" }}
+          />
         </div>
       ) : (
-        <div className={"TableCellCoverPlaceholder"}>
-          <CoverPlaceholder />
-        </div>
+          <div className={"TableCellCoverPlaceholder"}>
+            <CoverPlaceholder />
+          </div>
       )}
 
       <div className={"TableCell TableCellTitleArtist"}>
         <span className={"TableCellTitle"}>{track.name}</span>
-        <span className={"TableCellArtist"}>
-          {track.artists.map((artist) => artist.name).join(", ")}
-        </span>
+        {track.artists !== undefined ? (
+            <span className={"TableCellArtist"}>
+          {track.artists?.map((artist) => artist.name).join(", ")}
+            </span>
+        ) : (
+            <></>
+        )}
       </div>
-
       {track.album !== undefined ? (
-        <div className={"TableCell TableCellAlbum"}>
-          <Link to={`/album/${track.album.id}`} className={"albumLink"} key={trackUniqueId}>
-            {track.album.name}
-          </Link>
-        </div>
+        <div className={"TableCell TableCellAlbum"}>{track.album.name}</div>
       ) : (
         <></>
       )}
-
       {track.added_at !== undefined ? (
         <div className={"TableCell TableCellAddedAt"}>
           {formatTimeDiff(new Date(track.added_at).getTime(), Date.now())}
@@ -208,12 +274,13 @@ function TrackListItem(props: Props) {
       ) : (
         <></>
       )}
-
-      <div className={"TableCell TableCellDuration"}>{formatTimestamp(track.duration_ms)}</div>
+      <div className={"TableCell TableCellDuration"}>
+        {formatTimestamp(track.duration_ms)}
+      </div>
       {track.liked !== undefined ? (
         <div className={"TableCell TableCellLiked"}>
-          <button className={`checkbox ${liked ? "checked" : ""}`} onClick={handleLikeButton}>
-            <span className={"material-icons"}>{liked ? "favorite" : "favorite_border"}</span>
+          <button className={`checkbox ${liked ? 'checked' : ''}`} onClick={handleLikeButton}>
+            <span className={'material-icons'}>{liked ? 'favorite' : 'favorite_border'}</span>
           </button>
         </div>
       ) : (
@@ -221,11 +288,14 @@ function TrackListItem(props: Props) {
       )}
       {track.tags !== undefined ? (
         <div className={"TableCell TableCellTags"}>
-          {track.tags.map((t, i) => (
-            <Link key={i} className={`Tag TagColor${t.color}`} to={`/tag/${t.id}`}>
+          {track.tags.map((t, i) =>
+            <Link key={i}
+                  className={`Tag TagColor${t.color}`}
+                  to={`/tag/${t.id}`}
+            >
               {t.title}
             </Link>
-          ))}
+          )}
         </div>
       ) : (
         <></>
@@ -240,6 +310,7 @@ function TrackListItem(props: Props) {
       </div>
     </div>
   );
+}
 }
 
 export default TrackListItem;
