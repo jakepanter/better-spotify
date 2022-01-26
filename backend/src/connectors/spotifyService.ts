@@ -233,10 +233,13 @@ export default class SpotifyService {
   }
 
   removeTracksFromPlaylist = async (
-      playlistId: string,
-      tracks: ReadonlyArray<{uri: string, positions: number[]}>,
+    accessToken: string,
+    playlistId: string,
+    tracks: ReadonlyArray<{uri: string, positions: number[]}>,
   ) => {
+    this.spotifyApi.setAccessToken(accessToken);
     const res = await this.spotifyApi.removeTracksFromPlaylist(playlistId, tracks);
+    this.spotifyApi.resetAccessToken();
     return res.body;
   }
 
@@ -255,29 +258,39 @@ export default class SpotifyService {
     return album.body;
   }
 
-  getSavedShows = async () => {
+  getSavedShows = async (accessToken: string) => {
+    this.spotifyApi.setAccessToken(accessToken);
     const result = await this.spotifyApi.getMySavedShows();
+    this.spotifyApi.resetAccessToken();
     return result.body;
   }
 
-  getShows = async (showIds: string[]) => {
+  getShows = async (accessToken: string, showIds: string[]) => {
+    this.spotifyApi.setAccessToken(accessToken);
     const data = await this.spotifyApi.getShows(showIds);
+    this.spotifyApi.resetAccessToken();
     return data.body;
   };
 
-  getShowEpisodes = async (showId: string, limit: number, offset: number) => {
+  getShowEpisodes = async (accessToken: string, showId: string, limit: number, offset: number) => {
     const options: any = { limit, offset };
+    this.spotifyApi.setAccessToken(accessToken);
     const result = await this.spotifyApi.getShowEpisodes(showId, options);
+    this.spotifyApi.resetAccessToken();
     return result.body;
   }
 
-  getShow = async(showId: string) => {
+  getShow = async (accessToken: string, showId: string) => {
+    this.spotifyApi.setAccessToken(accessToken);
     const result = await this.spotifyApi.getShow(showId);
+    this.spotifyApi.resetAccessToken();
     return result.body;
   }
 
-  getEpisode = async(episodeId: string) => {
+  getEpisode = async (accessToken: string, episodeId: string) => {
+    this.spotifyApi.setAccessToken(accessToken);
     const result = await this.spotifyApi.getEpisode(episodeId);
+    this.spotifyApi.resetAccessToken();
     return result.body;
   }
 

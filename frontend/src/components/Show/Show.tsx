@@ -3,6 +3,7 @@ import { EpisodeObject, ShowEpisodesResponse, ShowObjectFull, SingleShowResponse
 import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import TrackList from "../TrackList/TrackList";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 // The fetching limit, can be adjusted by changing this value
 const limit = 20;
@@ -26,9 +27,13 @@ export default function Show(props: IProps) {
     const [offset, setOffset] = useState<number>(0);
 
     async function fetchShowData() {
+        const authHeader = getAuthHeader();
         const data: SingleShowResponse = await fetch(
-            `${API_URL}api/spotify/show/${id}`        
-        ).then((res) => res.json());
+            `${API_URL}api/spotify/show/${id}`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }).then((res) => res.json());
 
         setShow(data);
 
@@ -42,6 +47,7 @@ export default function Show(props: IProps) {
     }
 
     async function fetchShowEpisodeData(newOffset: number) {
+        const authHeader = getAuthHeader();
         // Only fetch if there are episodes left to fetch
         if (
             show &&
@@ -52,7 +58,11 @@ export default function Show(props: IProps) {
             return;
 
         const data: ShowEpisodesResponse = await fetch(
-            `${API_URL}api/spotify/show/${id}/episodes?offset=${newOffset}&limit=${limit}`
+            `${API_URL}api/spotify/show/${id}/episodes?offset=${newOffset}&limit=${limit}`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         ).then((res) => res.json());
         const fetchedEpisodes = data.items as ShowEpisodes[];
         setEpisodes((oldEpisodes) => [

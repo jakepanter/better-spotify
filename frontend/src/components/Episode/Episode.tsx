@@ -4,7 +4,7 @@ import { EpisodeObject, SingleEpisodeResponse } from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import "./Episode.scss";
-
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 interface IProps {
   id: string;
@@ -24,9 +24,13 @@ export default function Episode(props: IProps) {
   var body: Body;
 
   async function fetchEpisodeData() {
+    const authHeader = getAuthHeader();
     const data: SingleEpisodeResponse = await fetch(
-      `${API_URL}api/spotify/episode/${id}`
-    ).then((res) => res.json());
+      `${API_URL}api/spotify/episode/${id}`, {
+          headers: {
+            'Authorization': authHeader
+          }
+        }).then((res) => res.json());
     
     const context_uri = "spotify:show:" + data.show.id;
     const track_uri = "spotify:episode:" + id;
@@ -44,9 +48,13 @@ export default function Episode(props: IProps) {
   }
 
   const sendRequest = useCallback(async () => {
+    const authHeader = getAuthHeader();
     fetch(`${API_URL}api/spotify/me/player/play`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': authHeader
+      },
       body: JSON.stringify(body)
     })
         .then(response => response.json())
