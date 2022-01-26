@@ -1,12 +1,13 @@
 @import "boilerplate";
 @import "normalize-css";
 
+
+
 .structure {
   display: flex;
   height: 100vh;
   width: 100%;
   background: $color-background;
-
   .minimizeMenuButton {
     position: absolute;
     left: 205px;
@@ -98,6 +99,182 @@
     &--main {
       height: calc(100vh - 80px);
     }
+  }
+
+
+  &.light_mode{
+    background: $color-background-light;
+    .minimizeMenuButton {
+      background: $white;
+      border: 0.5px solid $gray-dark;
+    }
+
+    .structure--left-panel {
+      background: $white;
+      border-color: $gray-dark;
+    }
+    .structure--main{
+      scrollbar-width: none; // fix
+    }
+  }
+}
+
+.light_mode{
+  p {
+    color: $color-default-light;
+  }
+
+  td, th {
+    color: $color-default-light;
+
+  }
+
+  // Button
+  .button {
+    background: $none;
+    color: $button-color-light;
+    border-color: $button-border-color-light;
+
+    &.active:enabled,
+    &:hover:enabled {
+      background: $button-background-active-light;
+      color: $button-color-active-light;
+      border-color: $button-border-color-active-light;
+    }
+  }
+
+  .input {
+    border: none;
+    border-bottom: $border-width*2 $border-style rgba(224, 224, 224, 0.1);
+    background-color: transparent;
+    color: $color-default;
+    display: inline-block;
+
+    &:focus {
+      outline: none;
+      border-bottom-color: $color-primary;
+    }
+
+    &:invalid {
+      border-bottom-color: $color-waring-darker;
+    }
+  }
+
+  .input-select {
+    padding: $button-padding-horizontal $button-padding-vertical;
+    display: inline-block;
+    font-family: $ff-buttons;
+    line-height: $lh-buttons;
+    letter-spacing: $ls-buttons;
+    font-weight: $fw-buttons;
+    text-transform: $tt-buttons;
+    text-decoration: none;
+    font-style: $fs-base;
+    border-width: $button-border-width;
+    border-style: $button-border-style;
+    border-radius: $button-border-radius;
+    max-width: 100%;
+    transition: $button-transition-base;
+    background: $button-background;
+    color: $button-color;
+    border-color: $button-border-color;
+
+    option {
+      background-color: $white;
+      color: $black;
+    }
+
+    &.active,
+    &:hover {
+      background: $button-background-active;
+      color: $button-color-active;
+      border-color: $button-border-color-active;
+      cursor: pointer;
+      text-decoration: none;
+    }
+  }
+
+  // Checkbox (re-styled button)
+  .checkbox {
+    background: none;
+    border: none;
+    border-radius: 50%;
+    color: $color-default;
+    display: inline-block;
+    padding: $button-padding-vertical;
+
+    &:enabled {
+      cursor: pointer;
+    }
+
+    &.checked {
+      color: $color-primary;
+    }
+  }
+
+  // Headlines
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: $ff-headlines;
+    font-weight: 300;
+    text-transform: uppercase;
+    color: $color-default;
+    margin-top: 0;
+  }
+
+  h1 {
+    font-size: $fz-h1;
+  }
+
+  h2 {
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    border-bottom: 1px solid rgba($color-default, 0.1);
+    font-size: $fz-h2;
+  }
+
+  h3 {
+    font-size: $fz-h3;
+  }
+
+  h4 {
+    font-size: $fz-h4;
+  }
+
+  h5 {
+    font-size: $fz-h5;
+  }
+
+  h6 {
+    font-size: $fz-h6;
+  }
+
+  // Scrollbar
+  /* Works on Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba($color-default, 0.5) rgba($color-default, 0.1);
+  }
+
+  /* Works on Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: rgba($color-default, 0.1);
+    border-radius: $border-radius;
+
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: rgba($color-default, 0.5);
+    border-radius: $border-radius;
   }
 }
 
