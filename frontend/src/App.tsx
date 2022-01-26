@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { API_URL } from "./utils/constants";
 import Albums from "./components/Albums/Albums";
 import Playlists from "./components/Playlists/Playlists";
+import Podcasts from "./components/Podcasts/Podcasts"
 import SavedTracks from "./components/SavedTracks/SavedTracks";
 import Player from "./components/Player/Player";
 import Sidebar from "./components/Sidebar/Sidebar";
@@ -19,17 +19,24 @@ import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import SettingsPage from "./pages/SettingsPage/SettingsPage";
 import TagTracklistPage from "./pages/TagTracklistPage/TagTracklistPage";
 import RelatedArtistsPage from "./pages/RelatedArtistsPage/RelatedArtistsPage";
+import ShowPage from "./pages/ShowPage/ShowPage";
+import EpisodePage from "./pages/EpisodePage/EpisodePage";
 import AuthorizePage from "./components/AuthorizePage/AuthorizePage";
 import AppContext, { ContextMenu } from "./AppContext";
+import { useSelector, useDispatch } from 'react-redux';
+import { getAuthentication, refreshAuthentication } from './utils/authenticationSlice';
+
+type AuthState = {
+  authentication: {
+    accessToken: string;
+    refreshToken: string;
+    expiresIn: string;
+  }
+}
 
 function App() {
-  const [isAuthorized, setIsAuthorized] = useState(false);
   const [editable, setEditable] = useState(false);
-  const toggleEditable = () => setEditable(!editable);
   const [miniMenu, setMiniMenu] = useState(false);
-  const menuToggle = () => {
-    setMiniMenu(!miniMenu);
-  };
   const [contextMenu, setContextMenu] = useState<ContextMenu>({
     isOpen: false,
     type: "",
@@ -38,24 +45,38 @@ function App() {
     data: null,
   });
 
+  const authentication = useSelector((state: AuthState) => state.authentication)
+  const dispatch = useDispatch()
+
+  const menuToggle = () => setMiniMenu(!miniMenu);
+
   const state = {
     contextMenu: contextMenu,
     setContextMenu,
   };
 
+  const toggleEditable = () => setEditable(!editable);
+
+  useEffect(() => {
+    dispatch(getAuthentication());
+  });
+
+  useEffect(() => {
+    const refreshInterval = setInterval(() => {
+      dispatch(refreshAuthentication())
+    }, 3600 * 1000 - 10000);
+    return () => clearInterval(refreshInterval);
+  }, []);
+
   useEffect(() => {
     // disables default context menu
     document.addEventListener("contextmenu", (e) => e.preventDefault(), true);
-
-    async function getAccessToken() {
-      const res = await fetch(`${API_URL}api/spotify/access-token`).then((res) => res.json());
-      setIsAuthorized(res !== undefined);
-    }
-    getAccessToken();
   }, []);
 
-  if (!isAuthorized) {
-    return <AuthorizePage />;
+  if (!authentication.accessToken || authentication.accessToken === '') {
+    return (
+        <AuthorizePage />
+    );
   }
 
   return (
@@ -103,8 +124,17 @@ function App() {
               <Route path="/album/:id">
                 <AlbumPage />
               </Route>
+              <Route path="/show/:id">
+                <ShowPage/>
+              </Route>
+              <Route path="/episode/:id">
+                <EpisodePage/>
+              </Route>
               <Route path="/collections/albums">
                 <Albums />
+              </Route>
+              <Route path="/collections/podcasts">
+                <Podcasts/>
               </Route>
               <Route path="/me/tracks">
                 <SavedTracks headerStyle={"full"} />
@@ -136,7 +166,7 @@ function App() {
                 <RelatedArtistsPage />
               </Route>
             </Switch>
-            <Player />
+            <Player token={authentication.accessToken} />
           </div>
         </div>
       </Router>

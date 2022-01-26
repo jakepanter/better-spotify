@@ -3,6 +3,7 @@ import './Searchbar.scss';
 import { API_URL } from '../../utils/constants';
 import CoverPlaceholder from '../CoverPlaceholder/CoverPlaceholder';
 import {Redirect} from 'react-router-dom';
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 type Body = {
   context_uri: string | undefined,
@@ -38,7 +39,7 @@ class Searchbar extends Component<IProps, IState> {
     const value = e.target.value;
     const key = e.which;
 
-    var searchbarResults = document.getElementById("SearchbarResultsID");
+    const searchbarResults = document.getElementById("SearchbarResultsID");
     if(searchbarResults != null)
       searchbarResults.style.display = 'block';
 
@@ -60,7 +61,12 @@ class Searchbar extends Component<IProps, IState> {
     }
 
     // Fetch results
-    const data = await fetch(`${API_URL}api/spotify/searchtracks?query=${value}`).then(res => res.json());
+    const authHeader = getAuthHeader();
+    const data = await fetch(`${API_URL}api/spotify/searchtracks?query=${value}`, {
+      headers: {
+        'Authorization': authHeader
+      }
+    }).then(res => res.json());
 
     // Save to state
     this.setState((state) => ({...state, results: data.items}));
@@ -76,9 +82,13 @@ class Searchbar extends Component<IProps, IState> {
       uri: id
     }
 
+    const authHeader = getAuthHeader();
     fetch(`${API_URL}api/spotify/me/player/play`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': authHeader
+      },
       body: JSON.stringify(body)
     }).then(response => response.json());
   }

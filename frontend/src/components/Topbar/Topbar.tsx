@@ -5,6 +5,7 @@ import Searchbar from "../Searchbar/Searchbar";
 import 'rc-slider/assets/index.css';
 import Volume from "./Volume";
 import {API_URL} from "../../utils/constants";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 function authorize() {
     fetch(`${API_URL}api/spotify/get-auth-url`)
@@ -29,8 +30,12 @@ const Topbar = (props: IProps) => {
 
     useEffect(() => {
         async function getProfilePicture() {
-            const res = await fetch(`${API_URL}api/spotify/me`)
-                .then((res) => res.json());
+            const authHeader = getAuthHeader();
+            const res = await fetch(`${API_URL}api/spotify/me`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }).then((res) => res.json());
             if (res.images && res.images.length > 0) setImage(res.images[0].url)
             console.log(image)
         }

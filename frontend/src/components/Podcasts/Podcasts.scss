@@ -1,0 +1,82 @@
+@import './src/boilerplate.scss';
+
+.Shows {
+  display: flex;
+  flex-flow: column nowrap;
+  height: 100%;
+
+  .Header {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row wrap;
+    margin-bottom: 0;
+    padding: $spacer / 2;
+  }
+
+  .Content {
+    padding-top: $spacer / 2;
+    flex: 1 1 0;
+    overflow: hidden auto;
+  }
+
+  .CoverList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
+    grid-template-rows: repeat(auto-fill, 1fr);
+    gap: $spacer / 2;
+    padding: 0 $spacer / 2;
+  }
+
+  .Card {
+    background-color: $color-accent-dark;
+    border-radius: $border-radius;
+    box-shadow: 0 0 ($spacer/2) rgba($black, .3);
+    display: flex;
+    flex-flow: column nowrap;
+    padding: $spacer / 2;
+    position: relative;
+    text-decoration: none;
+    transition: $transition-base;
+
+    &:hover {
+      background-color: lighten($color-accent-dark, 5%);
+    }
+
+    &Cover {
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      border-radius: $border-radius;
+      margin-bottom: $spacer / 4;
+      position: relative;
+      width: 100%;
+
+      &::before {
+        content: '';
+        display: block;
+        padding-top: 100%;
+      }
+    }
+
+    &Title,
+    &Artist {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &Title {
+      font-family: $font-special;
+      font-size: 20px;
+      color: $gray-light;
+      margin-bottom: $spacer / 4;
+    }
+
+    &Artist {
+      font-family: $font-special;
+      font-size: 18px;
+      color: $color-default;
+    }
+  }
+}
