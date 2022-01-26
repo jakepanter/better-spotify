@@ -67,7 +67,7 @@ function App() {
   return (
     <AppContext.Provider value={state}>
       <Router>
-        <div className={`structure ${lightmode ? " light_mode" : ""}`}>
+        <div className={`structure ${lightmode ? " light_mode" : ""} `}>
           {contextMenu.isOpen && contextMenu.x && contextMenu.y && (
             <ContextMenuWrapper
               type={contextMenu.type}
