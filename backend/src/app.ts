@@ -106,6 +106,7 @@ export default class App {
 
     this.server.get('/api/spotify/me/tracks/contains', async (req: Request, res: Response) => {
       const trackIds: string[] = (req.query.trackIds as string ?? '').split(',');
+      if (trackIds.length === 1 && trackIds[0] === '') return res.json([]);
       const data = await this.spotifyService.isSaved(trackIds);
       return res.json(data);
     });
