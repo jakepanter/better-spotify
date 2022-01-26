@@ -1,0 +1,74 @@
+@import "./src/boilerplate.scss";
+
+.DialogWrapper {
+  align-items: center;
+  background-color: transparentize($color-background, 0.5);
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  left: 190px;
+  opacity: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  visibility: hidden;
+  z-index: 1000;
+
+  &.open {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.Dialog {
+  background-color: $color-accent-dark;
+  border-radius: $border-radius;
+  display: flex;
+  flex-flow: column nowrap;
+  max-height: calc(100% - #{$spacer});
+  overflow: hidden auto;
+  position: relative;
+  width: calc(100% - #{$spacer});
+  max-width: 720px;
+
+  .button {
+    color: $color-default;
+    display: inline-flex;
+    flex-flow: row nowrap;
+
+    .material-icons {
+      margin-right: $button-padding-horizontal;
+    }
+  }
+
+  &Header {
+    align-items: center;
+    border-bottom: $border-width $border-style rgba(224, 224, 224, 0.1);
+    color: $color-default;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+
+    &Title {
+      padding-left: $spacer;
+    }
+
+    &CloseButton {
+      background-color: transparent;
+      border: none;
+      border-radius: $border-radius;
+      padding: $button-padding-horizontal;
+
+      &:hover,
+      &:active {
+        background-color: transparentize($color-default, 0.9);
+      }
+    }
+  }
+
+  &Content {
+    padding: $spacer;
+  }
+}

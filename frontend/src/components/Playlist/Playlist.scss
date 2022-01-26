@@ -56,9 +56,23 @@
       padding: $spacer / 2;
       width: 30%;
     }
+
+    .more-button {
+      background: none;
+      border: none;
+      span {
+        color: white;
+      }
+    }
   }
 
   .Tracklist {
     flex: 1 1 auto;
+  }
+
+  input {
+    background: none;
+    border: none;
+    width: 100%;
   }
 }

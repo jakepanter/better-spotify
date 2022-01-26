@@ -1,5 +1,19 @@
 @import "./src/boilerplate.scss";
 
+.albumLink {
+  text-decoration: none!important;
+  color: $color-default;
+
+  &:hover {
+    text-decoration: underline !important;
+    color: $color-default;
+  }
+}
+
+.Pointer {
+  cursor: pointer;
+}
+
 .TableRow {
   user-select: none;
   &:hover:not(.Selected):not(.TableHeader) {
@@ -8,10 +22,44 @@
 }
 .Selected {
   background-color: $color-primary;
+
+  .checkbox.checked {
+    color: $color-default;
+  }
+
+  .Tag {
+    color: $color-default !important;
+  }
 }
 
-.TrackListRow:hover {
-    transition: $transition-base;
-    color: $color-default;
-    background-color: lighten($color-accent-dark, 5%);
+.Tag {
+  border: 1px solid currentColor;
+  border-radius: $border-radius;
+  display: inline-block;
+  padding: 4px;
+  margin-right: 4px;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &Color0 {
+    color: $color-tag-0;
+  }
+  &Color1 {
+    color: $color-tag-1;
+  }
+  &Color2 {
+    color: $color-tag-2
+  }
+  &Color3 {
+    color: $color-tag-3;
+  }
+  &Color4 {
+    color: $color-tag-4;
+  }
+  &Color5 {
+    color: $color-tag-5;
+  }
 }

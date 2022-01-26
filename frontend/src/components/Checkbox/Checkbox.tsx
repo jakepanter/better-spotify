@@ -1,10 +1,11 @@
-import React, {ChangeEvent, Component} from "react";
+import React, {Component} from "react";
 import './Checkbox.scss';
 
 interface IProps {
   checked?: boolean;
   label?: string;
-  onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
+  // eslint-disable-next-line no-unused-vars
+  onChange?: (value: boolean) => void | undefined;
   iconCodeChecked?: string;
   iconCodeUnchecked?: string;
 }
@@ -24,11 +25,21 @@ class Checkbox extends Component<IProps, IState> {
     }
   }
 
-  onChange(e: ChangeEvent<HTMLInputElement>) {
-    this.setState((state) => ({...state, checked: e.target.checked}));
-    if (this.props.onChange !== undefined) {
-      this.props.onChange(e);
+  shouldComponentUpdate(nextProps: Readonly<IProps>) {
+    if (nextProps.checked !== this.state.checked) {
+      const value = nextProps.checked ?? true;
+      this.setState({checked: value});
     }
+    return true;
+  }
+
+  toggleState() {
+    this.setState((oldState) => this.setState({checked: !oldState.checked}),
+      () => {
+      if (this.props.onChange !== undefined) {
+        this.props.onChange(this.state.checked);
+      }
+    });
   }
 
   render() {
@@ -36,13 +47,12 @@ class Checkbox extends Component<IProps, IState> {
     const { checked } = this.state;
 
     return (
-      <label className={`Checkbox ${checked ? 'checked' : ''}`}>
-        <input className={'CheckboxElement'} type={'checkbox'} checked={this.props.checked} onChange={(e) => this.onChange(e)} />
+      <button className={`Checkbox ${checked ? 'checked' : ''}`} onClick={() => this.toggleState()}>
         <span className={'CheckboxIcon material-icons'}>
           {checked ? iconCodeChecked ? iconCodeChecked : 'check_box' : iconCodeUnchecked ? iconCodeUnchecked : 'check_box_outline_blank'}
         </span>
         <span className={'CheckboxLabel'}>{label}</span>
-      </label>
+      </button>
     );
   }
 }

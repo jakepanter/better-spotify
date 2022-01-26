@@ -3,13 +3,40 @@
 
 .structure {
   display: flex;
+  height: 100vh;
   width: 100%;
   background: $color-background;
+
+  .minimizeMenuButton {
+    position: absolute;
+    left: 205px;
+    bottom: 15px;
+    z-index: 2;
+    margin-top: 10px;
+    background: $color-accent-dark;
+    border-radius: $border-radius;
+    border: 0.5px solid rgba($color-default, 0.1);
+    padding: 0;
+
+    &.positionMenuButton {
+      left: 65px;
+    }
+
+    p {
+      transition: $transition-base;
+      padding: 3px;
+    }
+
+    .turned {
+      transform: rotate(-180deg);
+    }
+  }
+
 
   &--left-panel {
     background: $color-accent-dark;
     border-right: 0.5px solid rgba($color-default, 0.1);
-    padding: $padding-horizontal $padding-vertical;
+    padding: 1rem $padding-vertical $padding-horizontal $padding-vertical;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -20,6 +47,32 @@
       box-sizing: content-box;
       width: $side-panel-size;
       min-width: $side-panel-size;
+      &.minimizeMenu {
+        width:45px;
+        min-width: 45px;
+
+        a {
+          padding: $button-padding-horizontal;
+          width: auto;
+        }
+
+        .left-side-panel--text {
+          display: none;
+        }
+
+        .left-side-panel--icon {
+          margin-right: 0;
+          font-size: 25px;
+        }
+
+        .logo {
+          display: none;
+        }
+
+        .logoImg {
+          display: block;
+        }
+      }
     }
   }
 
@@ -27,8 +80,9 @@
     height: 100vh;
     flex: 1 1 auto;
     overflow: hidden auto;
-    padding: 32px $padding-horizontal;
+    padding: 0 $padding-horizontal;
     z-index: 0;
+    scrollbar-width: none;
   }
 
   @media screen and(max-width: $breakpoint-md) {
@@ -97,6 +151,23 @@ td, th {
   }
 }
 
+.input {
+  border: none;
+  border-bottom: $border-width*2 $border-style rgba(224, 224, 224, 0.1);
+  background-color: transparent;
+  color: $color-default;
+  display: inline-block;
+
+  &:focus {
+    outline: none;
+    border-bottom-color: $color-primary;
+  }
+
+  &:invalid {
+    border-bottom-color: $color-waring-darker;
+  }
+}
+
 .input-select {
   padding: $button-padding-horizontal $button-padding-vertical;
   display: inline-block;
@@ -128,6 +199,24 @@ td, th {
     border-color: $button-border-color-active;
     cursor: pointer;
     text-decoration: none;
+  }
+}
+
+// Checkbox (re-styled button)
+.checkbox {
+  background: none;
+  border: none;
+  border-radius: 50%;
+  color: $color-default;
+  display: inline-block;
+  padding: $button-padding-vertical;
+
+  &:enabled {
+    cursor: pointer;
+  }
+
+  &.checked {
+    color: $color-primary;
   }
 }
 
@@ -172,6 +261,7 @@ h5 {
 h6 {
   font-size: $fz-h6;
 }
+
 // Scrollbar
 /* Works on Firefox */
 * {
@@ -185,7 +275,7 @@ h6 {
 }
 
 *::-webkit-scrollbar-track {
-  background:  rgba($color-default, 0.1);
+  background: rgba($color-default, 0.1);
   border-radius: $border-radius;
 
 }

@@ -38,7 +38,7 @@ class Player extends Component<IProps, IState> {
             {this.state.token &&
                 <SpotifyWebPlayer
                     token={this.state.token}
-                    uris={['spotify:track:2aibwv5hGXSgw7Yru8IYTO']}
+                    uris={['spotify:playlist:37i9dQZF1EOedu9gJ5DTVp']}
                     name={'Better Spotify 🚀'}
                 />
             }

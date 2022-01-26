@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, {ChangeEvent, Component} from 'react';
 import './Dashboard.scss';
 import {Layout, Layouts, Responsive, WidthProvider} from 'react-grid-layout';
@@ -8,6 +7,8 @@ import Album from "../Album/Album";
 import Playlist from "../Playlist/Playlist";
 import Albums from "../Albums/Albums";
 import Playlists from "../Playlists/Playlists";
+import TagTracklist from "../TagTracklist/TagTracklist";
+import TagsSystem from "../../utils/tags-system";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -27,6 +28,10 @@ export interface IDashboardChart extends DashboardItem {
   period: ChartPeriod;
 }
 
+export interface IDashboardTagTracklist extends DashboardItem {
+  id: string;
+}
+
 interface IProps {
   editable: boolean;
 }
@@ -36,6 +41,7 @@ interface IState {
   playlists: IDashboardPlaylist[];
   albums: IDashboardAlbum[];
   charts: IDashboardChart[];
+  tagTracklists: IDashboardTagTracklist[];
   showFavorites: boolean;
   showAlbums: boolean;
   showPlaylists: boolean;
@@ -44,6 +50,7 @@ interface IState {
     type: ChartType,
     period: ChartPeriod,
   };
+  tagTracklistsSelection: string;
   width: number;
 }
 
@@ -106,21 +113,37 @@ export class DashboardService {
 }
 
 const DEFAULT_DASHBOARD_STATE: IState = {
-  layouts: {},
+  layouts:{
+    md: [
+      { w: 1, h: 2, x: 1, y: 0, i: "favorites", moved: false, static: false },
+      { w: 1, h: 2, x: 0, y: 0, i: "albums", moved: false, static: false },
+      { w: 1, h: 2, x: 0, y: 2, i: "playlists", moved: false, static: false },
+      { w: 1, h: 2, x: 1, y: 2, i: "top-daily-global", moved: false, static: false },
+    ],
+    xl: [
+      { w: 2, h: 2, x: 2, y: 0, i: "favorites", moved: false, static: false },
+      { w: 2, h: 2, x: 0, y: 2, i: "albums", moved: false, static: false },
+      { w: 2, h: 2, x: 0, y: 0, i: "playlists", moved: false, static: false },
+      { w: 2, h: 2, x: 2, y: 2, i: "top-daily-global", moved: false, static: false },
+    ],
+    sm: [
+      { w: 1, h: 2, x: 0, y: 0, i: "favorites", moved: false, static: false },
+      { w: 1, h: 2, x: 0, y: 2, i: "albums", moved: false, static: false },
+      { w: 1, h: 2, x: 0, y: 4, i: "playlists", moved: false, static: false },
+      { w: 1, h: 2, x: 0, y: 6, i: "top-daily-global", moved: false, static: false },
+    ]},
   albums: [],
   playlists: [],
   charts: [
-    {countryCode: 'global', chartType: 'top', period: 'daily'}
+    { countryCode: "global", chartType: "top", period: "daily" }
   ],
+  tagTracklists: [],
   showFavorites: true,
   showAlbums: true,
   showPlaylists: true,
-  chartSelection: {
-    countryCode: 'global',
-    type: 'top',
-    period: 'daily',
-  },
-  width: 0,
+  chartSelection: { countryCode: "global", type: "top", period: "daily" },
+  tagTracklistsSelection: "",
+  width: 1475
 };
 
 class Dashboard extends Component<IProps, IState> {
@@ -148,6 +171,8 @@ class Dashboard extends Component<IProps, IState> {
   }
 
   private removeAlbum(id: string) {
+    if (!confirm('Do you want to remove this widget?')) return;
+
     const {albums} = this.state;
     const newAlbums = albums.filter((a) => a.id !== id);
     this.updateAlbums(newAlbums);
@@ -170,6 +195,8 @@ class Dashboard extends Component<IProps, IState> {
   }
 
   private removePlaylist(id: string) {
+    if (!confirm('Do you want to remove this widget?')) return;
+
     const {playlists} = this.state;
     const newPlaylists = playlists.filter((p) => p.id !== id);
     this.updatePlaylists(newPlaylists);
@@ -195,6 +222,8 @@ class Dashboard extends Component<IProps, IState> {
   }
 
   private removeChart(countryCode: CountryCode, type: ChartType, period: ChartPeriod) {
+    if (!confirm('Do you want to remove this widget?')) return;
+
     const {charts} = this.state;
     const newCharts = charts.filter((c) => !(c.countryCode === countryCode && c.chartType === type && c.period === period));
     this.updateCharts(newCharts);
@@ -205,6 +234,29 @@ class Dashboard extends Component<IProps, IState> {
       (state) => ({...state, charts: newCharts}),
       () => this.saveState(),
     );
+  }
+
+  private addTagTracklist(id: string) {
+    const { tagTracklists } = this.state;
+    if (!tagTracklists.some((t) => t.id === id)) {
+      const newTagTracklists = [...tagTracklists, { id }];
+      this.updateTagTracklist(newTagTracklists);
+    }
+  }
+
+  private removeTagTracklist(id: string) {
+    if (!confirm('Do you want to remove this widget?')) return;
+
+    const { tagTracklists } = this.state;
+    const newTagTracklists = tagTracklists.filter((t) => t.id !== id);
+    this.updateTagTracklist(newTagTracklists);
+  }
+
+  private updateTagTracklist(newTagTracklists: IDashboardTagTracklist[]) {
+    this.setState(
+      (state) => ({...state, tagTracklists: newTagTracklists}),
+      () => this.saveState(),
+    )
   }
 
   // Save Layout
@@ -240,23 +292,31 @@ class Dashboard extends Component<IProps, IState> {
     );
   }
 
-  private showFavorites(e: ChangeEvent<HTMLInputElement>) {
+  // TagTracklists form
+  private updateTagTracklistSelection(e: ChangeEvent<HTMLSelectElement>) {
     this.setState(
-      (state) => ({...state, showFavorites: e.target.checked}),
+      (state) => ({...state, tagTracklistsSelection: e.target.value}),
       () => this.saveState(),
     );
   }
 
-  private showAlbums(e: ChangeEvent<HTMLInputElement>) {
+  private showFavorites(value: boolean) {
     this.setState(
-      (state) => ({...state, showAlbums: e.target.checked}),
+      (state) => ({...state, showFavorites: value}),
       () => this.saveState(),
     );
   }
 
-  private showPlaylists(e: ChangeEvent<HTMLInputElement>) {
+  private showAlbums(value: boolean) {
     this.setState(
-      (state) => ({...state, showPlaylists: e.target.checked}),
+      (state) => ({...state, showAlbums: value}),
+      () => this.saveState(),
+    );
+  }
+
+  private showPlaylists(value: boolean) {
+    this.setState(
+      (state) => ({...state, showPlaylists: value}),
       () => this.saveState(),
     );
   }
@@ -283,18 +343,50 @@ class Dashboard extends Component<IProps, IState> {
       albums,
       playlists,
       charts,
+      tagTracklists,
       showFavorites,
       showAlbums,
       showPlaylists,
       chartSelection,
-      width
+      tagTracklistsSelection,
+      width,
     } = this.state;
     const { editable } = this.props;
+    const tags = TagsSystem.getTags();
+
+    const tagSelection = tagTracklistsSelection === '' ? (Object.keys(tags.availableTags).length === 0 ? '' : Object.entries(tags.availableTags)[0][0]) : tagTracklistsSelection;
 
     return (
       <div className={`DashboardContainer ${editable ? 'editable' : ''}`} ref={this.containerRef}>
         {editable ?
           <div className={'DashboardConfigurator'}>
+            <div className={'DashboardTagTracklistsForm'}>
+              <div className={'DashboardTagTracklistsFormSelects'}>
+                <select
+                  className={'input-select'}
+                  value={tagSelection}
+                  onChange={(e) => this.updateTagTracklistSelection(e)}
+                >
+                  {Object.entries(tags.availableTags).map((t) => <option key={t[0]} value={t[0]}>{t[1].title}</option>)}
+                </select>
+              </div>
+              <div className={'DashboardTagTracklistsFormButtons'}>
+                <button
+                  className={'button'}
+                  disabled={tagSelection === ''}
+                  onClick={() => this.addTagTracklist(tagSelection)}
+                >
+                  Add Tag Tracklist
+                </button>
+                <button
+                  className={'button'}
+                  disabled={tagSelection === ''}
+                  onClick={() => this.removeTagTracklist(tagSelection)}
+                >
+                  Remove Tag Tracklist
+                </button>
+              </div>
+            </div>
             <div className={'DashboardChartsForm'}>
               <div className={'DashboardChartsFormSelects'}>
                 <select
@@ -339,25 +431,25 @@ class Dashboard extends Component<IProps, IState> {
             <div className={'DashboardSettingsForm'}>
               <Checkbox
                 checked={showFavorites}
-                label={'Show Favorites'}
-                onChange={(e) => this.showFavorites(e)}
-              />
-              <Checkbox
-                checked={showAlbums}
-                label={'Show Albums'}
-                onChange={(e) => this.showAlbums(e)}
+                label={'Show liked songs'}
+                onChange={(value) => this.showFavorites(value)}
               />
               <Checkbox
                 checked={showPlaylists}
                 label={'Show Playlists'}
-                onChange={(e) => this.showPlaylists(e)}
+                onChange={(value) => this.showPlaylists(value)}
+              />
+              <Checkbox
+                  checked={showAlbums}
+                  label={'Show Albums'}
+                  onChange={(value) => this.showAlbums(value)}
               />
             </div>
           </div>
           : <></>
         }
         <ResponsiveGridLayout
-          className={'Dashboard'}
+          className={`Dashboard ${editable ? 'editable' : ''}`}
           layouts={layouts}
           breakpoints={{xl: 1600, md: 768, sm: 0}}
           cols={{xl: 4, md: 2, sm: 1}}
@@ -371,36 +463,63 @@ class Dashboard extends Component<IProps, IState> {
         >
           {showFavorites ?
             <div key={'favorites'} className={'DashboardItem'}>
+              <button className={'RemoveButton'} onClick={() => confirm('Do you want to remove this widget?') ? this.showFavorites(false) : undefined}>
+                <span className={'material-icons'}>close</span>
+              </button>
               <SavedTracks headerStyle={'compact'}/>
             </div>
             : <></>
           }
           {showAlbums ?
             <div key={'albums'} className={'DashboardItem'}>
+              <button className={'RemoveButton'} onClick={() => confirm('Do you want to remove this widget?') ? this.showAlbums(false) : undefined}>
+                <span className={'material-icons'}>close</span>
+              </button>
               <Albums />
             </div>
             : <></>
           }
           {showPlaylists ?
             <div key={'playlists'} className={'DashboardItem'}>
+              <button className={'RemoveButton'} onClick={() => confirm('Do you want to remove this widget?') ? this.showPlaylists(false) : undefined}>
+                <span className={'material-icons'}>close</span>
+              </button>
               <Playlists />
             </div>
             : <></>
           }
           {albums.map((a) => <div key={a.id} className={'DashboardItem'}>
+            <button className={'RemoveButton'} onClick={() => this.removeAlbum(a.id)}>
+              <span className={'material-icons'}>close</span>
+            </button>
             <Album id={a.id} headerStyle={'compact'}/>
           </div>)}
           {playlists.map((p) => <div key={p.id} className={'DashboardItem'}>
+            <button className={'RemoveButton'} onClick={() => this.removePlaylist(p.id)}>
+              <span className={'material-icons'}>close</span>
+            </button>
             <Playlist id={p.id} headerStyle={'compact'}/>
           </div>)}
           {charts.map((c) => {
             const chartCode = `${c.chartType}-${c.period}-${c.countryCode}`;
             return (
               <div key={chartCode} className={'DashboardItem'}>
+                <button className={'RemoveButton'} onClick={() => this.removeChart(c.countryCode, c.chartType, c.period)}>
+                  <span className={'material-icons'}>close</span>
+                </button>
                 <Playlist id={getChartCode(c.countryCode, c.chartType, c.period)} headerStyle={'compact'}/>
               </div>
             );
           })}
+          {tagTracklists &&
+            tagTracklists.map((t) => (
+              <div key={t.id} className={"DashboardItem"}>
+                <button className={'RemoveButton'} onClick={() => this.removeTagTracklist(t.id)}>
+                  <span className={'material-icons'}>close</span>
+                </button>
+                <TagTracklist id={t.id} headerStyle={"compact"} />
+              </div>
+            ))}
         </ResponsiveGridLayout>
       </div>
     );

@@ -20,50 +20,48 @@ const Sidebar = () => {
             </button>
             {/* Sidebar menu */}
             <ul className={`left-side-panel--list ${navbarOpen ? " showMenu" : ""}`}>
-                <h1><Link to="/">Better<span className="non-colored-headline">Spotify</span></Link></h1>
+                <img className={"logoImg"} src="logo512.png" alt="Logo"></img>
+                <h1 className={"logo"}><Link to="/">Better<span className="non-colored-headline">Spotify</span></Link></h1>
                 <li className="column">
-                    <NavLink activeClassName="active" className="button" to="/" onClick={() => closeMenu()} exact>
+                    <NavLink title={"Home"} activeClassName="active" className="button" to="/" onClick={() => closeMenu()} exact>
                         <span className="material-icons left-side-panel--icon">home</span>
                         <span className="left-side-panel--text">Home</span>
                     </NavLink>
                 </li>
                 <li className="column">
-                    <NavLink activeClassName="active" className="button" to="/me/tracks" onClick={() => closeMenu()}
-                             exact>
+                    <NavLink title={"Liked songs"} activeClassName="active" className="button" to="/me/tracks" onClick={() => closeMenu()} exact>
                         <span className="material-icons left-side-panel--icon">favorite</span>
-                        <span className="left-side-panel--text">Favorites</span>
+                        <span className="left-side-panel--text">Liked songs</span>
                     </NavLink>
                 </li>
                 <li className="column">
-                    <NavLink activeClassName="active" className="button" to="/playlists" onClick={() => closeMenu()}
-                             exact>
+                    <NavLink title={"Playlists"} activeClassName="active" className="button" to="/playlists" onClick={() => closeMenu()} exact>
                         <span className="material-icons left-side-panel--icon">queue_music</span>
                         <span className="left-side-panel--text">Playlists</span>
                     </NavLink>
                 </li>
                 <li className="column">
-                    <NavLink activeClassName="active" className="button" to="/collections/albums"
-                             onClick={() => closeMenu()} exact>
+                    <NavLink title={"Albums"} activeClassName="active" className="button" to="/collections/albums" onClick={() => closeMenu()} exact>
                         <span className="material-icons left-side-panel--icon">library_music</span>
                         <span className="left-side-panel--text">Albums</span>
                     </NavLink>
                 </li>
                 <li className="column">
-                    <NavLink activeClassName="active" className="button" to="/ " onClick={() => closeMenu()} exact>
+                    <NavLink title={"Discover"} activeClassName="active" className="button" to="/discover" onClick={() => closeMenu()} exact>
                         <span className="material-icons left-side-panel--icon">manage_search</span>
                         <span className="left-side-panel--text">Discover</span>
                     </NavLink>
                 </li>
                 <li className="column">
-                    <NavLink activeClassName="active" className="button" to="/ " onClick={() => closeMenu()} exact>
+                    <NavLink title={"Podcasts"} activeClassName="active" className="button" to="/ " onClick={() => closeMenu()} exact>
                         <span className="material-icons left-side-panel--icon">record_voice_over</span>
                         <span className="left-side-panel--text">Podcasts</span>
                     </NavLink>
                 </li>
                 <li className="column">
-                    <NavLink activeClassName="active" className="button" to="/ " onClick={() => closeMenu()} exact>
-                        <span className="material-icons left-side-panel--icon">menu_book</span>
-                        <span className="left-side-panel--text">Audiobooks</span>
+                    <NavLink title={"Tags"} activeClassName="active" className="button" to="/settings" onClick={() => closeMenu()} exact>
+                        <span className="material-icons left-side-panel--icon">bookmark</span>
+                        <span className="left-side-panel--text">Tags</span>
                     </NavLink>
                 </li>
             </ul>

@@ -5,9 +5,13 @@
   height: 100%;
   width: 100%;
   flex-direction: column;
-
-  h1 {
-    margin-bottom: 3rem;
+  .logoImg{
+    max-width: 45px;
+    margin: 1rem auto 2rem auto;
+    display: none;
+  }
+  .logo {
+    margin-bottom: 2rem;
     text-align: center;
 
     a {
@@ -38,7 +42,7 @@
 
     li {
       list-style: none;
-      border-radius: 10px;
+      border-radius: $border-radius;
       width: 100%;
       max-width: 100%;
       margin-bottom: 1rem;
@@ -54,7 +58,7 @@
 
     a {
       width: 100%;
-      border-radius: 10px;
+      border-radius: $border-radius;
       font-size: 14px;
       border: $none;
       background: $color-accent-dark;
