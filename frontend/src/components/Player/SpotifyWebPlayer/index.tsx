@@ -131,6 +131,7 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
       status: STATUS.IDLE,
       track: this.emptyTrack,
       volume: parseVolume(props.initialVolume) || 1,
+      shuffleState: false,
     };
 
     this.styles = getMergedStyles(props.styles);

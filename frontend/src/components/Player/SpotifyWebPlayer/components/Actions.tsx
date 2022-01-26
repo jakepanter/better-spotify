@@ -72,15 +72,6 @@ function Actions(props: Props) {
             styles={styles}
             title={'Shuffle'}
         />
-      {currentDeviceId && (
-        <Volume
-          playerPosition={playerPosition}
-          setVolume={setVolume}
-          styles={styles}
-          title={locale.volume}
-          volume={volume}
-        />
-      )}
       <Devices
         currentDeviceId={currentDeviceId}
         deviceId={deviceId}

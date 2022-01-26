@@ -434,4 +434,10 @@ export default class SpotifyService {
     this.spotifyApi.transferMyPlayback(deviceIds, options);
     this.spotifyApi.resetAccessToken();
   }
+
+  setShuffle = async (accessToken: string, state: boolean) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    this.spotifyApi.setShuffle(state);
+    this.spotifyApi.resetAccessToken();
+  }
 }

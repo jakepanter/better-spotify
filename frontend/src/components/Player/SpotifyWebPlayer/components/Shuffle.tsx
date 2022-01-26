@@ -2,6 +2,8 @@ import * as React from 'react';
 
 import { px, styled } from '../styles';
 import { StyledProps, StylesOptions } from '../types/common';
+import { getAuthHeader } from '../../../../helpers/api-helpers';
+import {API_URL} from "../../../../utils/constants";
 
 interface Props {
   currentDeviceId?: string;
@@ -62,7 +64,7 @@ const Wrapper = styled('div')(
   'DevicesRSWP',
 );
 
-export default class Devices extends React.PureComponent<Props, State> {
+export default class Shuffle extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -71,8 +73,25 @@ export default class Devices extends React.PureComponent<Props, State> {
     };
   }
 
+  componentDidMount() {
+    const authHeader = getAuthHeader();
+    fetch(`${API_URL}api/spotify/me/player/shuffle?state=${this.state.isActive}`, {
+      headers: {
+        'Authorization': authHeader
+      }
+    });
+  }
+
   private handleClickToggleShuffle = () => {
+    const shuffleState = !this.state.isActive;
     this.setState(state => ({ isActive: !state.isActive }));
+    const authHeader = getAuthHeader();
+    fetch(`${API_URL}api/spotify/me/player/shuffle?state=${shuffleState}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': authHeader
+      }
+    });
   };
 
   public render() {

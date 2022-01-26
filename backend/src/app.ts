@@ -58,9 +58,9 @@ export default class App {
       const search = req.query?.search;
       if (type === undefined || type === '' || search === undefined || search === '') return res.sendStatus(400);
       const result = await this.spotifyService.searchCustom(
-          accessToken,
-          type.toString(),
-          search.toString(),
+        accessToken,
+        type.toString(),
+        search.toString(),
       );
       return res.json(result);
     });
@@ -204,9 +204,9 @@ export default class App {
       const { playlistId } = req.params;
       const tracks = req.body;
       const response = await this.spotifyService.addTracksToPlaylist(
-          accessToken,
-          playlistId,
-          tracks,
+        accessToken,
+        playlistId,
+        tracks,
       );
       return res.json(response);
     });
@@ -216,9 +216,9 @@ export default class App {
       const { playlistId } = req.params;
       const tracks = req.body;
       const response = await this.spotifyService.removeTracksFromPlaylist(
-          accessToken,
-          playlistId,
-          tracks,
+        accessToken,
+        playlistId,
+        tracks,
       );
       return res.json(response);
     });
@@ -229,10 +229,10 @@ export default class App {
       const offset = Number(req.query?.offset ?? 0);
       const playlistId = req.params.playlistId as string;
       const album = await this.spotifyService.getPlaylistTracks(
-          accessToken,
-          playlistId,
-          limit,
-          offset,
+        accessToken,
+        playlistId,
+        limit,
+        offset,
       );
       return res.json(album);
     });
@@ -249,9 +249,9 @@ export default class App {
       const playlistId = req.params.playlistId as string;
       const options = req.body;
       const response = await this.spotifyService.editPlaylistDetails(
-          accessToken,
-          playlistId,
-          options,
+        accessToken,
+        playlistId,
+        options,
       );
       return res.json(response);
     });
@@ -284,10 +284,10 @@ export default class App {
       const showId = req.params.showId as string;
 
       const episodes = await this.spotifyService.getShowEpisodes(
-          accessToken,
-          showId,
-          limit,
-          offset,
+        accessToken,
+        showId,
+        limit,
+        offset,
       );
       return res.json(episodes);
     });
@@ -384,9 +384,9 @@ export default class App {
       const before: any = req.query?.before ?? Date.now();
       const limit: any = req.query?.limit ?? 20;
       const recentTracks = await this.spotifyService.getMyRecentlyPlayedTracks(
-          accessToken,
-          before,
-          limit,
+        accessToken,
+        before,
+        limit,
       );
       return res.json(recentTracks);
     });
@@ -397,10 +397,10 @@ export default class App {
       const limit: any = Number(req.query?.limit ?? 20);
       const offset: any = Number(req.query?.offset ?? 0);
       const newRealeses = await this.spotifyService.getNewReleases(
-          accessToken,
-          country,
-          limit,
-          offset,
+        accessToken,
+        country,
+        limit,
+        offset,
       );
       return res.json(newRealeses);
     });
@@ -411,10 +411,10 @@ export default class App {
       const offset: number = Number(req.query?.offset ?? 0);
       const time_range: string = req.query?.time_range as string ?? 'medium_term';
       const topArtists = await this.spotifyService.getMyTopArtists(
-          accessToken,
-          limit,
-          offset,
-          time_range,
+        accessToken,
+        limit,
+        offset,
+        time_range,
       );
       return res.json(topArtists);
     });
@@ -437,6 +437,13 @@ export default class App {
     this.server.put('/api/spotify/me/player/play', async (req: Request, res: Response) => {
       const accessToken = getToken(req);
       const result = await this.spotifyService.play(accessToken, req.body);
+      return res.json(result);
+    });
+
+    this.server.put('/api/spotify/me/player/shuffle', async (req: Request, res: Response) => {
+      const accessToken = getToken(req);
+      const state: boolean = JSON.parse(req.query?.state as string);
+      const result = await this.spotifyService.setShuffle(accessToken, state);
       return res.json(result);
     });
 

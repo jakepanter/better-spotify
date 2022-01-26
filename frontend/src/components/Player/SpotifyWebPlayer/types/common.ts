@@ -51,6 +51,7 @@ export interface State {
   status: string;
   track: SpotifyPlayerTrack;
   volume: number;
+  shuffleState: boolean;
 }
 
 export interface ComponentsProps {
