@@ -13,21 +13,18 @@ import { API_URL } from "../../utils/constants";
 import AppContext from "../../AppContext";
 import useOutsideClick from "../../helpers/useOutsideClick";
 import { useHistory } from "react-router-dom";
-import { getAuthHeader } from '../../helpers/api-helpers';
+import { getAuthHeader } from "../../helpers/api-helpers";
 
 type Props = {
   data: SinglePlaylistResponse;
   anchorPoint: { x: number; y: number };
 };
 
-const fetcher = (url: any) => {
-  const authHeader = getAuthHeader();
-  return fetch(url, {
-    headers: {
-      'Authorization': authHeader
-    }
+const authHeader = getAuthHeader();
+const fetcher = (url: any) =>
+  fetch(url, {
+    headers: { Authorization: authHeader },
   }).then((r) => r.json());
-}
 
 //arbitrary number to limit the max tracks loaded initially
 const MAX_TRACKS_LOADED = 250;
@@ -67,11 +64,9 @@ function PlaylistMenu(props: Props) {
     while (offset < total && offset < MAX_TRACKS_LOADED) {
       const authHeader = getAuthHeader();
       let response: PlaylistTrackResponse = await fetch(
-        `${API_URL}api/spotify/playlist/${playlistId}/tracks?offset=${offset}`, {
-            headers: {
-              'Authorization': authHeader
-            }
-          }).then(async (res) => {
+        `${API_URL}api/spotify/playlist/${playlistId}/tracks?offset=${offset}`,
+        { headers: { Authorization: authHeader } }
+      ).then(async (res) => {
         return (await res.json()) as Promise<PlaylistTrackResponse>;
       });
       tracks = tracks.concat(response.items.map((item) => item.track.uri));
@@ -93,7 +88,7 @@ function PlaylistMenu(props: Props) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': authHeader
+          Authorization: authHeader,
         },
         body: JSON.stringify(subArray),
       });
@@ -106,9 +101,7 @@ function PlaylistMenu(props: Props) {
     const playlistId = props.data.id;
     const authHeader = getAuthHeader();
     await fetch(`${API_URL}api/spotify/playlist/${playlistId}/unfollow`, {
-      headers: {
-        'Authorization': authHeader
-      }
+      headers: { Authorization: authHeader },
     });
     mutate(`${API_URL}api/spotify/playlists`);
     history.push("/playlists");

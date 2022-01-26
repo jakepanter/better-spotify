@@ -11,7 +11,7 @@ import "./Playlists.scss";
 import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import { createNewPlaylist } from "../../helpers/api-helpers";
-import { getAuthHeader } from '../../helpers/api-helpers';
+import { getAuthHeader } from "../../helpers/api-helpers";
 
 export default function Playlists() {
   const [playlists, setPlaylists] = useState<ListOfUsersPlaylistsResponse>();
@@ -35,9 +35,7 @@ export default function Playlists() {
   async function fetchData(url: string) {
     const authHeader = getAuthHeader();
     const data: ListOfUsersPlaylistsResponse = await fetch(url, {
-      headers: {
-        'Authorization': authHeader
-      }
+      headers: { Authorization: authHeader },
     }).then((res) => res.json());
     setPlaylists(data);
     const arr: PlaylistObjectSimplified[] = [...items, ...data.items];
