@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {
   CurrentUsersProfileResponse,
   ListOfUsersPlaylistsResponse,
@@ -12,6 +12,7 @@ import { API_URL } from "../../utils/constants";
 import AppContext from "../../AppContext";
 import useOutsideClick from "../../helpers/useOutsideClick";
 import { useHistory } from "react-router-dom";
+import {DashboardService} from "../Dashboard/Dashboard";
 
 type Props = {
   data: PlaylistObjectSimplified;
@@ -28,6 +29,7 @@ function PlaylistsMenu(props: Props) {
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
   const state = useContext(AppContext);
   const history = useHistory();
+  const [isOnStartpage, setIsOnStartpage] = useState<boolean>(DashboardService.containsPlaylist(props.data.id));
 
   const { data: playlists, error: playlistsError } = useSWR<ListOfUsersPlaylistsResponse>(
     `${API_URL}api/spotify/playlists`,
@@ -46,6 +48,7 @@ function PlaylistsMenu(props: Props) {
 
   useEffect(() => {
     toggleMenu(true);
+    setIsOnStartpage(DashboardService.containsPlaylist(props.data.id));
     offset = 0;
   }, []);
 
@@ -55,6 +58,7 @@ function PlaylistsMenu(props: Props) {
 
   useEffect(() => {
     toggleMenu(true);
+    setIsOnStartpage(DashboardService.containsPlaylist(props.data.id));
   }, [props.anchorPoint]);
 
   const getAllTracksOfPlaylist = async (playlist: PlaylistObjectSimplified): Promise<string[]> => {
@@ -98,6 +102,16 @@ function PlaylistsMenu(props: Props) {
     history.push(history.location.pathname, { unfollowed: playlistId });
   };
 
+  const toggleStartpage = () => {
+    if (isOnStartpage) {
+      DashboardService.removePlaylist(props.data.id);
+      setIsOnStartpage(false);
+    } else {
+      DashboardService.addPlaylist(props.data.id);
+      setIsOnStartpage(true);
+    }
+  }
+
   if (playlistsError || meError) return <p>error</p>;
 
   return (
@@ -108,7 +122,9 @@ function PlaylistsMenu(props: Props) {
       ref={ref}
     >
       <MenuItem disabled>Add to Queue</MenuItem>
-      <MenuItem disabled>Add to Startpage</MenuItem>
+      <MenuItem onClick={() => toggleStartpage()}>
+        {isOnStartpage ? 'Remove from Startpage' : 'Add to Startpage'}
+      </MenuItem>
       <SubMenu label={"Add to Playlist"}>
         {playlists && me ? (
           playlists.items
