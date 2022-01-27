@@ -12,6 +12,7 @@ import {NavLink, Link} from "react-router-dom";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import "./Artist.scss"
 import TrackList from "../TrackList/TrackList";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 
 interface IProps {
@@ -31,6 +32,8 @@ interface IState {
 
 
 class Artist extends Component<IProps, IState> {
+
+    private _isMounted: boolean;
     constructor(props: IProps) {
         super(props);
         this.state = {
@@ -43,56 +46,87 @@ class Artist extends Component<IProps, IState> {
             relatedArtists: [],
             filter: "All"
         };
+        this._isMounted = false;
         this.handleFilterChange = this.handleFilterChange.bind(this);
     }
 
-
     async componentDidMount() {
+        this._isMounted = true;
+
+        const authHeader = getAuthHeader();
         // fetch artist
         const artistData: SingleArtistResponse = await fetch(
-            `${API_URL}api/spotify/artist/${this.props.id}`
+            `${API_URL}api/spotify/artist/${this.props.id}`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         ).then((res) => res.json());
-        this.setState({artist: artistData});
+        this._isMounted && this.setState({artist: artistData});
 
         //fetch artist top tracks
         const topTracks: ArtistsTopTracksResponse = await fetch(
-            `${API_URL}api/spotify/artist/${this.props.id}/top-tracks`
+            `${API_URL}api/spotify/artist/${this.props.id}/top-tracks`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         ).then((res) => res.json());
-        this.setState({artistTopTracks: topTracks.tracks});
+        this._isMounted && this.setState({artistTopTracks: topTracks.tracks});
 
         // fetch albums
         const allAlbums: ArtistsAlbumsResponse = await fetch(
-            `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=album`
+            `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=album`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         ).then((res) => res.json());
-        this.setState((state) => ({...state, albums: allAlbums.items}));
+        this._isMounted && this.setState((state) => ({...state, albums: allAlbums.items}));
 
 
         // fetch singles
         const allSingles: ArtistsAlbumsResponse = await fetch(
-            `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=single`
+            `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=single`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         ).then((res) => res.json());
-        this.setState((state) => ({...state, singles: allSingles.items}));
+        this._isMounted && this.setState((state) => ({...state, singles: allSingles.items}));
 
 
         // fetch albums where the artist appears on
         const allAppearsOn: ArtistsAlbumsResponse = await fetch(
-            `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=appears_on`
+            `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=appears_on`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         ).then((res) => res.json());
-        this.setState((state) => ({...state, appearsOn: allAppearsOn.items}));
+        this._isMounted && this.setState((state) => ({...state, appearsOn: allAppearsOn.items}));
 
 
         // fetch compilations
         const allCompilations: ArtistsAlbumsResponse = await fetch(
-            `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=compilation`
+            `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=compilation`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         ).then((res) => res.json());
-        this.setState((state) => ({...state, compilations: allCompilations.items}));
+        this._isMounted && this.setState((state) => ({...state, compilations: allCompilations.items}));
 
 
         // fet related artists
         const allRelatedArtists = await fetch(
-            `${API_URL}api/spotify/artists/${this.props.id}/related-artists`
+            `${API_URL}api/spotify/artists/${this.props.id}/related-artists`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         ).then((res) => res.json());
-        this.setState((state) => ({...state, relatedArtists: allRelatedArtists.artists.slice(0,5)}))
+        this._isMounted && this.setState((state) => ({...state, relatedArtists: allRelatedArtists.artists.slice(0,5)}))
 
 
     }
@@ -101,6 +135,10 @@ class Artist extends Component<IProps, IState> {
     handleFilterChange(value: string) {
         //the value of the filter-option will be set
         this.setState({filter: value});
+    }
+
+    componentWillUnmount(): void {
+        this._isMounted = false;
     }
 
 

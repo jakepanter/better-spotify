@@ -7,6 +7,7 @@ import {API_URL} from "../../utils/constants";
 import {Link, useParams} from "react-router-dom";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import "../../cards.scss";
+import {getAuthHeader} from "../../helpers/api-helpers";
 
 let header: string = "Albums";
 
@@ -37,7 +38,12 @@ export default function ArtistAlbums() {
 
     // fetch albums
     async function fetchAlbums(url: string) {
-        const allAlbums: ArtistsAlbumsResponse = await fetch(url).then((res) => res.json());
+        const authHeader = getAuthHeader();
+        const allAlbums: ArtistsAlbumsResponse = await fetch(url, {
+            headers: {
+                'Authorization': authHeader
+            }
+        }).then((res) => res.json());
         setAlbums(allAlbums);
         const arr: AlbumObjectSimplified[] = [...albumItems, ...allAlbums.items];
         setAlbumItems(arr);

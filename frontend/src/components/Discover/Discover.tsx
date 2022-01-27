@@ -46,7 +46,6 @@ class Discover extends Component<IProps, IState> {
         };
     }
 
-
     async componentDidMount() {
 
         // fetch reently played tracks
@@ -54,17 +53,6 @@ class Discover extends Component<IProps, IState> {
             // Save to state
             this.setState((state) => ({...state, recentlyPlayedTracks: recentPlayedTracksData.items}));
         });
-
-        // get users country
-        const authHeader = getAuthHeader();
-        const me = await fetch(
-            `${API_URL}api/spotify/me`, {
-                headers: {
-                    'Authorization': authHeader
-                }
-            }
-        ).then((res) => res.json());
-        const country = me.country;
 
         // fetch new releases
         this.fetchNewReleases().then((newReleasedAlbums) => {

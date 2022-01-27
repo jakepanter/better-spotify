@@ -329,25 +329,26 @@ export default class SpotifyService {
     await this.spotifyApi.setVolume(volume);
     this.spotifyApi.resetAccessToken();
     return true;
-  getArtist= async (artistId: string) => {
-    const artist = await this.spotifyApi.getArtist(artistId);
-    return artist.body;
   }
 
-  getArtistAlbums = async (artistId: string, limit: number, market: string, offset: number, include_groups?: string) => {
+  /*getArtist= async (artistId: string) => {
+    const artist = await this.spotifyApi.getArtist(artistId);
+    return artist.body;
+  }*/
+
+  getArtistAlbums = async (accessToken: string, artistId: string, limit: number, market: string, offset: number, include_groups?: string) => {
     const options: any = { limit, market, offset , include_groups};
+    this.spotifyApi.setAccessToken(accessToken);
     const albums = await this.spotifyApi.getArtistAlbums(artistId, options);
+    this.spotifyApi.resetAccessToken();
     return albums.body;
   }
 
-  getArtistTopTracks = async (artistId: string, country: string) => {
+  getArtistTopTracks = async (accessToken: string, artistId: string, country: string) => {
+    this.spotifyApi.setAccessToken(accessToken);
     const topTracks = await this.spotifyApi.getArtistTopTracks(artistId, country);
+    this.spotifyApi.resetAccessToken();
     return topTracks.body;
-  }
-
-  setVolume = async (volume: number) => {
-    const result = await this.spotifyApi.setVolume(volume);
-    return result;
   }
 
   // only 'before' is specified because we want to display the recently played tracks from the current timestamp
@@ -451,6 +452,5 @@ export default class SpotifyService {
     options: TransferPlaybackOptions) => {
     this.spotifyApi.setAccessToken(accessToken);
     this.spotifyApi.transferMyPlayback(deviceIds, options);
-    this.spotifyApi.resetAccessToken();
   }
 }

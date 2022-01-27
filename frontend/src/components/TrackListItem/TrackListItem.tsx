@@ -237,8 +237,7 @@ function TrackListItem(props: Props) {
       onClick={(e) => handleClick(e)}
       onContextMenu={(e) => handleRightClick(e)}
     >
-      {track.album !== undefined || track.album !== undefined && type === "topTracks"
-      track.album.available_markets !== undefined ? (
+      {track.album !== undefined &&  track.album.available_markets !== undefined || track.album !== undefined && type === "topTracks" ? (
         <div className={"TableCell TableCellArtwork"} onClick={(e) => handlePlayButton(e)}>
           <img
             src={track.album.images[2].url}

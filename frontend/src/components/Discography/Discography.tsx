@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {ArtistsAlbumsResponse, AlbumObjectSimplified} from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import Album from "../Album/Album";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 
 // The fetching limit, can be adjusted by changing this value
@@ -19,12 +20,21 @@ export default function Discography (props: IProps) {
     const [nextAlbumURL, setNextAlbumURL] = useState<string>(
         `${API_URL}api/spotify/artist/${id}/albums?country=${localStorage.getItem("country")}&limit=${limit}&include_groups=album,single`
     );
+    //TODO isMounted
+    const isMounted = useRef(false)
 
     async function fetchAlbums(url: string) {
-        const allAlbums: ArtistsAlbumsResponse = await fetch(url).then((res) => res.json());
-        setAlbums(allAlbums);
-        const arr: AlbumObjectSimplified[] = [...albumItems, ...allAlbums.items];
-        setAlbumItems(arr);
+        if( isMounted.current) {
+            const authHeader = getAuthHeader();
+            const allAlbums: ArtistsAlbumsResponse = await fetch(url, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }).then((res) => res.json());
+            isMounted.current && setAlbums(allAlbums);
+            const arr: AlbumObjectSimplified[] = [...albumItems, ...allAlbums.items];
+            isMounted.current && setAlbumItems(arr);
+        }
     }
 
     if (!albums && !albumItems) return <p>loading...</p>;
@@ -42,15 +52,16 @@ export default function Discography (props: IProps) {
             const limit = albums.limit;
             const offset = albums.offset + limit;
             const url = `${API_URL}api/spotify/artist/${id}/albums?country="DE"&offset=${offset}&limit=${limit}&market=DE&include_groups=album,single`;
-            setNextAlbumURL(url);
+            isMounted.current && setNextAlbumURL(url);
         }
     };
 
     // when the value of nextAlbumURL changes, call fetchAlbums(nextAlbumURL)
     useEffect(() => {
-        fetchAlbums(nextAlbumURL)
+        isMounted.current = true;
+        isMounted.current && fetchAlbums(nextAlbumURL)
+        return () => { isMounted.current = false }
     }, [nextAlbumURL]);
-
 
 
     return(
