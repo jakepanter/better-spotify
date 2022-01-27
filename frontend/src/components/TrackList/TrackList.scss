@@ -220,7 +220,7 @@
     .TableRow {
       &:hover:not(.TableHeader):not(.Selected) {
         color: $color-default-light;
-        background-color: $color-background-light;
+        background-color: darken($white, 10%);
 
 
         .TableCellCoverPlaceholder::before {
