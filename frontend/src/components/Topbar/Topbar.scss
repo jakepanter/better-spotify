@@ -115,8 +115,11 @@
     .settings {
       .settings-button {
         border-radius: $border-radius;
-        background: $color-accent-light;
-
+        background: $white;
+        transition: $transition-base;
+        &:hover{
+          background: darken($white, 10%);
+        }
         .material-icons {
           color: $color-default-light;
         }

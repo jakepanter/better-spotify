@@ -207,3 +207,32 @@
     color: rgba($white, 0.45);
   }
 }
+
+.light_mode {
+  .Tracklist {
+    background: $white;
+    color: $color-default-light;
+
+    .Link {
+      color: $color-default-light;
+    }
+
+    .TableRow {
+      &:hover:not(.TableHeader):not(.Selected) {
+        color: $color-default-light;
+        background-color: $color-background-light;
+
+
+        .TableCellCoverPlaceholder::before {
+          color: rgba($black, 1);
+        }
+      }
+    }
+
+    .TableHeader {
+      background-color: $white;
+      border-bottom: $border-width $border-style transparentize($color-default-light, 0.89);
+      color: rgba($color-default-light, 0.65);
+    }
+  }
+}

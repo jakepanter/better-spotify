@@ -60,6 +60,7 @@
     .more-button {
       background: none;
       border: none;
+
       span {
         color: white;
       }
@@ -74,5 +75,11 @@
     background: none;
     border: none;
     width: 100%;
+  }
+}
+
+.light_mode {
+  .more-button span {
+    color: $color-default-light
   }
 }

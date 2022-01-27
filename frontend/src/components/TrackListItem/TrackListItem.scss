@@ -63,3 +63,23 @@
     color: $color-tag-5;
   }
 }
+.light_mode {
+  .albumLink {
+    color: $color-default-light;
+
+    &:hover {
+      color: $color-default-light;
+    }
+  }
+
+  .Selected {
+    background-color: $color-primary;
+
+    .checkbox.checked {
+      color: $color-default-light;
+    }
+    .Tag {
+      color: $color-default-light !important;
+    }
+  }
+}

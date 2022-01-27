@@ -26,8 +26,12 @@ function App() {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [editable, setEditable] = useState(false);
   const toggleEditable = () => setEditable(!editable);
-  const [miniMenu, setMiniMenu] = useState(false);
+  const [miniMenu, setMiniMenu] = useState(localStorage.getItem('miniMenu') === 'true' ? true : false);
   const menuToggle = () => setMiniMenu(!miniMenu);
+  useEffect(() => {
+    localStorage.setItem('miniMenu', String(miniMenu));
+  }, [miniMenu]);
+
   const [lightmode, setLightmode] = useState(localStorage.getItem('lightmode') === 'true' ? true : false);
   const toggleLightmode = () => setLightmode(!lightmode);
   useEffect(() => {

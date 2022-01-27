@@ -60,7 +60,7 @@ const Topbar = (props: IProps) => {
                 <button className={'settings-button customize-button'} onClick={toggleEditable} title={"Customize start page"}>
                     <span className={'material-icons'}>{props.editable ? "close" : "edit"}</span>
                 </button>
-                <button title={props.lightTheme ? "Change to darkmode" : "Change to lightmode"} className={`settings-button`} onClick={toggleLightmode}>
+                <button title={props.lightTheme ? "Switch to darkmode" : "Switch to lightmode"} className={`settings-button`} onClick={toggleLightmode}>
                     <span className={'material-icons'}>{props.lightTheme ? "light_mode" : "nightlight_round"}</span>
                 </button>
                 <button className={'settings-button'} onClick={authorize} title={"Log out"}>
