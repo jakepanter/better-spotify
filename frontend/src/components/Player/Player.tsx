@@ -1,22 +1,21 @@
-import React, {Component} from 'react';
-import {API_URL} from '../../utils/constants';
+import React, { Component } from 'react';
 import SpotifyWebPlayer from "./SpotifyWebPlayer";
 import "./Player.scss";
 
-
 interface IProps {
-    lightTheme: boolean
+    token: string;
+    lightTheme: boolean;
 }
 
 interface IState {
     token: string;
     color: string;
-    altColor: string,
-    bgColor: string,
-    loaderColor: string,
-    sliderTrackColor: string,
-    trackArtistColor: string,
-    trackNameColor: string
+    altColor: string;
+    bgColor: string;
+    loaderColor: string;
+    sliderTrackColor: string;
+    trackArtistColor: string;
+    trackNameColor: string;
 }
 
 class Player extends Component<IProps, IState> {
@@ -37,7 +36,10 @@ class Player extends Component<IProps, IState> {
     }
 
     componentDidMount() {
-        this.fetchToken();
+        const token = this.props.token;
+        this.setState({
+            token: token
+        });
 
         if (this.props.lightTheme) {
             this.setState({
@@ -48,7 +50,7 @@ class Player extends Component<IProps, IState> {
                 trackArtistColor: '#1F1F1F',
                 trackNameColor: '#1F1F1F'
             })
-        }else{
+        } else {
             this.setState({
                 altColor: '#ccc',
                 color: '#E0E0E0',
@@ -60,33 +62,24 @@ class Player extends Component<IProps, IState> {
         }
     }
 
-    async fetchToken() {
-        const token = await fetch(`${API_URL}api/spotify/access-token`).then(res => res.json());
-        if (token) {
-            this.setState({
-                token: token
-            })
-        }
-    }
-
     render() {
         return (
             <div className={'Player'}>
-                {this.state.token &&
+            {this.state.token &&
                 <SpotifyWebPlayer
                     token={this.state.token}
                     uris={['spotify:playlist:37i9dQZF1EOedu9gJ5DTVp']}
                     name={'Better Spotify 🚀'}
-                     styles={{
-                         altColor: this.state.altColor,
-                         color: this.state.color,
-                         bgColor: this.state.bgColor,
-                         loaderColor: this.state.loaderColor,
-                         trackArtistColor: this.state.trackArtistColor,
-                         trackNameColor: this.state.trackNameColor
-                     }}
+                    styles={{
+                        altColor: this.state.altColor,
+                        color: this.state.color,
+                        bgColor: this.state.bgColor,
+                        loaderColor: this.state.loaderColor,
+                        trackArtistColor: this.state.trackArtistColor,
+                        trackNameColor: this.state.trackNameColor
+                    }}
                 />
-                }
+            }
             </div>
         )
     }

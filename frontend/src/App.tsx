@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { API_URL } from "./utils/constants";
 import Albums from "./components/Albums/Albums";
 import Playlists from "./components/Playlists/Playlists";
 import Podcasts from "./components/Podcasts/Podcasts"
@@ -9,7 +8,9 @@ import Player from "./components/Player/Player";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Topbar from "./components/Topbar/Topbar";
+import SearchPage from "./components/SearchPage/SearchPage";
 import ContextMenuWrapper from "./components/ContextMenu/ContextMenuWrapper";
+import SearchPageCustom from "./components/SearchPage/Custom/SearchPageCustom";
 import Discover from "./components/Discover/Discover";
 import SongHistory from "./components/SongHistory/SongHistory";
 import Releases from "./components/Releases/Releases";
@@ -17,30 +18,25 @@ import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import AlbumPage from "./pages/AlbumPage/AlbumPage";
 import SettingsPage from "./pages/SettingsPage/SettingsPage";
 import TagTracklistPage from "./pages/TagTracklistPage/TagTracklistPage";
-import SearchPage from "./components/SearchPage/SearchPage";
-import SearchPageCustom from "./components/SearchPage/Custom/SearchPageCustom";
+import RelatedArtistsPage from "./pages/RelatedArtistsPage/RelatedArtistsPage";
 import ShowPage from "./pages/ShowPage/ShowPage";
 import EpisodePage from "./pages/EpisodePage/EpisodePage";
-import RelatedArtistsPage from "./pages/RelatedArtistsPage/RelatedArtistsPage";
 import AuthorizePage from "./components/AuthorizePage/AuthorizePage";
 import AppContext, { ContextMenu } from "./AppContext";
+import { useSelector, useDispatch } from 'react-redux';
+import { getAuthentication, refreshAuthentication } from './utils/authenticationSlice';
+
+type AuthState = {
+  authentication: {
+    accessToken: string;
+    refreshToken: string;
+    expiresIn: string;
+  }
+}
 
 function App() {
-  const [isAuthorized, setIsAuthorized] = useState(false);
   const [editable, setEditable] = useState(false);
-  const toggleEditable = () => setEditable(!editable);
   const [miniMenu, setMiniMenu] = useState(localStorage.getItem('miniMenu') === 'true' ? true : false);
-  const menuToggle = () => setMiniMenu(!miniMenu);
-  useEffect(() => {
-    localStorage.setItem('miniMenu', String(miniMenu));
-  }, [miniMenu]);
-
-  const [lightmode, setLightmode] = useState(localStorage.getItem('lightmode') === 'true' ? true : false);
-  const toggleLightmode = () => setLightmode(!lightmode);
-  useEffect(() => {
-    localStorage.setItem('lightmode', String(lightmode));
-    }, [lightmode]);
-
   const [contextMenu, setContextMenu] = useState<ContextMenu>({
     isOpen: false,
     type: "",
@@ -48,25 +44,50 @@ function App() {
     y: null,
     data: null,
   });
+  const [lightmode, setLightmode] = useState(localStorage.getItem('lightmode') === 'true' ? true : false);
+
+  const toggleLightmode = () => setLightmode(!lightmode);
+
+  useEffect(() => {
+    localStorage.setItem('miniMenu', String(miniMenu));
+  }, [miniMenu]);
+
+  useEffect(() => {
+    localStorage.setItem('lightmode', String(lightmode));
+  }, [lightmode]);
+
+  const authentication = useSelector((state: AuthState) => state.authentication)
+  const dispatch = useDispatch()
+
+  const menuToggle = () => setMiniMenu(!miniMenu);
 
   const state = {
     contextMenu: contextMenu,
     setContextMenu,
   };
 
+  const toggleEditable = () => setEditable(!editable);
+
+  useEffect(() => {
+    dispatch(getAuthentication());
+  });
+
+  useEffect(() => {
+    const refreshInterval = setInterval(() => {
+      dispatch(refreshAuthentication())
+    }, 3600 * 1000 - 10000);
+    return () => clearInterval(refreshInterval);
+  }, []);
+
   useEffect(() => {
     // disables default context menu
     document.addEventListener("contextmenu", (e) => e.preventDefault(), true);
-
-    async function getAccessToken() {
-      const res = await fetch(`${API_URL}api/spotify/access-token`).then((res) => res.json());
-      setIsAuthorized(res !== undefined);
-    }
-    getAccessToken();
   }, []);
 
-  if (!isAuthorized) {
-    return <AuthorizePage />;
+  if (!authentication.accessToken || authentication.accessToken === '') {
+    return (
+        <AuthorizePage />
+    );
   }
 
   return (
@@ -156,7 +177,7 @@ function App() {
                 <RelatedArtistsPage />
               </Route>
             </Switch>
-            <Player key={String(lightmode)} lightTheme={lightmode} />
+            <Player token={authentication.accessToken} key={String(lightmode)} lightTheme={lightmode} />
           </div>
         </div>
       </Router>
