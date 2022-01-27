@@ -61,14 +61,10 @@ function App() {
   const authentication = useSelector((state: AuthState) => state.authentication)
   const dispatch = useDispatch()
 
-  const menuToggle = () => setMiniMenu(!miniMenu);
-
   const state = {
     contextMenu: contextMenu,
     setContextMenu,
   };
-
-  const toggleEditable = () => setEditable(!editable);
 
   useEffect(() => {
     dispatch(getAuthentication());
