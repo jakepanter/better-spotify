@@ -1,12 +1,13 @@
 import "./TrackList.scss";
 import React, { useContext, useEffect, useState, useRef } from "react";
-import { PlaylistObjectFull, SavedTrackObject, TrackObjectFull } from "spotify-types";
+import { EpisodeObjectFull, PlaylistObjectFull, SavedTrackObject, TrackObjectFull } from "spotify-types";
 import { AlbumTrack } from "../Album/Album";
 import { PlaylistTrack } from "../Playlist/Playlist";
 import TrackListItem from "../TrackListItem/TrackListItem";
 import AppContext from "../../AppContext";
 import TagsSystem from "../../utils/tags-system";
-import { TagsTrack } from "../TagTracklist/TagTracklist";
+import { ShowEpisodes } from "../Show/Show";
+import {TagsTrack} from "../TagTracklist/TagTracklist";
 import { SongHistoryTrack } from "../SongHistory/SongHistory";
 
 type Props =
@@ -28,6 +29,13 @@ type Props =
   | {
       type: "saved";
       tracks: SavedTrackObject[];
+      loadMoreCallback: () => void;
+      fullyLoaded: boolean;
+      id_tracklist: string;
+    }
+    | {
+      type: "show";
+      tracks: ShowEpisodes[];
       loadMoreCallback: () => void;
       fullyLoaded: boolean;
       id_tracklist: string;
@@ -156,7 +164,7 @@ function TrackList(props: Props) {
     setSelected(arr);
   };
 
-  const isTrackSelected = (track: TrackObjectFull | AlbumTrack, index: number) => {
+  const isTrackSelected = (track: TrackObjectFull | AlbumTrack | EpisodeObjectFull, index: number) => {
     const trackUniqueId = `${track.uri}-${index}`;
     return selectedTracks.some((track) => track === trackUniqueId);
   };
@@ -421,6 +429,47 @@ function TrackList(props: Props) {
           </div>
         </div>
       )}
+
+      {type === "show" && (
+        <div
+          className={"Tracklist"}
+          onScroll={(e: React.UIEvent<HTMLDivElement>) =>
+            scrollHandler(e, loadMoreCallback)
+          }
+        >
+          <div className={"TableBody"}>
+            {props.tracks.map((item, index) => {
+              const episode = item ;
+              const tagList = TagsSystem.getTagsOfElement(episode.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
+              return (
+                <TrackListItem
+                  track={episode}
+                  name={episode.name}
+                  duration_ms={episode.duration_ms}
+                  image={episode.images[0]}
+                  description={episode.description}
+                  liked={episode.is_saved}
+                  key={type + "-episode-" + episode.id + "-" + index}
+                  listIndex={index}
+                  selected={isTrackSelected(episode, index)}
+                  onSelectionChange={handleSelectionChange}
+                  onContextMenuOpen={handleContextMenuOpen}
+                  id_tracklist={id_tracklist}
+                  type={type}
+                  tags={tagList}
+                />
+              );
+            })}
+            {!fullyLoaded ? (
+              <div className={"PlaylistLoader"}>
+                <div className={"loader"} />
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+      )}  
 
       {type === "tags" && (
         <div

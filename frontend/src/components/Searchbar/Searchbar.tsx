@@ -38,7 +38,7 @@ class Searchbar extends Component<IProps, IState> {
     const value = e.target.value;
     const key = e.which;
 
-    var searchbarResults = document.getElementById("SearchbarResultsID");
+    const searchbarResults = document.getElementById("SearchbarResultsID");
     if(searchbarResults != null)
       searchbarResults.style.display = 'block';
 

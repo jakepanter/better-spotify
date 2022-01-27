@@ -53,7 +53,7 @@ const Sidebar = () => {
                     </NavLink>
                 </li>
                 <li className="column">
-                    <NavLink title={"Podcasts"} activeClassName="active" className="button" to="/ " onClick={() => closeMenu()} exact>
+                    <NavLink title={"Podcasts"} activeClassName="active" className="button" to="/collections/podcasts" onClick={() => closeMenu()} exact>
                         <span className="material-icons left-side-panel--icon">record_voice_over</span>
                         <span className="left-side-panel--text">Podcasts</span>
                     </NavLink>
