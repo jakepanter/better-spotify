@@ -32,7 +32,8 @@ const Topbar = (props: IProps) => {
             const res = await fetch(`${API_URL}api/spotify/me`)
                 .then((res) => res.json());
             if (res.images && res.images.length > 0) setImage(res.images[0].url)
-            console.log(image)
+            //save country of user in local storage
+            localStorage.setItem("country", res.country)
         }
 
         getProfilePicture();
