@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Slider from "rc-slider";
 import {API_URL} from "../../utils/constants";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 interface IProps {}
 
@@ -42,7 +43,12 @@ class Volume extends Component<IProps, IState> {
     }
 
     setVolume = (value: number) => {
-        return fetch(`${API_URL}api/spotify/volume?volume=${value}`, {method: 'PUT'});
+        const authHeader = getAuthHeader();
+        return fetch(`${API_URL}api/spotify/volume?volume=${value}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': authHeader
+            }});
     }
 
     render() {

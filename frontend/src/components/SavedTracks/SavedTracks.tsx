@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {PlaylistTrackResponse, SavedTrackObject} from "spotify-types";
 import {API_URL} from "../../utils/constants";
 import TrackList from "../TrackList/TrackList";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 const limit = 50;
 
@@ -23,8 +24,13 @@ export default function SavedTracks(props: IProps) {
         // Only fetch if there are tracks left to fetch
         if (total >= 0 && total <= offset) return;
 
+        const authHeader = getAuthHeader();
         const data: PlaylistTrackResponse = await fetch(
-            `${API_URL}api/spotify/me/tracks?offset=${newOffset}&limit=${limit}`
+            `${API_URL}api/spotify/me/tracks?offset=${newOffset}&limit=${limit}`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         ).then((res) => res.json());
 
         // Save new tracks

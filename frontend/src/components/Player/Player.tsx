@@ -6,6 +6,7 @@ import "./Player.scss";
 
 interface IProps {
     lightTheme: boolean
+    token: string;
 }
 
 interface IState {
