@@ -239,7 +239,7 @@ function TrackListItem(props: Props) {
     >
       {track.album !== undefined &&
       track.album.available_markets !== undefined ? (
-        <div className={"TableCell TableCellArtwork"}>
+        <div className={"TableCell TableCellArtwork"} onClick={(e) => handlePlayButton(e)}>
           <img
             src={track.album.images[2].url}
             alt=""
@@ -247,7 +247,7 @@ function TrackListItem(props: Props) {
           />
         </div>
       ) : (
-          <div className={"TableCellCoverPlaceholder"}>
+          <div className={"TableCellCoverPlaceholder"} onClick={(e) => handlePlayButton(e)}>
             <CoverPlaceholder />
           </div>
       )}
