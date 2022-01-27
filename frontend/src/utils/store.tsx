@@ -1,8 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
-import counterReducer from './authenticationSlice'
+import authenticationReducer from './authenticationSlice'
+import playbackReducer from './playbackSlice'
 
 export default configureStore({
     reducer: {
-        authentication: counterReducer,
+        authentication: authenticationReducer,
+        playback: playbackReducer,
     },
 })
