@@ -27,9 +27,7 @@ function App() {
   const [editable, setEditable] = useState(false);
   const toggleEditable = () => setEditable(!editable);
   const [miniMenu, setMiniMenu] = useState(false);
-  const menuToggle = () => {
-    setMiniMenu(!miniMenu);
-  };
+  const menuToggle = () => setMiniMenu(!miniMenu);
   const [lightmode, setLightmode] = useState(localStorage.getItem('lightmode') === 'true' ? true : false);
   const toggleLightmode = () => setLightmode(!lightmode);
   useEffect(() => {
@@ -142,7 +140,7 @@ function App() {
                 <RelatedArtistsPage />
               </Route>
             </Switch>
-            <Player />
+            <Player key={String(lightmode)} lightTheme={lightmode} />
           </div>
         </div>
       </Router>

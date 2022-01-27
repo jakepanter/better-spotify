@@ -26,9 +26,11 @@ const Topbar = (props: IProps) => {
     const toggleEditable = () => {
         props.onChangeEditable();
     }
+
     const toggleLightmode = () => {
         props.onChangeLightmode();
     }
+
     const [image, setImage] = useState<string>('');
 
     useEffect(() => {
