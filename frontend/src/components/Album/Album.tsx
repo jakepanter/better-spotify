@@ -127,13 +127,11 @@ export default function Album(props: IProps) {
             <div className={"PlaylistHeaderMeta"}>
               <h4>Album</h4>
               <h1>{album.name}</h1>
-              {/*TODO Anzeige von Namen verbessern!*/}
               <p>
                 by {album.artists.map<React.ReactNode>((a) =>
                   <Link to={`/artist/${a.id}`} className={"artists-name"} key={a.id}>{a.name}</Link>).reduce((a,b)=>[a,', ',b])} —{" "}
                 {album.tracks.total} Song{album.tracks.total === 1 ? "" : "s"}
               </p>
-
             </div>
             <div className={"PlaylistHeaderFilter"}>{/* Filter */}</div>
           </div>

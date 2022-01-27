@@ -153,7 +153,6 @@ function TrackListItem(props: Props) {
       onClick={(e) => handleClick(e)}
       onContextMenu={(e) => handleRightClick(e)}
     >
-      {/*TODO check condition available markets, why is it necessary?*/}
       {track.album !== undefined && track.album.available_markets !== undefined || track.album !== undefined && type === "topTracks" ? (
         <div className={"TableCell TableCellArtwork"}>
           <img src={track.album.images[2].url} alt="" style={{ width: "40px", height: "40px" }} />
