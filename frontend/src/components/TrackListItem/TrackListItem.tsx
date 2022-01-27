@@ -236,16 +236,13 @@ function TrackListItem(props: Props) {
         )}
       </div>
       {track.album !== undefined ? (
-        <div className={"TableCell TableCellAlbum"}>{track.album.name}</div>
+          <div className={"TableCell TableCellAlbum"}>
+            <Link to={`/album/${track.album.id}`} className={"albumLink"} key={trackUniqueId}>
+              {track.album.name}
+            </Link>
+          </div>
       ) : (
-        <></>
-      )}
-      {track.added_at !== undefined ? (
-        <div className={"TableCell TableCellAddedAt"}>
-          {formatTimeDiff(new Date(track.added_at).getTime(), Date.now())}
-        </div>
-      ) : (
-        <></>
+          <></>
       )}
       <div className={"TableCell TableCellDuration"}>
         {formatTimestamp(track.duration_ms)}
