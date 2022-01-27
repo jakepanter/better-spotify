@@ -106,6 +106,7 @@ export default class App {
 
     this.server.get('/api/spotify/me/tracks/contains', async (req: Request, res: Response) => {
       const trackIds: string[] = (req.query.trackIds as string ?? '').split(',');
+      if (trackIds.length === 1 && trackIds[0] === '') return res.json([]);
       const data = await this.spotifyService.isSaved(trackIds);
       return res.json(data);
     });
@@ -225,7 +226,40 @@ export default class App {
       return res.json(response);
     });
 
-    this.server.get('/api/spotify/volume', async (req: Request, res: Response) => {
+    this.server.get('/api/spotify/me/shows', async (req: Request, res: Response) => {
+      const shows = await this.spotifyService.getSavedShows();
+      return res.json(shows);
+    })
+
+    this.server.get('/api/spotify/shows', async (req: Request, res: Response) => {
+      const showIds: string[] = (req.query.showIds as string ?? ' ').split(',');
+      const shows = await this.spotifyService.getShows(showIds);
+      return res.json(shows);
+    })
+
+    this.server.get('/api/spotify/show/:showId/episodes', async (req: Request, res: Response) => {
+      const limit = Number(req.query?.limit ?? 50);
+      const offset = Number(req.query?.offset ?? 0);
+      console.log(limit, offset);
+      const showId = req.params.showId as string;
+
+      const episodes = await this.spotifyService.getShowEpisodes(showId, limit, offset);
+      return res.json(episodes);
+    })
+
+    this.server.get('/api/spotify/show/:showId', async (req: Request, res: Response) => {
+      const showId = req.params.showId as string;
+      const show = await this.spotifyService.getShow(showId);
+      return res.json(show);
+    })
+
+    this.server.get('/api/spotify/episode/:episodeId', async (req: Request, res: Response) => {
+      const { episodeId } = req.params;
+      const episode = await this.spotifyService.getEpisode(episodeId);
+      return res.json(episode);
+    })
+
+    this.server.put('/api/spotify/volume', async (req: Request, res: Response) => {
       const volume: any = req.query?.volume ?? 100;
       const result = await this.spotifyService.setVolume(volume);
       return res.json(result);
