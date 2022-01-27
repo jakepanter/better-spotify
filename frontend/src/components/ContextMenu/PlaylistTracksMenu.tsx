@@ -11,7 +11,7 @@ import {
 import AppContext from "../../AppContext";
 import useSWR, { mutate } from "swr";
 import useOutsideClick from "../../helpers/useOutsideClick";
-import { createNewPlaylist } from "../../helpers/api-helpers";
+import { createNewPlaylist, getAuthHeader } from "../../helpers/api-helpers";
 import { API_URL } from "../../utils/constants";
 import TagsSystem from "../../utils/tags-system";
 
@@ -20,7 +20,11 @@ type Props = {
   anchorPoint: { x: number; y: number };
 };
 
-const fetcher = (url: any) => fetch(url).then((r) => r.json());
+const authHeader = getAuthHeader();
+const fetcher = (url: any) =>
+  fetch(url, {
+    headers: { Authorization: authHeader },
+  }).then((r) => r.json());
 
 function PlaylistTracksMenu(props: Props) {
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
@@ -60,7 +64,7 @@ function PlaylistTracksMenu(props: Props) {
     const tracks = props.data.tracks.map((track) => track.split("-")[0]);
     await fetch(`${API_URL}api/spotify/playlist/${playlistId}/add`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: authHeader },
       body: JSON.stringify(tracks),
     });
   };
@@ -74,7 +78,7 @@ function PlaylistTracksMenu(props: Props) {
     });
     await fetch(`${API_URL}api/spotify/playlist/${props.data.playlist.id}/remove`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: authHeader },
       body: JSON.stringify(tracks),
     });
     history.push(history.location.pathname, { removed: tracks });
@@ -101,7 +105,9 @@ function PlaylistTracksMenu(props: Props) {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
     //extract track id
     const trackId = props.data.tracks.map((track) => track.split("track:")[1].split("-")[0])[0];
-    const track: any = await fetch(`${API_URL}api/spotify/track/${trackId}`).then((r) => r.json());
+    const track: any = await fetch(`${API_URL}api/spotify/track/${trackId}`, {
+      headers: { Authorization: authHeader },
+    }).then((r) => r.json());
     history.push(`/album/${track.album.id}`);
   };
 
@@ -109,7 +115,9 @@ function PlaylistTracksMenu(props: Props) {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
     //extract track id
     const trackId = props.data.tracks.map((track) => track.split("track:")[1].split("-")[0])[0];
-    const track: any = await fetch(`${API_URL}api/spotify/track/${trackId}`).then((r) => r.json());
+    const track: any = await fetch(`${API_URL}api/spotify/track/${trackId}`, {
+      headers: { Authorization: authHeader },
+    }).then((r) => r.json());
     history.push(`/artist/${track.artists[0].id}`);
   };
 

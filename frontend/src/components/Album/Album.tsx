@@ -9,6 +9,7 @@ import {
 import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import TrackList from "../TrackList/TrackList";
+import { getAuthHeader } from '../../helpers/api-helpers';
 import {Link} from "react-router-dom";
 
 // The fetching limit, can be adjusted by changing this value
@@ -33,12 +34,18 @@ export default function Album(props: IProps) {
   const [offset, setOffset] = useState<number>(limit);
 
   async function fetchAlbumData() {
+    const authHeader = getAuthHeader();
     const data: SingleAlbumResponse = await fetch(
-      `${API_URL}api/spotify/album/${id}?limit=${limit}`
+      `${API_URL}api/spotify/album/${id}?limit=${limit}`,{
+      headers: {
+        'Authorization': authHeader
+      }
+    }
     ).then((res) => res.json());
 
     // Save album data
     setAlbum(data);
+
     // Save if tracks are saved
     const saved: CheckUsersSavedTracksResponse = await fetchIsSavedData(
       data.tracks.items.map((i) => i.id)
@@ -63,8 +70,13 @@ export default function Album(props: IProps) {
     )
       return;
 
+    const authHeader = getAuthHeader();
     const data: AlbumTracksResponse = await fetch(
-      `${API_URL}api/spotify/album/${id}/tracks?offset=${newOffset}&limit=${limit}`
+      `${API_URL}api/spotify/album/${id}/tracks?offset=${newOffset}&limit=${limit}`, {
+          headers: {
+            'Authorization': authHeader
+          }
+        }
     ).then((res) => res.json());
 
     let saved: CheckUsersSavedTracksResponse = [];
@@ -87,9 +99,12 @@ export default function Album(props: IProps) {
   }
 
   async function fetchIsSavedData(trackIds: string[]) {
+    const authHeader = getAuthHeader();
     const data: CheckUsersSavedTracksResponse = await fetch(
-      `${API_URL}api/spotify/me/tracks/contains?trackIds=${trackIds}`
-    ).then((res) => res.json());
+      `${API_URL}api/spotify/me/tracks/contains?trackIds=${trackIds}`, {
+          headers: {
+            'Authorization': authHeader
+          }}).then((res) => res.json());
 
     return data;
   }

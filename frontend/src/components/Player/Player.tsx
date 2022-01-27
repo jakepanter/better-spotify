@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { API_URL } from '../../utils/constants';
 import SpotifyWebPlayer from "./SpotifyWebPlayer";
 import "./Player.scss";
 
-interface IProps {}
+interface IProps {
+    token: string;
+}
 
 interface IState {
     token: string;
@@ -20,16 +21,10 @@ class Player extends Component<IProps, IState> {
     }
 
     componentDidMount() {
-        this.fetchToken();
-    }
-
-    async fetchToken() {
-        const token  = await fetch(`${API_URL}api/spotify/access-token`).then(res => res.json());
-        if (token) {
-            this.setState({
-                token: token
-            })
-        }
+        const token = this.props.token;
+        this.setState({
+            token: token
+        })
     }
 
     render() {

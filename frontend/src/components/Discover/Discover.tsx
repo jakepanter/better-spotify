@@ -13,6 +13,7 @@ import {API_URL} from "../../utils/constants";
 import {NavLink, Link} from "react-router-dom";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import {formatTimeDiff} from "../../utils/functions";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 interface IProps {
 }
@@ -54,6 +55,17 @@ class Discover extends Component<IProps, IState> {
             this.setState((state) => ({...state, recentlyPlayedTracks: recentPlayedTracksData.items}));
         });
 
+        // get users country
+        const authHeader = getAuthHeader();
+        const me = await fetch(
+            `${API_URL}api/spotify/me`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
+        ).then((res) => res.json());
+        const country = me.country;
+
         // fetch new releases
         this.fetchNewReleases().then((newReleasedAlbums) => {
             this.setState((state) => ({...state, newReleases: newReleasedAlbums.albums.items}));
@@ -78,17 +90,27 @@ class Discover extends Component<IProps, IState> {
     }
 
     async fetchRecentlyPlayedTracks() {
+        const authHeader = getAuthHeader();
         const res = await fetch(
-            `${API_URL}api/spotify/player/recently-played?limit=${limit}`
+            `${API_URL}api/spotify/player/recently-played?limit=${limit}`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         );
         const recentPlayedTracksData: UsersRecentlyPlayedTracksResponse = await res.json();
         return recentPlayedTracksData;
     }
 
     async fetchNewReleases() {
+        const authHeader = getAuthHeader();
         const country = localStorage.getItem("country");
         const res = await fetch(
-            `${API_URL}api/spotify/browse/new-releases?country=${country}&limit=${limit}`
+            `${API_URL}api/spotify/browse/new-releases?country=${country}&limit=${limit}`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         );
         const newReleasedAlbums: ListOfNewReleasesResponse = await res.json();
         return newReleasedAlbums;
@@ -96,17 +118,27 @@ class Discover extends Component<IProps, IState> {
 
 
     async fetchTopArtists() {
+        const authHeader = getAuthHeader();
         // Fetch top artists
         const res = await fetch(
-            `${API_URL}api/spotify/me/top/artists`
+            `${API_URL}api/spotify/me/top/artists`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         );
         const topArtists = await res.json();
         return topArtists;
     }
 
     async fetchRelatedArtists(artistId: string) {
+        const authHeader = getAuthHeader();
         const res = await fetch(
-            `${API_URL}api/spotify/artists/${artistId}/related-artists`
+            `${API_URL}api/spotify/artists/${artistId}/related-artists`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         );
         const relatedArtists = await res.json();
         return relatedArtists;

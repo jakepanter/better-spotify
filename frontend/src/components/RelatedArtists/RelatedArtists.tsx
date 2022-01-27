@@ -7,6 +7,7 @@ import {Link} from "react-router-dom";
 //import "../../cards.scss";
 import "./RelatedArtists.scss";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 
 interface IProps {
@@ -29,14 +30,23 @@ class RelatedArtists extends Component<IProps, IState> {
 
     async componentDidMount() {
         // Fetch playlists
+        const authHeader = getAuthHeader();
         const relatedArtists: ArtistsRelatedArtistsResponse = await fetch(
-            `${API_URL}api/spotify/artists/${this.props.id}/related-artists`
+            `${API_URL}api/spotify/artists/${this.props.id}/related-artists`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         ).then((res) => res.json());
         // Save to state
         this.setState((state) => ({...state, relatedArtistsList: relatedArtists.artists}));
 
         const artist: SingleArtistResponse = await fetch(
-            `${API_URL}api/spotify/artist/${this.props.id}`
+            `${API_URL}api/spotify/artist/${this.props.id}`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         ).then((res) => res.json());
         // Save to state
         this.setState((state) => ({...state, artistName: artist.name}));

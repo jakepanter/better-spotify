@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
 //anyone know how to satisfy eslint and the unused prop function variables????
+import "./TrackListItem.scss";
 import React, { useCallback, useContext, useEffect, useState } from "react";
+import { Link, Route } from "react-router-dom";
 import {
   AlbumObjectSimplified,
   EpisodeObject,
@@ -11,21 +13,21 @@ import {
   TrackObjectSimplified,
 } from "spotify-types";
 import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
-import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
-import "./TrackListItem.scss";
-import {API_URL} from "../../utils/constants";
-import {TagWithId} from "../../utils/tags-system";
-import { Link, Route } from "react-router-dom";
+import { API_URL } from "../../utils/constants";
+import { Tag } from "../../utils/tags-system";
+import { TagWithId } from "../../utils/tags-system";
 import EpisodePage from "../../pages/EpisodePage/EpisodePage";
-import AppContext from "../../AppContext";
 import Button from "../Button/Button";
+import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
+import AppContext from "../../AppContext";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 type Body = {
-  context_uri: string | undefined,
-  position_ms: number | undefined,
+  context_uri: string | undefined;
+  position_ms: number | undefined;
   offset?: {
-    uri: string | undefined
-  }
+    uri: string | undefined;
+  };
 };
 
 type Props = {
@@ -59,7 +61,7 @@ function TrackListItem(props: Props) {
   const [liked, setLiked] = useState<boolean>(!!props.liked);
   const state = useContext(AppContext);
 
-  const id_tracklist= props.id_tracklist;
+  const id_tracklist = props.id_tracklist;
   const type = props.type;
   let track_uri = "spotify:track:" + props.track.id;
 
@@ -88,9 +90,13 @@ function TrackListItem(props: Props) {
         uri: track_uri
       }
     }
+    const authHeader = getAuthHeader();
     fetch(`${API_URL}api/spotify/me/player/play`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': authHeader
+      },
       body: JSON.stringify(body)
     })
         .then(response => response.json())
@@ -133,7 +139,15 @@ function TrackListItem(props: Props) {
   };
 
   const fetchUserId = async () => {
-    return await fetch(`${API_URL}api/spotify/me`).then(res => res.json()).then(data => data.uri)};
+      const authHeader = getAuthHeader();
+    return await fetch(`${API_URL}api/spotify/me`, {
+        headers: {
+            'Authorization': authHeader
+        }
+    })
+      .then((res) => res.json())
+      .then((data) => data.uri);
+  };
 
   const handleAddToPlaylist = (e: any) => {
     e.stopPropagation();
@@ -150,13 +164,25 @@ function TrackListItem(props: Props) {
     e.stopPropagation();
     if (!liked) {
       // add
-      await fetch(`${API_URL}api/spotify/me/tracks/add?trackIds=${track.track.id}`)
-          .then((res) => res.json());
+      const authHeader = getAuthHeader();
+      await fetch(`${API_URL}api/spotify/me/tracks/add?trackIds=${track.track.id}`, {
+          headers: {
+              'Authorization': authHeader
+          }
+      }).then((res) =>
+        res.json()
+      );
       setLiked(true);
     } else {
       // remove
-      await fetch(`${API_URL}api/spotify/me/tracks/remove?trackIds=${track.track.id}`)
-          .then((res) => res.json());
+      const authHeader = getAuthHeader();
+      await fetch(`${API_URL}api/spotify/me/tracks/remove?trackIds=${track.track.id}`, {
+          headers: {
+              'Authorization': authHeader
+          }
+      }).then((res) =>
+        res.json()
+      );
       setLiked(false);
     }
   };
@@ -211,8 +237,9 @@ function TrackListItem(props: Props) {
       onClick={(e) => handleClick(e)}
       onContextMenu={(e) => handleRightClick(e)}
     >
-      {track.album !== undefined && track.album.available_markets !== undefined || track.album !== undefined && type === "topTracks" ? (
-        <div className={"TableCell TableCellArtwork"}>
+      {track.album !== undefined || track.album !== undefined && type === "topTracks"
+      track.album.available_markets !== undefined ? (
+        <div className={"TableCell TableCellArtwork"} onClick={(e) => handlePlayButton(e)}>
           <img
             src={track.album.images[2].url}
             alt=""
@@ -220,7 +247,7 @@ function TrackListItem(props: Props) {
           />
         </div>
       ) : (
-          <div className={"TableCellCoverPlaceholder"}>
+          <div className={"TableCellCoverPlaceholder"} onClick={(e) => handlePlayButton(e)}>
             <CoverPlaceholder />
           </div>
       )}
