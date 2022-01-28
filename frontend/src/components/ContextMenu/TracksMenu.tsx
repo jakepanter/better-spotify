@@ -31,6 +31,7 @@ function TracksMenu(props: Props) {
   const trackId = props.data.map((track) => track.split("-")[0].split(":")[2])[0];
   const tags = TagsSystem.getTags();
   const [tagsForTrack, setTagsForTrack] = useState<string[]>(TagsSystem.getTagsOfElement(trackId));
+  const [liked, setLiked] = useState<boolean>(false);
 
   const state = useContext(AppContext);
   const history = useHistory();
@@ -119,6 +120,33 @@ function TracksMenu(props: Props) {
     history.push(`/settings`);
   };
 
+  const handleLikeButton = async (e: any) => {
+    e.stopPropagation();
+    if (!liked) {
+      // add
+      const authHeader = getAuthHeader();
+      await fetch(`${API_URL}api/spotify/me/tracks/add?trackIds=${trackId}`, {
+        headers: {
+          'Authorization': authHeader
+        }
+      }).then((res) =>
+        res.json()
+      );
+      setLiked(true);
+    } else {
+      // remove
+      const authHeader = getAuthHeader();
+      await fetch(`${API_URL}api/spotify/me/tracks/remove?trackIds=${trackId}`, {
+        headers: {
+          'Authorization': authHeader
+        }
+      }).then((res) =>
+        res.json()
+      );
+      setLiked(false);
+    }
+  };
+
   if (playlistsError || meError) return <p>error</p>;
 
   if (props.data.length === 1) {
@@ -202,7 +230,9 @@ function TracksMenu(props: Props) {
             <MenuItem>Fetching Playlists...</MenuItem>
           )}
         </SubMenu>
-        <MenuItem disabled>Like</MenuItem>
+        <MenuItem onClick={handleLikeButton}>
+          {liked ? 'Dislike' : 'Like'}
+        </MenuItem>
       </ControlledMenu>
     );
   }
