@@ -58,7 +58,7 @@ class RelatedArtists extends Component<IProps, IState> {
             return (
                 <li className="column" key={artist.id}>
                     <Link to={`/artist/${artist.id}`}>
-                        {artist.images !==undefined ? (
+                        {artist.images.length !== 0 ? (
                             <div className={"cover"} style={{
                                 backgroundImage: `url(${artist.images[0].url})`
                             }}>
