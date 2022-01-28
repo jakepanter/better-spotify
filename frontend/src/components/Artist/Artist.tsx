@@ -33,6 +33,7 @@ interface IState {
 
 class Artist extends Component<IProps, IState> {
 
+    // to check if a component is mounted, following source is used to achieve that: https://stackoverflow.com/questions/39767482/is-there-a-way-to-check-if-the-react-component-is-unmounted
     private _isMounted: boolean;
     constructor(props: IProps) {
         super(props);
