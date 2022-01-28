@@ -156,3 +156,24 @@
 .col {
   min-height: 100px;
 }
+
+.light_mode {
+  .albumLink {
+    color: $color-default-light;
+
+    &:hover {
+      color: $color-default-light;
+    }
+  }
+
+  .Selected {
+    background-color: $color-primary;
+
+    .checkbox.checked {
+      color: $color-default-light;
+    }
+    .Tag {
+      color: $color-default-light !important;
+    }
+  }
+}

@@ -72,3 +72,23 @@
     padding: $spacer;
   }
 }
+.light_mode {
+  .Dialog {
+    background-color: $white;
+    .button {
+      color: $color-default-light;
+     }
+
+    &Header {
+      border-bottom: $border-width $border-style rgba($color-default-light, .2);
+      color: $color-default-light;
+
+      &CloseButton {
+        &:hover,
+        &:active {
+          background-color: transparentize($color-default-light, 0.9);
+        }
+      }
+    }
+  }
+}
