@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import "./NotificationsService.scss";
 
 export class NotificationsService {
-  private static displays: NotificationsDisplay | null;
+  private static display: NotificationsDisplay | null = null;
 
   /**
    * Push a notification. keepAlive is optional (defaults to 5000ms)
@@ -11,17 +11,17 @@ export class NotificationsService {
    * @param keepAlive
    */
   static push(type: NotificationType, message: string, keepAlive?: number) {
-    if (NotificationsService.displays !== null) {
-      NotificationsService.displays.push(type, message, keepAlive);
+    if (NotificationsService.display !== null) {
+      NotificationsService.display.push(type, message, keepAlive);
     }
   }
 
   static register(instance: NotificationsDisplay) {
-    this.displays = instance;
+    this.display = instance;
   }
 
   static unregister() {
-    this.displays = null;
+    this.display = null;
   }
 }
 
@@ -83,7 +83,7 @@ export class NotificationsDisplay extends Component<IProps, IState> {
     return (
       <div className={'NotificationsService'}>
         {notifications.map((n) => {
-          const iconCode = n.type === 'info' ? 'info' : n.type === 'success' ? 'done' : n.type;
+          const iconCode = n.type === 'success' ? 'done' : n.type;
           return (
             <div key={n.id} className={`Notification Notification${n.type.charAt(0).toUpperCase() + n.type.slice(1)}`}>
               <span className={'NotificationIcon material-icons'}>{iconCode}</span>
