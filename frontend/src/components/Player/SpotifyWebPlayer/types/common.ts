@@ -9,6 +9,16 @@ export interface CallbackState extends State {
   type: string;
 }
 
+interface PlaybackState {
+  playback: {
+    paused: boolean;
+    position: number;
+    repeatMode: number;
+    shuffle: boolean;
+    currentTrackId: string;
+  }
+}
+
 export interface Props {
   autoPlay?: boolean;
   // eslint-disable-next-line no-unused-vars
@@ -28,6 +38,8 @@ export interface Props {
   // eslint-disable-next-line no-unused-vars
   updateSavedStatus?: (fn: (status: boolean) => any) => any;
   uris?: string | string[];
+  // eslint-disable-next-line no-unused-vars
+  setPlaybackStateCallback: (state: PlaybackState) => void;
 }
 
 export interface State {

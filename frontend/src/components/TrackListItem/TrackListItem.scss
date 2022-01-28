@@ -105,6 +105,37 @@
   }
 }
 
+.Playing {
+  background-color: $color-secondary;
+  animation-name: playingColor;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  color: $color-primary;
+
+  .checkbox.checked {
+    color: $color-default;
+  }
+
+  .Tag {
+    color: $color-default !important;
+  }
+}
+
+.Paused {
+  animation: none !important;
+}
+
+@keyframes playingColor {
+  0% {
+    background-color: $color-secondary;
+  }
+  50% {
+    background-color: rgba(24,40,58,0.2);
+  }
+  100% {
+    background-color: $color-secondary;
+  }
+}
 
 .Selected {
   background-color: $color-primary;

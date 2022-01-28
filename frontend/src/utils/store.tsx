@@ -2,9 +2,10 @@ import { configureStore } from '@reduxjs/toolkit'
 import authenticationReducer from './authenticationSlice'
 import playbackReducer from './playbackSlice'
 
-export default configureStore({
+const store = configureStore({
     reducer: {
         authentication: authenticationReducer,
         playback: playbackReducer,
     },
 })
+export default store;

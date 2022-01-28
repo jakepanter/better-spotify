@@ -48,11 +48,6 @@ import {
   TYPE,
   validateURI,
 } from './utils';
-import { connect } from 'react-redux';
-
-interface DispatchProps {
-  setPlaybackState: () => void;
-}
 
 class SpotifyWebPlayer extends React.PureComponent<Props, State> {
   private isActive = false;
@@ -488,11 +483,17 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
             previous_tracks,
           },
           shuffle,
+          repeat_mode,
         } = state;
 
-        dispatch(setPlaybackState(state));
-
-        console.log(shuffle);
+        this.props.setPlaybackStateCallback({ playback: {
+            paused: paused,
+            position: position,
+            repeatMode: repeat_mode,
+            shuffle: shuffle,
+            currentTrackId: id,
+          }
+        })
 
 
         const isPlaying = !paused;
@@ -975,4 +976,4 @@ export { STATUS, TYPE };
 
 export * from './types';
 
-export default connect()(SpotifyWebPlayer);
+export default SpotifyWebPlayer;

@@ -11,12 +11,11 @@ export const playbackSlice = createSlice({
     },
     reducers: {
         setPlaybackState: (state, action) => {
-            console.log(action.payload)
-            state.paused = action.payload.paused;
-            state.position = action.payload.position;
-            state.repeatMode = action.payload.repeatMode;
-            state.shuffle = action.payload.shuffle;
-            state.currentTrackId = action.payload.currentTrackId;
+            state.paused = action.payload.playback.paused;
+            state.position = action.payload.playback.position;
+            state.repeatMode = action.payload.playback.repeatMode;
+            state.shuffle = action.payload.playback.shuffle;
+            state.currentTrackId = action.payload.playback.currentTrackId;
         },
     },
 })

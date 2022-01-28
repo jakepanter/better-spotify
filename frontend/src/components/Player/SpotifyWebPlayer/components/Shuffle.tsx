@@ -4,6 +4,7 @@ import { px, styled } from '../styles';
 import { StyledProps, StylesOptions } from '../types/common';
 import { getAuthHeader } from '../../../../helpers/api-helpers';
 import {API_URL} from "../../../../utils/constants";
+import {useSelector} from "react-redux";
 
 interface Props {
   currentDeviceId?: string;
@@ -14,10 +15,6 @@ interface Props {
   playerPosition: string;
   styles: StylesOptions;
   title: string;
-}
-
-export interface State {
-  isActive: boolean;
 }
 
 const Wrapper = styled('div')(
@@ -64,27 +61,22 @@ const Wrapper = styled('div')(
   'DevicesRSWP',
 );
 
-export default class Shuffle extends React.PureComponent<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      isActive: props.active,
-    };
+interface PlaybackState {
+  playback: {
+    paused: boolean;
+    position: number;
+    repeatMode: number;
+    shuffle: boolean;
+    currentTrackId: string;
   }
+}
 
-  componentDidMount() {
-    const authHeader = getAuthHeader();
-    fetch(`${API_URL}api/spotify/me/player/shuffle?state=${this.state.isActive}`, {
-      headers: {
-        'Authorization': authHeader
-      }
-    });
-  }
+export default function Shuffle (props: Props) {
 
-  private handleClickToggleShuffle = () => {
-    const shuffleState = !this.state.isActive;
-    this.setState(state => ({ isActive: !state.isActive }));
+  const playback = useSelector((state: PlaybackState) => state.playback);
+
+  const handleClickToggleShuffle = () => {
+    const shuffleState = !playback.shuffle;
     const authHeader = getAuthHeader();
     fetch(`${API_URL}api/spotify/me/player/shuffle?state=${shuffleState}`, {
       method: 'PUT',
@@ -94,45 +86,42 @@ export default class Shuffle extends React.PureComponent<Props, State> {
     });
   };
 
-  public render() {
-    const { isActive } = this.state;
-    const {
-      styles: { altColor, bgColor, color },
-      title,
-    } = this.props;
+  const {
+    styles: { altColor, bgColor, color },
+    title,
+  } = props;
 
-    return (
+  return (
       <Wrapper
-        style={{
-          altColor,
-          bgColor,
-          color
-        }}
+          style={{
+            altColor,
+            bgColor,
+            color
+          }}
       >
-          <>
-            {isActive && (
-                <button
-                    aria-label={title}
-                    onClick={this.handleClickToggleShuffle}
-                    title={title}
-                    type="button"
-                    className={'shuffle-active'}
-                >
-                  <span className={'material-icons'}>shuffle_on</span>
-                </button>
-            )}
-            {!isActive && (
-                <button
-                    aria-label={title}
-                    onClick={this.handleClickToggleShuffle}
-                    title={title}
-                    type="button"
-                >
-                  <span className={'material-icons'}>shuffle</span>
-                </button>
-            )}
-          </>
+        <>
+          {playback.shuffle && (
+              <button
+                  aria-label={title}
+                  onClick={handleClickToggleShuffle}
+                  title={title}
+                  type="button"
+                  className={'shuffle-active'}
+              >
+                <span className={'material-icons'}>shuffle_on</span>
+              </button>
+          )}
+          {!playback.shuffle && (
+              <button
+                  aria-label={title}
+                  onClick={handleClickToggleShuffle}
+                  title={title}
+                  type="button"
+              >
+                <span className={'material-icons'}>shuffle</span>
+              </button>
+          )}
+        </>
       </Wrapper>
-    );
-  }
+  );
 }
