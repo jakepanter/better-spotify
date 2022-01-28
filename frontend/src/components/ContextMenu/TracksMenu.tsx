@@ -19,13 +19,13 @@ type Props = {
   anchorPoint: { x: number; y: number };
 };
 
-const authHeader = getAuthHeader();
-const fetcher = (url: any) =>
-  fetch(url, {
-    headers: { Authorization: authHeader },
-  }).then((r) => r.json());
-
 function TracksMenu(props: Props) {
+  const authHeader = getAuthHeader();
+  const fetcher = (url: any) =>
+    fetch(url, {
+      headers: { Authorization: authHeader },
+    }).then((r) => r.json());
+
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
 
   const trackId = props.data.map((track) => track.split("-")[0].split(":")[2])[0];

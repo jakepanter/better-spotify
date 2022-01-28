@@ -23,6 +23,10 @@ import ShowPage from "./pages/ShowPage/ShowPage";
 import EpisodePage from "./pages/EpisodePage/EpisodePage";
 import AuthorizePage from "./components/AuthorizePage/AuthorizePage";
 import AppContext, { ContextMenu } from "./AppContext";
+import { NotificationsDisplay } from "./components/NotificationService/NotificationsService";
+import ArtistPage from "./pages/ArtistPage/ArtistPage";
+import DiscographyPage from "./pages/DiscographyPage/DiscographyPage";
+import ArtistAlbums from "./components/ArtistAlbum/ArtistAlbum";
 import { useSelector, useDispatch } from 'react-redux';
 import { getAuthentication, refreshAuthentication } from './utils/authenticationSlice';
 
@@ -126,6 +130,15 @@ function App() {
               <Route exact path="/">
                 <Dashboard editable={editable} />
               </Route>
+              <Route path="/artist/:id/discography">
+                <DiscographyPage />
+              </Route>
+              <Route path="/artist/:id/albums/:type">
+                <ArtistAlbums />
+              </Route>
+              <Route path="/artist/:id">
+                <ArtistPage />
+              </Route>
               <Route path="/playlists">
                 <Playlists />
               </Route>
@@ -179,6 +192,7 @@ function App() {
             </Switch>
             <Player token={authentication.accessToken} key={String(lightmode)} lightTheme={lightmode} />
           </div>
+          <NotificationsDisplay/>
         </div>
       </Router>
     </AppContext.Provider>
