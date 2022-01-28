@@ -5,7 +5,7 @@ import Searchbar from "../Searchbar/Searchbar";
 import 'rc-slider/assets/index.css';
 import Volume from "./Volume";
 import {API_URL} from "../../utils/constants";
-import { getAuthHeader } from '../../helpers/api-helpers';
+import {getAuthHeader} from '../../helpers/api-helpers';
 
 function authorize() {
     fetch(`${API_URL}api/spotify/get-auth-url`)
@@ -18,12 +18,18 @@ function authorize() {
 
 interface IProps {
     onChangeEditable: () => void,
-    editable: boolean
+    editable: boolean,
+    onChangeLightmode: () => void,
+    lightTheme: boolean
 }
 
 const Topbar = (props: IProps) => {
     const toggleEditable = () => {
         props.onChangeEditable();
+    }
+
+    const toggleLightmode = () => {
+        props.onChangeLightmode();
     }
 
     const [image, setImage] = useState<string>('');
@@ -54,14 +60,26 @@ const Topbar = (props: IProps) => {
             </div>
             <div className={'top-bar-item volume'}>
                 <Volume/>
+                <div className={"lightModeToggle"}>
+                    <span className={'material-icons light'}>light_mode</span>
+                    <div className={"switch"}>
+                        <label className={"switchLabel"}>
+                            <input type="checkbox" onChange={toggleLightmode}/>
+                            <span className={"slider round"}/>
+                        </label>
+                    </div>
+                    <span className={'material-icons dark'}>nightlight_round</span>
+                </div>
             </div>
             <div className={'top-bar-item settings'}>
-                <button className={'settings-button customize-button'} onClick={toggleEditable} title={"Customize start page"}>
+                <button className={'settings-button customize-button'} onClick={toggleEditable}
+                        title={"Customize start page"}>
                     <span className={'material-icons'}>{props.editable ? "close" : "edit"}</span>
                 </button>
                 <button className={'settings-button'} onClick={authorize} title={"Log out"}>
                     <span className={'material-icons'}>login</span>
                 </button>
+
                 {image != ''
                     ? <button className={'settings-button profile-image'} title={"Profile"}>
                         <img src={image} alt={'profile'}/>

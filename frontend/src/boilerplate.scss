@@ -36,8 +36,21 @@ $color-waring-darkest: #D83010;
 $color-positive-dark: #35DF91;
 $color-positive-darker: #1EB972;
 $color-positive-darkest: #188D58;
-
 $checkbox-icon: $color-primary;
+
+// light mode colors:
+// project base colors
+$color-background-light: #F2F2F2;
+$color-default-light: #1F1F1F;
+$color-accent-light: #CDCECD;
+
+// Buttons
+$button-background-light: $color-accent-light;
+$button-background-active-light: $color-accent-light;
+$button-color-light: $color-default-light;
+$button-color-active-light: $color-primary;
+$button-border-color-light: $color-primary;
+$button-border-color-active-light: $color-primary;
 
 // Tags
 $color-tag-0: $color-primary;

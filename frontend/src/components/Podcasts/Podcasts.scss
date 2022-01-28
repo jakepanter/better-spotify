@@ -80,3 +80,22 @@
     }
   }
 }
+.light_mode {
+  .Shows {
+    .Card {
+      background-color: lighten($color-accent-light, 5%);
+      box-shadow: 0 0 ($spacer/2) rgba($gray-dark, .3);
+      &:hover {
+        background-color: $color-accent-light;
+      }
+
+      &Title {
+        color: $color-default-light;
+      }
+
+      &Artist {
+        color: $color-secondary;
+      }
+    }
+  }
+}
