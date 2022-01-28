@@ -11,7 +11,6 @@ import {formatTimeDiff} from "../../utils/functions";
 import { getAuthHeader } from '../../helpers/api-helpers';
 
 const limit = 24;
-let country: string;
 
 export default function Releases() {
     // The list of releases (albums)
@@ -26,17 +25,9 @@ export default function Releases() {
     }, [offset]);
 
     async function fetchTrackData(offset: number) {
-        //get users country
         const authHeader = getAuthHeader();
-        const me = await fetch(
-            `${API_URL}api/spotify/me`, {
-                headers: {
-                    'Authorization': authHeader
-                }
-            }
-        ).then((res) => res.json());
-        country = me.country;
-
+        //get users country
+        const country = localStorage.getItem("country");
         const data: ListOfNewReleasesResponse = await fetch(`${API_URL}api/spotify/browse/new-releases?limit=${limit}&country=${country}&offset=${offset}`, {
             headers: {
                 'Authorization': authHeader
