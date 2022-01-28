@@ -20,6 +20,16 @@ export const playbackSlice = createSlice({
     },
 })
 
+export interface PlaybackState {
+    playback: {
+        paused: boolean;
+        position: number;
+        repeatMode: number;
+        shuffle: boolean;
+        currentTrackId: string;
+    }
+}
+
 // Action creators are generated for each case reducer function
 export const { setPlaybackState } = playbackSlice.actions
 

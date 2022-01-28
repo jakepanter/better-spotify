@@ -2,21 +2,12 @@
 import * as React from 'react';
 
 import { SpotifyDevice, SpotifyPlayerTrack, WebPlaybackTrack } from './spotify';
+import {PlaybackState} from "../../../../utils/playbackSlice";
 
 export type PlainObject<T = any> = Record<string, T>;
 
 export interface CallbackState extends State {
   type: string;
-}
-
-interface PlaybackState {
-  playback: {
-    paused: boolean;
-    position: number;
-    repeatMode: number;
-    shuffle: boolean;
-    currentTrackId: string;
-  }
 }
 
 export interface Props {

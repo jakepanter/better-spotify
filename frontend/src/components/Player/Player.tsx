@@ -3,19 +3,10 @@ import SpotifyWebPlayer from "./SpotifyWebPlayer";
 import "./Player.scss";
 import { useDispatch } from 'react-redux';
 import { setPlaybackState } from '../../utils/playbackSlice';
+import {PlaybackState} from "../../utils/playbackSlice";
 
 interface IProps {
     token: string;
-}
-
-interface PlaybackState {
-    playback: {
-        paused: boolean;
-        position: number;
-        repeatMode: number;
-        shuffle: boolean;
-        currentTrackId: string;
-    }
 }
 
 export default function Player(props: IProps) {

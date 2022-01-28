@@ -22,6 +22,7 @@ import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import AppContext from "../../AppContext";
 import { getAuthHeader } from '../../helpers/api-helpers';
 import {useSelector} from "react-redux";
+import {PlaybackState} from "../../utils/playbackSlice";
 
 type Body = {
   context_uri: string | undefined;
@@ -53,16 +54,6 @@ type Props = {
   id_tracklist: string;
   type: string;
 };
-
-interface PlaybackState {
-  playback: {
-    paused: boolean;
-    position: number;
-    repeatMode: number;
-    shuffle: boolean;
-    currentTrackId: string;
-  }
-}
 
 function TrackListItem(props: Props) {
   const track = props;

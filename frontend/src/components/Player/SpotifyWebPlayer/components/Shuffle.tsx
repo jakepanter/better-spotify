@@ -5,6 +5,7 @@ import { StyledProps, StylesOptions } from '../types/common';
 import { getAuthHeader } from '../../../../helpers/api-helpers';
 import {API_URL} from "../../../../utils/constants";
 import {useSelector} from "react-redux";
+import {PlaybackState} from "../../../../utils/playbackSlice";
 
 interface Props {
   currentDeviceId?: string;
@@ -60,16 +61,6 @@ const Wrapper = styled('div')(
   }),
   'DevicesRSWP',
 );
-
-interface PlaybackState {
-  playback: {
-    paused: boolean;
-    position: number;
-    repeatMode: number;
-    shuffle: boolean;
-    currentTrackId: string;
-  }
-}
 
 export default function Shuffle (props: Props) {
 
