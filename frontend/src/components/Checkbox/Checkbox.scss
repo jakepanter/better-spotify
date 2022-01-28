@@ -21,3 +21,18 @@
     margin-left: 4px;
   }
 }
+.light_mode {
+  .Checkbox {
+    .CheckboxIcon {
+      color: $color-default-light;
+    }
+
+    &.checked .CheckboxIcon {
+      color: $color-default-light;
+    }
+
+    .CheckboxLabel {
+      color: $color-default-light;;
+    }
+  }
+}

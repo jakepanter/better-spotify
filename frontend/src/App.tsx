@@ -36,7 +36,7 @@ type AuthState = {
 
 function App() {
   const [editable, setEditable] = useState(false);
-  const [miniMenu, setMiniMenu] = useState(false);
+  const [miniMenu, setMiniMenu] = useState(localStorage.getItem('miniMenu') === 'true' ? true : false);
   const [contextMenu, setContextMenu] = useState<ContextMenu>({
     isOpen: false,
     type: "",
@@ -44,6 +44,17 @@ function App() {
     y: null,
     data: null,
   });
+  const [lightmode, setLightmode] = useState(localStorage.getItem('lightmode') === 'true' ? true : false);
+
+  const toggleLightmode = () => setLightmode(!lightmode);
+
+  useEffect(() => {
+    localStorage.setItem('miniMenu', String(miniMenu));
+  }, [miniMenu]);
+
+  useEffect(() => {
+    localStorage.setItem('lightmode', String(lightmode));
+  }, [lightmode]);
 
   const authentication = useSelector((state: AuthState) => state.authentication)
   const dispatch = useDispatch()
@@ -82,7 +93,7 @@ function App() {
   return (
     <AppContext.Provider value={state}>
       <Router>
-        <div className="structure">
+        <div className={`structure ${lightmode ? " light_mode" : ""} `}>
           {contextMenu.isOpen && contextMenu.x && contextMenu.y && (
             <ContextMenuWrapper
               type={contextMenu.type}
@@ -110,7 +121,7 @@ function App() {
             <Sidebar />
           </div>
           <div className="structure--main">
-            <Topbar editable={editable} onChangeEditable={toggleEditable} />
+            <Topbar editable={editable} onChangeEditable={toggleEditable} lightTheme={lightmode} onChangeLightmode={toggleLightmode}/>
             <Switch>
               <Route exact path="/">
                 <Dashboard editable={editable} />
@@ -166,7 +177,7 @@ function App() {
                 <RelatedArtistsPage />
               </Route>
             </Switch>
-            <Player token={authentication.accessToken} />
+            <Player token={authentication.accessToken} key={String(lightmode)} lightTheme={lightmode} />
           </div>
         </div>
       </Router>

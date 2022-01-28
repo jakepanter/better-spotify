@@ -32,6 +32,7 @@
       display: flex;
       flex-flow: row wrap;
       margin-right: $spacer / 4;
+
       .input-select {
         height: 100%;
       }
@@ -49,6 +50,7 @@
       display: flex;
       flex-flow: row wrap;
       margin-right: $spacer / 4;
+
       .input-select {
         height: 100%;
       }
@@ -79,7 +81,7 @@
     padding: 1.5rem;
     overflow: hidden;
     position: relative;
-    box-shadow: 0px 0px 10px 0px rgba($color-secondary,0.1);
+    box-shadow: 0px 0px 10px 0px rgba($color-secondary, 0.1);
 
     //doesnt work with the context menu, please remove or specify elements
     // &>* {
@@ -108,7 +110,8 @@
   &.editable {
     .DashboardItem {
       cursor: move;
-      &>*:not(.react-resizable-handle):not(.RemoveButton) {
+
+      & > *:not(.react-resizable-handle):not(.RemoveButton) {
         pointer-events: none;
       }
     }
@@ -139,6 +142,32 @@
 
     &:hover > .react-resizable-handle {
       background-color: $color-primary;
+    }
+  }
+}
+
+.light_mode {
+
+  .DashboardConfigurator {
+    background-color: $color-background-light;
+    border-bottom: $border-width $border-style $button-border-color-light;
+  }
+
+  .Dashboard {
+    .DashboardItem {
+      background-color: $white;
+      box-shadow: 0px 0px 10px 0px rgba($color-secondary, 0.1);
+    }
+
+    .RemoveButton {
+      background-color: lighten($color-accent-light, 0.5);
+      color: $color-default-light;
+    }
+
+    .react-grid-item {
+      &.react-grid-placeholder {
+        background-color: transparentize($color-accent-light, 0.5);
+      }
     }
   }
 }
