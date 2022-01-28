@@ -331,11 +331,6 @@ export default class SpotifyService {
     return true;
   }
 
-  /*getArtist= async (artistId: string) => {
-    const artist = await this.spotifyApi.getArtist(artistId);
-    return artist.body;
-  }*/
-
   getArtistAlbums = async (accessToken: string, artistId: string, limit: number, market: string, offset: number, include_groups?: string) => {
     const options: any = { limit, market, offset , include_groups};
     this.spotifyApi.setAccessToken(accessToken);

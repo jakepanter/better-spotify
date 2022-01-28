@@ -4,8 +4,7 @@ import {
 } from "spotify-types";
 import {API_URL} from '../../utils/constants';
 import {Link} from "react-router-dom";
-//import "../../cards.scss";
-import "./RelatedArtists.scss";
+import "../../cards.scss";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import { getAuthHeader } from '../../helpers/api-helpers';
 
@@ -57,26 +56,27 @@ class RelatedArtists extends Component<IProps, IState> {
         if (this.state.relatedArtistsList.length === 0) return <p>loading...</p>;
         const relatedArtists = this.state.relatedArtistsList.map((artist) => {
             return (
-
-                    <Link to={`/artist/${artist.id}`}  className={"Card"} key={artist.id}>
-                        {artist.images.length !== 0 ? (
-                            <div className={"CardCover"} style={{
+                <li className="column" key={artist.id}>
+                    <Link to={`/artist/${artist.id}`}>
+                        {artist.images !==undefined ? (
+                            <div className={"cover"} style={{
                                 backgroundImage: `url(${artist.images[0].url})`
                             }}>
                             </div>
                         ) :(
                             <CoverPlaceholder/>
                         )}
-                        <span className="CardTitle">{artist.name}</span>
+                        <span className="title">{artist.name}</span>
                     </Link>
+                </li>
             );
         });
 
         return (
-            <div className={"RelatedArtists"} style={{overflow: 'hidden auto'}}>
-                <h2 className={"Header"}>More Like &quot;{this.state.artistName}&quot;</h2>
-                <div className={"Content"}>
-                    <ul className={"CoverList"}>{relatedArtists}</ul>
+            <div style={{overflow: 'hidden auto'}}>
+                <h2>More Like &quot;{this.state.artistName}&quot;</h2>
+                <div className={"overview"}>
+                    <ul className={"overview-items"}>{relatedArtists}</ul>
                 </div>
             </div>
         );
