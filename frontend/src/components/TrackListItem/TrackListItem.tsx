@@ -78,7 +78,7 @@ function TrackListItem(props: Props) {
     } else if (type === 'show') {
       context_uri = "spotify:show:" + id_tracklist;
       track_uri = "spotify:episode:" + props.track.id;
-    } else if (type === "search") {
+    } else if (type === "search" || type === "topTracks") {
       context_uri = "spotify:album:" + track.album?.id;
     }
     const body: Body = {
@@ -237,8 +237,7 @@ function TrackListItem(props: Props) {
       onClick={(e) => handleClick(e)}
       onContextMenu={(e) => handleRightClick(e)}
     >
-      {track.album !== undefined &&
-      track.album.available_markets !== undefined ? (
+      {track.album !== undefined &&  track.album.available_markets !== undefined || track.album !== undefined && type === "topTracks" ? (
         <div className={"TableCell TableCellArtwork"} onClick={(e) => handlePlayButton(e)}>
           <img
             src={track.album.images[2].url}
@@ -263,16 +262,13 @@ function TrackListItem(props: Props) {
         )}
       </div>
       {track.album !== undefined ? (
-        <div className={"TableCell TableCellAlbum"}>{track.album.name}</div>
+          <div className={"TableCell TableCellAlbum"}>
+            <Link to={`/album/${track.album.id}`} className={"albumLink"} key={trackUniqueId}>
+              {track.album.name}
+            </Link>
+          </div>
       ) : (
-        <></>
-      )}
-      {track.added_at !== undefined ? (
-        <div className={"TableCell TableCellAddedAt"}>
-          {formatTimeDiff(new Date(track.added_at).getTime(), Date.now())}
-        </div>
-      ) : (
-        <></>
+          <></>
       )}
       <div className={"TableCell TableCellDuration"}>
         {formatTimestamp(track.duration_ms)}

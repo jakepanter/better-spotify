@@ -18,12 +18,10 @@
 .discover-font-adjustment h3 {
   font-size: 20px;
 }
+.discover {
 
-.overview {
   .overview-items {
-    @media screen and(min-width: $breakpoint-sm) and(max-width: $breakpoint-md) {
-      height: 25vh !important;
-    }
+    height: auto !important;
 
     .column {
       //3 columns when tablet
