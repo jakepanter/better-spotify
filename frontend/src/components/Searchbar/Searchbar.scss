@@ -27,18 +27,45 @@
     padding: 10px 20px;
     list-style-type: none;
     background: $color-accent-dark;
+    border-radius: $border-radius;
+    margin-top: 5px;
   }
 
   .SearchbarResultItem {
     padding: 5px;
     cursor: pointer;
-
+    transition: $transition-base;
+    border-radius: $border-radius;
     &:hover {
       background: $color-secondary;
     }
 
     img {
       margin-right: 10px;
+    }
+  }
+}
+.light_mode{
+  .Searchbar {
+    color: $color-default-light;
+    .SearchbarInput {
+      background: $white;
+    }
+
+    .SearchbarInput::placeholder {
+      color: $color-default-light;
+    }
+
+    .search-icon {
+      color: $color-default-light;
+    }
+
+    .SearchbarResults {
+      background: $white;
+    }
+
+    .SearchbarResultItem:hover {
+        background: rgba($color-background-light, .9);
     }
   }
 }

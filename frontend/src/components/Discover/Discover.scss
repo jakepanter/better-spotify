@@ -4,19 +4,21 @@
   margin-bottom: 2rem;
 }
 
-.header{
+.header {
   display: block !important;
 
-  a{
+  a {
     margin-right: 2rem;
     float: right;
     color: $gray-dark;
     text-decoration: none;
   }
 }
-.discover-font-adjustment h3{
+
+.discover-font-adjustment h3 {
   font-size: 20px;
 }
+
 .overview {
   .overview-items {
     @media screen and(min-width: $breakpoint-sm) and(max-width: $breakpoint-md) {
@@ -33,7 +35,7 @@
       }
 
       //4 columns when bigger than tablet
-      @media screen and(min-width: $breakpoint-md) and (max-width: $breakpoint-xl){
+      @media screen and(min-width: $breakpoint-md) and (max-width: $breakpoint-xl) {
 
         width: calc(100% / 4 - 2rem);
 
@@ -48,4 +50,8 @@
       }
     }
   }
+}
+
+.light_mode .header a {
+  color: $color-default-light;
 }

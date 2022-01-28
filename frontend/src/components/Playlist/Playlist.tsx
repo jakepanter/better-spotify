@@ -12,6 +12,7 @@ import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import AppContext from "../../AppContext";
 import { useLocation } from "react-router-dom";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 // The fetching limit, can be adjusted by changing this value
 const limit = 50;
@@ -39,10 +40,15 @@ export default function Playlist(props: IProps) {
   const location = useLocation<any>();
 
   async function fetchPlaylistData() {
+    //this only fetches the total number of tracks, cover image and owner of the playlist, not the actual tracks
+    const authHeader = getAuthHeader();
     //this only fetches metadata of the playlist not the actual tracks
     const data: SinglePlaylistResponse = await fetch(
-      `${API_URL}api/spotify/playlist/${id}?fields=tracks(total)&fields=images&fields=owner&fields=name&fields=id`
-    ).then((res) => res.json());
+      `${API_URL}api/spotify/playlist/${id}?fields=tracks(total)&fields=images&fields=owner&fields=name&fields=id`, {
+          headers: {
+            'Authorization': authHeader
+          }
+        }).then((res) => res.json());
 
     // Save album data
     setPlaylist(data);
@@ -55,9 +61,13 @@ export default function Playlist(props: IProps) {
     if (playlist && playlist.tracks && playlist.tracks.total && playlist.tracks.total <= newOffset)
       return;
 
+    const authHeader = getAuthHeader();
     const data: PlaylistTrackResponse = await fetch(
-      `${API_URL}api/spotify/playlist/${id}/tracks?offset=${newOffset}&limit=${limit}`
-    ).then((res) => res.json());
+      `${API_URL}api/spotify/playlist/${id}/tracks?offset=${newOffset}&limit=${limit}`, {
+          headers: {
+            'Authorization': authHeader
+          }
+        }).then((res) => res.json());
 
     // Save new tracks
     // Save if tracks are saved
@@ -75,8 +85,13 @@ export default function Playlist(props: IProps) {
   }
 
   async function fetchIsSavedData(trackIds: string[]) {
+    const authHeader = getAuthHeader();
     const data: CheckUsersSavedTracksResponse = await fetch(
-      `${API_URL}api/spotify/me/tracks/contains?trackIds=${trackIds}`
+      `${API_URL}api/spotify/me/tracks/contains?trackIds=${trackIds}`, {
+          headers: {
+            'Authorization': authHeader
+          }
+        }
     ).then((res) => res.json());
 
     return data;
@@ -126,9 +141,13 @@ export default function Playlist(props: IProps) {
       setTitle(playlist.name);
     } else {
       if (title !== playlist?.name) {
+        const authHeader = getAuthHeader();
         fetch(`${API_URL}api/spotify/playlist/${playlist?.id}/edit`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': authHeader
+          },
           body: JSON.stringify({ name: title }),
         });
       }

@@ -19,3 +19,18 @@
     }
   }
 }
+.light_mode {
+  .szh-menu {
+    background-color: $color-background-light;
+
+    &__item {
+      color: $color-default-light;
+      &--hover {
+        background-color:$gray-dark;
+      }
+      &--disabled {
+        color: darkgrey;
+      }
+    }
+  }
+}

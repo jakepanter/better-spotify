@@ -134,3 +134,19 @@
 
   }
 }
+.light_mode {
+  .Player {
+    background: $color-background-light;
+
+    // Volume bar background
+    .rrs__track {
+       background-color: rgba($color-default-light, .5) !important;
+    }
+
+
+    // Choose device section
+    .__vr0lc5 > div button {
+      color: $color-default-light;
+    }
+  }
+}

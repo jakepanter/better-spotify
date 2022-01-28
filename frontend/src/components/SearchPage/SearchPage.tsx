@@ -7,6 +7,7 @@ import { SearchResponse } from "spotify-types";
 import { useParams } from "react-router-dom";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import TrackList from "../TrackList/TrackList";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 export default function SearchPage() {
     let params = useParams() as { search: string };
@@ -15,8 +16,13 @@ export default function SearchPage() {
     const [result, setSearchResult] = useState<SearchResponse>()
 
     async function fetchSearchResult() {
+        const authHeader = getAuthHeader();
         const data: SearchResponse = await fetch(
-            `${API_URL}api/spotify/search?query=${search}`
+            `${API_URL}api/spotify/search?query=${search}`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         ).then((res) => res.json());
         
         setSearchResult(data);
