@@ -28,7 +28,7 @@ export interface Props {
   // eslint-disable-next-line no-unused-vars
   updateSavedStatus?: (fn: (status: boolean) => any) => any;
   uris?: string | string[];
-  handlePlayingTrack: Function
+  handlePlayingTrack: Function;
 }
 
 export interface State {

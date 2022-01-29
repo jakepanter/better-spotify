@@ -463,7 +463,8 @@ export default class App {
 
     // get current song
     this.server.get('/api/spotify/player/currently-playing', async (req: Request, res: Response) => {
-      const currentlyPlaying = await this.spotifyService.getPlaybackState();
+      const accessToken = getToken(req);
+      const currentlyPlaying = await this.spotifyService.getPlaybackState(accessToken);
       return res.json(currentlyPlaying);
     });
 

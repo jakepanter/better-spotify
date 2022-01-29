@@ -225,15 +225,11 @@ export default class Info extends React.PureComponent<Props, State> {
       classes.push('rswp__active');
     }
 
-    //TODO modified anchor
     return (
       <Wrapper className={classes.join(' ')} style={{ h: height }}>
         {image && (
           <a
             aria-label={title}
-            //href={getSpotifyLink(uri)}
-            //rel="noreferrer"
-            //target="_blank"
             title={title}
           >
             <img alt={name} src={image} />

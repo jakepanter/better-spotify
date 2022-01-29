@@ -4,6 +4,7 @@ import SpotifyWebPlayer from "./SpotifyWebPlayer";
 import "./Player.scss";
 import {TrackObjectFull, EpisodeObject} from "spotify-types";
 import {Link} from "react-router-dom";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 interface IProps {
     token: string;
@@ -35,14 +36,19 @@ class Player extends Component<IProps, IState> {
             loaderColor: '',
             sliderTrackColor: '',
             trackArtistColor: '',
-            trackNameColor: ''
+            trackNameColor: '',
             track: {} as TrackObjectFull
         };
     }
 
     // fetch the track and use for displaying information about the currently playing track
     async getPlayingTrackData(trackId: string) {
-        const track = await fetch(`/api/spotify/track/${trackId}`).then((res) => res.json());
+        const authHeader = getAuthHeader();
+        const track = await fetch(`${API_URL}api/spotify/track/${trackId}`,{
+            headers: {
+                'Authorization': authHeader
+            }
+        }).then((res) => res.json());
         this.setState({track: track});
     }
 

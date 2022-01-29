@@ -234,7 +234,7 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
                 this.updateState({isSaved: false});
             }
 
-            //TODO newly added
+            //NOTE: newly added to pass currently playing track's id to Player component
             this.props.handlePlayingTrack(track.id)
         }
 
