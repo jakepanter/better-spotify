@@ -23,6 +23,7 @@ import ShowPage from "./pages/ShowPage/ShowPage";
 import EpisodePage from "./pages/EpisodePage/EpisodePage";
 import AuthorizePage from "./components/AuthorizePage/AuthorizePage";
 import AppContext, { ContextMenu } from "./AppContext";
+import { NotificationsDisplay } from "./components/NotificationService/NotificationsService";
 import ArtistPage from "./pages/ArtistPage/ArtistPage";
 import DiscographyPage from "./pages/DiscographyPage/DiscographyPage";
 import ArtistAlbums from "./components/ArtistAlbum/ArtistAlbum";
@@ -191,6 +192,7 @@ function App() {
             </Switch>
             <Player token={authentication.accessToken} key={String(lightmode)} lightTheme={lightmode} />
           </div>
+          <NotificationsDisplay/>
         </div>
       </Router>
     </AppContext.Provider>
