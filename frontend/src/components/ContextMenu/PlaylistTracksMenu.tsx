@@ -163,7 +163,7 @@ function PlaylistTracksMenu(props: Props) {
                 </MenuItem>
               ))
           ) : (
-            <MenuItem>Fetching Playlists...</MenuItem>
+            <MenuItem disabled>Fetching Playlists...</MenuItem>
           )}
         </SubMenu>
         {props.data.playlist.owner.id === me?.id && (

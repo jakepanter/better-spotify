@@ -6,9 +6,9 @@
   bottom: 0;
   display: flex;
   justify-content: center;
-  left: 190px;
   opacity: 0;
   position: fixed;
+  left: 0;
   right: 0;
   top: 0;
   visibility: hidden;
@@ -77,10 +77,10 @@
     background-color: $white;
     .button {
       color: $color-default-light;
-     }
+    }
 
     &Header {
-      border-bottom: $border-width $border-style rgba($color-default-light, .2);
+      border-bottom: $border-width $border-style rgba($color-default-light, 0.2);
       color: $color-default-light;
 
       &CloseButton {

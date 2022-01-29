@@ -29,6 +29,8 @@ export default function Playlists() {
     if (location.state && location.state.unfollowed) {
       const unfollowedPlaylistId = location.state.unfollowed;
       setItems(items.filter((list) => list.id !== unfollowedPlaylistId));
+    } else if (location.state && location.state.edited) {
+      //update single playlist???
     }
   }, [location]);
 

@@ -26,11 +26,16 @@
     &__item {
       color: $color-default-light;
       &--hover {
-        background-color:$gray-dark;
+        background-color: $gray-dark;
       }
       &--disabled {
         color: darkgrey;
       }
     }
   }
+}
+textarea {
+  width: 100%;
+  resize: vertical;
+  max-height: 100px;
 }
