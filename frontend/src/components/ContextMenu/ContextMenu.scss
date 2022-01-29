@@ -39,3 +39,19 @@ textarea {
   resize: vertical;
   max-height: 100px;
 }
+
+.cover-wrapper {
+  width: 200px;
+  height: 200px;
+}
+
+.dropzone {
+  display: inline-block;
+  object-fit: cover;
+  height: 100%;
+  cursor: alias;
+  img {
+    height: 100%;
+    object-fit: cover;
+  }
+}
