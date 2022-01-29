@@ -1,7 +1,7 @@
 @import "./src/boilerplate.scss";
 
 .albumLink {
-  text-decoration: none!important;
+  text-decoration: none !important;
   color: $color-default;
 
   &:hover {
@@ -16,6 +16,7 @@
 
 .TableRow {
   user-select: none;
+
   &:hover:not(.Selected):not(.TableHeader) {
     background-color: $color-secondary;
   }
@@ -91,6 +92,7 @@
         &:hover::before {
           color: rgba($white, 1.0);
         }
+
         &:before {
           content: "\e038";
           font-family: "Material Icons";
@@ -98,7 +100,7 @@
           display: inline-block;
           font-size: 50px;
           text-align: center;
-          color: rgba($white, 0.45);     
+          color: rgba($white, 0.45);
         }
       }
     }
@@ -130,7 +132,7 @@
     background-color: $color-secondary;
   }
   50% {
-    background-color: rgba(24,40,58,0.2);
+    background-color: rgba(24, 40, 58, 0.2);
   }
   100% {
     background-color: $color-secondary;
@@ -164,18 +166,23 @@
   &Color0 {
     color: $color-tag-0;
   }
+
   &Color1 {
     color: $color-tag-1;
   }
+
   &Color2 {
     color: $color-tag-2;
   }
+
   &Color3 {
     color: $color-tag-3;
   }
+
   &Color4 {
     color: $color-tag-4;
   }
+
   &Color5 {
     color: $color-tag-5;
   }
@@ -184,11 +191,25 @@
 .row {
   min-height: 500px;
 }
+
 .col {
   min-height: 100px;
 }
 
+
 .light_mode {
+  @keyframes playingColor_light {
+    0% {
+      background-color: $color-background-light;
+    }
+    50% {
+      background-color: rgba($color-background-light, 0.2);
+    }
+    100% {
+      background-color: $color-background-light;
+    }
+  }
+
   .albumLink {
     color: $color-default-light;
 
@@ -203,6 +224,20 @@
     .checkbox.checked {
       color: $color-default-light;
     }
+
+    .Tag {
+      color: $color-default-light !important;
+    }
+  }
+
+  .Playing {
+    background-color: $color-background-light;
+    animation-name: playingColor_light;
+
+    .checkbox.checked {
+      color: $color-default-light;
+    }
+
     .Tag {
       color: $color-default-light !important;
     }
