@@ -19,6 +19,8 @@ interface TransferPlaybackOptions {
   play?: boolean | undefined;
 }
 
+type RepeatState = 'track' | 'context' | 'off';
+
 export default class SpotifyService {
   private static readonly scopes: string[] = [
     'ugc-image-upload',
@@ -332,7 +334,9 @@ export default class SpotifyService {
   }
 
   getArtistAlbums = async (accessToken: string, artistId: string, limit: number, market: string, offset: number, include_groups?: string) => {
-    const options: any = { limit, market, offset , include_groups};
+    const options: any = {
+      limit, market, offset, include_groups,
+    };
     this.spotifyApi.setAccessToken(accessToken);
     const albums = await this.spotifyApi.getArtistAlbums(artistId, options);
     this.spotifyApi.resetAccessToken();
@@ -452,6 +456,12 @@ export default class SpotifyService {
   setShuffle = async (accessToken: string, state: boolean) => {
     this.spotifyApi.setAccessToken(accessToken);
     this.spotifyApi.setShuffle(state);
+    this.spotifyApi.resetAccessToken();
+  }
+
+  setRepeat = async (accessToken: string, state: RepeatState) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    this.spotifyApi.setRepeat(state);
     this.spotifyApi.resetAccessToken();
   }
 }

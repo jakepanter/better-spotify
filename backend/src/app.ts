@@ -5,6 +5,8 @@ import path from 'path';
 import SpotifyService from './connectors/spotifyService';
 import Config from './config/variables';
 
+type RepeatState = 'track' | 'context' | 'off';
+
 export default class App {
   private spotifyService: SpotifyService;
 
@@ -223,7 +225,6 @@ export default class App {
       return res.json(response);
     });
 
-
     // fetch artist
     this.server.get('/api/spotify/artist/:artistId', async (req: Request, res: Response) => {
       const accessToken = getToken(req);
@@ -237,7 +238,7 @@ export default class App {
       const artistId = req.params.artistId as string;
       const include_groups = req.query?.include_groups as string ?? undefined;
       const limit = Number(req.query?.limit ?? 20);
-      const market = req.query?.market as string ?? "DE";
+      const market = req.query?.market as string ?? 'DE';
       const offset = Number(req.query?.offset ?? 0);
       const albums = await this.spotifyService.getArtistAlbums(accessToken, artistId, limit, market, offset, include_groups);
       return res.json(albums);
@@ -246,7 +247,7 @@ export default class App {
     this.server.get('/api/spotify/artist/:artistId/top-tracks', async (req: Request, res: Response) => {
       const accessToken = getToken(req);
       const artistId = req.params.artistId as string;
-      const country = req.query?.country as string ?? "DE";
+      const country = req.query?.country as string ?? 'DE';
       const topTracks = await this.spotifyService.getArtistTopTracks(accessToken, artistId, country);
       return res.json(topTracks);
     });
@@ -447,7 +448,6 @@ export default class App {
       return res.json(topArtists);
     });
 
-
     this.server.get('/api/spotify/artists/:artistId/related-artists', async (req: Request, res: Response) => {
       const accessToken = getToken(req);
       const artistId: string = req.params.artistId as string;
@@ -465,6 +465,13 @@ export default class App {
       const accessToken = getToken(req);
       const state: boolean = JSON.parse(req.query?.state as string);
       const result = await this.spotifyService.setShuffle(accessToken, state);
+      return res.json(result);
+    });
+
+    this.server.put('/api/spotify/me/player/repeat', async (req: Request, res: Response) => {
+      const accessToken = getToken(req);
+      const state: RepeatState = req.query?.state as RepeatState;
+      const result = await this.spotifyService.setRepeat(accessToken, state);
       return res.json(result);
     });
 
