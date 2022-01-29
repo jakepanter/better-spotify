@@ -46,7 +46,6 @@ class Discover extends Component<IProps, IState> {
         };
     }
 
-
     async componentDidMount() {
 
         // fetch reently played tracks
@@ -55,19 +54,8 @@ class Discover extends Component<IProps, IState> {
             this.setState((state) => ({...state, recentlyPlayedTracks: recentPlayedTracksData.items}));
         });
 
-        // get users country
-        const authHeader = getAuthHeader();
-        const me = await fetch(
-            `${API_URL}api/spotify/me`, {
-                headers: {
-                    'Authorization': authHeader
-                }
-            }
-        ).then((res) => res.json());
-        const country = me.country;
-
         // fetch new releases
-        this.fetchNewReleases(country).then((newReleasedAlbums) => {
+        this.fetchNewReleases().then((newReleasedAlbums) => {
             this.setState((state) => ({...state, newReleases: newReleasedAlbums.albums.items}));
         });
 
@@ -102,8 +90,9 @@ class Discover extends Component<IProps, IState> {
         return recentPlayedTracksData;
     }
 
-    async fetchNewReleases(country: string) {
+    async fetchNewReleases() {
         const authHeader = getAuthHeader();
+        const country = localStorage.getItem("country");
         const res = await fetch(
             `${API_URL}api/spotify/browse/new-releases?country=${country}&limit=${limit}`, {
                 headers: {
@@ -219,7 +208,7 @@ class Discover extends Component<IProps, IState> {
                             <h3>Recently listened to</h3>
                             <NavLink to={"/song-history"}>View More</NavLink>
                         </div>
-                        <div className={"overview"}>
+                        <div className={"overview discover"}>
                             <ul className={"overview-items"}
                                 style={{height: '40vh', overflow: 'hidden'}}>{recentlyPlayedList}</ul>
                         </div>
@@ -231,7 +220,7 @@ class Discover extends Component<IProps, IState> {
                             <h3>New Releases</h3>
                             <NavLink to={"/new-releases"}>View More</NavLink>
                         </div>
-                        <div className={"overview"}>
+                        <div className={"overview discover"}>
                             <ul className={"overview-items"}
                                 style={{height: '40vh', overflow: 'hidden'}}>{releases}</ul>
                         </div>
@@ -240,7 +229,7 @@ class Discover extends Component<IProps, IState> {
                     {/*More like "artist"*/}
                     {relatedArtists.map((tmp, index) =>
                         <div className={"section"} key={this.state.relatedArtistsList[index].artist.id}>
-                            <div className={"overview"} key={this.state.relatedArtistsList[index].artist.id}>
+                            <div className={"overview discover"} key={this.state.relatedArtistsList[index].artist.id}>
                                 <div className={'header discover-font-adjustment'}>
                                     <h3>More like &quot;{this.state.relatedArtistsList[index].artist.name}&quot;</h3>
                                     <NavLink to={`/related-artists/${this.state.relatedArtistsList[index].artist.id}`}>View

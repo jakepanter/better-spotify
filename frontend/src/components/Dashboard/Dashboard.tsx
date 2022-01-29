@@ -9,6 +9,7 @@ import Albums from "../Albums/Albums";
 import Playlists from "../Playlists/Playlists";
 import TagTracklist from "../TagTracklist/TagTracklist";
 import TagsSystem from "../../utils/tags-system";
+import {NotificationsService} from "../NotificationService/NotificationsService";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -64,6 +65,8 @@ export class DashboardService {
     if (!currentDashboard.albums.some((a) => a.id === id)) {
       currentDashboard.albums.push({id: id});
       DashboardService.saveCurrentDashboardState(currentDashboard);
+
+      NotificationsService.push('success', 'Added album to start page');
     }
   }
 
@@ -71,6 +74,8 @@ export class DashboardService {
     const currentDashboard = DashboardService.getCurrentDashboardState();
     const newAlbums = currentDashboard.albums.filter((a) => a.id !== id);
     DashboardService.saveCurrentDashboardState({...currentDashboard, albums: newAlbums});
+
+    NotificationsService.push('success', 'Removed album from start page');
   }
 
   static containsAlbum(id: string) {
@@ -84,6 +89,8 @@ export class DashboardService {
     if (!currentDashboard.playlists.some((a) => a.id === id)) {
       currentDashboard.playlists.push({id: id});
       DashboardService.saveCurrentDashboardState(currentDashboard);
+
+      NotificationsService.push('success', 'Added playlist to start page');
     }
   }
 
@@ -91,6 +98,8 @@ export class DashboardService {
     const currentDashboard = DashboardService.getCurrentDashboardState();
     const newPlaylists = currentDashboard.playlists.filter((p) => p.id !== id);
     DashboardService.saveCurrentDashboardState({...currentDashboard, playlists: newPlaylists});
+
+    NotificationsService.push('success', 'Removed playlist from start page');
   }
 
   static containsPlaylist(id: string) {
@@ -165,20 +174,14 @@ class Dashboard extends Component<IProps, IState> {
   }
 
   // Albums
-  private addAlbum(id: string) {
-    const {albums} = this.state;
-    if (!albums.some((a) => a.id === id)) {
-      const newAlbums = [...albums, {id: id}]
-      this.updatePlaylists(newAlbums);
-    }
-  }
-
   private removeAlbum(id: string) {
     if (!confirm('Do you want to remove this widget?')) return;
 
     const {albums} = this.state;
     const newAlbums = albums.filter((a) => a.id !== id);
     this.updateAlbums(newAlbums);
+
+    NotificationsService.push('success', 'Removed album from start page');
   }
 
   private updateAlbums(newAlbums: IDashboardAlbum[]) {
@@ -189,20 +192,14 @@ class Dashboard extends Component<IProps, IState> {
   }
 
   // Playlists
-  private addPlaylist(id: string) {
-    const {playlists} = this.state;
-    if (!playlists.some((p) => p.id === id)) {
-      const newPlaylists = [...playlists, {id: id}]
-      this.updatePlaylists(newPlaylists);
-    }
-  }
-
   private removePlaylist(id: string) {
     if (!confirm('Do you want to remove this widget?')) return;
 
     const {playlists} = this.state;
     const newPlaylists = playlists.filter((p) => p.id !== id);
     this.updatePlaylists(newPlaylists);
+
+    NotificationsService.push('success', 'Removed playlist from start page');
   }
 
   private updatePlaylists(newPlaylists: IDashboardPlaylist[]) {
@@ -221,6 +218,8 @@ class Dashboard extends Component<IProps, IState> {
     ) {
       const newCharts = [...charts, {countryCode: countryCode, chartType: type, period}]
       this.updateCharts(newCharts);
+
+      NotificationsService.push('success', 'Added chart to start page');
     }
   }
 
@@ -230,6 +229,8 @@ class Dashboard extends Component<IProps, IState> {
     const {charts} = this.state;
     const newCharts = charts.filter((c) => !(c.countryCode === countryCode && c.chartType === type && c.period === period));
     this.updateCharts(newCharts);
+
+    NotificationsService.push('success', 'Removed chart from start page');
   }
 
   private updateCharts(newCharts: IDashboardChart[]) {
@@ -244,6 +245,8 @@ class Dashboard extends Component<IProps, IState> {
     if (!tagTracklists.some((t) => t.id === id)) {
       const newTagTracklists = [...tagTracklists, { id }];
       this.updateTagTracklist(newTagTracklists);
+
+      NotificationsService.push('success', 'Added tag tracklist to start page');
     }
   }
 
@@ -253,6 +256,8 @@ class Dashboard extends Component<IProps, IState> {
     const { tagTracklists } = this.state;
     const newTagTracklists = tagTracklists.filter((t) => t.id !== id);
     this.updateTagTracklist(newTagTracklists);
+
+    NotificationsService.push('success', 'Removed tag tracklist from start page');
   }
 
   private updateTagTracklist(newTagTracklists: IDashboardTagTracklist[]) {
@@ -308,6 +313,12 @@ class Dashboard extends Component<IProps, IState> {
       (state) => ({...state, showFavorites: value}),
       () => this.saveState(),
     );
+
+    if (value) {
+      NotificationsService.push('success', 'Added favorites to start page');
+    } else {
+      NotificationsService.push('success', 'Removed favorites from start page');
+    }
   }
 
   private showAlbums(value: boolean) {
@@ -315,6 +326,12 @@ class Dashboard extends Component<IProps, IState> {
       (state) => ({...state, showAlbums: value}),
       () => this.saveState(),
     );
+
+    if (value) {
+      NotificationsService.push('success', 'Added albums to start page');
+    } else {
+      NotificationsService.push('success', 'Removed albums from start page');
+    }
   }
 
   private showPlaylists(value: boolean) {
@@ -322,6 +339,12 @@ class Dashboard extends Component<IProps, IState> {
       (state) => ({...state, showPlaylists: value}),
       () => this.saveState(),
     );
+
+    if (value) {
+      NotificationsService.push('success', 'Added playlists to start page');
+    } else {
+      NotificationsService.push('success', 'Removed playlists from start page');
+    }
   }
 
   updateWidth = () => {

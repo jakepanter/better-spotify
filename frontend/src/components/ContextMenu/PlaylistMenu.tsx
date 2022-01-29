@@ -20,17 +20,17 @@ type Props = {
   anchorPoint: { x: number; y: number };
 };
 
-const authHeader = getAuthHeader();
-const fetcher = (url: any) =>
-  fetch(url, {
-    headers: { Authorization: authHeader },
-  }).then((r) => r.json());
-
 //arbitrary number to limit the max tracks loaded initially
 const MAX_TRACKS_LOADED = 250;
 let offset = 0;
 
 function PlaylistMenu(props: Props) {
+  const authHeader = getAuthHeader();
+  const fetcher = (url: any) =>
+    fetch(url, {
+      headers: { Authorization: authHeader },
+    }).then((r) => r.json());
+
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
   const state = useContext(AppContext);
   const history = useHistory();

@@ -223,6 +223,34 @@ export default class App {
       return res.json(response);
     });
 
+
+    // fetch artist
+    this.server.get('/api/spotify/artist/:artistId', async (req: Request, res: Response) => {
+      const accessToken = getToken(req);
+      const artistId: string = req.params.artistId as string;
+      const artists = await this.spotifyService.getArtist(accessToken, artistId);
+      return res.json(artists);
+    });
+
+    this.server.get('/api/spotify/artist/:artistId/albums', async (req: Request, res: Response) => {
+      const accessToken = getToken(req);
+      const artistId = req.params.artistId as string;
+      const include_groups = req.query?.include_groups as string ?? undefined;
+      const limit = Number(req.query?.limit ?? 20);
+      const market = req.query?.market as string ?? "DE";
+      const offset = Number(req.query?.offset ?? 0);
+      const albums = await this.spotifyService.getArtistAlbums(accessToken, artistId, limit, market, offset, include_groups);
+      return res.json(albums);
+    });
+
+    this.server.get('/api/spotify/artist/:artistId/top-tracks', async (req: Request, res: Response) => {
+      const accessToken = getToken(req);
+      const artistId = req.params.artistId as string;
+      const country = req.query?.country as string ?? "DE";
+      const topTracks = await this.spotifyService.getArtistTopTracks(accessToken, artistId, country);
+      return res.json(topTracks);
+    });
+
     this.server.get('/api/spotify/playlist/:playlistId/tracks', async (req: Request, res: Response) => {
       const accessToken = getToken(req);
       const limit = Number(req.query?.limit ?? 50);
@@ -419,13 +447,6 @@ export default class App {
       return res.json(topArtists);
     });
 
-    // fetch artist
-    this.server.get('/api/spotify/artists/:artistId', async (req: Request, res: Response) => {
-      const accessToken = getToken(req);
-      const artistId: string = req.params.artistId as string;
-      const artists = await this.spotifyService.getArtist(accessToken, artistId);
-      return res.json(artists);
-    });
 
     this.server.get('/api/spotify/artists/:artistId/related-artists', async (req: Request, res: Response) => {
       const accessToken = getToken(req);
