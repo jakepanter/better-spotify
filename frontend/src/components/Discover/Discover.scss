@@ -4,24 +4,49 @@
   margin-bottom: 2rem;
 }
 
+// fix the overview page
+.discover-parent .overview-items {
+  height: auto !important;
+}
+
 .header {
-  display: block !important;
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-between;
+  align-items: start;
 
   a {
     margin-right: 2rem;
     float: right;
     color: $gray-dark;
     text-decoration: none;
+    transition: $transition-base;
+
+    &:hover{
+      color: $color-primary;
+    }
   }
 }
 
-.discover-font-adjustment h3 {
-  font-size: 20px;
-}
-.discover {
+.discover-font-adjustment {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
+  a{
+    flex-basis: auto;
+  }
+  h3 {
+    font-size: 20px;
+    flex-basis: auto;
+  }
+}
+
+.discover {
   .overview-items {
-    height: auto !important;
+    @media screen and(min-width: $breakpoint-sm) and(max-width: $breakpoint-md) {
+      height: 25vh !important;
+    }
 
     .column {
       //3 columns when tablet

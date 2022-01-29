@@ -12,7 +12,7 @@ import {NavLink, Link} from "react-router-dom";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import "./Artist.scss"
 import TrackList from "../TrackList/TrackList";
-import { getAuthHeader } from '../../helpers/api-helpers';
+import {getAuthHeader} from '../../helpers/api-helpers';
 
 
 interface IProps {
@@ -35,6 +35,7 @@ class Artist extends Component<IProps, IState> {
 
     // to check if a component is mounted, following source is used to achieve that: https://stackoverflow.com/questions/39767482/is-there-a-way-to-check-if-the-react-component-is-unmounted
     private _isMounted: boolean;
+
     constructor(props: IProps) {
         super(props);
         this.state = {
@@ -127,7 +128,7 @@ class Artist extends Component<IProps, IState> {
                 }
             }
         ).then((res) => res.json());
-        this._isMounted && this.setState((state) => ({...state, relatedArtists: allRelatedArtists.artists.slice(0,5)}))
+        this._isMounted && this.setState((state) => ({...state, relatedArtists: allRelatedArtists.artists.slice(0, 5)}))
 
 
     }
@@ -265,7 +266,7 @@ class Artist extends Component<IProps, IState> {
         });
 
         return (
-            <div style={{overflow: "hidden auto"}} key={this.props.id}>
+            <div style={{overflow: "hidden auto"}} key={this.props.id} className={"artists-overview"}>
 
                 {/*Filter*/}
                 <div className="select">
@@ -298,10 +299,9 @@ class Artist extends Component<IProps, IState> {
                 {(this.state.filter === "Discography" || this.state.filter == "All") && this.state.artistTopTracks ? (
                         <div className={"section"}>
                             <div className={"header"}>
-                                <h2>Discography
-                                    <NavLink to={`/artist/${this.props.id}/discography`} className={"viewMoreLink"}>View Entire
-                                        Discography</NavLink>
-                                </h2>
+                                <h2>Discography</h2>
+                                <NavLink to={`/artist/${this.props.id}/discography`} className={"viewMoreLink"}>View Entire
+                                    Discography</NavLink>
                             </div>
                             <TrackList type={"topTracks"} tracks={this.state.artistTopTracks} loadMoreCallback={() => {
                             }} fullyLoaded={true} id_tracklist={''}/>

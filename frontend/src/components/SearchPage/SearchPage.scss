@@ -5,13 +5,19 @@
 }
 
 .header {
-  display: block !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
 
   a {
     margin-right: 2rem;
     float: right;
     color: $gray-dark;
     text-decoration: none;
+    transition: $transition-base;
+    &:hover{
+      color: $color-primary;
+    }
   }
 }
 

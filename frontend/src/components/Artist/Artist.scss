@@ -4,7 +4,7 @@
   margin-bottom: 2rem;
 }
 
-.select{
+.select {
   float: right;
   align-items: center;
   display: flex;
@@ -12,7 +12,6 @@
   margin-right: $spacer / 4;
 
   .input-select {
-    //color: $color-default !important;
     height: 100%;
     border-radius: $border-radius;
     background: $color-accent-dark;
@@ -22,18 +21,33 @@
 }
 
 
-.header .viewMoreLink{
-    //margin-right: 2rem;
-    float: right;
-    color: $gray-dark;
-    text-decoration: none;
-    text-transform: none;
-    &:hover {
-      color: $color-primary;
-    }
+.header .viewMoreLink {
+  //margin-right: 2rem;
+  float: right;
+  color: $gray-dark;
+  text-decoration: none;
+  text-transform: none;
+
+  &:hover {
+    color: $color-primary;
+  }
 }
-.artist-section ul{
-  height: auto !important;
+
+// fix the overview page
+.artists-overview {
+  .artist-section ul {
+    height: auto !important;
+  }
+
+  .header {
+    h2 {
+      border: none;
+      width: auto;
+      margin-bottom: 0px;
+    }
+
+    border-bottom: 1px solid rgba(224, 224, 224, 0.1);
+  }
 }
 
 .artist {
