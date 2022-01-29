@@ -9,6 +9,8 @@ import {
 import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import TrackList from "../TrackList/TrackList";
+import { getAuthHeader } from '../../helpers/api-helpers';
+import {Link} from "react-router-dom";
 
 // The fetching limit, can be adjusted by changing this value
 const limit = 20;
@@ -32,8 +34,13 @@ export default function Album(props: IProps) {
   const [offset, setOffset] = useState<number>(0);
 
   async function fetchAlbumData() {
+    const authHeader = getAuthHeader();
     const data: SingleAlbumResponse = await fetch(
-      `${API_URL}api/spotify/album/${id}?limit=${limit}`
+      `${API_URL}api/spotify/album/${id}?limit=${limit}`,{
+      headers: {
+        'Authorization': authHeader
+      }
+    }
     ).then((res) => res.json());
 
     // Save album data
@@ -63,14 +70,23 @@ export default function Album(props: IProps) {
     )
       return;
 
+    const authHeader = getAuthHeader();
     const data: AlbumTracksResponse = await fetch(
-      `${API_URL}api/spotify/album/${id}/tracks?offset=${newOffset}&limit=${limit}`
+      `${API_URL}api/spotify/album/${id}/tracks?offset=${newOffset}&limit=${limit}`, {
+          headers: {
+            'Authorization': authHeader
+          }
+        }
     ).then((res) => res.json());
 
-    // Save whether tracks are saved or not
-    const saved: CheckUsersSavedTracksResponse = await fetchIsSavedData(
-      data.items.map((i) => i.id)
-    );
+    let saved: CheckUsersSavedTracksResponse = [];
+    const savedAlbums = data.items.map((i) => i.id);
+    if(savedAlbums.length !== 0) {
+      // Save whether tracks are saved or not
+       saved = await fetchIsSavedData(
+           savedAlbums
+      );
+    }
     const fetchedTracks = data.items as AlbumTrack[];
     setTracks((oldTracks) => [
       ...oldTracks,
@@ -83,9 +99,12 @@ export default function Album(props: IProps) {
   }
 
   async function fetchIsSavedData(trackIds: string[]) {
+    const authHeader = getAuthHeader();
     const data: CheckUsersSavedTracksResponse = await fetch(
-      `${API_URL}api/spotify/me/tracks/contains?trackIds=${trackIds}`
-    ).then((res) => res.json());
+      `${API_URL}api/spotify/me/tracks/contains?trackIds=${trackIds}`, {
+          headers: {
+            'Authorization': authHeader
+          }}).then((res) => res.json());
 
     return data;
   }
@@ -124,7 +143,8 @@ export default function Album(props: IProps) {
               <h4>Album</h4>
               <h1>{album.name}</h1>
               <p>
-                by {album.artists.map((a) => a.name).join(", ")} —{" "}
+                by {album.artists.map<React.ReactNode>((a) =>
+                  <Link to={`/artist/${a.id}`} className={"artists-name"} key={a.id}>{a.name}</Link>).reduce((a,b)=>[a,', ',b])} —{" "}
                 {album.tracks.total} Song{album.tracks.total === 1 ? "" : "s"}
               </p>
             </div>

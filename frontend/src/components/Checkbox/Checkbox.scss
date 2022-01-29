@@ -2,13 +2,11 @@
 
 .Checkbox {
   align-items: center;
+  border: none;
+  background-color: transparent;
   cursor: pointer;
   display: inline-flex;
   user-select: none;
-
-  .CheckboxElement {
-    display: none;
-  }
 
   .CheckboxIcon {
     color: $gray-dark;
@@ -21,5 +19,20 @@
   .CheckboxLabel {
     color: $color-default;
     margin-left: 4px;
+  }
+}
+.light_mode {
+  .Checkbox {
+    .CheckboxIcon {
+      color: $color-default-light;
+    }
+
+    &.checked .CheckboxIcon {
+      color: $color-default-light;
+    }
+
+    .CheckboxLabel {
+      color: $color-default-light;;
+    }
   }
 }

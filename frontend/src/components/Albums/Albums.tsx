@@ -5,6 +5,7 @@ import { API_URL } from "../../utils/constants";
 import "../../cards.scss";
 import "./Albums.scss";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
+import { getAuthHeader } from '../../helpers/api-helpers';
 import AppContext from "../../AppContext";
 
 export default function Albums() {
@@ -18,7 +19,13 @@ export default function Albums() {
   }, [next]);
 
   async function fetchData(url: string) {
-    const data: UsersSavedAlbumsResponse = await fetch(url).then((res) => res.json());
+    const authHeader = getAuthHeader();
+    const data: UsersSavedAlbumsResponse = await fetch(url, {
+      headers: {
+        'Authorization': authHeader
+      }}).then((res) =>
+      res.json()
+    );
     setAlbums(data);
     const arr: SavedAlbumObject[] = [...items, ...data.items];
     setItems(arr);

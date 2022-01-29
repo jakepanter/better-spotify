@@ -3,6 +3,12 @@
 .szh-menu {
   background-color: $color-background;
 
+  &__divider {
+    height: 1px;
+    margin: 0.25rem 0;
+    background-color: rgb(87, 87, 87);
+  }
+
   &__item {
     color: $color-default;
     &--hover {
@@ -10,6 +16,21 @@
     }
     &--disabled {
       color: darkgrey;
+    }
+  }
+}
+.light_mode {
+  .szh-menu {
+    background-color: $color-background-light;
+
+    &__item {
+      color: $color-default-light;
+      &--hover {
+        background-color:$gray-dark;
+      }
+      &--disabled {
+        color: darkgrey;
+      }
     }
   }
 }

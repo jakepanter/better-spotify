@@ -1,5 +1,5 @@
 import "./ContextMenu.scss";
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { ControlledMenu, MenuDivider, MenuItem, SubMenu, useMenuState } from "@szhsin/react-menu";
 import {
@@ -10,18 +10,28 @@ import {
 import AppContext from "../../AppContext";
 import useSWR, { mutate } from "swr";
 import useOutsideClick from "../../helpers/useOutsideClick";
-import { createNewPlaylist } from "../../helpers/api-helpers";
+import { createNewPlaylist, getAuthHeader } from "../../helpers/api-helpers";
 import { API_URL } from "../../utils/constants";
+import TagsSystem from "../../utils/tags-system";
 
 type Props = {
   data: String[];
   anchorPoint: { x: number; y: number };
 };
 
-const fetcher = (url: any) => fetch(url).then((r) => r.json());
-
 function TracksMenu(props: Props) {
+  const authHeader = getAuthHeader();
+  const fetcher = (url: any) =>
+    fetch(url, {
+      headers: { Authorization: authHeader },
+    }).then((r) => r.json());
+
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
+
+  const trackId = props.data.map((track) => track.split("-")[0].split(":")[2])[0];
+  const tags = TagsSystem.getTags();
+  const [tagsForTrack, setTagsForTrack] = useState<string[]>(TagsSystem.getTagsOfElement(trackId));
+
   const state = useContext(AppContext);
   const history = useHistory();
 
@@ -53,10 +63,9 @@ function TracksMenu(props: Props) {
     const tracks = props.data.map((track) => track.split("-")[0]);
     await fetch(`${API_URL}api/spotify/playlist/${playlistId}/add`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: authHeader },
       body: JSON.stringify(tracks),
     });
-    console.log("added to playlist");
   };
 
   const addToNewPlaylist = async () => {
@@ -80,7 +89,9 @@ function TracksMenu(props: Props) {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
     //extract track id
     const trackId = props.data.map((track) => track.split("track:")[1].split("-")[0])[0];
-    const track: any = await fetch(`${API_URL}api/spotify/track/${trackId}`).then((r) => r.json());
+    const track: any = await fetch(`${API_URL}api/spotify/track/${trackId}`, {
+      headers: { Authorization: authHeader },
+    }).then((r) => r.json());
     history.push(`/album/${track.album.id}`);
   };
 
@@ -88,8 +99,24 @@ function TracksMenu(props: Props) {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
     //extract track id
     const trackId = props.data.map((track) => track.split("track:")[1].split("-")[0])[0];
-    const track: any = await fetch(`${API_URL}api/spotify/track/${trackId}`).then((r) => r.json());
+    const track: any = await fetch(`${API_URL}api/spotify/track/${trackId}`, {
+      headers: { Authorization: authHeader },
+    }).then((r) => r.json());
     history.push(`/artist/${track.artists[0].id}`);
+  };
+
+  const setTags = (tagId: string, checked: boolean) => {
+    if (checked) {
+      TagsSystem.addTagToElement(trackId, tagId);
+    } else {
+      TagsSystem.removeTagFromElement(trackId, tagId);
+    }
+    setTagsForTrack(TagsSystem.getTagsOfElement(trackId));
+  };
+
+  const navigateToTags = () => {
+    state.setContextMenu({ ...state.contextMenu, isOpen: false });
+    history.push(`/settings`);
   };
 
   if (playlistsError || meError) return <p>error</p>;
@@ -122,6 +149,22 @@ function TracksMenu(props: Props) {
           ) : (
             <MenuItem>Fetching Playlists...</MenuItem>
           )}
+        </SubMenu>
+        <SubMenu label={"Tags"} overflow={"auto"} position={"anchor"}>
+          <MenuItem onClick={navigateToTags}>New Tag</MenuItem>
+          {Object.keys(tags.availableTags).length > 0 && <MenuDivider />}
+          {Object.entries(tags.availableTags).map((e) => (
+            <MenuItem
+              key={e[0]}
+              type={"checkbox"}
+              checked={tagsForTrack.includes(e[0])}
+              onClick={(event) =>
+                setTags(e[0], event.checked !== undefined ? event.checked : false)
+              }
+            >
+              {e[1].title}
+            </MenuItem>
+          ))}
         </SubMenu>
         <MenuItem disabled onClick={showArtist}>
           Show Artist

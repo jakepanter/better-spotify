@@ -11,6 +11,7 @@ import "./Playlists.scss";
 import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import { createNewPlaylist } from "../../helpers/api-helpers";
+import { getAuthHeader } from "../../helpers/api-helpers";
 
 export default function Playlists() {
   const [playlists, setPlaylists] = useState<ListOfUsersPlaylistsResponse>();
@@ -32,7 +33,10 @@ export default function Playlists() {
   }, [location]);
 
   async function fetchData(url: string) {
-    const data: ListOfUsersPlaylistsResponse = await fetch(url).then((res) => res.json());
+    const authHeader = getAuthHeader();
+    const data: ListOfUsersPlaylistsResponse = await fetch(url, {
+      headers: { Authorization: authHeader },
+    }).then((res) => res.json());
     setPlaylists(data);
     const arr: PlaylistObjectSimplified[] = [...items, ...data.items];
     setItems(arr);
@@ -81,10 +85,14 @@ export default function Playlists() {
 
   const myPlaylists = items.map((playlist) => {
     return (
-      <Link to={`/playlist/${playlist.id}`} className={"Card"} key={playlist.id}>
+      <Link
+        to={`/playlist/${playlist.id}`}
+        className={"Card"}
+        key={playlist.id}
+        onContextMenu={(e) => handleRightClick(e, playlist.id)}
+      >
         {playlist.images.length > 0 ? (
           <div
-            onContextMenu={(e) => handleRightClick(e, playlist.id)}
             className={"CardCover"}
             style={{ backgroundImage: `url(${playlist.images[0].url})` }}
           />

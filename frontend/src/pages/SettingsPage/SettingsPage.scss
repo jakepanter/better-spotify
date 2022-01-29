@@ -9,20 +9,52 @@
     display: flex;
     flex-flow: column nowrap;
 
-    &Heading {}
+    &Heading {
+    }
 
-    &Row {}
+    &Row {
+    }
   }
 
   .SpacingTop {
     margin-top: $spacer / 2;
+
+    .button {
+      background: none;
+      margin-right: 10px;
+      border-radius: $border-radius;
+      padding: 10px;
+      line-height: 0;
+      transition: $transition-base;
+
+      &:hover {
+        background: $color-primary;
+
+        span {
+          color: $white;
+        }
+      }
+
+      &:disabled,
+      &[disabled] {
+        border-color: $gray;
+        pointer-events: none;
+      }
+    }
   }
 }
 
 .SettingsSectionTags {
   color: $color-default;
 
-  .TagColor {}
+  .Dialog .TagColor {
+    opacity: .8;
+    transition: $transition-base;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
 
   .TagList {
     background: transparent;
@@ -55,7 +87,7 @@
     font-size: 14px;
     margin-bottom: $spacer;
 
-    &>* {
+    & > * {
       margin-top: $spacer / 4;
     }
 
@@ -73,18 +105,21 @@
       background: $color-tag-0 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk6P/+HwAEpAKHdCyqmAAAAABJRU5ErkJggg==) repeat;
       color: $color-default;
     }
+
     &Color1,
     &Color1:checked,
     &Color1:hover {
       background: $color-tag-1 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8Vab+HwAGoQKYdNiqNwAAAABJRU5ErkJggg==) repeat;
       color: $color-accent-dark;
     }
+
     &Color2,
     &Color2:checked,
     &Color2:hover {
       background: $color-tag-2 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP0kPnzHwAEdQJhnGYzsQAAAABJRU5ErkJggg==) repeat;
       color: $color-default;
     }
+
     &Color3,
     &Color3:checked,
     &Color3:focus,
@@ -92,17 +127,43 @@
       background: $color-tag-3 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8fl/yPwAHtALwtWw5/gAAAABJRU5ErkJggg==) repeat;
       color: $color-accent-dark;
     }
+
     &Color4,
     &Color4:checked,
     &Color4:hover {
       background: $color-tag-4 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mPk+T73PwAFWAKh28WaywAAAABJRU5ErkJggg==) repeat;
       color: $color-accent-dark;
     }
+
     &Color5,
     &Color5:checked,
     &Color5:hover {
       background: $color-tag-5 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8Jcb/HwAFUQIgkCwlbQAAAABJRU5ErkJggg==) repeat;
       color: $color-default;
+    }
+  }
+}
+
+.light_mode {
+  .Settings .SpacingTop .button {
+    &:disabled,
+    &[disabled] {
+      border-color: $gray-dark;
+    }
+  }
+  .input {
+    color: $color-default-light;
+  }
+  .SettingsSectionTags {
+    color: $color-default-light;
+
+    .TagList {
+      background: $white;
+      border-color: $gray-dark;
+    }
+
+    .Label {
+      color: transparentize($color-default-light, 0.5);
     }
   }
 }

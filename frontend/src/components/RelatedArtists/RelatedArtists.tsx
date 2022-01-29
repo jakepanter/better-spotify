@@ -6,6 +6,7 @@ import {API_URL} from '../../utils/constants';
 import {Link} from "react-router-dom";
 import "../../cards.scss";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 
 interface IProps {
@@ -28,15 +29,23 @@ class RelatedArtists extends Component<IProps, IState> {
 
     async componentDidMount() {
         // Fetch playlists
+        const authHeader = getAuthHeader();
         const relatedArtists: ArtistsRelatedArtistsResponse = await fetch(
-            `${API_URL}api/spotify/artists/${this.props.id}/related-artists`
+            `${API_URL}api/spotify/artists/${this.props.id}/related-artists`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         ).then((res) => res.json());
         // Save to state
         this.setState((state) => ({...state, relatedArtistsList: relatedArtists.artists}));
 
-
         const artist: SingleArtistResponse = await fetch(
-            `${API_URL}api/spotify/artists/${this.props.id}`
+            `${API_URL}api/spotify/artist/${this.props.id}`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         ).then((res) => res.json());
         // Save to state
         this.setState((state) => ({...state, artistName: artist.name}));
@@ -49,7 +58,7 @@ class RelatedArtists extends Component<IProps, IState> {
             return (
                 <li className="column" key={artist.id}>
                     <Link to={`/artist/${artist.id}`}>
-                        {artist.images !==undefined ? (
+                        {artist.images.length !== 0 ? (
                             <div className={"cover"} style={{
                                 backgroundImage: `url(${artist.images[0].url})`
                             }}>
@@ -70,7 +79,6 @@ class RelatedArtists extends Component<IProps, IState> {
                     <ul className={"overview-items"}>{relatedArtists}</ul>
                 </div>
             </div>
-
         );
     }
 }

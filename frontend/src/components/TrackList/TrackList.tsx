@@ -1,12 +1,13 @@
 import "./TrackList.scss";
 import React, { useContext, useEffect, useState, useRef } from "react";
-import { SavedTrackObject, TrackObjectFull } from "spotify-types";
+import { EpisodeObjectFull, PlaylistObjectFull, SavedTrackObject, TrackObjectFull } from "spotify-types";
 import { AlbumTrack } from "../Album/Album";
 import { PlaylistTrack } from "../Playlist/Playlist";
 import TrackListItem from "../TrackListItem/TrackListItem";
 import AppContext from "../../AppContext";
 import TagsSystem from "../../utils/tags-system";
-import { TagsTrack } from "../TagTracklist/TagTracklist";
+import { ShowEpisodes } from "../Show/Show";
+import {TagsTrack} from "../TagTracklist/TagTracklist";
 import { SongHistoryTrack } from "../SongHistory/SongHistory";
 
 type Props =
@@ -19,6 +20,7 @@ type Props =
     }
   | {
       type: "playlist";
+      playlist: PlaylistObjectFull;
       tracks: PlaylistTrack[];
       loadMoreCallback: () => void;
       fullyLoaded: boolean;
@@ -27,6 +29,13 @@ type Props =
   | {
       type: "saved";
       tracks: SavedTrackObject[];
+      loadMoreCallback: () => void;
+      fullyLoaded: boolean;
+      id_tracklist: string;
+    }
+    | {
+      type: "show";
+      tracks: ShowEpisodes[];
       loadMoreCallback: () => void;
       fullyLoaded: boolean;
       id_tracklist: string;
@@ -52,7 +61,13 @@ type Props =
       loadMoreCallback: () => void;
       fullyLoaded: boolean;
       id_tracklist: string;
-    };
+    }| {
+  type: "topTracks";
+  tracks: TrackObjectFull[];
+  loadMoreCallback: () => void;
+  fullyLoaded: boolean;
+  id_tracklist: string;
+};
 
 function scrollHandler(e: React.UIEvent<HTMLDivElement>, loadMoreCallback: () => void) {
   if (e.currentTarget.scrollTop + e.currentTarget.clientHeight >= e.currentTarget.scrollHeight) {
@@ -71,20 +86,34 @@ function TrackList(props: Props) {
     if (selectedTracks.length === 0)
       state.setContextMenu({ ...state.contextMenu, isOpen: false, data: [], x: null, y: null });
     else if (selectedTracks.length === 1) {
-      if (selectedTracks[0] !== state.contextMenu.data[0]) {
-        state.setContextMenu({
-          ...state.contextMenu,
-          type: "tracks",
-          isOpen: false,
-          data: selectedTracks,
-        });
+      if (props.type === "playlist" && state.contextMenu.data.tracks) {
+        if (selectedTracks[0] !== state.contextMenu.data.tracks[0]) {
+          state.setContextMenu({
+            ...state.contextMenu,
+            type: `tracklist-${props.type}`,
+            isOpen: false,
+            data: { tracks: selectedTracks, playlist: props.playlist },
+          });
+        }
+      } else {
+        if (selectedTracks[0] !== state.contextMenu.data[0]) {
+          state.setContextMenu({
+            ...state.contextMenu,
+            type: `tracklist-${props.type}`,
+            isOpen: false,
+            data: selectedTracks,
+          });
+        }
       }
     } else {
       state.setContextMenu({
         ...state.contextMenu,
-        type: "tracks",
+        type: `tracklist-${props.type}`,
         isOpen: false,
-        data: selectedTracks,
+        data:
+          props.type === "playlist"
+            ? { tracks: selectedTracks, playlist: props.playlist }
+            : selectedTracks,
       });
     }
   }, [selectedTracks]);
@@ -103,22 +132,26 @@ function TrackList(props: Props) {
   const handleContextMenuOpen = (trackUniqueId: String, x: number, y: number) => {
     if (!selectedTracks.some((track) => track === trackUniqueId)) {
       state.setContextMenu({
-        ...state.contextMenu,
-        type: "tracks",
+        type: `tracklist-${props.type}`,
         isOpen: true,
         x: x,
         y: y,
-        data: [trackUniqueId],
+        data:
+          props.type === "playlist"
+            ? { tracks: [trackUniqueId], playlist: props.playlist }
+            : [trackUniqueId],
       });
       setSelected([trackUniqueId]);
     } else {
       state.setContextMenu({
-        ...state.contextMenu,
-        type: "tracks",
+        type: `tracklist-${props.type}`,
         isOpen: true,
         x: x,
         y: y,
-        data: selectedTracks,
+        data:
+          props.type === "playlist"
+            ? { tracks: selectedTracks, playlist: props.playlist }
+            : selectedTracks,
       });
     }
   };
@@ -130,13 +163,8 @@ function TrackList(props: Props) {
     const arr: String[] = selectedTracks.filter((track) => track !== trackUniqueId);
     setSelected(arr);
   };
-  /*
-  const resetSelected = () => {
-    setSelected([]);
-  };
-  */
 
-  const isTrackSelected = (track: TrackObjectFull | AlbumTrack, index: number) => {
+  const isTrackSelected = (track: TrackObjectFull | AlbumTrack | EpisodeObjectFull, index: number) => {
     const trackUniqueId = `${track.uri}-${index}`;
     return selectedTracks.some((track) => track === trackUniqueId);
   };
@@ -163,11 +191,12 @@ function TrackList(props: Props) {
           ref={container}
         >
           <div className={"TableHeader TableRow"}>
+            <div className={"TableCell TableCellArtwork"} />
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
             <div className={"TableCell TableCellLiked"}>Liked</div>
             <div className={"TableCell TableCellTags"}>Tags</div>
-            <div className={"TableCell TableCellActions"}></div>
+            <div className={"TableCell TableCellActions"}>Playlist</div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
@@ -220,7 +249,7 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellDuration"}>Duration</div>
             <div className={"TableCell TableCellLiked"}>Liked</div>
             <div className={"TableCell TableCellTags"}>Tags</div>
-            <div className={"TableCell TableCellActions"}></div>
+            <div className={"TableCell TableCellActions"}>Playlist</div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
@@ -307,7 +336,47 @@ function TrackList(props: Props) {
           </div>
         </div>
       )}
-
+      {
+        type === "topTracks" && (
+            <div className={`Tracklist ${sizeClass}`} ref={container}>
+              <div className={"TableHeader TableRow"}>
+                <div className={"TableCell TableCellArtwork"} />
+                <div className={"TableCell TableCellTitleArtist"}>Title</div>
+                <div className={"TableCell TableCellAlbum"}>Album</div>
+                <div className={"TableCell TableCellDuration"}>Duration</div>
+                <div className={"TableCell TableCellTags"}>Tags</div>
+              </div>
+              <div className={"TableBody"}>
+                {props.tracks.map((item, index) => {
+                  const tagList = TagsSystem.getTagsOfElement(item.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
+                  return (
+                        <TrackListItem
+                            track={item}
+                            name={item.name}
+                            artists={item.artists}
+                            duration_ms={item.duration_ms}
+                            album={item.album}
+                            key={type + "-track-" + item.id + "-" + index}
+                            listIndex={index}
+                            selected={isTrackSelected(item, index)}
+                            onSelectionChange={handleSelectionChange}
+                            onContextMenuOpen={handleContextMenuOpen}
+                            id_tracklist={''}
+                            type={type}
+                            tags={tagList}
+                        />
+                  );
+                })}
+                {!fullyLoaded ? (
+                    <div className={"PlaylistLoader"}>
+                      <div className={"loader"} />
+                    </div>
+                ) : (
+                    <></>
+                )}
+              </div>
+            </div>
+        )}
       {type === "saved" && (
         <div
           className={`Tracklist ${sizeClass}`}
@@ -321,7 +390,7 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellAddedAt"}>Added</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
             <div className={"TableCell TableCellTags"}>Tags</div>
-            <div className={"TableCell TableCellActions"}></div>
+            <div className={"TableCell TableCellActions"}>Playlist</div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
@@ -360,6 +429,47 @@ function TrackList(props: Props) {
           </div>
         </div>
       )}
+
+      {type === "show" && (
+        <div
+          className={"Tracklist"}
+          onScroll={(e: React.UIEvent<HTMLDivElement>) =>
+            scrollHandler(e, loadMoreCallback)
+          }
+        >
+          <div className={"TableBody"}>
+            {props.tracks.map((item, index) => {
+              const episode = item ;
+              const tagList = TagsSystem.getTagsOfElement(episode.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
+              return (
+                <TrackListItem
+                  track={episode}
+                  name={episode.name}
+                  duration_ms={episode.duration_ms}
+                  image={episode.images[0]}
+                  description={episode.description}
+                  liked={episode.is_saved}
+                  key={type + "-episode-" + episode.id + "-" + index}
+                  listIndex={index}
+                  selected={isTrackSelected(episode, index)}
+                  onSelectionChange={handleSelectionChange}
+                  onContextMenuOpen={handleContextMenuOpen}
+                  id_tracklist={id_tracklist}
+                  type={type}
+                  tags={tagList}
+                />
+              );
+            })}
+            {!fullyLoaded ? (
+              <div className={"PlaylistLoader"}>
+                <div className={"loader"} />
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+      )}  
 
       {type === "tags" && (
         <div
@@ -424,6 +534,7 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellDuration"}>Duration</div>
             <div className={"TableCell TableCellLiked"}>Liked</div>
             <div className={"TableCell TableCellTags"}>Tags</div>
+            <div className={"TableCell TableCellActions"}>Playlist</div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {

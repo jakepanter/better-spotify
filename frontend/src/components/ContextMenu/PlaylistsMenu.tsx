@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   CurrentUsersProfileResponse,
   ListOfUsersPlaylistsResponse,
@@ -12,22 +12,31 @@ import { API_URL } from "../../utils/constants";
 import AppContext from "../../AppContext";
 import useOutsideClick from "../../helpers/useOutsideClick";
 import { useHistory } from "react-router-dom";
+import { DashboardService } from "../Dashboard/Dashboard";
+import { getAuthHeader } from "../../helpers/api-helpers";
 
 type Props = {
   data: PlaylistObjectSimplified;
   anchorPoint: { x: number; y: number };
 };
 
-const fetcher = (url: any) => fetch(url).then((r) => r.json());
-
 //arbitrary number to limit the max tracks loaded initially
 const MAX_TRACKS_LOADED = 250;
 let offset = 0;
 
 function PlaylistsMenu(props: Props) {
+  const authHeader = getAuthHeader();
+  const fetcher = (url: any) =>
+    fetch(url, {
+      headers: { Authorization: authHeader },
+    }).then((r) => r.json());
+
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
   const state = useContext(AppContext);
   const history = useHistory();
+  const [isOnStartpage, setIsOnStartpage] = useState<boolean>(
+    DashboardService.containsPlaylist(props.data.id)
+  );
 
   const { data: playlists, error: playlistsError } = useSWR<ListOfUsersPlaylistsResponse>(
     `${API_URL}api/spotify/playlists`,
@@ -46,6 +55,7 @@ function PlaylistsMenu(props: Props) {
 
   useEffect(() => {
     toggleMenu(true);
+    setIsOnStartpage(DashboardService.containsPlaylist(props.data.id));
     offset = 0;
   }, []);
 
@@ -55,6 +65,7 @@ function PlaylistsMenu(props: Props) {
 
   useEffect(() => {
     toggleMenu(true);
+    setIsOnStartpage(DashboardService.containsPlaylist(props.data.id));
   }, [props.anchorPoint]);
 
   const getAllTracksOfPlaylist = async (playlist: PlaylistObjectSimplified): Promise<string[]> => {
@@ -63,7 +74,8 @@ function PlaylistsMenu(props: Props) {
     let tracks: string[] = [];
     while (offset < total && offset < MAX_TRACKS_LOADED) {
       let response: PlaylistTrackResponse = await fetch(
-        `${API_URL}api/spotify/playlist/${playlistId}/tracks?offset=${offset}`
+        `${API_URL}api/spotify/playlist/${playlistId}/tracks?offset=${offset}`,
+        { headers: { Authorization: authHeader } }
       ).then(async (res) => {
         return (await res.json()) as Promise<PlaylistTrackResponse>;
       });
@@ -83,7 +95,7 @@ function PlaylistsMenu(props: Props) {
       const subArray = tracks.slice(alreadyAddedTracks, alreadyAddedTracks + 100);
       fetch(`${API_URL}api/spotify/playlist/${playlistId}/add`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: authHeader },
         body: JSON.stringify(subArray),
       });
       alreadyAddedTracks += 100;
@@ -93,9 +105,21 @@ function PlaylistsMenu(props: Props) {
   const deletePlaylist = async () => {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
     const playlistId = props.data.id;
-    await fetch(`${API_URL}api/spotify/playlist/${playlistId}/unfollow`);
+    await fetch(`${API_URL}api/spotify/playlist/${playlistId}/unfollow`, {
+      headers: { Authorization: authHeader },
+    });
     mutate(`${API_URL}api/spotify/playlists`);
     history.push(history.location.pathname, { unfollowed: playlistId });
+  };
+
+  const toggleStartpage = () => {
+    if (isOnStartpage) {
+      DashboardService.removePlaylist(props.data.id);
+      setIsOnStartpage(false);
+    } else {
+      DashboardService.addPlaylist(props.data.id);
+      setIsOnStartpage(true);
+    }
   };
 
   if (playlistsError || meError) return <p>error</p>;
@@ -108,7 +132,9 @@ function PlaylistsMenu(props: Props) {
       ref={ref}
     >
       <MenuItem disabled>Add to Queue</MenuItem>
-      <MenuItem disabled>Add to Startpage</MenuItem>
+      <MenuItem onClick={() => toggleStartpage()}>
+        {isOnStartpage ? "Remove from Startpage" : "Add to Startpage"}
+      </MenuItem>
       <SubMenu label={"Add to Playlist"}>
         {playlists && me ? (
           playlists.items

@@ -32,6 +32,7 @@
   max-width: 720px;
 
   .button {
+    color: $color-default;
     display: inline-flex;
     flex-flow: row nowrap;
 
@@ -43,6 +44,7 @@
   &Header {
     align-items: center;
     border-bottom: $border-width $border-style rgba(224, 224, 224, 0.1);
+    color: $color-default;
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
@@ -68,5 +70,25 @@
 
   &Content {
     padding: $spacer;
+  }
+}
+.light_mode {
+  .Dialog {
+    background-color: $white;
+    .button {
+      color: $color-default-light;
+     }
+
+    &Header {
+      border-bottom: $border-width $border-style rgba($color-default-light, .2);
+      color: $color-default-light;
+
+      &CloseButton {
+        &:hover,
+        &:active {
+          background-color: transparentize($color-default-light, 0.9);
+        }
+      }
+    }
   }
 }

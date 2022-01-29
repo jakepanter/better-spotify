@@ -10,6 +10,7 @@
   .minimizeMenuButton {
     position: absolute;
     left: 205px;
+    bottom: 15px;
     z-index: 2;
     margin-top: 10px;
     background: $color-accent-dark;
@@ -47,7 +48,7 @@
       width: $side-panel-size;
       min-width: $side-panel-size;
       &.minimizeMenu {
-        width:45px;
+        width: 45px;
         min-width: 45px;
 
         a {
@@ -96,6 +97,24 @@
 
     &--main {
       height: calc(100vh - 80px);
+    }
+  }
+
+  &.light_mode {
+    background: $color-background-light;
+
+    .minimizeMenuButton {
+      background: $white;
+      border: 0.5px solid $gray-dark;
+    }
+
+    .structure--left-panel {
+      background: $white;
+      border-color: $gray-dark;
+    }
+
+    .structure--main {
+      scrollbar-width: none; // fix
     }
   }
 }
@@ -282,4 +301,98 @@ h6 {
 *::-webkit-scrollbar-thumb {
   background-color: rgba($color-default, 0.5);
   border-radius: $border-radius;
+}
+
+.light_mode {
+  p {
+    color: $color-default-light;
+  }
+
+  td, th {
+    color: $color-default-light;
+
+  }
+
+  // Button
+  .button {
+    background: $none;
+    color: $button-color-light;
+    border-color: $button-border-color-light;
+
+    &.active:enabled,
+    &:hover:enabled {
+      background: $button-background-active-light;
+      color: $button-color-active-light;
+      border-color: $button-border-color-active-light;
+    }
+  }
+
+  .input {
+    border: none;
+    border-bottom: $border-width*2 $border-style rgba(224, 224, 224, 0.1);
+    background-color: transparent;
+    color: $color-default;
+    display: inline-block;
+
+    &:focus {
+      outline: none;
+      border-bottom-color: $color-primary;
+    }
+
+    &:invalid {
+      border-bottom-color: $color-waring-darker;
+    }
+  }
+
+  .input-select {
+    background: $button-background-light;
+    color: $button-color-light;
+    border-color: $button-border-color-light;
+
+    option {
+      background-color: $white;
+      color: $black;
+    }
+
+    &.active,
+    &:hover {
+      background: $button-background-active-light;
+      color: $button-color-active-light;
+      border-color: $button-border-color-active-light;
+    }
+  }
+
+  // Checkbox (re-styled button)
+  .checkbox {
+    color: $color-default-light;
+  }
+
+  // Headlines
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: $color-default-light;
+  }
+
+  h2 {
+    border-bottom: 1px solid rgba($color-default, 0.9);
+  }
+
+  // Scrollbar
+  /* Works on Firefox */
+  * {
+    scrollbar-color: rgba($color-default-light, 0.5) rgba($color-default-light, 0.1);
+  }
+
+  *::-webkit-scrollbar-track {
+    background: rgba($color-default-light, 0.1);
+
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: rgba($color-default-light, 0.5);
+  }
 }

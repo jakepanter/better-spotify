@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, {ChangeEvent, Component} from 'react';
 import './Dashboard.scss';
 import {Layout, Layouts, Responsive, WidthProvider} from 'react-grid-layout';
@@ -10,6 +9,7 @@ import Albums from "../Albums/Albums";
 import Playlists from "../Playlists/Playlists";
 import TagTracklist from "../TagTracklist/TagTracklist";
 import TagsSystem from "../../utils/tags-system";
+import {NotificationsService} from "../NotificationService/NotificationsService";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -65,6 +65,8 @@ export class DashboardService {
     if (!currentDashboard.albums.some((a) => a.id === id)) {
       currentDashboard.albums.push({id: id});
       DashboardService.saveCurrentDashboardState(currentDashboard);
+
+      NotificationsService.push('success', 'Added album to start page');
     }
   }
 
@@ -72,6 +74,8 @@ export class DashboardService {
     const currentDashboard = DashboardService.getCurrentDashboardState();
     const newAlbums = currentDashboard.albums.filter((a) => a.id !== id);
     DashboardService.saveCurrentDashboardState({...currentDashboard, albums: newAlbums});
+
+    NotificationsService.push('success', 'Removed album from start page');
   }
 
   static containsAlbum(id: string) {
@@ -85,6 +89,8 @@ export class DashboardService {
     if (!currentDashboard.playlists.some((a) => a.id === id)) {
       currentDashboard.playlists.push({id: id});
       DashboardService.saveCurrentDashboardState(currentDashboard);
+
+      NotificationsService.push('success', 'Added playlist to start page');
     }
   }
 
@@ -92,6 +98,8 @@ export class DashboardService {
     const currentDashboard = DashboardService.getCurrentDashboardState();
     const newPlaylists = currentDashboard.playlists.filter((p) => p.id !== id);
     DashboardService.saveCurrentDashboardState({...currentDashboard, playlists: newPlaylists});
+
+    NotificationsService.push('success', 'Removed playlist from start page');
   }
 
   static containsPlaylist(id: string) {
@@ -100,7 +108,7 @@ export class DashboardService {
   }
 
   // Helper methods
-  private static getCurrentDashboardState() {
+  static getCurrentDashboardState() {
     const currentDashboardString = localStorage.getItem('dashboardState')?.toString();
     if (currentDashboardString !== undefined) {
       return JSON.parse(currentDashboardString) as IState;
@@ -114,27 +122,44 @@ export class DashboardService {
 }
 
 const DEFAULT_DASHBOARD_STATE: IState = {
-  layouts: {},
+  layouts:{
+    md: [
+      { w: 1, h: 2, x: 1, y: 0, i: "favorites", moved: false, static: false },
+      { w: 1, h: 2, x: 0, y: 0, i: "albums", moved: false, static: false },
+      { w: 1, h: 2, x: 0, y: 2, i: "playlists", moved: false, static: false },
+      { w: 1, h: 2, x: 1, y: 2, i: "top-daily-global", moved: false, static: false },
+    ],
+    xl: [
+      { w: 2, h: 2, x: 2, y: 0, i: "favorites", moved: false, static: false },
+      { w: 2, h: 2, x: 0, y: 2, i: "albums", moved: false, static: false },
+      { w: 2, h: 2, x: 0, y: 0, i: "playlists", moved: false, static: false },
+      { w: 2, h: 2, x: 2, y: 2, i: "top-daily-global", moved: false, static: false },
+    ],
+    sm: [
+      { w: 1, h: 2, x: 0, y: 0, i: "favorites", moved: false, static: false },
+      { w: 1, h: 2, x: 0, y: 2, i: "albums", moved: false, static: false },
+      { w: 1, h: 2, x: 0, y: 4, i: "playlists", moved: false, static: false },
+      { w: 1, h: 2, x: 0, y: 6, i: "top-daily-global", moved: false, static: false },
+    ]},
   albums: [],
   playlists: [],
   charts: [
-    {countryCode: 'global', chartType: 'top', period: 'daily'}
+    { countryCode: "global", chartType: "top", period: "daily" }
   ],
   tagTracklists: [],
   showFavorites: true,
   showAlbums: true,
   showPlaylists: true,
-  chartSelection: {
-    countryCode: 'global',
-    type: 'top',
-    period: 'daily',
-  },
-  tagTracklistsSelection: '',
-  width: 0,
+  chartSelection: { countryCode: "global", type: "top", period: "daily" },
+  tagTracklistsSelection: "",
+  width: 1475
 };
 
 class Dashboard extends Component<IProps, IState> {
   private readonly containerRef = React.createRef<HTMLDivElement>();
+
+  private pollStorage: any;
+
   constructor(props: IProps) {
     super(props);
 
@@ -149,18 +174,14 @@ class Dashboard extends Component<IProps, IState> {
   }
 
   // Albums
-  private addAlbum(id: string) {
-    const {albums} = this.state;
-    if (!albums.some((a) => a.id === id)) {
-      const newAlbums = [...albums, {id: id}]
-      this.updatePlaylists(newAlbums);
-    }
-  }
-
   private removeAlbum(id: string) {
+    if (!confirm('Do you want to remove this widget?')) return;
+
     const {albums} = this.state;
     const newAlbums = albums.filter((a) => a.id !== id);
     this.updateAlbums(newAlbums);
+
+    NotificationsService.push('success', 'Removed album from start page');
   }
 
   private updateAlbums(newAlbums: IDashboardAlbum[]) {
@@ -171,18 +192,14 @@ class Dashboard extends Component<IProps, IState> {
   }
 
   // Playlists
-  private addPlaylist(id: string) {
-    const {playlists} = this.state;
-    if (!playlists.some((p) => p.id === id)) {
-      const newPlaylists = [...playlists, {id: id}]
-      this.updatePlaylists(newPlaylists);
-    }
-  }
-
   private removePlaylist(id: string) {
+    if (!confirm('Do you want to remove this widget?')) return;
+
     const {playlists} = this.state;
     const newPlaylists = playlists.filter((p) => p.id !== id);
     this.updatePlaylists(newPlaylists);
+
+    NotificationsService.push('success', 'Removed playlist from start page');
   }
 
   private updatePlaylists(newPlaylists: IDashboardPlaylist[]) {
@@ -201,13 +218,19 @@ class Dashboard extends Component<IProps, IState> {
     ) {
       const newCharts = [...charts, {countryCode: countryCode, chartType: type, period}]
       this.updateCharts(newCharts);
+
+      NotificationsService.push('success', 'Added chart to start page');
     }
   }
 
   private removeChart(countryCode: CountryCode, type: ChartType, period: ChartPeriod) {
+    if (!confirm('Do you want to remove this widget?')) return;
+
     const {charts} = this.state;
     const newCharts = charts.filter((c) => !(c.countryCode === countryCode && c.chartType === type && c.period === period));
     this.updateCharts(newCharts);
+
+    NotificationsService.push('success', 'Removed chart from start page');
   }
 
   private updateCharts(newCharts: IDashboardChart[]) {
@@ -222,13 +245,19 @@ class Dashboard extends Component<IProps, IState> {
     if (!tagTracklists.some((t) => t.id === id)) {
       const newTagTracklists = [...tagTracklists, { id }];
       this.updateTagTracklist(newTagTracklists);
+
+      NotificationsService.push('success', 'Added tag tracklist to start page');
     }
   }
 
   private removeTagTracklist(id: string) {
+    if (!confirm('Do you want to remove this widget?')) return;
+
     const { tagTracklists } = this.state;
     const newTagTracklists = tagTracklists.filter((t) => t.id !== id);
     this.updateTagTracklist(newTagTracklists);
+
+    NotificationsService.push('success', 'Removed tag tracklist from start page');
   }
 
   private updateTagTracklist(newTagTracklists: IDashboardTagTracklist[]) {
@@ -279,25 +308,43 @@ class Dashboard extends Component<IProps, IState> {
     );
   }
 
-  private showFavorites(e: ChangeEvent<HTMLInputElement>) {
+  private showFavorites(value: boolean) {
     this.setState(
-      (state) => ({...state, showFavorites: e.target.checked}),
+      (state) => ({...state, showFavorites: value}),
       () => this.saveState(),
     );
+
+    if (value) {
+      NotificationsService.push('success', 'Added favorites to start page');
+    } else {
+      NotificationsService.push('success', 'Removed favorites from start page');
+    }
   }
 
-  private showAlbums(e: ChangeEvent<HTMLInputElement>) {
+  private showAlbums(value: boolean) {
     this.setState(
-      (state) => ({...state, showAlbums: e.target.checked}),
+      (state) => ({...state, showAlbums: value}),
       () => this.saveState(),
     );
+
+    if (value) {
+      NotificationsService.push('success', 'Added albums to start page');
+    } else {
+      NotificationsService.push('success', 'Removed albums from start page');
+    }
   }
 
-  private showPlaylists(e: ChangeEvent<HTMLInputElement>) {
+  private showPlaylists(value: boolean) {
     this.setState(
-      (state) => ({...state, showPlaylists: e.target.checked}),
+      (state) => ({...state, showPlaylists: value}),
       () => this.saveState(),
     );
+
+    if (value) {
+      NotificationsService.push('success', 'Added playlists to start page');
+    } else {
+      NotificationsService.push('success', 'Removed playlists from start page');
+    }
   }
 
   updateWidth = () => {
@@ -309,10 +356,21 @@ class Dashboard extends Component<IProps, IState> {
   };
   componentDidMount() {
     this.updateWidth();
+    // Resize listener
     window.addEventListener('resize', this.updateWidth);
+
+    // Detect updates from DashboardService
+    this.pollStorage = setInterval(() => {
+      const {albums, playlists} = this.state;
+      const savedState = DashboardService.getCurrentDashboardState();
+      if (albums.length !== savedState.albums.length || playlists.length !== savedState.playlists.length) {
+        this.setState((state) => ({...state, albums: savedState.albums, playlists: savedState.playlists}));
+      }
+    }, 50);
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateWidth);
+    clearInterval(this.pollStorage);
   }
 
   // Render
@@ -328,10 +386,12 @@ class Dashboard extends Component<IProps, IState> {
       showPlaylists,
       chartSelection,
       tagTracklistsSelection,
-      width
+      width,
     } = this.state;
     const { editable } = this.props;
     const tags = TagsSystem.getTags();
+
+    const tagSelection = tagTracklistsSelection === '' ? (Object.keys(tags.availableTags).length === 0 ? '' : Object.entries(tags.availableTags)[0][0]) : tagTracklistsSelection;
 
     return (
       <div className={`DashboardContainer ${editable ? 'editable' : ''}`} ref={this.containerRef}>
@@ -341,22 +401,24 @@ class Dashboard extends Component<IProps, IState> {
               <div className={'DashboardTagTracklistsFormSelects'}>
                 <select
                   className={'input-select'}
-                  value={tagTracklistsSelection}
+                  value={tagSelection}
                   onChange={(e) => this.updateTagTracklistSelection(e)}
                 >
-                  {Object.entries(tags.availableTags).map((t) => <option value={t[0]}>{t[1].title}</option>)}
+                  {Object.entries(tags.availableTags).map((t) => <option key={t[0]} value={t[0]}>{t[1].title}</option>)}
                 </select>
               </div>
               <div className={'DashboardTagTracklistsFormButtons'}>
                 <button
                   className={'button'}
-                  onClick={() => this.addTagTracklist(tagTracklistsSelection)}
+                  disabled={tagSelection === ''}
+                  onClick={() => this.addTagTracklist(tagSelection)}
                 >
                   Add Tag Tracklist
                 </button>
                 <button
                   className={'button'}
-                  onClick={() => this.removeTagTracklist(tagTracklistsSelection)}
+                  disabled={tagSelection === ''}
+                  onClick={() => this.removeTagTracklist(tagSelection)}
                 >
                   Remove Tag Tracklist
                 </button>
@@ -406,25 +468,25 @@ class Dashboard extends Component<IProps, IState> {
             <div className={'DashboardSettingsForm'}>
               <Checkbox
                 checked={showFavorites}
-                label={'Show Favorites'}
-                onChange={(e) => this.showFavorites(e)}
-              />
-              <Checkbox
-                checked={showAlbums}
-                label={'Show Albums'}
-                onChange={(e) => this.showAlbums(e)}
+                label={'Show liked songs'}
+                onChange={(value) => this.showFavorites(value)}
               />
               <Checkbox
                 checked={showPlaylists}
                 label={'Show Playlists'}
-                onChange={(e) => this.showPlaylists(e)}
+                onChange={(value) => this.showPlaylists(value)}
+              />
+              <Checkbox
+                  checked={showAlbums}
+                  label={'Show Albums'}
+                  onChange={(value) => this.showAlbums(value)}
               />
             </div>
           </div>
           : <></>
         }
         <ResponsiveGridLayout
-          className={'Dashboard'}
+          className={`Dashboard ${editable ? 'editable' : ''}`}
           layouts={layouts}
           breakpoints={{xl: 1600, md: 768, sm: 0}}
           cols={{xl: 4, md: 2, sm: 1}}
@@ -438,32 +500,50 @@ class Dashboard extends Component<IProps, IState> {
         >
           {showFavorites ?
             <div key={'favorites'} className={'DashboardItem'}>
+              <button className={'RemoveButton'} onClick={() => confirm('Do you want to remove this widget?') ? this.showFavorites(false) : undefined}>
+                <span className={'material-icons'}>close</span>
+              </button>
               <SavedTracks headerStyle={'compact'}/>
             </div>
             : <></>
           }
           {showAlbums ?
             <div key={'albums'} className={'DashboardItem'}>
+              <button className={'RemoveButton'} onClick={() => confirm('Do you want to remove this widget?') ? this.showAlbums(false) : undefined}>
+                <span className={'material-icons'}>close</span>
+              </button>
               <Albums />
             </div>
             : <></>
           }
           {showPlaylists ?
             <div key={'playlists'} className={'DashboardItem'}>
+              <button className={'RemoveButton'} onClick={() => confirm('Do you want to remove this widget?') ? this.showPlaylists(false) : undefined}>
+                <span className={'material-icons'}>close</span>
+              </button>
               <Playlists />
             </div>
             : <></>
           }
           {albums.map((a) => <div key={a.id} className={'DashboardItem'}>
+            <button className={'RemoveButton'} onClick={() => this.removeAlbum(a.id)}>
+              <span className={'material-icons'}>close</span>
+            </button>
             <Album id={a.id} headerStyle={'compact'}/>
           </div>)}
           {playlists.map((p) => <div key={p.id} className={'DashboardItem'}>
+            <button className={'RemoveButton'} onClick={() => this.removePlaylist(p.id)}>
+              <span className={'material-icons'}>close</span>
+            </button>
             <Playlist id={p.id} headerStyle={'compact'}/>
           </div>)}
           {charts.map((c) => {
             const chartCode = `${c.chartType}-${c.period}-${c.countryCode}`;
             return (
               <div key={chartCode} className={'DashboardItem'}>
+                <button className={'RemoveButton'} onClick={() => this.removeChart(c.countryCode, c.chartType, c.period)}>
+                  <span className={'material-icons'}>close</span>
+                </button>
                 <Playlist id={getChartCode(c.countryCode, c.chartType, c.period)} headerStyle={'compact'}/>
               </div>
             );
@@ -471,6 +551,9 @@ class Dashboard extends Component<IProps, IState> {
           {tagTracklists &&
             tagTracklists.map((t) => (
               <div key={t.id} className={"DashboardItem"}>
+                <button className={'RemoveButton'} onClick={() => this.removeTagTracklist(t.id)}>
+                  <span className={'material-icons'}>close</span>
+                </button>
                 <TagTracklist id={t.id} headerStyle={"compact"} />
               </div>
             ))}

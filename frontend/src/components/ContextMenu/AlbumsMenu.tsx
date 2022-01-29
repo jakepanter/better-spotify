@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   AlbumObjectFull,
   CreatePlaylistResponse,
@@ -11,20 +11,28 @@ import "./ContextMenu.scss";
 import { API_URL } from "../../utils/constants";
 import AppContext from "../../AppContext";
 import useOutsideClick from "../../helpers/useOutsideClick";
-import { createNewPlaylist } from "../../helpers/api-helpers";
+import { createNewPlaylist, getAuthHeader } from "../../helpers/api-helpers";
 import { useHistory } from "react-router-dom";
+import { DashboardService } from "../Dashboard/Dashboard";
 
 type Props = {
   data: AlbumObjectFull;
   anchorPoint: { x: number; y: number };
 };
 
-const fetcher = (url: any) => fetch(url).then((r) => r.json());
-
 function AlbumsMenu(props: Props) {
+  const authHeader = getAuthHeader();
+  const fetcher = (url: any) =>
+    fetch(url, {
+      headers: { Authorization: authHeader },
+    }).then((r) => r.json());
+
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
   const state = useContext(AppContext);
   const history = useHistory();
+  const [isOnStartpage, setIsOnStartpage] = useState<boolean>(
+    DashboardService.containsAlbum(props.data.id)
+  );
 
   const { data: playlists, error: playlistsError } = useSWR<ListOfUsersPlaylistsResponse>(
     `${API_URL}api/spotify/playlists`,
@@ -43,10 +51,12 @@ function AlbumsMenu(props: Props) {
 
   useEffect(() => {
     toggleMenu(true);
+    setIsOnStartpage(DashboardService.containsAlbum(props.data.id));
   }, []);
 
   useEffect(() => {
     toggleMenu(true);
+    setIsOnStartpage(DashboardService.containsAlbum(props.data.id));
   }, [props.anchorPoint]);
 
   const addToPlaylist = async (playlistId: String) => {
@@ -55,7 +65,7 @@ function AlbumsMenu(props: Props) {
 
     fetch(`${API_URL}api/spotify/playlist/${playlistId}/add`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: authHeader },
       body: JSON.stringify(tracks),
     });
   };
@@ -77,6 +87,16 @@ function AlbumsMenu(props: Props) {
     history.push(`/playlist/${newPlaylist.id}`, { created: newPlaylist.id });
   };
 
+  const toggleStartpage = () => {
+    if (isOnStartpage) {
+      DashboardService.removeAlbum(props.data.id);
+      setIsOnStartpage(false);
+    } else {
+      DashboardService.addAlbum(props.data.id);
+      setIsOnStartpage(true);
+    }
+  };
+
   if (playlistsError || meError) return <p>error</p>;
 
   return (
@@ -87,7 +107,9 @@ function AlbumsMenu(props: Props) {
       ref={ref}
     >
       <MenuItem disabled>Add to Queue</MenuItem>
-      <MenuItem disabled>Add to Startpage</MenuItem>
+      <MenuItem onClick={() => toggleStartpage()}>
+        {isOnStartpage ? "Remove from Startpage" : "Add to Startpage"}
+      </MenuItem>
       <SubMenu label={"Add to Playlist"}>
         <MenuItem onClick={addToNewPlaylist}>Add to new Playlist</MenuItem>
         <MenuDivider />

@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {PlaylistTrackResponse, SavedTrackObject} from "spotify-types";
 import {API_URL} from "../../utils/constants";
 import TrackList from "../TrackList/TrackList";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 const limit = 50;
 
@@ -23,8 +24,13 @@ export default function SavedTracks(props: IProps) {
         // Only fetch if there are tracks left to fetch
         if (total >= 0 && total <= offset) return;
 
+        const authHeader = getAuthHeader();
         const data: PlaylistTrackResponse = await fetch(
-            `${API_URL}api/spotify/me/tracks?offset=${newOffset}&limit=${limit}`
+            `${API_URL}api/spotify/me/tracks?offset=${newOffset}&limit=${limit}`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         ).then((res) => res.json());
 
         // Save new tracks
@@ -47,7 +53,7 @@ export default function SavedTracks(props: IProps) {
             {headerStyle !== "none" ? (
                 headerStyle === "compact" ? (
                     <div className={"PlaylistHeader PlaylistHeaderCompact"}>
-                        <h2>Saved Tracks</h2>
+                        <h2>Liked songs</h2>
                     </div>
                 ) : (
                     <div className={"PlaylistHeader PlaylistHeaderFull"}>
@@ -56,11 +62,11 @@ export default function SavedTracks(props: IProps) {
                                 src={
                                     "https://t.scdn.co/images/3099b3803ad9496896c43f22fe9be8c4.png"
                                 }
-                                alt={"Saved Tracks"}
+                                alt={"Liked songs"}
                             />
                         </div>
                         <div className={"PlaylistHeaderMeta"}>
-                            <h1>Saved Tracks</h1>
+                            <h1>Liked songs</h1>
                             <p>
                                 {total} Song{total === 1 ? "" : "s"}
                             </p>

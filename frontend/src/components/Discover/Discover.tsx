@@ -13,6 +13,7 @@ import {API_URL} from "../../utils/constants";
 import {NavLink, Link} from "react-router-dom";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import {formatTimeDiff} from "../../utils/functions";
+import { getAuthHeader } from '../../helpers/api-helpers';
 
 interface IProps {
 }
@@ -45,7 +46,6 @@ class Discover extends Component<IProps, IState> {
         };
     }
 
-
     async componentDidMount() {
 
         // fetch reently played tracks
@@ -54,14 +54,8 @@ class Discover extends Component<IProps, IState> {
             this.setState((state) => ({...state, recentlyPlayedTracks: recentPlayedTracksData.items}));
         });
 
-        // get users country
-        const me = await fetch(
-            `${API_URL}api/spotify/me`
-        ).then((res) => res.json());
-        const country = me.country;
-
         // fetch new releases
-        this.fetchNewReleases(country).then((newReleasedAlbums) => {
+        this.fetchNewReleases().then((newReleasedAlbums) => {
             this.setState((state) => ({...state, newReleases: newReleasedAlbums.albums.items}));
         });
 
@@ -84,16 +78,27 @@ class Discover extends Component<IProps, IState> {
     }
 
     async fetchRecentlyPlayedTracks() {
+        const authHeader = getAuthHeader();
         const res = await fetch(
-            `${API_URL}api/spotify/player/recently-played?limit=${limit}`
+            `${API_URL}api/spotify/player/recently-played?limit=${limit}`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         );
         const recentPlayedTracksData: UsersRecentlyPlayedTracksResponse = await res.json();
         return recentPlayedTracksData;
     }
 
-    async fetchNewReleases(country: string) {
+    async fetchNewReleases() {
+        const authHeader = getAuthHeader();
+        const country = localStorage.getItem("country");
         const res = await fetch(
-            `${API_URL}api/spotify/browse/new-releases?country=${country}&limit=${limit}`
+            `${API_URL}api/spotify/browse/new-releases?country=${country}&limit=${limit}`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         );
         const newReleasedAlbums: ListOfNewReleasesResponse = await res.json();
         return newReleasedAlbums;
@@ -101,17 +106,27 @@ class Discover extends Component<IProps, IState> {
 
 
     async fetchTopArtists() {
+        const authHeader = getAuthHeader();
         // Fetch top artists
         const res = await fetch(
-            `${API_URL}api/spotify/me/top/artists`
+            `${API_URL}api/spotify/me/top/artists`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         );
         const topArtists = await res.json();
         return topArtists;
     }
 
     async fetchRelatedArtists(artistId: string) {
+        const authHeader = getAuthHeader();
         const res = await fetch(
-            `${API_URL}api/spotify/artists/${artistId}/related-artists`
+            `${API_URL}api/spotify/artists/${artistId}/related-artists`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }
         );
         const relatedArtists = await res.json();
         return relatedArtists;
@@ -189,11 +204,11 @@ class Discover extends Component<IProps, IState> {
                 <div style={{overflow: 'hidden auto'}}>
                     {/*Recently Played Tracks*/}
                     <div className={"section"} key="recentlyPlayed">
-                        <div className={'header'}>
+                        <div className={'header discover-font-adjustment'}>
                             <h3>Recently listened to</h3>
                             <NavLink to={"/song-history"}>View More</NavLink>
                         </div>
-                        <div className={"overview"}>
+                        <div className={"overview discover"}>
                             <ul className={"overview-items"}
                                 style={{height: '40vh', overflow: 'hidden'}}>{recentlyPlayedList}</ul>
                         </div>
@@ -201,11 +216,11 @@ class Discover extends Component<IProps, IState> {
 
                     {/*New Releases*/}
                     <div className={"section"} key="newReleases">
-                        <div className={'header'}>
+                        <div className={'header discover-font-adjustment'}>
                             <h3>New Releases</h3>
                             <NavLink to={"/new-releases"}>View More</NavLink>
                         </div>
-                        <div className={"overview"}>
+                        <div className={"overview discover"}>
                             <ul className={"overview-items"}
                                 style={{height: '40vh', overflow: 'hidden'}}>{releases}</ul>
                         </div>
@@ -214,8 +229,8 @@ class Discover extends Component<IProps, IState> {
                     {/*More like "artist"*/}
                     {relatedArtists.map((tmp, index) =>
                         <div className={"section"} key={this.state.relatedArtistsList[index].artist.id}>
-                            <div className={"overview"} key={this.state.relatedArtistsList[index].artist.id}>
-                                <div className={'header'}>
+                            <div className={"overview discover"} key={this.state.relatedArtistsList[index].artist.id}>
+                                <div className={'header discover-font-adjustment'}>
                                     <h3>More like &quot;{this.state.relatedArtistsList[index].artist.name}&quot;</h3>
                                     <NavLink to={`/related-artists/${this.state.relatedArtistsList[index].artist.id}`}>View
                                         More</NavLink>

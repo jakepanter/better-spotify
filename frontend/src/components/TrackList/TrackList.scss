@@ -25,7 +25,7 @@
     width: 100%;
     transition: $transition-base;
 
-    &:hover:not(.TableHeader) {
+    &:hover:not(.TableHeader):not(.Selected) {
       user-select: none;
       background-color: $color-secondary;
       color: $color-default;
@@ -142,7 +142,7 @@
 
     &Duration {
       flex: 0 1 90px;
-      text-align: right;
+      text-align: center;
     }
 
     &AddedAt {
@@ -154,13 +154,13 @@
     }
 
     &Actions {
-      flex: 0 0 60px;
+      flex: 0.2 0 0;
     }
 
     &Tags {
       align-items: center;
       display: flex;
-      flex: 0.5 0 0;
+      flex: 0.3 0 0;
       flex-flow: row nowrap;
     }
   }
@@ -170,6 +170,7 @@
       &Album,
       &AddedAt,
       &Liked,
+      &Actions,
       &Tags {
         display: none;
       }
@@ -179,6 +180,7 @@
   &Medium {
     .TableCell {
       &AddedAt,
+      &Actions,
       &Tags {
         display: none;
       }
@@ -205,3 +207,33 @@
     color: rgba($white, 0.45);
   }
 }
+
+.light_mode {
+  .Tracklist {
+    background: $white;
+    color: $color-default-light;
+
+    .Link {
+      color: $color-default-light;
+    }
+
+    .TableRow {
+      &:hover:not(.TableHeader):not(.Selected) {
+        color: $color-default-light;
+        background-color: darken($white, 10%);
+
+
+        .TableCellCoverPlaceholder::before {
+          color: rgba($black, 1);
+        }
+      }
+    }
+
+    .TableHeader {
+      background-color: $white;
+      border-bottom: $border-width $border-style transparentize($color-default-light, 0.89);
+      color: rgba($color-default-light, 0.65);
+    }
+  }
+}
+

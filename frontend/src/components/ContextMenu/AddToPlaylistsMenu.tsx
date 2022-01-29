@@ -10,7 +10,7 @@ import AppContext from "../../AppContext";
 import useSWR, { mutate } from "swr";
 import "./ContextMenu.scss";
 import useOutsideClick from "../../helpers/useOutsideClick";
-import { createNewPlaylist } from "../../helpers/api-helpers";
+import { createNewPlaylist, getAuthHeader } from "../../helpers/api-helpers";
 import { useHistory } from "react-router-dom";
 
 type Props = {
@@ -18,9 +18,13 @@ type Props = {
   anchorPoint: { x: number; y: number };
 };
 
-const fetcher = (url: any) => fetch(url).then((r) => r.json());
-
 function AddToPlaylistsMenu(props: Props) {
+  const authHeader = getAuthHeader();
+  const fetcher = (url: any) =>
+    fetch(url, {
+      headers: { Authorization: authHeader },
+    }).then((r) => r.json());
+
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
   const state = useContext(AppContext);
   const history = useHistory();
@@ -54,7 +58,7 @@ function AddToPlaylistsMenu(props: Props) {
     const tracks = props.data.map((track) => track.split("-")[0]);
     await fetch(`${API_URL}api/spotify/playlist/${playlistId}/add`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: authHeader },
       body: JSON.stringify(tracks),
     });
   };
