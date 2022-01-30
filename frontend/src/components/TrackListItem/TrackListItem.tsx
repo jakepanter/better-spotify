@@ -21,6 +21,8 @@ import Button from "../Button/Button";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import AppContext from "../../AppContext";
 import { getAuthHeader } from '../../helpers/api-helpers';
+import {useSelector} from "react-redux";
+import {PlaybackState} from "../../utils/playbackSlice";
 
 type Body = {
   context_uri: string | undefined;
@@ -60,6 +62,7 @@ function TrackListItem(props: Props) {
   const [specialKey, setSpecialKey] = useState<String | null>(null);
   const [liked, setLiked] = useState<boolean>(!!props.liked);
   const state = useContext(AppContext);
+  const playback = useSelector((state: PlaybackState) => state.playback);
 
   const id_tracklist = props.id_tracklist;
   const type = props.type;
@@ -98,8 +101,7 @@ function TrackListItem(props: Props) {
         'Authorization': authHeader
       },
       body: JSON.stringify(body)
-    })
-        .then(response => response.json())
+    });
   }, []);
 
   useEffect(() => {
@@ -189,12 +191,14 @@ function TrackListItem(props: Props) {
 
   if(!liked && type==="saved") {
     return(
-      <div className="hidden"></div>
+        <div className="hidden"></div>
     )
   } else {
     if(type === "show") {
       return (
-        <div className={`Pointer EpisodeRow ${selected ? "Selected" : ""}`}
+        <div className={`Pointer EpisodeRow ${selected ? "Selected" : ""}
+        ${playback.currentTrackId === track.track.id ? "Playing" : ""}
+        ${playback.paused ? "Paused" : ""}`}
           onContextMenu={(e) => handleRightClick(e)}
         >
           <Link to={`/episode/${props.track.id}`}>
@@ -234,11 +238,13 @@ function TrackListItem(props: Props) {
         </div>
       );
     }
-  
+
     else {
         return (
       <div
-        className={`Pointer TableRow ${selected ? "Selected" : ""}`}
+        className={`Pointer TableRow ${selected ? "Selected" : ""}
+        ${playback.currentTrackId === track.track.id ? "Playing" : ""}
+        ${playback.paused ? "Paused" : ""}`}
         onClick={(e) => handleClick(e)}
         onContextMenu={(e) => handleRightClick(e)}
       >
@@ -255,7 +261,7 @@ function TrackListItem(props: Props) {
               <CoverPlaceholder />
             </div>
         )}
-  
+
         <div className={"TableCell TableCellTitleArtist"}>
           <span className={"TableCellTitle"}>{track.name}</span>
           {track.artists !== undefined ? (
