@@ -39,7 +39,7 @@ export default function SearchPage() {
       Artists = result.artists?.items.map((item) => {
         return(
           <li className="column" key={item.id}>
-            <Link to={`/album/${item.id}`}>
+            <Link to={`/artist/${item.id}`}>
                 {item.images.length > 0 ? (
                   <div
                     className={"cover"}
@@ -152,7 +152,7 @@ export default function SearchPage() {
       Shows = result.shows?.items.map((item) => {
         return(
           <li className="column" key={item.id}>
-            <Link to={`/album/${item.id}`}>
+            <Link to={`/show/${item.id}`}>
                 {item.images.length > 0 ? (
                   <div
                     className={"cover"}
@@ -189,7 +189,7 @@ export default function SearchPage() {
       Episodes = result.episodes?.items.map((item) => {
         return(
           <li className="column" key={item.id}>
-            <Link to={`/album/${item.id}`}>
+            <Link to={`/episode/${item.id}`}>
                 {item.images.length > 0 ? (
                   <div
                     className={"cover"}
