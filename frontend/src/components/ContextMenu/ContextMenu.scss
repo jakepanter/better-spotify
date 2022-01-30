@@ -34,6 +34,8 @@
     }
   }
 }
+
+// EDIT DIALOG
 textarea {
   width: 100%;
   resize: vertical;
@@ -41,15 +43,36 @@ textarea {
 }
 
 .cover-wrapper {
+  position: relative;
   width: 200px;
   height: 200px;
+  border-radius: $border-radius;
+  overflow: hidden;
+  cursor: alias;
+  .hover-overlay {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    &:hover {
+      opacity: 1;
+      transition: $transition-base;
+      background-color: rgba($color-primary, 0.5);
+    }
+  }
+  span {
+    text-align: center;
+    color: white;
+    user-select: none;
+  }
 }
 
 .dropzone {
   display: inline-block;
-  object-fit: cover;
-  height: 100%;
-  cursor: alias;
   img {
     height: 100%;
     object-fit: cover;

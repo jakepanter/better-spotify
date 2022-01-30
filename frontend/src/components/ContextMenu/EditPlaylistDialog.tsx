@@ -96,16 +96,13 @@ function EditPlaylistDialog(props: Props) {
       onClose={closeMenu}
     >
       <p>Cover</p>
-      <div className="cover-wrapper">
-        <div {...getRootProps({ className: "dropzone" })}>
-          <input {...getInputProps()} />
-          <img
-            width={200}
-            src={image?.toString()}
-            alt={props.data.name + " Cover"}
-            onClick={open}
-          />
+      <div {...getRootProps({ className: "dropzone cover-wrapper" })} onClick={open}>
+        <input {...getInputProps()} />
+        <div className="hover-overlay">
+          <span className="material-icons">upload</span>
+          <span>Drag &amp; drop or click to select an image to upload</span>
         </div>
+        <img width={200} src={image?.toString()} alt={props.data.name + " Cover"} />
       </div>
 
       <p>Title</p>
