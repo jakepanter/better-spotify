@@ -1,11 +1,12 @@
 import React, {  useState, useEffect} from "react";
 import { API_URL } from "../../../utils/constants";
 import "../../../cards.scss";
-import { SearchResponse } from "spotify-types";
+import { CheckUsersSavedTracksResponse, SearchResponse } from "spotify-types";
 import { useParams } from "react-router-dom";
 import CoverPlaceholder from "../../CoverPlaceholder/CoverPlaceholder";
 import { Link } from "react-router-dom";
 import TrackList from "../../TrackList/TrackList";
+import { getAuthHeader } from '../../../helpers/api-helpers';
 
 
 export default function SearchPageCustom() {
@@ -13,13 +14,34 @@ export default function SearchPageCustom() {
     const search = params.search;
     const type = params.type;
     const [result, setSearchResult] = useState<SearchResponse>()
+    const [tracksSaved, setSaved] = useState<CheckUsersSavedTracksResponse>();
 
     async function fetchSearchResult() {
+        const authHeader = getAuthHeader();
         const data: SearchResponse = await fetch(
-            `${API_URL}api/spotify/customsearch?type=${type}&search=${search}`
+            `${API_URL}api/spotify/customsearch?type=${type}&search=${search}`, {
+              headers: {
+                'Authorization': authHeader
+              }
+            }
         ).then((res) => res.json());
         
         setSearchResult(data);
+
+        if(data.tracks?.items && data.tracks.items.length > 0)
+        {
+          const trackIds = data.tracks?.items.map((i => i.id))
+          //Check if tracks of search results are saved by User
+          const saved = await fetch(
+            `${API_URL}api/spotify/me/tracks/contains?trackIds=${(trackIds)}`, {
+                headers: {
+                  'Authorization': authHeader
+                }
+              }
+          ).then((res) => res.json());     
+          
+          setSaved(saved);
+        }
     }
 
     useEffect(() => {
@@ -29,7 +51,7 @@ export default function SearchPageCustom() {
     if (!result) return <p></p>;
 
     if(type == 'tracks') {
-        if(result.tracks?.items && result.tracks.items.length > 0) {
+        if(result.tracks?.items && result.tracks.items.length > 0 && tracksSaved) {
             const searchTracks = (
                 <TrackList
                 fullyLoaded = {true}
@@ -37,6 +59,7 @@ export default function SearchPageCustom() {
                 tracks={result.tracks?.items}
                 loadMoreCallback={() => null}
                 id_tracklist={search}
+                is_saved={tracksSaved}
                 />
             );
         

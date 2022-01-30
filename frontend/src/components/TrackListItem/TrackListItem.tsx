@@ -189,130 +189,135 @@ function TrackListItem(props: Props) {
     }
   };
 
-  if(type === "show") {
-    return (
-      <div className={`Pointer EpisodeRow ${selected ? "Selected" : ""}
-      ${playback.currentTrackId === track.track.id ? "Playing" : ""}
-      ${playback.paused ? "Paused" : ""}`}
+  if(!liked && type==="saved") {
+    return(
+        <div className="hidden"></div>
+    )
+  } else {
+    if(type === "show") {
+      return (
+        <div className={`Pointer EpisodeRow ${selected ? "Selected" : ""}
+        ${playback.currentTrackId === track.track.id ? "Playing" : ""}
+        ${playback.paused ? "Paused" : ""}`}
+          onContextMenu={(e) => handleRightClick(e)}
+        >
+          <Link to={`/episode/${props.track.id}`}>
+          <div className="noTags">
+              {track.image !== undefined && track.image !== null ? (
+                <div className={"TableCell TableCellArtwork"}>
+                  <img
+                    src={track.image.url}
+                    alt=""
+                    style={{ width: "100px", height: "100px" }}
+                  />
+                </div>
+              ) : (
+                <CoverPlaceholder />
+              )}
+              <div className={"EpisodeContent"}>
+                <h5 className={"TableCellTitleArtist"}>{track.name}</h5>
+                <p>{track.description}</p>
+                <div className={"TableCellPlayEpisode"} onClick={(e) => handlePlayButton(e)}/>
+              </div>
+            </div>
+            {track.tags !== undefined ? (
+              <div className={"TableCell TableCellTags"}>
+                {track.tags.map((t, i) =>
+                  <Link key={i}
+                    className={`Tag TagColor${t.color}`}
+                    to={`/tag/${t.id}`}
+                  >
+                    {t.title}
+                </Link>
+              )}
+            </div>
+        ) : (
+          <></>
+        )}
+        </Link>
+        </div>
+      );
+    }
+
+    else {
+        return (
+      <div
+        className={`Pointer TableRow ${selected ? "Selected" : ""}
+        ${playback.currentTrackId === track.track.id ? "Playing" : ""}
+        ${playback.paused ? "Paused" : ""}`}
+        onClick={(e) => handleClick(e)}
         onContextMenu={(e) => handleRightClick(e)}
       >
-        <Link to={`/episode/${props.track.id}`}>
-        <div className="noTags">
-            {track.image !== undefined && track.image !== null ? (
-              <div className={"TableCell TableCellArtwork"}>
-                <img
-                  src={track.image.url}
-                  alt=""
-                  style={{ width: "100px", height: "100px" }}
-                />
-              </div>
-            ) : (
+        {track.album !== undefined &&  track.album.available_markets !== undefined || track.album !== undefined && type === "topTracks" ? (
+          <div className={"TableCell TableCellArtwork"} onClick={(e) => handlePlayButton(e)}>
+            <img
+              src={track.album.images[2].url}
+              alt=""
+              style={{ width: "40px", height: "40px" }}
+            />
+          </div>
+        ) : (
+            <div className={"TableCellCoverPlaceholder"} onClick={(e) => handlePlayButton(e)}>
               <CoverPlaceholder />
-            )}
-            <div className={"EpisodeContent"}>
-              <h5 className={"TableCellTitleArtist"}>{track.name}</h5>
-              <p>{track.description}</p>
-              <div className={"TableCellPlayEpisode"} onClick={(e) => handlePlayButton(e)}/>
             </div>
-          </div>
-          {track.tags !== undefined ? (
-            <div className={"TableCell TableCellTags"}>
-              {track.tags.map((t, i) =>
-                <Link key={i}
-                  className={`Tag TagColor${t.color}`}
-                  to={`/tag/${t.id}`}
-                >
-                  {t.title}
-              </Link>
-            )}
-          </div>
-      ) : (
-        <></>
-      )}
-      </Link>
-      </div>
-    );
-  }
+        )}
 
-  else {
-      return (
-    <div
-      className={`Pointer TableRow ${selected ? "Selected" : ""}
-      ${playback.currentTrackId === track.track.id ? "Playing" : ""}
-      ${playback.paused ? "Paused" : ""}`}
-      onClick={(e) => handleClick(e)}
-      onContextMenu={(e) => handleRightClick(e)}
-    >
-      {track.album !== undefined &&  track.album.available_markets !== undefined || track.album !== undefined && type === "topTracks" ? (
-        <div className={"TableCell TableCellArtwork"} onClick={(e) => handlePlayButton(e)}>
-          <img
-            src={track.album.images[2].url}
-            alt=""
-            style={{ width: "40px", height: "40px" }}
-          />
+        <div className={"TableCell TableCellTitleArtist"}>
+          <span className={"TableCellTitle"}>{track.name}</span>
+          {track.artists !== undefined ? (
+              <span className={"TableCellArtist"}>
+            {track.artists?.map((artist) => artist.name).join(", ")}
+              </span>
+          ) : (
+              <></>
+          )}
         </div>
-      ) : (
-          <div className={"TableCellCoverPlaceholder"} onClick={(e) => handlePlayButton(e)}>
-            <CoverPlaceholder />
-          </div>
-      )}
-
-      <div className={"TableCell TableCellTitleArtist"}>
-        <span className={"TableCellTitle"}>{track.name}</span>
-        {track.artists !== undefined ? (
-            <span className={"TableCellArtist"}>
-          {track.artists?.map((artist) => artist.name).join(", ")}
-            </span>
+        {track.album !== undefined ? (
+            <div className={"TableCell TableCellAlbum"}>
+              <Link to={`/album/${track.album.id}`} className={"albumLink"} key={trackUniqueId}>
+                {track.album.name}
+              </Link>
+            </div>
         ) : (
             <></>
         )}
-      </div>
-      {track.album !== undefined ? (
-          <div className={"TableCell TableCellAlbum"}>
-            <Link to={`/album/${track.album.id}`} className={"albumLink"} key={trackUniqueId}>
-              {track.album.name}
-            </Link>
+        <div className={"TableCell TableCellDuration"}>
+          {formatTimestamp(track.duration_ms)}
+        </div>
+        {track.liked !== undefined ? (
+          <div className={"TableCell TableCellLiked"}>
+            <button className={`checkbox ${liked ? 'checked' : ''}`} onClick={handleLikeButton}>
+              <span className={'material-icons'}>{liked ? 'favorite' : 'favorite_border'}</span>
+            </button>
           </div>
-      ) : (
+        ) : (
           <></>
-      )}
-      <div className={"TableCell TableCellDuration"}>
-        {formatTimestamp(track.duration_ms)}
-      </div>
-      {track.liked !== undefined ? (
-        <div className={"TableCell TableCellLiked"}>
-          <button className={`checkbox ${liked ? 'checked' : ''}`} onClick={handleLikeButton}>
-            <span className={'material-icons'}>{liked ? 'favorite' : 'favorite_border'}</span>
-          </button>
+        )}
+        {track.tags !== undefined ? (
+          <div className={"TableCell TableCellTags"}>
+            {track.tags.map((t, i) =>
+              <Link key={i}
+                    className={`Tag TagColor${t.color}`}
+                    to={`/tag/${t.id}`}
+              >
+                {t.title}
+              </Link>
+            )}
+          </div>
+        ) : (
+          <></>
+        )}
+        <div className="TableCell TableCellActions">
+          <Button
+            simple
+            icon="playlist_add"
+            className="material-icons"
+            onClick={handleAddToPlaylist}
+          />
         </div>
-      ) : (
-        <></>
-      )}
-      {track.tags !== undefined ? (
-        <div className={"TableCell TableCellTags"}>
-          {track.tags.map((t, i) =>
-            <Link key={i}
-                  className={`Tag TagColor${t.color}`}
-                  to={`/tag/${t.id}`}
-            >
-              {t.title}
-            </Link>
-          )}
-        </div>
-      ) : (
-        <></>
-      )}
-      <div className="TableCell TableCellActions">
-        <Button
-          simple
-          icon="playlist_add"
-          className="material-icons"
-          onClick={handleAddToPlaylist}
-        />
       </div>
-    </div>
-  );
-}
+    );}
+  }
 }
 
 export default TrackListItem;

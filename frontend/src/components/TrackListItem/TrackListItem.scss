@@ -1,5 +1,9 @@
 @import "./src/boilerplate.scss";
 
+.hidden {
+  display: none
+}
+
 .albumLink {
   text-decoration: none !important;
   color: $color-default;
