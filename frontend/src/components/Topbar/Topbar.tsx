@@ -64,10 +64,7 @@ const Topbar = (props: IProps) => {
                 <div className={"lightModeToggle"}>
                     <span className={'material-icons light'}>light_mode</span>
                     <div className={"switch"}>
-                        <label className={"switchLabel"}>
-                            <input type="checkbox" onChange={toggleLightmode}/>
-                            <span className={"slider round"}/>
-                        </label>
+                            <span title ={'Set mode'} className={"slider"} onClick={toggleLightmode}/>
                     </div>
                     <span className={'material-icons dark'}>nightlight_round</span>
                 </div>
