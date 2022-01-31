@@ -1,5 +1,11 @@
 @import './src/boilerplate.scss';
 
+.artists-name{
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .Albums {
   display: flex;
   flex-flow: column nowrap;

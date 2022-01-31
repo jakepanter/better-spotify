@@ -2,7 +2,7 @@
 //anyone know how to satisfy eslint and the unused prop function variables????
 import "./TrackListItem.scss";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Link, Route } from "react-router-dom";
+import { Link, Route, useHistory } from "react-router-dom";
 import {
   AlbumObjectSimplified,
   EpisodeObject,
@@ -63,6 +63,7 @@ function TrackListItem(props: Props) {
   const [liked, setLiked] = useState<boolean>(!!props.liked);
   const state = useContext(AppContext);
   const playback = useSelector((state: PlaybackState) => state.playback);
+  const history = useHistory();
 
   const id_tracklist = props.id_tracklist;
   const type = props.type;
@@ -189,6 +190,11 @@ function TrackListItem(props: Props) {
     }
   };
 
+  const goToArtist = (e: any, artistId: string) => {
+    e.preventDefault();
+    history.push(`/artist/${artistId}`)
+  };
+
   if(!liked && type==="saved") {
     return(
         <div className="hidden"></div>
@@ -266,7 +272,9 @@ function TrackListItem(props: Props) {
           <span className={"TableCellTitle"}>{track.name}</span>
           {track.artists !== undefined ? (
               <span className={"TableCellArtist"}>
-            {track.artists?.map((artist) => artist.name).join(", ")}
+                {/*TODO style bitte anpassen*/}
+                <span className={"CardArtist"}>{track.artists?.map<React.ReactNode>((a) =>
+                    <span onClick={e => goToArtist(e, a.id)} className={"artists-name"} key={a.id}>{a.name}</span>).reduce((a,b)=>[a,', ',b])}</span>
               </span>
           ) : (
               <></>

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { UsersSavedAlbumsResponse, SavedAlbumObject } from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import "../../cards.scss";
@@ -13,6 +13,7 @@ export default function Albums() {
   const [items, setItems] = useState<SavedAlbumObject[]>([]);
   const [next, setNext] = useState<string>(`${API_URL}api/spotify/collections/albums`);
   const state = useContext(AppContext);
+  const history = useHistory()
 
   useEffect(() => {
     fetchData(next);
@@ -45,6 +46,12 @@ export default function Albums() {
     });
   };
 
+  const goToArtist = (e: any, artistId: string) => {
+    e.preventDefault();
+    history.push(`/artist/${artistId}`)
+  };
+
+
   //fetch next albums when you reach the bottom of the current list
   const onScroll = (e: any) => {
     const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
@@ -74,7 +81,9 @@ export default function Albums() {
           <CoverPlaceholder />
         )}
         <span className={"CardTitle"}>{item.album.name}</span>
-        <span className={"CardArtist"}>{item.album.artists.map((a) => a.name).join(", ")}</span>
+        <span className={"CardArtist"}>
+          {item.album.artists.map<React.ReactNode>((a) =>
+            <span onClick={e => goToArtist(e, a.id)} className={"artists-name"} key={a.id}>{a.name}</span>).reduce((a,b)=>[a,', ',b])}</span>
       </Link>
     );
   });

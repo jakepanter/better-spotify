@@ -33,8 +33,6 @@ interface IState {
 
 class Artist extends Component<IProps, IState> {
 
-    // to check if a component is mounted, following source is used to achieve that: https://stackoverflow.com/questions/39767482/is-there-a-way-to-check-if-the-react-component-is-unmounted
-    private _isMounted: boolean;
     constructor(props: IProps) {
         super(props);
         this.state = {
@@ -47,13 +45,10 @@ class Artist extends Component<IProps, IState> {
             relatedArtists: [],
             filter: "All"
         };
-        this._isMounted = false;
         this.handleFilterChange = this.handleFilterChange.bind(this);
     }
 
     async componentDidMount() {
-        this._isMounted = true;
-
         const authHeader = getAuthHeader();
         // fetch artist
         const artistData: SingleArtistResponse = await fetch(
@@ -63,7 +58,7 @@ class Artist extends Component<IProps, IState> {
                 }
             }
         ).then((res) => res.json());
-        this._isMounted && this.setState({artist: artistData});
+        this.setState({artist: artistData});
 
         //fetch artist top tracks
         const topTracks: ArtistsTopTracksResponse = await fetch(
@@ -73,7 +68,7 @@ class Artist extends Component<IProps, IState> {
                 }
             }
         ).then((res) => res.json());
-        this._isMounted && this.setState({artistTopTracks: topTracks.tracks});
+        this.setState({artistTopTracks: topTracks.tracks});
 
         // fetch albums
         const allAlbums: ArtistsAlbumsResponse = await fetch(
@@ -83,7 +78,7 @@ class Artist extends Component<IProps, IState> {
                 }
             }
         ).then((res) => res.json());
-        this._isMounted && this.setState((state) => ({...state, albums: allAlbums.items}));
+        this.setState((state) => ({...state, albums: allAlbums.items}));
 
 
         // fetch singles
@@ -94,7 +89,7 @@ class Artist extends Component<IProps, IState> {
                 }
             }
         ).then((res) => res.json());
-        this._isMounted && this.setState((state) => ({...state, singles: allSingles.items}));
+        this.setState((state) => ({...state, singles: allSingles.items}));
 
 
         // fetch albums where the artist appears on
@@ -105,7 +100,7 @@ class Artist extends Component<IProps, IState> {
                 }
             }
         ).then((res) => res.json());
-        this._isMounted && this.setState((state) => ({...state, appearsOn: allAppearsOn.items}));
+        this.setState((state) => ({...state, appearsOn: allAppearsOn.items}));
 
 
         // fetch compilations
@@ -116,7 +111,7 @@ class Artist extends Component<IProps, IState> {
                 }
             }
         ).then((res) => res.json());
-        this._isMounted && this.setState((state) => ({...state, compilations: allCompilations.items}));
+        this.setState((state) => ({...state, compilations: allCompilations.items}));
 
 
         // fet related artists
@@ -127,7 +122,7 @@ class Artist extends Component<IProps, IState> {
                 }
             }
         ).then((res) => res.json());
-        this._isMounted && this.setState((state) => ({...state, relatedArtists: allRelatedArtists.artists.slice(0,5)}))
+        this.setState((state) => ({...state, relatedArtists: allRelatedArtists.artists.slice(0,5)}))
 
 
     }
@@ -137,11 +132,6 @@ class Artist extends Component<IProps, IState> {
         //the value of the filter-option will be set
         this.setState({filter: value});
     }
-
-    componentWillUnmount(): void {
-        this._isMounted = false;
-    }
-
 
     render() {
         if (Object.keys(this.state.artist).length === 0) return <p>Artist not found</p>;

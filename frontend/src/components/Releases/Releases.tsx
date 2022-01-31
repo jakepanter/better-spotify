@@ -5,7 +5,7 @@ import {
 } from "spotify-types";
 import { API_URL } from '../../utils/constants';
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import "./Releases.scss";
 import {formatTimeDiff} from "../../utils/functions";
 import { getAuthHeader } from '../../helpers/api-helpers';
@@ -18,6 +18,7 @@ export default function Releases() {
     // The list of releases (albums)
     const [albums, setAlbums] = useState<AlbumObjectSimplified[]>([]);
     const [offset, setOffset] = useState<number>(0);
+    const history = useHistory();
 
     // Fetch more album tracks if necessary
     useEffect(() => {
@@ -52,6 +53,11 @@ export default function Releases() {
         }
     };
 
+    const goToArtist = (e: any, artistId: string) => {
+        e.preventDefault();
+        history.push(`/artist/${artistId}`)
+    };
+
     if (!releases || !albums) return <p>loading...</p>;
     const releasedAlbums = albums.map((album)=>{
         return(
@@ -68,7 +74,8 @@ export default function Releases() {
                     <CoverPlaceholder />
                 )}
                 <span className={"CardTitle"}>{album.name}</span>
-                <span className={"CardArtist"}>{album.artists.map((a) => a.name).join(", ")}</span>
+                <span className={"CardArtist"}>{album.artists.map<React.ReactNode>((a) =>
+                    <span onClick={e => goToArtist(e, a.id)} className={"artists-name"} key={a.id}>{a.name}</span>).reduce((a,b)=>[a,', ',b])}</span>
                 <span className={"CardAddedAt"}>{formatTimeDiff(new Date(album.release_date).getTime(), Date.now())}</span>
             </Link>
         );
