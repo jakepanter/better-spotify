@@ -64,15 +64,17 @@ function EditPlaylistDialog(props: Props) {
   };
 
   const saveChanges = async () => {
-    // update title and description
-    fetch(`${API_URL}api/spotify/playlist/${props.data.id}/edit`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authHeader,
-      },
-      body: JSON.stringify({ name: title, description: description }),
-    });
+    // update title and description if changed
+    if ((title !== props.data.name && title !== "") || description !== props.data.description) {
+      await fetch(`${API_URL}api/spotify/playlist/${props.data.id}/edit`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authHeader,
+        },
+        body: JSON.stringify({ name: title, description: description }),
+      });
+    }
     // update cover image if changed
     if (image !== props.data.images[0].url) {
       const img = (image as string).split("base64,")[1];
@@ -95,36 +97,44 @@ function EditPlaylistDialog(props: Props) {
       open={state.contextMenu.isOpen}
       onClose={closeMenu}
     >
-      <p>Cover</p>
-      <div {...getRootProps({ className: "dropzone cover-wrapper" })} onClick={open}>
-        <input {...getInputProps()} />
-        <div className="hover-overlay">
-          <span className="material-icons">upload</span>
-          <span>Drag &amp; drop or click to select an image to upload</span>
+      <div className="dialog-wrapper">
+        <div {...getRootProps({ className: "dropzone cover-wrapper" })} onClick={open}>
+          <input {...getInputProps()} />
+          <div className="hover-overlay">
+            <span className="material-icons">upload</span>
+            <span>Drag &amp; drop or click to select an image to upload</span>
+          </div>
+          <img width={200} src={image?.toString()} alt={props.data.name + " Cover"} />
         </div>
-        <img width={200} src={image?.toString()} alt={props.data.name + " Cover"} />
+
+        <div className="details">
+          <p>Title</p>
+          <h3>
+            <input
+              type="text"
+              minLength={1}
+              maxLength={50}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </h3>
+
+          <p>Description</p>
+          <textarea
+            minLength={1}
+            maxLength={200}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          ></textarea>
+        </div>
       </div>
 
-      <p>Title</p>
-      <h3>
-        <input
-          type="text"
-          minLength={50}
-          maxLength={50}
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </h3>
-
-      <p>Description</p>
-      <textarea
-        minLength={1}
-        maxLength={200}
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      ></textarea>
-
-      <button className={"button"} onClick={saveChanges} disabled={!title.trim()}>
+      <button
+        className={"button"}
+        onClick={saveChanges}
+        disabled={!title.trim()}
+        style={{ float: "right" }}
+      >
         Save
       </button>
     </Dialog>

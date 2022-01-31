@@ -36,15 +36,37 @@
 }
 
 // EDIT DIALOG
-textarea {
+.dialog-wrapper {
+  display: flex;
+  margin-bottom: 20px;
+  input,
+  textarea {
+    width: 100%;
+    background-color: $black;
+    border-radius: $border-radius;
+    padding: 5px;
+    margin-bottom: 10px;
+    color: $white;
+    border: none;
+    outline: none;
+  }
+  textarea {
+    // resize: vertical;
+    height: 70px;
+    max-height: 70px;
+  }
+}
+
+.details {
   width: 100%;
-  resize: vertical;
-  max-height: 100px;
+  margin-left: 20px;
 }
 
 .cover-wrapper {
   position: relative;
+  min-width: 200px;
   width: 200px;
+  min-height: 200px;
   height: 200px;
   border-radius: $border-radius;
   overflow: hidden;
