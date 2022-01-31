@@ -3,7 +3,7 @@ import { API_URL } from "../../utils/constants";
 import "../../cards.scss";
 import './SearchPage.scss';
 import { Link } from "react-router-dom";
-import { SearchResponse } from "spotify-types";
+import { CheckUsersSavedTracksResponse, SearchResponse } from "spotify-types";
 import { useParams } from "react-router-dom";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import TrackList from "../TrackList/TrackList";
@@ -13,7 +13,8 @@ export default function SearchPage() {
     let params = useParams() as { search: string };
     const search = params.search;
 
-    const [result, setSearchResult] = useState<SearchResponse>()
+    const [result, setSearchResult] = useState<SearchResponse>();
+    const [tracksSaved, setSaved] = useState<CheckUsersSavedTracksResponse>();
 
     async function fetchSearchResult() {
         const authHeader = getAuthHeader();
@@ -26,12 +27,28 @@ export default function SearchPage() {
         ).then((res) => res.json());
         
         setSearchResult(data);
+        
+        if(data.tracks?.items && data.tracks.items.length > 0)
+        {
+          const trackIds = data.tracks?.items.map((i => i.id))
+          //Check if tracks of search results are saved by User
+          const saved = await fetch(
+            `${API_URL}api/spotify/me/tracks/contains?trackIds=${(trackIds)}`, {
+                headers: {
+                  'Authorization': authHeader
+                }
+              }
+          ).then((res) => res.json());     
+          
+          setSaved(saved);
+        }
     }
-
+    
     useEffect(() => {
         fetchSearchResult();
     }, [search]);
 
+    
     if (!result) return <p></p>;
     
     let Artists, searchArtists;
@@ -221,7 +238,7 @@ export default function SearchPage() {
     }
 
     let Tracks, searchTracks;
-    if(result.tracks?.items && result.tracks.items.length > 0) {
+    if(result.tracks?.items && result.tracks.items.length > 0 && tracksSaved) {
       Tracks = (
         <TrackList
           fullyLoaded = {true}
@@ -229,6 +246,7 @@ export default function SearchPage() {
           tracks={result.tracks.items.slice(0, 9)}
           loadMoreCallback={() => null}
           id_tracklist={search}
+          is_saved={tracksSaved?.slice(0, 9)}
         />
       );
 

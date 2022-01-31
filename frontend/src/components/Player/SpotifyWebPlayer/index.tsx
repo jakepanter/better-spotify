@@ -10,233 +10,264 @@ import Loader from './components/Loader';
 import Player from './components/Player';
 import Slider from './components/Slider';
 import {
-    getDevices,
-    getPlaybackState,
-    next,
-    pause,
-    play,
-    previous,
-    seek,
-    setDevice,
-    setVolume,
+  getDevices,
+  getPlaybackState,
+  next,
+  pause,
+  play,
+  previous,
+  seek,
+  setDevice,
+  setVolume,
 } from './spotify';
-import {getMergedStyles} from './styles';
+import { getMergedStyles } from './styles';
 import {
-    PlayOptions,
-    Props,
-    SpotifyDevice,
-    SpotifyPlayerCallback,
-    SpotifyPlayerStatus,
-    State,
-    StylesOptions,
-    WebPlaybackAlbum,
-    WebPlaybackArtist,
-    WebPlaybackError,
-    WebPlaybackImage,
-    WebPlaybackPlayer,
-    WebPlaybackReady,
-    WebPlaybackState,
+  PlayOptions,
+  Props,
+  SpotifyDevice,
+  SpotifyPlayerCallback,
+  SpotifyPlayerStatus,
+  State,
+  StylesOptions,
+  WebPlaybackAlbum,
+  WebPlaybackArtist,
+  WebPlaybackError,
+  WebPlaybackImage,
+  WebPlaybackPlayer,
+  WebPlaybackReady,
+  WebPlaybackState,
 } from './types';
 import {
-    getLocale,
-    getSpotifyURIType,
-    isEqualArray,
-    loadSpotifyPlayer,
-    parseVolume,
-    round,
-    STATUS,
-    TYPE,
-    validateURI,
+  getLocale,
+  getSpotifyURIType,
+  isEqualArray,
+  loadSpotifyPlayer,
+  parseVolume,
+  round,
+  STATUS,
+  TYPE,
+  validateURI,
 } from './utils';
 
 class SpotifyWebPlayer extends React.PureComponent<Props, State> {
-    private isActive = false;
-    private emptyTrack = {
-        artists: [] as WebPlaybackArtist[],
-        durationMs: 0,
-        id: '',
-        image: '',
-        name: '',
-        uri: '',
+  private isActive = false;
+  private emptyTrack = {
+    artists: [] as WebPlaybackArtist[],
+    durationMs: 0,
+    id: '',
+    image: '',
+    name: '',
+    uri: '',
+  };
+
+  private getPlayOptions = memoize((data): PlayOptions => {
+    const playOptions: PlayOptions = {
+      context_uri: undefined,
+      uris: undefined,
     };
 
-    private getPlayOptions = memoize((data): PlayOptions => {
-        const playOptions: PlayOptions = {
-            context_uri: undefined,
-            uris: undefined,
-        };
+    /* istanbul ignore else */
+    if (data) {
+      const ids = Array.isArray(data) ? data : [data];
 
-        /* istanbul ignore else */
-        if (data) {
-            const ids = Array.isArray(data) ? data : [data];
-
-            if (!ids.every(d => validateURI(d))) {
-                // eslint-disable-next-line no-console
-                console.error('Invalid URI');
-
-                return playOptions;
-            }
-
-            if (ids.some(d => getSpotifyURIType(d) === 'track')) {
-                if (!ids.every(d => getSpotifyURIType(d) === 'track')) {
-                    // eslint-disable-next-line no-console
-                    console.warn("You can't mix tracks URIs with other types");
-                }
-
-                playOptions.uris = ids.filter(d => validateURI(d) && getSpotifyURIType(d) === 'track');
-            } else {
-                if (ids.length > 1) {
-                    // eslint-disable-next-line no-console
-                    console.warn("Albums, Artists, Playlists and Podcasts can't have multiple URIs");
-                }
-
-                // eslint-disable-next-line prefer-destructuring
-                playOptions.context_uri = ids[0];
-            }
-        }
+      if (!ids.every(d => validateURI(d))) {
+        // eslint-disable-next-line no-console
+        console.error('Invalid URI');
 
         return playOptions;
-    });
+      }
 
-    private hasNewToken = false;
-    private player?: WebPlaybackPlayer;
-    private playerProgressInterval?: number;
-    private playerSyncInterval?: number;
-    private ref = React.createRef<HTMLDivElement>();
-    private seekUpdateInterval = 100;
-    private readonly styles: StylesOptions;
-    private syncTimeout?: number;
+      if (ids.some(d => getSpotifyURIType(d) === 'track')) {
+        if (!ids.every(d => getSpotifyURIType(d) === 'track')) {
+          // eslint-disable-next-line no-console
+          console.warn("You can't mix tracks URIs with other types");
+        }
 
-    constructor(props: Props) {
-        super(props);
+        playOptions.uris = ids.filter(d => validateURI(d) && getSpotifyURIType(d) === 'track');
+      } else {
+        if (ids.length > 1) {
+          // eslint-disable-next-line no-console
+          console.warn("Albums, Artists, Playlists and Podcasts can't have multiple URIs");
+        }
 
-        this.state = {
-            currentDeviceId: '',
-            deviceId: '',
-            devices: [],
-            error: '',
-            errorType: '',
-            isActive: false,
-            isInitializing: false,
-            isMagnified: false,
-            isPlaying: false,
-            isSaved: false,
-            isUnsupported: false,
-            needsUpdate: false,
-            nextTracks: [],
-            playerPosition: 'bottom',
-            position: 0,
-            previousTracks: [],
-            progressMs: 0,
-            status: STATUS.IDLE,
-            track: this.emptyTrack,
-            volume: parseVolume(props.initialVolume) || 1
-        };
-
-        this.styles = getMergedStyles(props.styles);
+        // eslint-disable-next-line prefer-destructuring
+        playOptions.context_uri = ids[0];
+      }
     }
 
-    // eslint-disable-next-line react/static-property-placement
-    static defaultProps = {
-        callback: () => undefined,
-        magnifySliderOnHover: false,
-        name: 'Spotify Web Player',
-        showSaveIcon: false,
-        syncExternalDeviceInterval: 5,
-        syncExternalDevice: false,
+    return playOptions;
+  });
+
+  private hasNewToken = false;
+  private player?: WebPlaybackPlayer;
+  private playerProgressInterval?: number;
+  private playerSyncInterval?: number;
+  private ref = React.createRef<HTMLDivElement>();
+  private seekUpdateInterval = 100;
+  private readonly styles: StylesOptions;
+  private syncTimeout?: number;
+
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      currentDeviceId: '',
+      deviceId: '',
+      devices: [],
+      error: '',
+      errorType: '',
+      isActive: false,
+      isInitializing: false,
+      isMagnified: false,
+      isPlaying: false,
+      isSaved: false,
+      isUnsupported: false,
+      needsUpdate: false,
+      nextTracks: [],
+      playerPosition: 'bottom',
+      position: 0,
+      previousTracks: [],
+      progressMs: 0,
+      status: STATUS.IDLE,
+      track: this.emptyTrack,
+      volume: parseVolume(props.initialVolume) || 1,
+      shuffleState: false,
     };
 
-    public async componentDidMount() {
-        this.isActive = true;
-        const {top = 0} = this.ref.current?.getBoundingClientRect() || {};
+    this.styles = getMergedStyles(props.styles);
+  }
 
-        this.updateState({
-            playerPosition: top > window.innerHeight / 2 ? 'bottom' : 'top',
-            status: STATUS.INITIALIZING,
-        });
+  // eslint-disable-next-line react/static-property-placement
+  static defaultProps = {
+    callback: () => undefined,
+    magnifySliderOnHover: false,
+    name: 'Spotify Web Player',
+    showSaveIcon: false,
+    syncExternalDeviceInterval: 5,
+    syncExternalDevice: false,
+  };
 
-        // @ts-ignore
-        if (!window.onSpotifyWebPlaybackSDKReady) {
-            // @ts-ignore
-            window.onSpotifyWebPlaybackSDKReady = this.initializePlayer;
-        } else {
-            this.initializePlayer();
-        }
+  public async componentDidMount() {
+    this.isActive = true;
+    const { top = 0 } = this.ref.current?.getBoundingClientRect() || {};
 
-        await loadSpotifyPlayer();
+    this.updateState({
+      playerPosition: top > window.innerHeight / 2 ? 'bottom' : 'top',
+      status: STATUS.INITIALIZING,
+    });
+
+    // @ts-ignore
+    if (!window.onSpotifyWebPlaybackSDKReady) {
+      // @ts-ignore
+      window.onSpotifyWebPlaybackSDKReady = this.initializePlayer;
+    } else {
+      this.initializePlayer();
     }
 
-    public async componentDidUpdate(previousProps: Props, previousState: State) {
-        const {currentDeviceId, deviceId, error, isInitializing, isPlaying, status, track} =
-            this.state;
-        const {
-            autoPlay,
-            callback,
-            offset,
-            play: playProp,
-            showSaveIcon,
-            syncExternalDevice,
-            token,
-            uris
-        } = this.props;
-        const isReady = previousState.status !== STATUS.READY && status === STATUS.READY;
-        const changedURIs = Array.isArray(uris)
-            ? !isEqualArray(previousProps.uris, uris)
-            : previousProps.uris !== uris;
-        const playOptions = this.getPlayOptions(uris);
+    await loadSpotifyPlayer();
+  }
 
-        const canPlay = !!currentDeviceId && !!(playOptions.context_uri || playOptions.uris);
-        const shouldPlay = (changedURIs && isPlaying) || !!(isReady && (autoPlay || playProp));
+  public async componentDidUpdate(previousProps: Props, previousState: State) {
+    const { currentDeviceId, deviceId, error, isInitializing, isPlaying, status, track } =
+      this.state;
+    const {
+      autoPlay,
+      callback,
+      offset,
+      play: playProp,
+      showSaveIcon,
+      syncExternalDevice,
+      token,
+      uris,
+    } = this.props;
+    const isReady = previousState.status !== STATUS.READY && status === STATUS.READY;
+    const changedURIs = Array.isArray(uris)
+      ? !isEqualArray(previousProps.uris, uris)
+      : previousProps.uris !== uris;
+    const playOptions = this.getPlayOptions(uris);
 
-        if (canPlay && shouldPlay) {
-            await play({deviceId: currentDeviceId, offset, ...playOptions});
+    const canPlay = !!currentDeviceId && !!(playOptions.context_uri || playOptions.uris);
+    const shouldPlay = (changedURIs && isPlaying) || !!(isReady && (autoPlay || playProp));
 
-            /* istanbul ignore else */
-            if (!isPlaying) {
-                this.updateState({isPlaying: true});
-            }
+    if (this.state.track.id === '') {
+      const playerState = await this.player?.getCurrentState();
+      const currentTrack = playerState?.track_window.current_track;
+      const previousTracks = playerState?.track_window.previous_tracks;
+      const nextTracks = playerState?.track_window.next_tracks;
+      if (currentTrack && currentTrack.id !== '') {
+        this.setState({
+          track: {
+            artists: currentTrack.artists,
+            durationMs: currentTrack.duration_ms,
+            id: currentTrack.id,
+            image: currentTrack.album.images[0].url,
+            name: currentTrack.name,
+            uri: currentTrack.uri
+          }
+        })
+      }
 
-            if (this.isExternalPlayer) {
-                this.syncTimeout = window.setTimeout(() => {
-                    this.syncDevice();
-                }, 600);
-            }
-        } else if (changedURIs && !isPlaying) {
-            this.updateState({needsUpdate: true});
-        }
+      if (previousTracks && previousTracks.length > 0) {
+        this.setState({
+          previousTracks: previousTracks
+        })
+      }
 
-        if (previousState.status !== status) {
-            callback!({
-                ...this.state,
-                type: TYPE.STATUS,
-            });
-        }
+      if (nextTracks && nextTracks.length > 0) {
+        this.setState({
+          nextTracks: nextTracks
+        })
+      }
+    }
 
-        if (previousState.currentDeviceId !== currentDeviceId && currentDeviceId) {
-            if (!isReady) {
-                callback!({
-                    ...this.state,
-                    type: TYPE.DEVICE,
-                });
-            }
+    if (canPlay && shouldPlay) {
+      await play({ deviceId: currentDeviceId, offset, ...playOptions });
 
-            await this.toggleSyncInterval(this.isExternalPlayer);
-            await this.updateSeekBar();
-        }
+      /* istanbul ignore else */
+      if (!isPlaying) {
+        this.updateState({ isPlaying: true });
+      }
 
-        if (previousState.track.id !== track.id && track.id) {
-            callback!({
-                ...this.state,
-                type: TYPE.TRACK,
-            });
+      if (this.isExternalPlayer) {
+        this.syncTimeout = window.setTimeout(() => {
+          this.syncDevice();
+        }, 600);
+      }
+    } else if (changedURIs && !isPlaying) {
+      this.updateState({ needsUpdate: true });
+    }
 
-            if (showSaveIcon) {
-                this.updateState({isSaved: false});
-            }
+    if (previousState.status !== status) {
+      callback!({
+        ...this.state,
+        type: TYPE.STATUS,
+      });
+    }
 
-            //NOTE: newly added to pass currently playing track's id to Player component
-            this.props.handlePlayingTrack(track.id)
-        }
+    if (previousState.currentDeviceId !== currentDeviceId && currentDeviceId) {
+      if (!isReady) {
+        callback!({
+          ...this.state,
+          type: TYPE.DEVICE,
+        });
+      }
+
+      await this.toggleSyncInterval(this.isExternalPlayer);
+      await this.updateSeekBar();
+    }
+
+    if (previousState.track.id !== track.id && track.id) {
+      callback!({
+        ...this.state,
+        type: TYPE.TRACK,
+      });
+
+      if (showSaveIcon) {
+        this.updateState({ isSaved: false });
+      }
+      //NOTE: newly added to pass currently playing track's id to Player component
+      this.props.handlePlayingTrack(track.id)
+    }
 
         if (previousState.isPlaying !== isPlaying) {
             this.toggleProgressBar();
@@ -472,31 +503,43 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
         });
     };
 
-    private handlePlayerStateChanges = async (state: WebPlaybackState | null) => {
-        try {
-            /* istanbul ignore else */
-            if (state) {
-                const {
-                    paused,
-                    position,
-                    track_window: {
-                        current_track: {album, artists, duration_ms, id, name, uri},
-                        next_tracks,
-                        previous_tracks,
-                    },
-                } = state;
+  private handlePlayerStateChanges = async (state: WebPlaybackState | null) => {
+    try {
+      /* istanbul ignore else */
+      if (state) {
+        const {
+          paused,
+          position,
+          track_window: {
+            current_track: { album, artists, duration_ms, id, name, uri },
+            next_tracks,
+            previous_tracks,
+          },
+          shuffle,
+          repeat_mode,
+        } = state;
 
-                const isPlaying = !paused;
-                const volume = await this.player!.getVolume();
-                const track = {
-                    artists,
-                    durationMs: duration_ms,
-                    id,
-                    image: this.setAlbumImage(album),
-                    name,
-                    uri,
-                };
-                let trackState;
+        this.props.setPlaybackStateCallback({ playback: {
+            paused: paused,
+            position: position,
+            repeatMode: repeat_mode,
+            shuffle: shuffle,
+            currentTrackId: id,
+          }
+        })
+
+
+        const isPlaying = !paused;
+        const volume = await this.player!.getVolume();
+        const track = {
+          artists,
+          durationMs: duration_ms,
+          id,
+          image: this.setAlbumImage(album),
+          name,
+          uri,
+        };
+        let trackState;
 
                 if (position === 0) {
                     trackState = {
