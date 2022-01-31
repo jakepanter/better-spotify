@@ -31,7 +31,7 @@ export default function Album(props: IProps) {
   // The list of tracks of the album
   const [tracks, setTracks] = useState<AlbumTrack[]>([]);
   // The current offset for fetching new tracks
-  const [offset, setOffset] = useState<number>(0);
+  const [offset, setOffset] = useState<number>(limit);
 
   async function fetchAlbumData() {
     const authHeader = getAuthHeader();
