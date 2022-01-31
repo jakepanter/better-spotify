@@ -6,11 +6,12 @@ import {
   CreatePlaylistResponse,
   ListOfUsersPlaylistsResponse,
   PlaylistObjectSimplified,
+  SinglePlaylistResponse,
 } from "spotify-types";
 import "./Playlists.scss";
 import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
-import { createNewPlaylist } from "../../helpers/api-helpers";
+import { createNewPlaylist, fetchPlaylist } from "../../helpers/api-helpers";
 import { getAuthHeader } from "../../helpers/api-helpers";
 
 export default function Playlists() {
@@ -25,14 +26,26 @@ export default function Playlists() {
   }, [next]);
 
   useEffect(() => {
-    // remove unfollowed playlist from items
     if (location.state && location.state.unfollowed) {
+      // remove unfollowed playlist from items
       const unfollowedPlaylistId = location.state.unfollowed;
       setItems(items.filter((list) => list.id !== unfollowedPlaylistId));
     } else if (location.state && location.state.edited) {
-      //update single playlist???
+      // update the edited playlist in items
+      const editedPlaylistId = location.state.edited;
+      updateSinglePlaylist(editedPlaylistId);
     }
   }, [location]);
+
+  const updateSinglePlaylist = async (playlistId: string) => {
+    const updatedPlaylist: SinglePlaylistResponse = await fetchPlaylist(playlistId);
+    setItems(
+      items.map((playlist) => {
+        if (playlist.id !== playlistId) return playlist;
+        return updatedPlaylist;
+      })
+    );
+  };
 
   async function fetchData(url: string) {
     const authHeader = getAuthHeader();
