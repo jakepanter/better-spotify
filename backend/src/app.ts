@@ -475,6 +475,13 @@ export default class App {
       return res.json(result);
     });
 
+    // get current song
+    this.server.get('/api/spotify/player/currently-playing', async (req: Request, res: Response) => {
+      const accessToken = getToken(req);
+      const currentlyPlaying = await this.spotifyService.getPlaybackState(accessToken);
+      return res.json(currentlyPlaying);
+    });
+
     // This must be before this.server.listen(...)
     // Serve static frontend files
     this.server.get('*', (req: Request, res: Response) => res.sendFile(path.join(`${__dirname}/../../frontend/build`)));

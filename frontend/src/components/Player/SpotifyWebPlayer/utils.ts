@@ -38,8 +38,10 @@ export function getLocale(locale?: Partial<Locale>): Locale {
 
 export function getSpotifyLink(uri: string): string {
   const [, type = '', id = ''] = uri.split(':');
-
-  return `https://open.spotify.com/${type}/${id}`;
+  if (type === "album") {
+    return `album/${id}`;
+  }
+  return "";
 }
 
 export function getSpotifyLinkTitle(name: string, locale: string): string {

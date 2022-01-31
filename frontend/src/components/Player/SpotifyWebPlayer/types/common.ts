@@ -31,6 +31,7 @@ export interface Props {
   uris?: string | string[];
   // eslint-disable-next-line no-unused-vars
   setPlaybackStateCallback: (state: PlaybackState) => void;
+  handlePlayingTrack: Function;
 }
 
 export interface State {

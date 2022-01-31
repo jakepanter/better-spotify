@@ -1,9 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import SpotifyWebPlayer from "./SpotifyWebPlayer";
+import {API_URL} from '../../utils/constants';
 import "./Player.scss";
-import { useDispatch } from 'react-redux';
-import { setPlaybackState } from '../../utils/playbackSlice';
+import {useDispatch} from 'react-redux';
+import {setPlaybackState} from '../../utils/playbackSlice';
 import {PlaybackState} from "../../utils/playbackSlice";
+import {TrackObjectFull, EpisodeObject} from "spotify-types";
+import {Link} from "react-router-dom";
+import {getAuthHeader} from '../../helpers/api-helpers';
 
 interface IProps {
     token: string;
@@ -20,7 +24,12 @@ interface ThemeState {
     trackNameColor: string;
 }
 
+interface tracks {
+    currentTrack: TrackObjectFull | EpisodeObject | null;
+}
+
 export default function Player(props: IProps) {
+    const [track, setTrack] = useState<tracks>();
 
     const [token, setToken] = useState('');
     const [theme, setTheme] = useState<ThemeState>({
@@ -30,8 +39,19 @@ export default function Player(props: IProps) {
         loaderColor: '',
         sliderTrackColor: '',
         trackArtistColor: '',
-        trackNameColor: ''
+        trackNameColor: '',
     })
+
+    // fetch the track and use for displaying information about the currently playing track
+    async function getPlayingTrackData(trackId: string) {
+        const authHeader = getAuthHeader();
+        const track = await fetch(`${API_URL}api/spotify/track/${trackId}`, {
+            headers: {
+                'Authorization': authHeader
+            }
+        }).then((res) => res.json());
+        setTrack({currentTrack: track});
+    }
 
     useEffect(() => {
         if (props.lightTheme) {
@@ -70,20 +90,29 @@ export default function Player(props: IProps) {
         <div className={'Player'}>
             {token &&
             <SpotifyWebPlayer
-              token={token}
-              uris={['spotify:playlist:37i9dQZF1EOedu9gJ5DTVp']}
-              name={'Better Spotify 🚀'}
-              styles={{
-                  altColor: theme.altColor,
-                  color: theme.color,
-                  bgColor: theme.bgColor,
-                  loaderColor: theme.loaderColor,
-                  trackArtistColor: theme.trackArtistColor,
-                  trackNameColor: theme.trackNameColor
-              }}
-              setPlaybackStateCallback={playbackCallback}
+                token={token}
+                uris={['spotify:playlist:37i9dQZF1EOedu9gJ5DTVp']}
+                name={'Better Spotify 🚀'}
+                handlePlayingTrack={getPlayingTrackData}
+                styles={{
+                    altColor: theme.altColor,
+                    color: theme.color,
+                    bgColor: theme.bgColor,
+                    loaderColor: theme.loaderColor,
+                    trackArtistColor: theme.trackArtistColor,
+                    trackNameColor: theme.trackNameColor
+                }}
+                setPlaybackStateCallback={playbackCallback}
             />
             }
+            {track !== undefined && track.currentTrack && track.currentTrack.type === "track" ?
+                (<div className={"redirect"}>
+                    <Link to={`/album/${track.currentTrack.album.id}`} className={"redirect-album"}/>
+                    <div className={"test"}>
+                        <span className={"artists-section"}>{track.currentTrack.artists.map<React.ReactNode>((a) =>
+                            <Link to={`/artist/${a.id}`} className={"artists-name"}
+                                  key={a.id}>{a.name}</Link>).reduce((a, b) => [a, ', ', b])}</span></div>
+                </div>) : (<></>)}
         </div>
     )
 }

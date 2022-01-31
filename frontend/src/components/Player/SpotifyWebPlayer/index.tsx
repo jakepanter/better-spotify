@@ -265,241 +265,243 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
       if (showSaveIcon) {
         this.updateState({ isSaved: false });
       }
+      //NOTE: newly added to pass currently playing track's id to Player component
+      this.props.handlePlayingTrack(track.id)
     }
 
-    if (previousState.isPlaying !== isPlaying) {
-      this.toggleProgressBar();
-      await this.toggleSyncInterval(this.isExternalPlayer);
+        if (previousState.isPlaying !== isPlaying) {
+            this.toggleProgressBar();
+            await this.toggleSyncInterval(this.isExternalPlayer);
 
-      callback!({
-        ...this.state,
-        type: TYPE.PLAYER,
-      });
+            callback!({
+                ...this.state,
+                type: TYPE.PLAYER,
+            });
+        }
+
+        if (token && previousProps.token !== token) {
+            this.hasNewToken = true;
+
+            if (!isInitializing) {
+                this.initializePlayer();
+            } else {
+                this.hasNewToken = true;
+            }
+        }
+
+        if (previousProps.play !== playProp && playProp !== isPlaying) {
+            await this.togglePlay(!track.id);
+        }
+
+        if (previousProps.offset !== offset) {
+            await this.toggleOffset();
+        }
+
+        if (previousState.isInitializing && !isInitializing) {
+            if (error === 'authentication_error' && this.hasNewToken) {
+                this.hasNewToken = false;
+                this.initializePlayer();
+            }
+
+            if (syncExternalDevice && !uris) {
+                const player: SpotifyPlayerStatus = await getPlaybackState();
+
+                /* istanbul ignore else */
+                if (player && player.is_playing && player.device.id !== deviceId) {
+                    this.setExternalDevice(player.device.id);
+                }
+            }
+        }
     }
 
-    if (token && previousProps.token !== token) {
-      this.hasNewToken = true;
-
-      if (!isInitializing) {
-        this.initializePlayer();
-      } else {
-        this.hasNewToken = true;
-      }
-    }
-
-    if (previousProps.play !== playProp && playProp !== isPlaying) {
-      await this.togglePlay(!track.id);
-    }
-
-    if (previousProps.offset !== offset) {
-      await this.toggleOffset();
-    }
-
-    if (previousState.isInitializing && !isInitializing) {
-      if (error === 'authentication_error' && this.hasNewToken) {
-        this.hasNewToken = false;
-        this.initializePlayer();
-      }
-
-      if (syncExternalDevice && !uris) {
-        const player: SpotifyPlayerStatus = await getPlaybackState();
+    public componentWillUnmount() {
+        this.isActive = false;
 
         /* istanbul ignore else */
-        if (player && player.is_playing && player.device.id !== deviceId) {
-          this.setExternalDevice(player.device.id);
+        if (this.player) {
+            this.player.disconnect();
         }
-      }
-    }
-  }
 
-  public componentWillUnmount() {
-    this.isActive = false;
-
-    /* istanbul ignore else */
-    if (this.player) {
-      this.player.disconnect();
+        clearInterval(this.playerSyncInterval);
+        clearInterval(this.playerProgressInterval);
+        clearTimeout(this.syncTimeout);
     }
 
-    clearInterval(this.playerSyncInterval);
-    clearInterval(this.playerProgressInterval);
-    clearTimeout(this.syncTimeout);
-  }
+    private get isExternalPlayer(): boolean {
+        const {currentDeviceId, deviceId, status} = this.state;
 
-  private get isExternalPlayer(): boolean {
-    const { currentDeviceId, deviceId, status } = this.state;
+        return (currentDeviceId && currentDeviceId !== deviceId) || status === STATUS.UNSUPPORTED;
+    }
 
-    return (currentDeviceId && currentDeviceId !== deviceId) || status === STATUS.UNSUPPORTED;
-  }
+    private handleChangeRange = async (position: number) => {
+        const {track} = this.state;
+        const {callback} = this.props;
+        let progress = 0;
 
-  private handleChangeRange = async (position: number) => {
-    const { track } = this.state;
-    const { callback } = this.props;
-    let progress = 0;
+        try {
+            const percentage = position / 100;
 
-    try {
-      const percentage = position / 100;
+            if (this.isExternalPlayer) {
+                progress = Math.round(track.durationMs * percentage);
+                await seek(progress);
 
-      if (this.isExternalPlayer) {
-        progress = Math.round(track.durationMs * percentage);
-        await seek(progress);
+                this.updateState({
+                    position,
+                    progressMs: progress,
+                });
+            } else if (this.player) {
+                const state = (await this.player.getCurrentState()) as WebPlaybackState;
+
+                if (state) {
+                    progress = Math.round(state.track_window.current_track.duration_ms * percentage);
+                    await this.player.seek(progress);
+
+                    this.updateState({
+                        position,
+                        progressMs: progress,
+                    });
+                } else {
+                    this.updateState({position: 0});
+                }
+            }
+
+            if (callback) {
+                callback({
+                    ...this.state,
+                    type: TYPE.PROGRESS,
+                });
+            }
+        } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error(error);
+        }
+    };
+
+    private handleClickTogglePlay = async () => {
+        const {isActive} = this.state;
+
+        try {
+            await this.togglePlay(!this.isExternalPlayer && !isActive);
+        } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error(error);
+        }
+    };
+
+    private handleClickPrevious = async () => {
+        try {
+            /* istanbul ignore else */
+            if (this.isExternalPlayer) {
+
+                await previous();
+                this.syncTimeout = window.setTimeout(() => {
+                    this.syncDevice();
+                }, 300);
+            } else if (this.player) {
+                await this.player.previousTrack();
+            }
+        } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error(error);
+        }
+    };
+
+    private handleClickNext = async () => {
+        try {
+            /* istanbul ignore else */
+            if (this.isExternalPlayer) {
+
+                await next();
+                this.syncTimeout = window.setTimeout(() => {
+                    this.syncDevice();
+                }, 300);
+            } else if (this.player) {
+                await this.player.nextTrack();
+            }
+        } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error(error);
+        }
+    };
+
+    private handleClickDevice = async (deviceId: string) => {
+        const {isUnsupported} = this.state;
+        const {autoPlay, persistDeviceSelection} = this.props;
+
+        this.updateState({currentDeviceId: deviceId});
+
+        try {
+            await setDevice(deviceId);
+
+            /* istanbul ignore else */
+            if (persistDeviceSelection) {
+                sessionStorage.setItem('rswpDeviceId', deviceId);
+            }
+
+            /* istanbul ignore else */
+            if (isUnsupported) {
+                await this.syncDevice();
+
+                const player: SpotifyPlayerStatus = await getPlaybackState();
+
+                if (player && !player.is_playing && autoPlay) {
+                    await this.togglePlay(true);
+                }
+            }
+        } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error(error);
+        }
+    };
+
+    private handleFavoriteStatusChange = (status: boolean) => {
+        const {isSaved} = this.state;
+        const {callback} = this.props;
+
+        this.updateState({isSaved: status});
+
+        /* istanbul ignore else */
+        if (isSaved !== status) {
+            callback!({
+                ...{
+                    ...this.state,
+                    isSaved: status,
+                },
+                type: TYPE.FAVORITE,
+            });
+        }
+    };
+
+    private handlePlayerErrors = async (type: string, message: string) => {
+        const {status} = this.state;
+        const isPlaybackError = type === 'playback_error';
+        const isInitializationError = type === 'initialization_error';
+        let nextStatus = status;
+        let devices: SpotifyDevice[] = [];
+
+        if (this.player && !isPlaybackError) {
+            await this.player.disconnect();
+        }
+
+        if (isInitializationError) {
+            nextStatus = STATUS.UNSUPPORTED;
+
+            ({devices = []} = await getDevices());
+        }
+
+        if (!isInitializationError && !isPlaybackError) {
+            nextStatus = STATUS.ERROR;
+        }
 
         this.updateState({
-          position,
-          progressMs: progress,
+            devices,
+            error: message,
+            errorType: type,
+            isInitializing: false,
+            isUnsupported: isInitializationError,
+            status: nextStatus,
         });
-      } else if (this.player) {
-        const state = (await this.player.getCurrentState()) as WebPlaybackState;
-
-        if (state) {
-          progress = Math.round(state.track_window.current_track.duration_ms * percentage);
-          await this.player.seek(progress);
-
-          this.updateState({
-            position,
-            progressMs: progress,
-          });
-        } else {
-          this.updateState({ position: 0 });
-        }
-      }
-
-      if (callback) {
-        callback({
-          ...this.state,
-          type: TYPE.PROGRESS,
-        });
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    }
-  };
-
-  private handleClickTogglePlay = async () => {
-    const { isActive } = this.state;
-
-    try {
-      await this.togglePlay(!this.isExternalPlayer && !isActive);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    }
-  };
-
-  private handleClickPrevious = async () => {
-    try {
-      /* istanbul ignore else */
-      if (this.isExternalPlayer) {
-
-        await previous();
-        this.syncTimeout = window.setTimeout(() => {
-          this.syncDevice();
-        }, 300);
-      } else if (this.player) {
-        await this.player.previousTrack();
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    }
-  };
-
-  private handleClickNext = async () => {
-    try {
-      /* istanbul ignore else */
-      if (this.isExternalPlayer) {
-
-        await next();
-        this.syncTimeout = window.setTimeout(() => {
-          this.syncDevice();
-        }, 300);
-      } else if (this.player) {
-        await this.player.nextTrack();
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    }
-  };
-
-  private handleClickDevice = async (deviceId: string) => {
-    const { isUnsupported } = this.state;
-    const { autoPlay, persistDeviceSelection } = this.props;
-
-    this.updateState({ currentDeviceId: deviceId });
-
-    try {
-      await setDevice(deviceId);
-
-      /* istanbul ignore else */
-      if (persistDeviceSelection) {
-        sessionStorage.setItem('rswpDeviceId', deviceId);
-      }
-
-      /* istanbul ignore else */
-      if (isUnsupported) {
-        await this.syncDevice();
-
-        const player: SpotifyPlayerStatus = await getPlaybackState();
-
-        if (player && !player.is_playing && autoPlay) {
-          await this.togglePlay(true);
-        }
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    }
-  };
-
-  private handleFavoriteStatusChange = (status: boolean) => {
-    const { isSaved } = this.state;
-    const { callback } = this.props;
-
-    this.updateState({ isSaved: status });
-
-    /* istanbul ignore else */
-    if (isSaved !== status) {
-      callback!({
-        ...{
-          ...this.state,
-          isSaved: status,
-        },
-        type: TYPE.FAVORITE,
-      });
-    }
-  };
-
-  private handlePlayerErrors = async (type: string, message: string) => {
-    const { status } = this.state;
-    const isPlaybackError = type === 'playback_error';
-    const isInitializationError = type === 'initialization_error';
-    let nextStatus = status;
-    let devices: SpotifyDevice[] = [];
-
-    if (this.player && !isPlaybackError) {
-      await this.player.disconnect();
-    }
-
-    if (isInitializationError) {
-      nextStatus = STATUS.UNSUPPORTED;
-
-      ({ devices = [] } = await getDevices());
-    }
-
-    if (!isInitializationError && !isPlaybackError) {
-      nextStatus = STATUS.ERROR;
-    }
-
-    this.updateState({
-      devices,
-      error: message,
-      errorType: type,
-      isInitializing: false,
-      isUnsupported: isInitializationError,
-      status: nextStatus,
-    });
-  };
+    };
 
   private handlePlayerStateChanges = async (state: WebPlaybackState | null) => {
     try {
@@ -539,471 +541,471 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
         };
         let trackState;
 
-        if (position === 0) {
-          trackState = {
-            nextTracks: next_tracks,
-            position: 0,
-            previousTracks: previous_tracks,
-            track,
-          };
+                if (position === 0) {
+                    trackState = {
+                        nextTracks: next_tracks,
+                        position: 0,
+                        previousTracks: previous_tracks,
+                        track,
+                    };
+                }
+
+                this.updateState({
+                    error: '',
+                    errorType: '',
+                    isActive: true,
+                    isPlaying,
+                    progressMs: position,
+                    volume: round(volume),
+                    ...trackState,
+                });
+            } else if (this.isExternalPlayer) {
+                await this.syncDevice();
+            } else {
+                this.updateState({
+                    isActive: false,
+                    isPlaying: false,
+                    nextTracks: [],
+                    position: 0,
+                    previousTracks: [],
+                    track: {
+                        artists: '',
+                        durationMs: 0,
+                        id: '',
+                        image: '',
+                        name: '',
+                        uri: '',
+                    },
+                });
+            }
+        } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error(error);
+        }
+    };
+
+    private handlePlayerStatus = async ({device_id}: WebPlaybackReady) => {
+        const {currentDeviceId, devices} = await this.initializeDevices(device_id);
+
+        this.updateState({
+            currentDeviceId,
+            deviceId: device_id,
+            devices,
+            isInitializing: false,
+            status: device_id ? STATUS.READY : STATUS.IDLE,
+        });
+    };
+
+    private handleToggleMagnify = () => {
+        const {magnifySliderOnHover} = this.props;
+
+        if (magnifySliderOnHover) {
+            this.updateState((previousState: State) => {
+                return {isMagnified: !previousState.isMagnified};
+            });
+        }
+    };
+
+    private async initializeDevices(id: string) {
+        const {persistDeviceSelection} = this.props;
+        const {devices} = await getDevices();
+        let currentDeviceId = id;
+
+        if (persistDeviceSelection) {
+            const savedDeviceId = sessionStorage.getItem('rswpDeviceId');
+
+            /* istanbul ignore else */
+            if (!savedDeviceId || !devices.some((d: SpotifyDevice) => d.id === savedDeviceId)) {
+                sessionStorage.setItem('rswpDeviceId', currentDeviceId);
+            } else {
+                currentDeviceId = savedDeviceId;
+            }
         }
 
-        this.updateState({
-          error: '',
-          errorType: '',
-          isActive: true,
-          isPlaying,
-          progressMs: position,
-          volume: round(volume),
-          ...trackState,
-        });
-      } else if (this.isExternalPlayer) {
-        await this.syncDevice();
-      } else {
-        this.updateState({
-          isActive: false,
-          isPlaying: false,
-          nextTracks: [],
-          position: 0,
-          previousTracks: [],
-          track: {
-            artists: '',
-            durationMs: 0,
-            id: '',
-            image: '',
-            name: '',
-            uri: '',
-          },
-        });
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    }
-  };
+        await setDevice(id, false);
 
-  private handlePlayerStatus = async ({ device_id }: WebPlaybackReady) => {
-    const { currentDeviceId, devices } = await this.initializeDevices(device_id);
-
-    this.updateState({
-      currentDeviceId,
-      deviceId: device_id,
-      devices,
-      isInitializing: false,
-      status: device_id ? STATUS.READY : STATUS.IDLE,
-    });
-  };
-
-  private handleToggleMagnify = () => {
-    const { magnifySliderOnHover } = this.props;
-
-    if (magnifySliderOnHover) {
-      this.updateState((previousState: State) => {
-        return { isMagnified: !previousState.isMagnified };
-      });
-    }
-  };
-
-  private async initializeDevices(id: string) {
-    const { persistDeviceSelection } = this.props;
-    const { devices } = await getDevices();
-    let currentDeviceId = id;
-
-    if (persistDeviceSelection) {
-      const savedDeviceId = sessionStorage.getItem('rswpDeviceId');
-
-      /* istanbul ignore else */
-      if (!savedDeviceId || !devices.some((d: SpotifyDevice) => d.id === savedDeviceId)) {
-        sessionStorage.setItem('rswpDeviceId', currentDeviceId);
-      } else {
-        currentDeviceId = savedDeviceId;
-      }
+        return {currentDeviceId, devices};
     }
 
-    await setDevice(id, false);
+    private initializePlayer = () => {
+        const {volume} = this.state;
+        const {name, token} = this.props;
 
-    return { currentDeviceId, devices };
-  }
+        this.updateState({isInitializing: true});
 
-  private initializePlayer = () => {
-    const { volume } = this.state;
-    const { name, token } = this.props;
+        // @ts-ignore
+        this.player = new window.Spotify.Player({
+            getOAuthToken: (callback: SpotifyPlayerCallback) => {
+                callback(token);
+            },
+            name,
+            volume,
+        }) as WebPlaybackPlayer;
 
-    this.updateState({ isInitializing: true });
-
-    // @ts-ignore
-    this.player = new window.Spotify.Player({
-      getOAuthToken: (callback: SpotifyPlayerCallback) => {
-        callback(token);
-      },
-      name,
-      volume,
-    }) as WebPlaybackPlayer;
-
-    this.player.addListener('ready', this.handlePlayerStatus);
-    this.player.addListener('not_ready', this.handlePlayerStatus);
-    this.player.addListener('player_state_changed', this.handlePlayerStateChanges);
-    this.player.addListener('initialization_error', (error: WebPlaybackError) =>
-      this.handlePlayerErrors('initialization_error', error.message),
-    );
-    this.player.addListener('authentication_error', (error: WebPlaybackError) =>
-      this.handlePlayerErrors('authentication_error', error.message),
-    );
-    this.player.addListener('account_error', (error: WebPlaybackError) =>
-      this.handlePlayerErrors('account_error', error.message),
-    );
-    this.player.addListener('playback_error', (error: WebPlaybackError) =>
-      this.handlePlayerErrors('playback_error', error.message),
-    );
-
-    this.player.connect();
-  };
-
-  private setAlbumImage = (album: WebPlaybackAlbum): string => {
-    const width = Math.min(...album.images.map(d => d.width));
-    const thumb: WebPlaybackImage =
-      album.images.find(d => d.width === width) || ({} as WebPlaybackImage);
-
-    return thumb.url;
-  };
-
-  private setExternalDevice = (id: string) => {
-    this.updateState({ currentDeviceId: id, isPlaying: true });
-  };
-
-  private setVolume = async (volume: number) => {
-
-    /* istanbul ignore else */
-    if (this.isExternalPlayer) {
-      await setVolume(Math.round(volume * 100));
-      await this.syncDevice();
-    } else if (this.player) {
-      await this.player.setVolume(volume);
-    }
-
-    this.updateState({ volume });
-  };
-
-  private syncDevice = async () => {
-    if (!this.isActive) {
-      return;
-    }
-
-    const { deviceId } = this.state;
-
-    try {
-      const player: SpotifyPlayerStatus = await getPlaybackState();
-      let track = this.emptyTrack;
-
-      if (!player) {
-        throw new Error('No player');
-      }
-
-      /* istanbul ignore else */
-      if (player.item) {
-        track = {
-          artists: player.item.artists,
-          durationMs: player.item.duration_ms,
-          id: player.item.id,
-          image: this.setAlbumImage(player.item.album),
-          name: player.item.name,
-          uri: player.item.uri,
-        };
-      }
-
-      this.updateState({
-        error: '',
-        errorType: '',
-        isActive: true,
-        isPlaying: player.is_playing,
-        nextTracks: [],
-        previousTracks: [],
-        progressMs: player.item ? player.progress_ms : 0,
-        status: STATUS.READY,
-        track,
-        volume: parseVolume(player.device.volume_percent),
-      });
-    } catch (error: any) {
-      const state = {
-        isActive: false,
-        isPlaying: false,
-        position: 0,
-        track: this.emptyTrack,
-      };
-
-      if (deviceId) {
-        this.updateState({
-          currentDeviceId: deviceId,
-          ...state,
-        });
-
-        return;
-      }
-
-      this.updateState({
-        error: error.message,
-        errorType: 'player_status',
-        status: STATUS.ERROR,
-        ...state,
-      });
-    }
-  };
-
-  private async toggleSyncInterval(shouldSync: boolean) {
-    const { syncExternalDeviceInterval } = this.props;
-
-    try {
-      if (this.isExternalPlayer && shouldSync && !this.playerSyncInterval) {
-        await this.syncDevice();
-
-        clearInterval(this.playerSyncInterval);
-        this.playerSyncInterval = window.setInterval(
-          this.syncDevice,
-          syncExternalDeviceInterval! * 1000,
+        this.player.addListener('ready', this.handlePlayerStatus);
+        this.player.addListener('not_ready', this.handlePlayerStatus);
+        this.player.addListener('player_state_changed', this.handlePlayerStateChanges);
+        this.player.addListener('initialization_error', (error: WebPlaybackError) =>
+            this.handlePlayerErrors('initialization_error', error.message),
         );
-      }
-
-      if ((!shouldSync || !this.isExternalPlayer) && this.playerSyncInterval) {
-        clearInterval(this.playerSyncInterval);
-        this.playerSyncInterval = undefined;
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    }
-  }
-
-  private toggleProgressBar() {
-    const { isPlaying } = this.state;
-
-    /* istanbul ignore else */
-    if (isPlaying) {
-      /* istanbul ignore else */
-      if (!this.playerProgressInterval) {
-        this.playerProgressInterval = window.setInterval(
-          this.updateSeekBar,
-          this.seekUpdateInterval,
+        this.player.addListener('authentication_error', (error: WebPlaybackError) =>
+            this.handlePlayerErrors('authentication_error', error.message),
         );
-      }
-    } else if (this.playerProgressInterval) {
-      clearInterval(this.playerProgressInterval);
-      this.playerProgressInterval = undefined;
-    }
-  }
+        this.player.addListener('account_error', (error: WebPlaybackError) =>
+            this.handlePlayerErrors('account_error', error.message),
+        );
+        this.player.addListener('playback_error', (error: WebPlaybackError) =>
+            this.handlePlayerErrors('playback_error', error.message),
+        );
 
-  private toggleOffset = async () => {
-    const { currentDeviceId, isPlaying } = this.state;
-    const { offset, uris } = this.props;
+        this.player.connect();
+    };
 
-    if (isPlaying && typeof offset === 'number' && Array.isArray(uris)) {
-      await play({ deviceId: currentDeviceId, offset, uris });
-    }
-  };
+    private setAlbumImage = (album: WebPlaybackAlbum): string => {
+        const width = Math.min(...album.images.map(d => d.width));
+        const thumb: WebPlaybackImage =
+            album.images.find(d => d.width === width) || ({} as WebPlaybackImage);
 
-  private togglePlay = async (init = false) => {
-    const { currentDeviceId, isPlaying, needsUpdate } = this.state;
-    const { offset, uris } = this.props;
-    const shouldInitialize = init || needsUpdate;
-    const playOptions = this.getPlayOptions(uris);
+        return thumb.url;
+    };
 
-    try {
-      /* istanbul ignore else */
-      if (this.isExternalPlayer) {
-        if (!isPlaying) {
-          await play({
-            deviceId: currentDeviceId,
-            offset,
-            ...(shouldInitialize ? playOptions : undefined),
-          });
-        } else {
-          await pause();
+    private setExternalDevice = (id: string) => {
+        this.updateState({currentDeviceId: id, isPlaying: true});
+    };
 
-          this.updateState({ isPlaying: false });
-        }
-
-        this.syncTimeout = window.setTimeout(() => {
-          this.syncDevice();
-        }, 300);
-      } else if (this.player) {
-        const playerState = await this.player.getCurrentState();
-
-        this.player.activateElement();
-
-        if (
-          (!playerState && !!(playOptions.context_uri || playOptions.uris)) ||
-          (shouldInitialize && playerState && playerState.paused)
-        ) {
-          await play({
-            deviceId: currentDeviceId,
-            offset,
-            ...(shouldInitialize ? playOptions : undefined),
-          });
-        } else {
-          await this.player.togglePlay();
-        }
-      }
-
-      if (needsUpdate) {
-        this.updateState({ needsUpdate: false });
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    }
-  };
-
-  private updateSeekBar = async () => {
-    if (!this.isActive) {
-      return;
-    }
-
-    const { progressMs, track } = this.state;
-
-    try {
-      /* istanbul ignore else */
-      if (this.isExternalPlayer) {
-        let position = progressMs / track.durationMs;
-
-        position = Number(((Number.isFinite(position) ? position : 0) * 100).toFixed(1));
-
-        this.updateState({
-          position,
-          progressMs: progressMs + this.seekUpdateInterval,
-        });
-      } else if (this.player) {
-        const state = (await this.player.getCurrentState()) as WebPlaybackState;
+    private setVolume = async (volume: number) => {
 
         /* istanbul ignore else */
-        if (state) {
-          const progress = state.position;
-          const position = Number(
-            ((progress / state.track_window.current_track.duration_ms) * 100).toFixed(1),
-          );
-
-          this.updateState({
-            position,
-            progressMs: progress + this.seekUpdateInterval,
-          });
+        if (this.isExternalPlayer) {
+            await setVolume(Math.round(volume * 100));
+            await this.syncDevice();
+        } else if (this.player) {
+            await this.player.setVolume(volume);
         }
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
+
+        this.updateState({volume});
+    };
+
+    private syncDevice = async () => {
+        if (!this.isActive) {
+            return;
+        }
+
+        const {deviceId} = this.state;
+
+        try {
+            const player: SpotifyPlayerStatus = await getPlaybackState();
+            let track = this.emptyTrack;
+
+            if (!player) {
+                throw new Error('No player');
+            }
+
+            /* istanbul ignore else */
+            if (player.item) {
+                track = {
+                    artists: player.item.artists,
+                    durationMs: player.item.duration_ms,
+                    id: player.item.id,
+                    image: this.setAlbumImage(player.item.album),
+                    name: player.item.name,
+                    uri: player.item.uri,
+                };
+            }
+
+            this.updateState({
+                error: '',
+                errorType: '',
+                isActive: true,
+                isPlaying: player.is_playing,
+                nextTracks: [],
+                previousTracks: [],
+                progressMs: player.item ? player.progress_ms : 0,
+                status: STATUS.READY,
+                track,
+                volume: parseVolume(player.device.volume_percent),
+            });
+        } catch (error: any) {
+            const state = {
+                isActive: false,
+                isPlaying: false,
+                position: 0,
+                track: this.emptyTrack,
+            };
+
+            if (deviceId) {
+                this.updateState({
+                    currentDeviceId: deviceId,
+                    ...state,
+                });
+
+                return;
+            }
+
+            this.updateState({
+                error: error.message,
+                errorType: 'player_status',
+                status: STATUS.ERROR,
+                ...state,
+            });
+        }
+    };
+
+    private async toggleSyncInterval(shouldSync: boolean) {
+        const {syncExternalDeviceInterval} = this.props;
+
+        try {
+            if (this.isExternalPlayer && shouldSync && !this.playerSyncInterval) {
+                await this.syncDevice();
+
+                clearInterval(this.playerSyncInterval);
+                this.playerSyncInterval = window.setInterval(
+                    this.syncDevice,
+                    syncExternalDeviceInterval! * 1000,
+                );
+            }
+
+            if ((!shouldSync || !this.isExternalPlayer) && this.playerSyncInterval) {
+                clearInterval(this.playerSyncInterval);
+                this.playerSyncInterval = undefined;
+            }
+        } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error(error);
+        }
     }
-  };
 
-  private updateState = (state = {}) => {
-    if (!this.isActive) {
-      return;
+    private toggleProgressBar() {
+        const {isPlaying} = this.state;
+
+        /* istanbul ignore else */
+        if (isPlaying) {
+            /* istanbul ignore else */
+            if (!this.playerProgressInterval) {
+                this.playerProgressInterval = window.setInterval(
+                    this.updateSeekBar,
+                    this.seekUpdateInterval,
+                );
+            }
+        } else if (this.playerProgressInterval) {
+            clearInterval(this.playerProgressInterval);
+            this.playerProgressInterval = undefined;
+        }
     }
 
-    this.setState(state);
-  };
+    private toggleOffset = async () => {
+        const {currentDeviceId, isPlaying} = this.state;
+        const {offset, uris} = this.props;
 
-  public render() {
-    const {
-      currentDeviceId,
-      deviceId,
-      devices,
-      error,
-      errorType,
-      isActive,
-      isMagnified,
-      isPlaying,
-      isUnsupported,
-      nextTracks,
-      playerPosition,
-      position,
-      previousTracks,
-      status,
-      track,
-      volume,
-    } = this.state;
-    const { locale, name, showSaveIcon, token, updateSavedStatus } = this.props;
-    const isReady = [STATUS.READY, STATUS.UNSUPPORTED].indexOf(status) >= 0;
-    const isPlaybackError = errorType === 'playback_error';
-    const localeMerged = getLocale(locale);
+        if (isPlaying && typeof offset === 'number' && Array.isArray(uris)) {
+            await play({deviceId: currentDeviceId, offset, uris});
+        }
+    };
 
-    let output = <Loader styles={this.styles!} />;
-    let info;
+    private togglePlay = async (init = false) => {
+        const {currentDeviceId, isPlaying, needsUpdate} = this.state;
+        const {offset, uris} = this.props;
+        const shouldInitialize = init || needsUpdate;
+        const playOptions = this.getPlayOptions(uris);
 
-    if (isPlaybackError) {
-      info = <p>{error}</p>;
-    }
+        try {
+            /* istanbul ignore else */
+            if (this.isExternalPlayer) {
+                if (!isPlaying) {
+                    await play({
+                        deviceId: currentDeviceId,
+                        offset,
+                        ...(shouldInitialize ? playOptions : undefined),
+                    });
+                } else {
+                    await pause();
 
-    if (isReady) {
-      /* istanbul ignore else */
-      if (!info) {
-        info = (
-          <Info
-            isActive={isActive}
-            locale={localeMerged}
-            onFavoriteStatusChange={this.handleFavoriteStatusChange}
-            showSaveIcon={showSaveIcon!}
-            styles={this.styles}
-            token={token}
-            track={track}
-            updateSavedStatus={updateSavedStatus}
-          />
+                    this.updateState({isPlaying: false});
+                }
+
+                this.syncTimeout = window.setTimeout(() => {
+                    this.syncDevice();
+                }, 300);
+            } else if (this.player) {
+                const playerState = await this.player.getCurrentState();
+
+                this.player.activateElement();
+
+                if (
+                    (!playerState && !!(playOptions.context_uri || playOptions.uris)) ||
+                    (shouldInitialize && playerState && playerState.paused)
+                ) {
+                    await play({
+                        deviceId: currentDeviceId,
+                        offset,
+                        ...(shouldInitialize ? playOptions : undefined),
+                    });
+                } else {
+                    await this.player.togglePlay();
+                }
+            }
+
+            if (needsUpdate) {
+                this.updateState({needsUpdate: false});
+            }
+        } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error(error);
+        }
+    };
+
+    private updateSeekBar = async () => {
+        if (!this.isActive) {
+            return;
+        }
+
+        const {progressMs, track} = this.state;
+
+        try {
+            /* istanbul ignore else */
+            if (this.isExternalPlayer) {
+                let position = progressMs / track.durationMs;
+
+                position = Number(((Number.isFinite(position) ? position : 0) * 100).toFixed(1));
+
+                this.updateState({
+                    position,
+                    progressMs: progressMs + this.seekUpdateInterval,
+                });
+            } else if (this.player) {
+                const state = (await this.player.getCurrentState()) as WebPlaybackState;
+
+                /* istanbul ignore else */
+                if (state) {
+                    const progress = state.position;
+                    const position = Number(
+                        ((progress / state.track_window.current_track.duration_ms) * 100).toFixed(1),
+                    );
+
+                    this.updateState({
+                        position,
+                        progressMs: progress + this.seekUpdateInterval,
+                    });
+                }
+            }
+        } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error(error);
+        }
+    };
+
+    private updateState = (state = {}) => {
+        if (!this.isActive) {
+            return;
+        }
+
+        this.setState(state);
+    };
+
+    public render() {
+        const {
+            currentDeviceId,
+            deviceId,
+            devices,
+            error,
+            errorType,
+            isActive,
+            isMagnified,
+            isPlaying,
+            isUnsupported,
+            nextTracks,
+            playerPosition,
+            position,
+            previousTracks,
+            status,
+            track,
+            volume,
+        } = this.state;
+        const {locale, name, showSaveIcon, token, updateSavedStatus} = this.props;
+        const isReady = [STATUS.READY, STATUS.UNSUPPORTED].indexOf(status) >= 0;
+        const isPlaybackError = errorType === 'playback_error';
+        const localeMerged = getLocale(locale);
+
+        let output = <Loader styles={this.styles!}/>;
+        let info;
+
+        if (isPlaybackError) {
+            info = <p>{error}</p>;
+        }
+
+        if (isReady) {
+            /* istanbul ignore else */
+            if (!info) {
+                info = (
+                    <Info
+                        isActive={isActive}
+                        locale={localeMerged}
+                        onFavoriteStatusChange={this.handleFavoriteStatusChange}
+                        showSaveIcon={showSaveIcon!}
+                        styles={this.styles}
+                        token={token}
+                        track={track}
+                        updateSavedStatus={updateSavedStatus}
+                    />
+                );
+            }
+
+            output = (
+                <>
+                    <div>{info}</div>
+                    <Controls
+                        isExternalDevice={this.isExternalPlayer}
+                        isPlaying={isPlaying}
+                        locale={localeMerged}
+                        nextTracks={nextTracks}
+                        onClickNext={this.handleClickNext}
+                        onClickPrevious={this.handleClickPrevious}
+                        onClickTogglePlay={this.handleClickTogglePlay}
+                        previousTracks={previousTracks}
+                        styles={this.styles}
+                    />
+                    <Actions
+                        currentDeviceId={currentDeviceId}
+                        deviceId={deviceId}
+                        devices={devices}
+                        isDevicesOpen={isUnsupported && !deviceId}
+                        locale={localeMerged}
+                        onClickDevice={this.handleClickDevice}
+                        playerPosition={playerPosition}
+                        setVolume={this.setVolume}
+                        styles={this.styles}
+                        volume={volume}
+                    />
+                </>
+            );
+        }
+
+        if (status === STATUS.ERROR) {
+            output = (
+                <ErrorMessage styles={this.styles}>
+                    {name}: {error}
+                </ErrorMessage>
+            );
+        }
+
+        return (
+            <Player ref={this.ref} styles={this.styles}>
+                {isReady && (
+                    <Slider
+                        isMagnified={isMagnified}
+                        onChangeRange={this.handleChangeRange}
+                        onToggleMagnify={this.handleToggleMagnify}
+                        position={position}
+                        styles={this.styles!}
+                    />
+                )}
+                <Content styles={this.styles}>{output}</Content>
+            </Player>
         );
-      }
-
-      output = (
-        <>
-          <div>{info}</div>
-          <Controls
-            isExternalDevice={this.isExternalPlayer}
-            isPlaying={isPlaying}
-            locale={localeMerged}
-            nextTracks={nextTracks}
-            onClickNext={this.handleClickNext}
-            onClickPrevious={this.handleClickPrevious}
-            onClickTogglePlay={this.handleClickTogglePlay}
-            previousTracks={previousTracks}
-            styles={this.styles}
-          />
-          <Actions
-            currentDeviceId={currentDeviceId}
-            deviceId={deviceId}
-            devices={devices}
-            isDevicesOpen={isUnsupported && !deviceId}
-            locale={localeMerged}
-            onClickDevice={this.handleClickDevice}
-            playerPosition={playerPosition}
-            setVolume={this.setVolume}
-            styles={this.styles}
-            volume={volume}
-          />
-        </>
-      );
     }
-
-    if (status === STATUS.ERROR) {
-      output = (
-        <ErrorMessage styles={this.styles}>
-          {name}: {error}
-        </ErrorMessage>
-      );
-    }
-
-    return (
-      <Player ref={this.ref} styles={this.styles}>
-        {isReady && (
-          <Slider
-            isMagnified={isMagnified}
-            onChangeRange={this.handleChangeRange}
-            onToggleMagnify={this.handleToggleMagnify}
-            position={position}
-            styles={this.styles!}
-          />
-        )}
-        <Content styles={this.styles}>{output}</Content>
-      </Player>
-    );
-  }
 }
 
-export { STATUS, TYPE };
+export {STATUS, TYPE};
 
 export * from './types';
 
