@@ -290,7 +290,7 @@ class Artist extends Component<IProps, IState> {
 
                 {/*Artist information*/}
                 <div className={"artist"}>
-                    <h1 className={"titleName"}>Artist</h1>
+                    <h2 className={"titleName"}>Artist</h2>
                     {artist}
                 </div>
 
