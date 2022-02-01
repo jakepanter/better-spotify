@@ -42,7 +42,7 @@
   input,
   textarea {
     width: 100%;
-    background-color: $black;
+    background-color: rgba($black, .75);
     border-radius: $border-radius;
     padding: 5px;
     margin-bottom: 10px;
@@ -98,5 +98,11 @@
   img {
     height: 100%;
     object-fit: cover;
+  }
+}
+.light_mode{
+  textarea, input {
+    background-color: rgba($color-background-light, 1);
+    color: $color-default-light;
   }
 }
