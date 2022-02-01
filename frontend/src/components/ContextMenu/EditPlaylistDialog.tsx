@@ -10,6 +10,7 @@ import Dialog from "../Dialog/Dialog";
 
 import { useDropzone } from "react-dropzone";
 import { compressAccurately, EImageType } from "image-conversion";
+import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 
 type Props = {
   data: SinglePlaylistResponse;
@@ -20,7 +21,10 @@ function EditPlaylistDialog(props: Props) {
   const authHeader = getAuthHeader();
   const [title, setTitle] = useState(props.data.name);
   const [description, setDescription] = useState(props.data.description ?? "");
-  const [image, setImage] = useState<string | ArrayBuffer | null>(props.data.images[0].url ?? "");
+  const [image, setImage] = useState<string | ArrayBuffer | null>(
+    props.data.images[0] ? props.data.images[0].url : ""
+  );
+  const [error, setError] = useState("");
 
   const state = useContext(AppContext);
   const history = useHistory();
@@ -34,9 +38,10 @@ function EditPlaylistDialog(props: Props) {
     noClick: true,
     noKeyboard: true,
     onDropRejected: () => {
-      console.log("THIS FILE IS TOO LARGE! MAX SIZE 5MB");
+      setError("THIS FILE IS TOO LARGE! MAX SIZE 5MB");
     },
     onDrop: (acceptedFiles) => {
+      setError("");
       if (acceptedFiles.length === 0) return;
       else compressImage(acceptedFiles[0]);
     },
@@ -65,18 +70,22 @@ function EditPlaylistDialog(props: Props) {
 
   const saveChanges = async () => {
     // update title and description if changed
-    if ((title !== props.data.name && title !== "") || description !== props.data.description) {
+    let changes: any;
+    if (title !== props.data.name && title !== "") changes.name = title;
+    if (description !== props.data.description && description !== "")
+      changes.description = description;
+    if (changes) {
       await fetch(`${API_URL}api/spotify/playlist/${props.data.id}/edit`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: authHeader,
         },
-        body: JSON.stringify({ name: title, description: description }),
+        body: JSON.stringify(changes),
       });
     }
     // update cover image if changed
-    if (image !== props.data.images[0].url) {
+    if (props.data.images[0] && image !== props.data.images[0].url) {
       const img = (image as string).split("base64,")[1];
       await fetch(`${API_URL}api/spotify/playlist/${props.data.id}/image`, {
         method: "POST",
@@ -98,13 +107,20 @@ function EditPlaylistDialog(props: Props) {
       onClose={closeMenu}
     >
       <div className="dialog-wrapper">
-        <div {...getRootProps({ className: "dropzone cover-wrapper" })} onClick={open}>
-          <input {...getInputProps()} />
-          <div className="hover-overlay">
-            <span className="material-icons">upload</span>
-            <span>Drag &amp; drop or click to select an image to upload</span>
+        <div>
+          <div {...getRootProps({ className: "dropzone cover-wrapper" })} onClick={open}>
+            <input {...getInputProps()} />
+            <div className="hover-overlay">
+              <span className="material-icons">upload</span>
+              <span>Drag &amp; drop or click to select an image to upload</span>
+            </div>
+            {image !== "" ? (
+              <img width={200} src={image?.toString()} alt={props.data.name + " Cover"} />
+            ) : (
+              <CoverPlaceholder style={{ width: "200px", height: "200px" }} />
+            )}
           </div>
-          <img width={200} src={image?.toString()} alt={props.data.name + " Cover"} />
+          <p style={{ color: "darkgrey", fontSize: "12px" }}>Maximum image size is 5MB</p>
         </div>
 
         <div className="details">
@@ -128,6 +144,8 @@ function EditPlaylistDialog(props: Props) {
           ></textarea>
         </div>
       </div>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
       <button
         className={"button"}
