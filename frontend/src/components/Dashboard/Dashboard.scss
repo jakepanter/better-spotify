@@ -27,6 +27,16 @@
     flex-basis: 100%;
   }
 
+  .infoCustomizeStartpage {
+    flex-basis: 100%;
+    padding-bottom: 5px;
+    span{
+      font-size: 17px;
+      vertical-align: text-top;
+      margin-right: 5px;
+    }
+  }
+
   h4 {
     font-size: 20px;
   }

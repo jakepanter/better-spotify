@@ -399,6 +399,7 @@ class Dashboard extends Component<IProps, IState> {
         {editable ?
           <div className={'DashboardConfigurator'}>
             <h3>Customize startpage</h3>
+            <p className={"infoCustomizeStartpage"}><span className="material-icons">info</span>Hover over the panels to move them according to your needs. The size of the panels can be changed in the right-hand corner of each panel.</p>
             <div className={`${tagSelection.length === 0 ? "noTagAvailable" : ""} DashboardTagTracklistsForm`}>
               <h4>tag panels</h4>
               <p className={"addTagNote"}>Please <Link to="/settings">add a tag</Link> first</p>
