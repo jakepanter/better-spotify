@@ -300,6 +300,7 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellDuration"}>Duration</div>
             <div className={"TableCell TableCellLiked"}>Liked</div>
             <div className={"TableCell TableCellTags"}>Tags</div>
+            <div className={"TableCell TableCellActions"}>Playlist</div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
@@ -348,6 +349,7 @@ function TrackList(props: Props) {
                 <div className={"TableCell TableCellAlbum"}>Album</div>
                 <div className={"TableCell TableCellDuration"}>Duration</div>
                 <div className={"TableCell TableCellTags"}>Tags</div>
+                <div className={"TableCell TableCellActions"}>Playlist</div>
               </div>
               <div className={"TableBody"}>
                 {props.tracks.map((item, index) => {
