@@ -144,13 +144,13 @@ export default function Playlist(props: IProps) {
     setTitle(newTitle);
   };
 
-  const updateTitle = () => {
+  const updateTitle = async () => {
     if (title === "" && playlist) {
       setTitle(playlist.name);
     } else {
       if (title !== playlist?.name) {
         const authHeader = getAuthHeader();
-        fetch(`${API_URL}api/spotify/playlist/${playlist?.id}/edit`, {
+        await fetch(`${API_URL}api/spotify/playlist/${playlist?.id}/edit`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -158,6 +158,7 @@ export default function Playlist(props: IProps) {
           },
           body: JSON.stringify({ name: title }),
         });
+        fetchPlaylistData();
       }
     }
   };
