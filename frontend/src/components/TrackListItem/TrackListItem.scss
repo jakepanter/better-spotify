@@ -84,18 +84,6 @@
         }
       }
 
-      .TableHeaderDuration {
-        &:before {
-          content: "\e038";
-          font-family: "Material Icons";
-          width: 50px;
-          display: inline-block;
-          font-size: 50px;
-          text-align: center;
-          color: rgba($white, 0.45);
-        }
-      }
-
       .TableCellPlayEpisode {
         margin-top: 8px;
         flex: 0 0 42px;
