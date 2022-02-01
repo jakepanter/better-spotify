@@ -6,7 +6,7 @@ function AlbumPage() {
   //get route params (:albumId)
   let params = useParams() as { id: string };
 
-  return <Album id={params.id} headerStyle={'full'} />
+  return <Album id={params.id} headerStyle={'full'} key={params.id}/>
 }
 
 export default AlbumPage;

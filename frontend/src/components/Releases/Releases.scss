@@ -86,3 +86,24 @@
     }
   }
 }
+.light_mode {
+  .Releases {
+    .Card {
+      background-color: lighten($color-accent-light, 5%);
+      box-shadow: 0 0 ($spacer/2) rgba($gray-dark, .3);
+
+      &:hover {
+        background-color: $color-accent-light;
+      }
+
+      &Title {
+        font-size: 20px;
+        color: $color-default-light;
+      }
+
+      &Artist, .CardAddedAt {
+        color: $color-secondary;
+      }
+    }
+  }
+}
