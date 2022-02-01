@@ -4,7 +4,7 @@
   margin-bottom: 2rem;
 }
 
-.select{
+.select {
   float: right;
   align-items: center;
   display: flex;
@@ -22,17 +22,19 @@
 }
 
 
-.header .viewMoreLink{
-    //margin-right: 2rem;
-    float: right;
-    color: $gray-dark;
-    text-decoration: none;
-    text-transform: none;
-    &:hover {
-      color: $color-primary;
-    }
+.header .viewMoreLink {
+  //margin-right: 2rem;
+  float: right;
+  color: $gray-dark;
+  text-decoration: none;
+  text-transform: none;
+
+  &:hover {
+    color: $color-primary;
+  }
 }
-.artist-section ul{
+
+.artist-section ul {
   height: auto !important;
 }
 
@@ -62,3 +64,12 @@
 }
 
 
+.light_mode {
+  .titleName {
+    color: $color-default-light;
+  }
+
+  .select .input-select {
+    background: rgba($color-accent-light, 0.7);
+  }
+}
