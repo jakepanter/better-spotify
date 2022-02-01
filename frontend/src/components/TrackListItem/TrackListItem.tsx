@@ -281,6 +281,16 @@ function TrackListItem(props: Props) {
         ) : (
             <></>
         )}
+
+        
+        {track.added_at != undefined ? (
+          <div className={"TableCell TableCellAddedAt"}>
+            {track.added_at}
+          </div>
+        ) : (
+          <></>
+        )}
+
         <div className={"TableCell TableCellDuration"}>
           {formatTimestamp(track.duration_ms)}
         </div>
