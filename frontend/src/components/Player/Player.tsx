@@ -104,7 +104,7 @@ export default function Player(props: IProps) {
             {track !== undefined && track && track.type === "track" ?
                 (<div className={"redirect"}>
                     <Link to={`/album/${track.album.id}`} className={"redirect-album"}/>
-                    <div className={"test"}>
+                    <div className={"playing-info"}>
                         <span className={"artists-section"}>{track.artists.map<React.ReactNode>((a) =>
                             <Link to={`/artist/${a.id}`} className={"artists-name"}
                                   key={a.id}>{a.name}</Link>).reduce((a, b) => [a, ', ', b])}</span></div>
