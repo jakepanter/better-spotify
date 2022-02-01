@@ -266,7 +266,7 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
         this.updateState({ isSaved: false });
       }
       //NOTE: newly added to pass currently playing track's id to Player component
-      this.props.handlePlayingTrack(track.id)
+      this.props.handlePlayingTrack(track.id, track.uri)
     }
 
         if (previousState.isPlaying !== isPlaying) {
