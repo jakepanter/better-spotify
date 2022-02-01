@@ -291,7 +291,7 @@ function TrackListItem(props: Props) {
         )}
 
         
-        {track.added_at != undefined ? (
+        {track.added_at !== undefined ? (
           <div className={"TableCell TableCellAddedAt"}>
             {dateStr}
           </div>
