@@ -25,7 +25,8 @@
   .SearchInfo {
     display: flex;
     align-items: center;
-    color: $gray-dark;
+    border-bottom: 1px solid rgba($color-default, .3);
+    padding: 5px 0px;
   }
 
   .SearchbarResults {
@@ -73,5 +74,8 @@
     .SearchbarResultItem:hover {
         background: rgba($color-background-light, .9);
     }
+  }
+  .SearchInfo {
+   border-bottom: 1px solid rgba($color-default-light, .3);
   }
 }
