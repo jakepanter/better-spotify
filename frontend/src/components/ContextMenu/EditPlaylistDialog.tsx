@@ -85,7 +85,7 @@ function EditPlaylistDialog(props: Props) {
       });
     }
     // update cover image if changed
-    if (props.data.images[0] && image !== props.data.images[0].url) {
+    if ((props.data.images[0] && image !== props.data.images[0].url) || image !== "") {
       const img = (image as string).split("base64,")[1];
       await fetch(`${API_URL}api/spotify/playlist/${props.data.id}/image`, {
         method: "POST",
