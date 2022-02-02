@@ -65,7 +65,7 @@ export default function SearchPageCustom() {
 
       return (
         <div className={"SearchPageCustom"}>
-          <h2>Search Tracks: &quot;{search}&quot;</h2>
+          <h2 className="Header">Search Tracks: &quot;{search}&quot;</h2>
           <div className={"Content"}>
             <div className={"CoverList"}>{searchTracks}</div>
           </div>
@@ -91,7 +91,7 @@ export default function SearchPageCustom() {
 
     return (
       <div className={"SearchPageCustom"}>
-        <h2>Search Album: &quot;{search}&quot;</h2>
+        <h2 className="Header">Search Album: &quot;{search}&quot;</h2>
         <div className={"Content"}>
           <div className={"CoverList"}>{searchAlbums}</div>
         </div>
@@ -116,7 +116,7 @@ export default function SearchPageCustom() {
 
     return (
       <div className={"SearchPageCustom"}>
-        <h2>Search Playlist: &quot;{search}&quot;</h2>
+        <h2 className="Header">Search Playlist: &quot;{search}&quot;</h2>
         <div className={"Content"}>
           <div className={"CoverList"}>{searchPlaylists}</div>
         </div>
@@ -141,7 +141,7 @@ export default function SearchPageCustom() {
 
     return (
       <div className={"SearchPageCustom"}>
-        <h2>Search Artist: &quot;{search}&quot;</h2>
+        <h2 className="Header">Search Artist: &quot;{search}&quot;</h2>
         <div className={"Content"}>
           <div className={"CoverList"}>{searchArtists}</div>
         </div>
@@ -166,7 +166,7 @@ export default function SearchPageCustom() {
 
     return (
       <div className={"SearchPageCustom"}>
-        <h2>Search Podcast: &quot;{search}&quot;</h2>
+        <h2 className="Header">Search Podcast: &quot;{search}&quot;</h2>
         <div className={"Content"}>
           <div className={"CoverList"}>{searchShows}</div>
         </div>
@@ -190,7 +190,7 @@ export default function SearchPageCustom() {
 
     return (
       <div className={"SearchPageCustom"}>
-        <h2>Search Episode: &quot;{search}&quot;</h2>
+        <h2 className="Header">Search Episode: &quot;{search}&quot;</h2>
         <div className={"Content"}>
           <div className={"CoverList"}>{searchEpisodes}</div>
         </div>

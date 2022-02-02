@@ -256,16 +256,18 @@ export default function SearchPage() {
   }
 
   return (
-    <div style={{ overflow: "hidden auto" }}>
-      <h2>Search for &quot;{search}&quot;</h2>
-      <div>
-        {searchTracks}
-        {searchAlbums}
-        {searchArtists}
-        {searchPlaylists}
-        {searchShows}
-        {searchEpisodes}
+    <>
+      <h2 className="Header">Search for &quot;{search}&quot;</h2>
+      <div style={{ overflow: "hidden auto" }}>
+        <div>
+          {searchTracks}
+          {searchAlbums}
+          {searchArtists}
+          {searchPlaylists}
+          {searchShows}
+          {searchEpisodes}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
