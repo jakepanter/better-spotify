@@ -11,6 +11,7 @@ import {
   ArtistObjectSimplified,
   TrackObjectFull,
   TrackObjectSimplified,
+  ResumePointObject,
 } from "spotify-types";
 import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
 import { API_URL } from "../../utils/constants";
@@ -37,6 +38,7 @@ type Props = {
   name: string;
   artists?: ArtistObjectSimplified[];
   duration_ms: number;
+  resume_point?: ResumePointObject;
   added_at?: string;
   liked?: boolean;
   album?: AlbumObjectSimplified| ShowObjectSimplified;
@@ -203,6 +205,26 @@ function TrackListItem(props: Props) {
     )
   } else {
     if(type === "show") {
+      let dateStr: string = "";
+      if(props.added_at) {
+        let release = new Date(props.added_at);
+
+        const months = ["Jan", "Feb", "Mar","Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        dateStr = release.getDate() + ". " + months[release.getMonth()] + " " + release.getFullYear() + " - ";
+      }
+
+      let progressStr: string = "";
+      let progressPercent: string = "0";
+      if(props.resume_point && props.duration_ms) {
+        progressStr = Math.round((props.duration_ms - props.resume_point.resume_position_ms)/60000).toString() + " Minutes and " + Math.round(((props.duration_ms - props.resume_point.resume_position_ms))%60000/1000).toString() + " sec left";
+        
+        if(props.resume_point.fully_played == true) {
+          progressPercent = "100"
+        } else {
+          progressPercent = Math.round((props.resume_point.resume_position_ms / props.duration_ms)*100).toString();  
+        }
+      }
+
       return (
         <div className={`Pointer EpisodeRow ${selected ? "Selected" : ""}
         ${playback.currentTrackId === track.track.id ? "Playing" : ""}
@@ -225,7 +247,18 @@ function TrackListItem(props: Props) {
               <div className={"EpisodeContent"}>
                 <h5 className={"TableCellTitleArtist"}>{track.name}</h5>
                 <p>{track.description}</p>
-                <div className={"TableCellPlayEpisode"} onClick={(e) => handlePlayButton(e)}/>
+                <div className={"TableCellPlayProgress"} >
+                  <div className={"PlayEpisode"} onClick={(e) => handlePlayButton(e)}></div>
+                  <div className={"ReleaseProgress"}>
+                    {dateStr}  
+                    {props.resume_point && props.duration_ms ? (
+                    <>
+                    {progressStr}
+                    </>
+                    ) : (<></>)} 
+                  </div>
+                  <div className={"progress-bar progress-bar-" + progressPercent}></div>
+                </div>   
               </div>
             </div>
             {track.tags !== undefined ? (
@@ -238,7 +271,7 @@ function TrackListItem(props: Props) {
                     {t.title}
                 </Link>
               )}
-            </div>
+              </div>
         ) : (
           <></>
         )}

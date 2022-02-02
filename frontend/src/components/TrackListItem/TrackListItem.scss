@@ -84,27 +84,61 @@
         }
       }
 
-      .TableCellPlayEpisode {
+      .TableCellPlayProgress {
         margin-top: 8px;
-        flex: 0 0 42px;
-        width: 52px;
         position: relative;
-        justify-content: center;
         align-items: center;
         display: flex;
+        float: left;
 
-        &:hover::before {
-          color: rgba($white, 1.0);
+        .PlayEpisode {
+          width: 52px;
+          &:hover::before {
+            color: rgba($white, 1.0);
+          }
+
+          &:before {
+            content: "\e038";
+            font-family: "Material Icons";
+            width: 50px;
+            display: inline-block;
+            font-size: 50px;
+            text-align: center;
+            color: rgba($white, 0.45);
+          } 
         }
 
-        &:before {
-          content: "\e038";
-          font-family: "Material Icons";
-          width: 50px;
+        .ReleaseProgress {
+          margin-left: 8px;
+        }
+
+
+        .progress-bar {
+          margin-left: 8px;
+          background: $white;
+          border-radius: 99px;
+          width: 200px;
+          height: 5px;
+          position: relative;
+          overflow: hidden;
           display: inline-block;
-          font-size: 50px;
-          text-align: center;
-          color: rgba($white, 0.45);
+          
+          &::before {
+            border-radius: 99px;
+            position: absolute;
+            height: 5px;
+            background: $color-primary;
+            content: '';
+            width: 0;
+            transition: width .2s;
+          }
+        }
+        
+        $start: 1;
+        $end: 100;
+        
+        @for $i from $start through $end {
+          .progress-bar-#{$i}::before { width: $i * 1% }
         }
       }
     }
