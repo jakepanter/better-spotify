@@ -347,7 +347,7 @@ h6 {
   }
 
   .input-select {
-    background: $button-background-light;
+    background: $none;
     color: $button-color-light;
     border-color: $button-border-color-light;
 
@@ -358,7 +358,7 @@ h6 {
 
     &.active,
     &:hover {
-      background: $button-background-active-light;
+      background: rgba($button-background-active-light, .5);
       color: $button-color-active-light;
       border-color: $button-border-color-active-light;
     }

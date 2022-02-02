@@ -1,4 +1,5 @@
 import React, {ChangeEvent, Component} from 'react';
+import {Link} from "react-router-dom";
 import './Dashboard.scss';
 import {Layout, Layouts, Responsive, WidthProvider} from 'react-grid-layout';
 import SavedTracks from "../SavedTracks/SavedTracks";
@@ -397,8 +398,12 @@ class Dashboard extends Component<IProps, IState> {
       <div className={`DashboardContainer ${editable ? 'editable' : ''}`} ref={this.containerRef}>
         {editable ?
           <div className={'DashboardConfigurator'}>
-            <div className={'DashboardTagTracklistsForm'}>
-              <div className={'DashboardTagTracklistsFormSelects'}>
+            <h3>Customize startpage</h3>
+            <p className={"infoCustomizeStartpage"}><span className="material-icons">info</span>Hover over the panels to move them according to your needs. The size of the panels can be changed in the lower right corner of each panel.</p>
+            <div className={`${tagSelection.length === 0 ? "noTagAvailable" : ""} DashboardTagTracklistsForm`}>
+              <h4>tag panels</h4>
+              <p className={"addTagNote"}>Please <Link to="/settings">add a tag</Link> first</p>
+              <div className={"DashboardTagTracklistsFormSelects"}>
                 <select
                   className={'input-select'}
                   value={tagSelection}
@@ -425,6 +430,7 @@ class Dashboard extends Component<IProps, IState> {
               </div>
             </div>
             <div className={'DashboardChartsForm'}>
+              <h4>chart panels</h4>
               <div className={'DashboardChartsFormSelects'}>
                 <select
                   className={'DashboardChartsCountryCode input-select'}
@@ -466,6 +472,7 @@ class Dashboard extends Component<IProps, IState> {
               </div>
             </div>
             <div className={'DashboardSettingsForm'}>
+              <h4>personal panels</h4>
               <Checkbox
                 checked={showFavorites}
                 label={'Show liked songs'}

@@ -109,10 +109,10 @@ $fz-h6: 18px;
 
 
 // Buttons
-$button-background: $color-primary;
-$button-background-active: none;
-$button-color: $white;
-$button-color-active: $color-primary;
+$button-background: $none;
+$button-background-active: $color-primary;
+$button-color: $color-primary;
+$button-color-active: $white;
 $ff-buttons: $font-default;
 $lh-buttons: 1.5;
 $ls-buttons: 0px;
