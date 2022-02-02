@@ -1,0 +1,9 @@
+@import "./src/boilerplate.scss";
+
+.SearchPageCustom {
+  display: flex;
+  flex-flow: column nowrap;
+  flex-grow: 1;
+  overflow: hidden auto;
+  margin-bottom: 2rem;
+}

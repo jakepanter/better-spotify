@@ -1,4 +1,4 @@
-@import './src/boilerplate.scss';
+@import "./src/boilerplate.scss";
 
 .overview {
   height: 100%;
@@ -13,11 +13,11 @@
     margin-top: 2rem;
 
     @include columns(
-            $columns-xl: 5,
-            $columns: 4,
-            $columns-md: 3,
-            $margin-md: 2rem,
-            $margin-xs: 2rem
+      $columns-xl: 5,
+      $columns: 4,
+      $columns-md: 3,
+      $margin-md: 2rem,
+      $margin-xs: 2rem
     );
 
     .column {
@@ -25,7 +25,7 @@
       background: $color-accent-dark;
       list-style-type: none;
 
-      box-shadow: 0 0 ($spacer/2) rgba($black, .3);
+      box-shadow: 0 0 ($spacer/2) rgba($black, 0.3);
       transition: $transition-base;
 
       &:hover {
@@ -62,7 +62,6 @@
       }
     }
 
-
     .title {
       display: block;
       font-family: $font-special;
@@ -77,7 +76,6 @@
       @media screen and(max-width: $breakpoint-md) {
         font-size: 15px;
         width: 150px;
-
       }
     }
 
@@ -116,24 +114,24 @@
 
 .light_mode {
   .overview .overview-items {
-      .column {
-        background: lighten($color-accent-light, 5%);
+    .column {
+      background: lighten($color-accent-light, 5%);
 
-        &:hover {
-          background-color: $color-accent-light;
-        }
+      &:hover {
+        background-color: $color-accent-light;
       }
+    }
 
-      .title {
-        color: $color-default-light;
-      }
+    .title {
+      color: $color-default-light;
+    }
 
-      .artists-name {
-        color: $color-secondary;
-      }
+    .artists-name {
+      color: $color-secondary;
+    }
 
-      .added-at {
-        color: $color-default-light;
-      }
+    .added-at {
+      color: $color-default-light;
+    }
   }
 }

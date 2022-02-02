@@ -1,6 +1,10 @@
-@import './src/boilerplate.scss';
+@import "./src/boilerplate.scss";
 
-.section {
+.Discover {
+  display: flex;
+  flex-flow: column nowrap;
+  // height: 100%;
+  overflow: hidden;
   margin-bottom: 2rem;
 }
 
@@ -19,7 +23,6 @@
   font-size: 20px;
 }
 .discover {
-
   .overview-items {
     height: auto !important;
 
@@ -27,14 +30,13 @@
       //3 columns when tablet
       @media screen and(min-width: $breakpoint-sm) and(max-width: $breakpoint-md) {
         width: calc(100% / 3 - 2rem);
-        &:nth-last-child(-n+2) {
+        &:nth-last-child(-n + 2) {
           display: none;
         }
       }
 
       //4 columns when bigger than tablet
       @media screen and(min-width: $breakpoint-md) and (max-width: $breakpoint-xl) {
-
         width: calc(100% / 4 - 2rem);
 
         &:last-child {
