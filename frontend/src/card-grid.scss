@@ -43,5 +43,8 @@
   }
   .ViewMoreLink {
     color: $color-default-light;
+    &:hover {
+      color: $color-primary;
+    }
   }
 }
