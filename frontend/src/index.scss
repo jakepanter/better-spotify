@@ -1,5 +1,6 @@
 @import "boilerplate";
 @import "normalize-css";
+@import "card-grid";
 
 .structure {
   display: flex;
@@ -31,7 +32,6 @@
       transform: rotate(-180deg);
     }
   }
-
 
   &--left-panel {
     background: $color-accent-dark;
@@ -131,9 +131,9 @@ p {
   color: $color-default;
 }
 
-td, th {
+td,
+th {
   color: $color-default;
-
 }
 
 // Button
@@ -173,7 +173,7 @@ td, th {
 
 .input {
   border: none;
-  border-bottom: $border-width*2 $border-style rgba(224, 224, 224, 0.1);
+  border-bottom: $border-width * 2 $border-style rgba($color-default, 0.1);
   background-color: transparent;
   color: $color-default;
   display: inline-block;
@@ -297,7 +297,6 @@ h6 {
 *::-webkit-scrollbar-track {
   background: rgba($color-default, 0.1);
   border-radius: $border-radius;
-
 }
 
 *::-webkit-scrollbar-thumb {
@@ -310,9 +309,9 @@ h6 {
     color: $color-default-light;
   }
 
-  td, th {
+  td,
+  th {
     color: $color-default-light;
-
   }
 
   // Button
@@ -331,7 +330,7 @@ h6 {
 
   .input {
     border: none;
-    border-bottom: $border-width*2 $border-style rgba(224, 224, 224, 0.1);
+    border-bottom: $border-width * 2 $border-style rgba(224, 224, 224, 0.1);
     background-color: transparent;
     color: $color-default;
     display: inline-block;
@@ -358,7 +357,7 @@ h6 {
 
     &.active,
     &:hover {
-      background: rgba($button-background-active-light, .5);
+      background: rgba($button-background-active-light, 0.5);
       color: $button-color-active-light;
       border-color: $button-border-color-active-light;
     }
@@ -391,7 +390,6 @@ h6 {
 
   *::-webkit-scrollbar-track {
     background: rgba($color-default-light, 0.1);
-
   }
 
   *::-webkit-scrollbar-thumb {

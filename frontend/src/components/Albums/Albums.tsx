@@ -1,12 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { UsersSavedAlbumsResponse, SavedAlbumObject } from "spotify-types";
 import { API_URL } from "../../utils/constants";
-import "../../cards.scss";
 import "./Albums.scss";
-import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
-import { getAuthHeader } from '../../helpers/api-helpers';
+import { getAuthHeader } from "../../helpers/api-helpers";
 import AppContext from "../../AppContext";
+import Card from "../Card/Card";
 
 export default function Albums() {
   const [albums, setAlbums] = useState<UsersSavedAlbumsResponse>();
@@ -22,10 +20,9 @@ export default function Albums() {
     const authHeader = getAuthHeader();
     const data: UsersSavedAlbumsResponse = await fetch(url, {
       headers: {
-        'Authorization': authHeader
-      }}).then((res) =>
-      res.json()
-    );
+        Authorization: authHeader,
+      },
+    }).then((res) => res.json());
     setAlbums(data);
     const arr: SavedAlbumObject[] = [...items, ...data.items];
     setItems(arr);
@@ -59,23 +56,15 @@ export default function Albums() {
   if (!albums || !items) return <p>loading...</p>;
   const savedAlbums = items.map((item) => {
     return (
-      <Link
-        to={`/album/${item.album.id}`}
-        className={"Card"}
+      <Card
         key={item.album.id}
-        onContextMenu={(e) => handleRightClick(e, item.album.id)}
-      >
-        {item.album.images.length > 0 ? (
-          <div
-            className={"CardCover"}
-            style={{ backgroundImage: `url(${item.album.images[0].url}` }}
-          />
-        ) : (
-          <CoverPlaceholder />
-        )}
-        <span className={"CardTitle"}>{item.album.name}</span>
-        <span className={"CardArtist"}>{item.album.artists.map((a) => a.name).join(", ")}</span>
-      </Link>
+        linkTo={`/album/${item.album.id}`}
+        item={item.album.id}
+        imageUrl={item.album.images[0] !== null ? item.album.images[0].url : ""}
+        title={item.album.name}
+        subtitle={item.album.artists.map((a) => a.name).join(", ")}
+        handleRightClick={handleRightClick}
+      />
     );
   });
 
