@@ -182,7 +182,7 @@ class Discover extends Component<IProps, IState> {
 
     return (
       <>
-        <h2>Discover</h2>
+        <h2 className={"Header"}>Discover</h2>
         <div style={{ overflow: "hidden auto" }}>
           {/*Recently Played Tracks*/}
           <div className={"Discover"} key="recentlyPlayed">
