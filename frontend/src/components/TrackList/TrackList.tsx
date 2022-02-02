@@ -310,24 +310,22 @@ function TrackList(props: Props) {
                   ...tags.availableTags[id],
                 })) ?? [];
               return (
-                <div key="TrackList">
-                  <TrackListItem
-                    track={item}
-                    name={item.name}
-                    artists={item.artists}
-                    duration_ms={item.duration_ms}
-                    album={item.album}
-                    key={type + "-track-" + item.id + "-" + index}
-                    liked={props.is_saved[index]}
-                    listIndex={index}
-                    selected={isTrackSelected(item, index)}
-                    onSelectionChange={handleSelectionChange}
-                    onContextMenuOpen={handleContextMenuOpen}
-                    id_tracklist={""}
-                    type={type}
-                    tags={tagList}
-                  />
-                </div>
+                <TrackListItem
+                  track={item}
+                  name={item.name}
+                  artists={item.artists}
+                  duration_ms={item.duration_ms}
+                  album={item.album}
+                  key={type + "-track-" + item.id + "-" + index}
+                  liked={props.is_saved[index]}
+                  listIndex={index}
+                  selected={isTrackSelected(item, index)}
+                  onSelectionChange={handleSelectionChange}
+                  onContextMenuOpen={handleContextMenuOpen}
+                  id_tracklist={""}
+                  type={type}
+                  tags={tagList}
+                />
               );
             })}
             {!fullyLoaded ? (
