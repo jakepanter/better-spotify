@@ -11,6 +11,7 @@ import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import TrackList from "../TrackList/TrackList";
 import { getAuthHeader } from '../../helpers/api-helpers';
 import {Link} from "react-router-dom";
+import "./Album.scss";
 
 // The fetching limit, can be adjusted by changing this value
 const limit = 20;
@@ -144,7 +145,7 @@ export default function Album(props: IProps) {
               <h1>{album.name}</h1>
               <p>
                 by {album.artists.map<React.ReactNode>((a) =>
-                  <Link to={`/artist/${a.id}`} className={"artists-name"} key={a.id}>{a.name}</Link>).reduce((a,b)=>[a,', ',b])} —{" "}
+                  <Link className={"album-artists"} to={`/artist/${a.id}`} key={a.id}>{a.name}</Link>).reduce((a,b)=>[a,', ',b])} —{" "}
                 {album.tracks.total} Song{album.tracks.total === 1 ? "" : "s"}
               </p>
             </div>
