@@ -20,6 +20,8 @@
 .EpisodeControl {
   width: 100%;
   display: flex;
+  justify-content: space-evenly;
+  align-items: center;
   padding-bottom: 16px;
 
   .PlayEpisode {
@@ -27,6 +29,7 @@
     flex: 0 0 42px;
     width: 62px;
     position: relative;
+    display: flex;
     justify-content: center;
     align-items: flex-start;
 
@@ -44,10 +47,22 @@
       color: rgba($white, 0.45);
       transition: $transition-base;
     }
+
+
+
+  }
+
+  .ReleaseProgress {
+    margin-left: 8px;
+    //font-size: 13px;
+    font-family: $font-default;
+    color: $color-default;
+    opacity: 0.8;
   }
 
   .progress-bar {
-    margin-left: 8px;
+    margin-left: 64px;
+    margin-right: auto;
     background: $white;
     border-radius: 99px;
     width: 200px;
@@ -81,11 +96,12 @@
     border-radius: 5px;
     max-height: 25px;
     border-color: #1C1C23;
-    margin: 16px 32px 16px auto;
+    margin: 16px 32px 16px 32px;
 
     &:hover {
       background-color: $color-primary;
       border-color: $color-primary;
+      color: #E0E0E0;
     }
   }
 }
