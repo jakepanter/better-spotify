@@ -173,7 +173,7 @@ th {
 
 .input {
   border: none;
-  border-bottom: $border-width * 2 $border-style rgba(224, 224, 224, 0.1);
+  border-bottom: $border-width * 2 $border-style rgba($color-default, 0.1);
   background-color: transparent;
   color: $color-default;
   display: inline-block;

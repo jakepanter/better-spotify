@@ -1,6 +1,5 @@
 .Header {
   align-items: center;
-  box-sizing: border-box;
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
@@ -42,6 +41,6 @@
     color: $color-default-light;
   }
   .ViewMoreLink {
-    color: $gray-dark;
+    color: $color-default-light;
   }
 }

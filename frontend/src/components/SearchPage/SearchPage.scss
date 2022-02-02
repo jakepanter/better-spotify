@@ -7,43 +7,31 @@
   margin-bottom: 2rem;
 }
 
-// .header {
-//   display: block !important;
+// kann vielleicht nochmal genutzt werden?
+// .CoverList {
+//   @media screen and(min-width: $breakpoint-sm) and(max-width: $breakpoint-md) {
+//     height: 25vh !important;
+//   }
 
 //   a {
-//     margin-right: 2rem;
-//     float: right;
-//     color: $gray-dark;
-//     text-decoration: none;
-//   }
-// }
-
-// .searchPage {
-//   .CoverList {
-//     @media screen and(min-width: $breakpoint-sm) and(max-width: $breakpoint-md) {
-//       height: 25vh !important;
+//     @media screen and(min-width: $breakpoint-lg) {
+//       &:nth-of-type(n + 6) {
+//         display: none;
+//       }
 //     }
-
-//     a {
-//       @media screen and(min-width: $breakpoint-lg) {
-//         &:nth-of-type(n + 6) {
-//           display: none;
-//         }
+//     @media screen and(min-width: $breakpoint-md) and(max-width: $breakpoint-xl) {
+//       &:nth-of-type(n + 5) {
+//         display: none;
 //       }
-//       @media screen and(min-width: $breakpoint-md) and(max-width: $breakpoint-xl) {
-//         &:nth-of-type(n + 5) {
-//           display: none;
-//         }
+//     }
+//     @media screen and(min-width: $breakpoint-sm) and(max-width: $breakpoint-md) {
+//       &:nth-of-type(n + 4) {
+//         display: none;
 //       }
-//       @media screen and(min-width: $breakpoint-sm) and(max-width: $breakpoint-md) {
-//         &:nth-of-type(n + 4) {
-//           display: none;
-//         }
-//       }
-//       @media screen and(max-width: $breakpoint-sm) {
-//         &:nth-of-type(n + 2) {
-//           display: none;
-//         }
+//     }
+//     @media screen and(max-width: $breakpoint-sm) {
+//       &:nth-of-type(n + 2) {
+//         display: none;
 //       }
 //     }
 //   }

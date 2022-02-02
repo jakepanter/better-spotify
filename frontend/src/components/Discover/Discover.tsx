@@ -143,66 +143,23 @@ class Discover extends Component<IProps, IState> {
           subtitle={track.album.artists.map((a) => a.name).join(", ")}
           handleRightClick={this.handleRightClick}
         />
-        // <li className={"column"} key={recentlyPlayedTrack.played_at}>
-        //     <Link to={`/album/${track.album.id}`}>
-        //         {track.album.images !== undefined ? (
-        //             <div className={"cover"} style={{
-        //                 backgroundImage: `url(${track.album.images[0].url})`
-        //             }}>
-        //             </div>) : (
-        //                 <CoverPlaceholder/>
-        //                 )}
-        //         <span className={"title"}>{track.name}</span>
-        //         <span className={"artists-name"}>{track.album.artists.map((a) => a.name).join(", ")}</span>
-        //     </Link>
-        // </li>
       );
     });
 
     // for new releases
     if (this.state.newReleases.length === 0) return <p>loading...</p>;
-    const releases = this.state.newReleases.map(
-      (newReleasedAlbum) => (
-        <Card
-          key={newReleasedAlbum.id}
-          item={newReleasedAlbum.id}
-          linkTo={`/album/${newReleasedAlbum.id}`}
-          imageUrl={newReleasedAlbum.images[0] !== null ? newReleasedAlbum.images[0].url : ""}
-          title={newReleasedAlbum.name}
-          subtitle={newReleasedAlbum.artists.map((a) => a.name).join(", ")}
-          subsubtitle={formatTimeDiff(
-            new Date(newReleasedAlbum.release_date).getTime(),
-            Date.now()
-          )}
-          handleRightClick={this.handleRightClick}
-        />
-      )
-      // {
-      //   return (
-      //     <li className="column" key={newReleasedAlbum.id}>
-      //       <Link to={`/album/${newReleasedAlbum.id}`}>
-      //         {newReleasedAlbum.images !== undefined ? (
-      //           <div
-      //             className={"cover"}
-      //             style={{
-      //               backgroundImage: `url(${newReleasedAlbum.images[0].url})`,
-      //             }}
-      //           ></div>
-      //         ) : (
-      //           <CoverPlaceholder />
-      //         )}
-      //         <span className={"title"}>{newReleasedAlbum.name}</span>
-      //         <span className={"artists-name"}>
-      //           {newReleasedAlbum.artists.map((a) => a.name).join(", ")}
-      //         </span>
-      //         <span className={"added-at"}>
-      //           {formatTimeDiff(new Date(newReleasedAlbum.release_date).getTime(), Date.now())}
-      //         </span>
-      //       </Link>
-      //     </li>
-      //   );
-      // }
-    );
+    const releases = this.state.newReleases.map((newReleasedAlbum) => (
+      <Card
+        key={newReleasedAlbum.id}
+        item={newReleasedAlbum.id}
+        linkTo={`/album/${newReleasedAlbum.id}`}
+        imageUrl={newReleasedAlbum.images[0] !== null ? newReleasedAlbum.images[0].url : ""}
+        title={newReleasedAlbum.name}
+        subtitle={newReleasedAlbum.artists.map((a) => a.name).join(", ")}
+        subsubtitle={formatTimeDiff(new Date(newReleasedAlbum.release_date).getTime(), Date.now())}
+        handleRightClick={this.handleRightClick}
+      />
+    ));
 
     //for related artists
     if (this.state.relatedArtistsList.length === 0) return <p>loading...</p>;
