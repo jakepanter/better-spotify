@@ -76,7 +76,7 @@ class RelatedArtists extends Component<IProps, IState> {
         <h2 className="Header">More Like &quot;{this.state.artistName}&quot;</h2>
         <div style={{ overflow: "hidden auto" }}>
           <div className={"Content"}>
-            <ul className={"CoverList"}>{relatedArtists}</ul>
+            <div className={"CoverList"}>{relatedArtists}</div>
           </div>
         </div>
       </>

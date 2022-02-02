@@ -81,9 +81,9 @@ export default function ArtistAlbums() {
         <div style={{ overflow: "hidden auto" }}>
           <h2>{header}</h2>
           <div className={"Content"}>
-            <ul className={"CoverList"} onScroll={onScrollAlbums}>
+            <div className={"CoverList"} onScroll={onScrollAlbums}>
               {allAlbums}
-            </ul>
+            </div>
           </div>
         </div>
       ) : (
