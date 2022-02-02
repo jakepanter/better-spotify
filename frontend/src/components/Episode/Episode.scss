@@ -46,6 +46,34 @@
     }
   }
 
+  .progress-bar {
+    margin-left: 8px;
+    background: $white;
+    border-radius: 99px;
+    width: 200px;
+    height: 5px;
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    
+    &::before {
+      border-radius: 99px;
+      position: absolute;
+      height: 5px;
+      background: $color-primary;
+      content: '';
+      width: 0;
+      transition: width .2s;
+    }
+  }
+  
+  $start: 1;
+  $end: 100;
+  
+  @for $i from $start through $end {
+    .progress-bar-#{$i}::before { width: $i * 1% }
+  }
+
   .AllEpisodes {
     padding: 4px 10px 1px 10px;
     align-items: flex-end;
