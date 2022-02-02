@@ -6,6 +6,7 @@ import {
   CreatePlaylistResponse,
   CurrentUsersProfileResponse,
   ListOfUsersPlaylistsResponse,
+  SingleTrackResponse,
 } from "spotify-types";
 import AppContext from "../../AppContext";
 import useSWR, { mutate } from "swr";
@@ -41,6 +42,10 @@ function TracksMenu(props: Props) {
   );
   const { data: me, error: meError } = useSWR<CurrentUsersProfileResponse>(
     `${API_URL}api/spotify/me`,
+    fetcher
+  );
+  const { data: track, error: trackError } = useSWR<SingleTrackResponse>(
+    `${API_URL}api/spotify/track/${trackId}`,
     fetcher
   );
 
@@ -87,22 +92,12 @@ function TracksMenu(props: Props) {
 
   const showAlbum = async () => {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
-    //extract track id
-    const trackId = props.data.map((track) => track.split("track:")[1].split("-")[0])[0];
-    const track: any = await fetch(`${API_URL}api/spotify/track/${trackId}`, {
-      headers: { Authorization: authHeader },
-    }).then((r) => r.json());
-    history.push(`/album/${track.album.id}`);
+    history.push(`/album/${track!.album.id}`);
   };
 
-  const showArtist = async () => {
+  const showArtist = async (index?: number) => {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
-    //extract track id
-    const trackId = props.data.map((track) => track.split("track:")[1].split("-")[0])[0];
-    const track: any = await fetch(`${API_URL}api/spotify/track/${trackId}`, {
-      headers: { Authorization: authHeader },
-    }).then((r) => r.json());
-    history.push(`/artist/${track.artists[0].id}`);
+    history.push(`/artist/${track!.artists[index ?? 0].id}`);
   };
 
   const setTags = (tagId: string, checked: boolean) => {
@@ -119,7 +114,7 @@ function TracksMenu(props: Props) {
     history.push(`/settings`);
   };
 
-  if (playlistsError || meError) return <p>error</p>;
+  if (playlistsError || meError || trackError) return <p>error</p>;
 
   if (props.data.length === 1) {
     return (
@@ -166,9 +161,17 @@ function TracksMenu(props: Props) {
             </MenuItem>
           ))}
         </SubMenu>
-        <MenuItem disabled onClick={showArtist}>
-          Show Artist
-        </MenuItem>
+        {track && track.artists.length > 1 ? (
+          <SubMenu label={"Show Artist"}>
+            {track.artists.map((a, i) => (
+              <MenuItem key={a.name} onClick={() => showArtist(i)}>
+                {a.name}
+              </MenuItem>
+            ))}
+          </SubMenu>
+        ) : (
+          <MenuItem onClick={() => showArtist()}>Show Artist</MenuItem>
+        )}
         <MenuItem onClick={showAlbum}>Show Album</MenuItem>
         <MenuItem disabled>Like</MenuItem>
       </ControlledMenu>

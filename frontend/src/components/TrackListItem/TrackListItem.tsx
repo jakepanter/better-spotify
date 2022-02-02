@@ -68,7 +68,15 @@ function TrackListItem(props: Props) {
   const id_tracklist = props.id_tracklist;
   const type = props.type;
   let track_uri = "spotify:track:" + props.track.id;
+  let dateStr: string = "";
 
+  if(track.added_at != undefined) {
+    let date = new Date(track.added_at);
+
+    const months = ["Jan", "Feb", "Mar","Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    dateStr = date.getDate() + ". " + months[date.getMonth()] + " " + date.getFullYear();
+  }
+  
   const sendRequest = useCallback(async () => {
     // POST request using fetch inside useEffect React hook
     let context_uri;
@@ -289,6 +297,16 @@ function TrackListItem(props: Props) {
         ) : (
             <></>
         )}
+
+        
+        {track.added_at !== undefined ? (
+          <div className={"TableCell TableCellAddedAt"}>
+            {dateStr}
+          </div>
+        ) : (
+          <></>
+        )}
+
         <div className={"TableCell TableCellDuration"}>
           {formatTimestamp(track.duration_ms)}
         </div>

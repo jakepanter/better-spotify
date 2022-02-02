@@ -21,11 +21,40 @@
   top: 0;
   z-index: 1;
 
+  h3 {
+    font-size: 24px;
+    padding-bottom: 5px;
+    flex-basis: 100%;
+  }
+
+  .infoCustomizeStartpage {
+    flex-basis: 100%;
+    padding-bottom: 5px;
+    span{
+      font-size: 17px;
+      vertical-align: text-top;
+      margin-right: 5px;
+    }
+  }
+
+  h4 {
+    font-size: 20px;
+  }
+
+  //Tag list CSS
   .DashboardTagTracklistsForm {
-    align-items: stretch;
+    padding: 10px;
+    border: 1px solid rgba($color-default, .5);
+    border-radius: $border-radius;
+    align-items: center;
     display: flex;
     flex-flow: row wrap;
-    margin-right: $spacer;
+    margin-right: 1rem;
+    max-width: calc(100% / 3);
+
+    .button {
+      margin-right: 10px;
+    }
 
     &Selects {
       align-items: center;
@@ -34,16 +63,46 @@
       margin-right: $spacer / 4;
 
       .input-select {
-        height: 100%;
+        height: auto;
+        margin-right: 10px;
+      }
+    }
+
+    h4 {
+      flex-basis: 100%;
+    }
+
+    .addTagNote {
+      display: none;
+    }
+
+    &.noTagAvailable {
+      .addTagNote {
+        flex-basis: 100%;
+        display: flex;
+
+        a {
+          color: $color-primary;
+          padding: 0 3px;
+        }
+      }
+
+      .input-select {
+        pointer-events: none;
+        opacity: .5
       }
     }
   }
 
+  //Charts list CSS
   .DashboardChartsForm {
-    align-items: stretch;
+    padding: 10px;
+    border: 1px solid rgba($color-default, .5);
+    border-radius: $border-radius;
+    align-items: center;
     display: flex;
     flex-flow: row wrap;
-    margin-right: $spacer;
+    margin-right: 1rem;
 
     &Selects {
       align-items: center;
@@ -53,20 +112,47 @@
 
       .input-select {
         height: 100%;
+        margin-right: 10px;
       }
     }
 
-    .DashboardChartsFormButtons {
+    .DashboardChartsFormButtons .button {
+      margin-left: 10px;
+
+    }
+
+    h4 {
+      flex-basis: 100%;
     }
   }
 
+  // Checkboxes CSS
   .DashboardSettingsForm {
     align-content: center;
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: column wrap;
+    padding: 10px;
+    border: 1px solid rgba($color-default, .5);
+    border-radius: $border-radius;
+    max-width: calc(100% / 3);
 
     .Checkbox {
       margin-right: $spacer;
+    }
+  }
+
+  @media screen and(max-width: 1600px) {
+    .DashboardSettingsForm, {
+      margin-top: 1rem;
+      max-width: 100%;
+    }
+    .DashboardTagTracklistsForm {
+      max-width: 100%;
+    }
+  }
+  @media screen and(max-width: 1385px) {
+    .DashboardChartsForm {
+      margin-top: 1rem;
     }
   }
 }
@@ -151,6 +237,10 @@
   .DashboardConfigurator {
     background-color: $color-background-light;
     border-bottom: $border-width $border-style $button-border-color-light;
+  }
+
+  .DashboardTagTracklistsForm, .DashboardChartsForm, .DashboardSettingsForm {
+    border-color: rgba($color-default-light, .3);
   }
 
   .Dashboard {

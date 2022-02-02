@@ -79,7 +79,7 @@ function Actions(props: Props) {
             active={false}
             playerPosition={playerPosition}
             styles={styles}
-            title={'Shuffle'}
+            title={'Repeat'}
         />
       <Devices
         currentDeviceId={currentDeviceId}
