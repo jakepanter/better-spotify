@@ -3,32 +3,9 @@
 .Playlists {
   display: flex;
   flex-flow: column nowrap;
+  flex-grow: 1;
   height: 100%;
   overflow: hidden;
-
-  .Header {
-    align-items: center;
-    justify-content: space-between;
-    box-sizing: border-box;
-    display: flex;
-    flex-flow: row wrap;
-    margin-bottom: 0;
-    padding: $spacer / 2;
-  }
-
-  .Content {
-    padding-top: $spacer / 2;
-    flex: 1 1 0;
-    overflow: hidden auto;
-  }
-
-  .CoverList {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
-    grid-template-rows: repeat(auto-fill, 1fr);
-    gap: $spacer / 2;
-    padding: 0 $spacer / 2;
-  }
 }
 
 .add-button {

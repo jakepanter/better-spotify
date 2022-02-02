@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../../utils/constants";
-import "../../cards.scss";
 import "./SearchPage.scss";
 import { Link } from "react-router-dom";
 import { CheckUsersSavedTracksResponse, SearchResponse } from "spotify-types";

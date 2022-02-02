@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import AppContext from "../../AppContext";
-import "../../cards.scss";
 import {
   CreatePlaylistResponse,
   ListOfUsersPlaylistsResponse,

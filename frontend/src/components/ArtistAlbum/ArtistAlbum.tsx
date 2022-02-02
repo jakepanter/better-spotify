@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { AlbumObjectSimplified, ArtistsAlbumsResponse } from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import { useParams } from "react-router-dom";
-import "../../cards.scss";
 import { getAuthHeader } from "../../helpers/api-helpers";
 import Card from "../Card/Card";
 
@@ -77,7 +76,7 @@ export default function ArtistAlbums() {
   }, [nextAlbumURL]);
 
   return (
-    <div>
+    <>
       {albumItems.length > 0 ? (
         <div style={{ overflow: "hidden auto" }}>
           <h2>{header}</h2>
@@ -90,6 +89,6 @@ export default function ArtistAlbums() {
       ) : (
         <></>
       )}
-    </div>
+    </>
   );
 }

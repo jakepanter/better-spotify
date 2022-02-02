@@ -8,7 +8,6 @@ import {
   ListOfNewReleasesResponse,
 } from "spotify-types";
 import "./Discover.scss";
-import "../../cards.scss";
 import { API_URL } from "../../utils/constants";
 import { NavLink } from "react-router-dom";
 import { formatTimeDiff } from "../../utils/functions";
@@ -213,7 +212,7 @@ class Discover extends Component<IProps, IState> {
           <Card
             key={relatedArtist.id}
             item={relatedArtist.id}
-            linkTo={`/album/${relatedArtist.id}`}
+            linkTo={`/artist/${relatedArtist.id}`}
             imageUrl={relatedArtist.images.length > 0 ? relatedArtist.images[0].url : ""}
             title={relatedArtist.name}
             handleRightClick={this.handleRightClick}

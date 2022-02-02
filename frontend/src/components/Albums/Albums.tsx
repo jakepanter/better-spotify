@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UsersSavedAlbumsResponse, SavedAlbumObject } from "spotify-types";
 import { API_URL } from "../../utils/constants";
-import "../../cards.scss";
 import "./Albums.scss";
 import { getAuthHeader } from "../../helpers/api-helpers";
 import AppContext from "../../AppContext";

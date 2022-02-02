@@ -5,7 +5,6 @@ import {
   MultipleShowsResponse,
   ShowObjectSimplified,
 } from "spotify-types";
-import "../../cards.scss";
 import { API_URL } from "../../utils/constants";
 import { getAuthHeader } from "../../helpers/api-helpers";
 import Card from "../Card/Card";
