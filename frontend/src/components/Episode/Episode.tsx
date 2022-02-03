@@ -84,6 +84,8 @@ export default function Episode(props: IProps) {
     } else {
       progressPercent = Math.round((episode.resume_point.resume_position_ms / episode.duration_ms)*100).toString();  
     }
+  } else {
+    progressStr = Math.round((episode.duration_ms)/60000).toString() + " Minutes and " + Math.round((episode.duration_ms)%60000/1000).toString() + " sec left";
   }
 
   return (

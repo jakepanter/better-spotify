@@ -215,7 +215,7 @@ function TrackListItem(props: Props) {
 
       let progressStr: string = "";
       let progressPercent: string = "0";
-      if (props.resume_point && props.duration_ms) {
+      if (props.resume_point?.resume_position_ms && props.duration_ms) {
         progressStr = Math.round((props.duration_ms - props.resume_point.resume_position_ms) / 60000).toString() + " Minutes and " + Math.round(((props.duration_ms - props.resume_point.resume_position_ms)) % 60000 / 1000).toString() + " sec left";
 
         if (props.resume_point.fully_played == true) {
@@ -223,6 +223,8 @@ function TrackListItem(props: Props) {
         } else {
           progressPercent = Math.round((props.resume_point.resume_position_ms / props.duration_ms) * 100).toString();
         }
+      } else {
+        progressStr = Math.round(props.duration_ms / 60000).toString() + " Minutes and " + Math.round((props.duration_ms) % 60000 / 1000).toString() + " sec left";
       }
 
       return (
