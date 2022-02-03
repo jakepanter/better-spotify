@@ -4,6 +4,7 @@ import { API_URL } from "../../utils/constants";
 import { useParams } from "react-router-dom";
 import { getAuthHeader } from "../../helpers/api-helpers";
 import Card from "../Card/Card";
+import "./ArtistAlbum.scss";
 
 let header: string = "Albums";
 
@@ -78,9 +79,9 @@ export default function ArtistAlbums() {
   return (
     <>
       {albumItems.length > 0 ? (
-        <div style={{ overflow: "hidden auto" }} onScroll={onScrollAlbums}>
+        <div className="ArtistAlbum">
           <h2 className="Header">{header}</h2>
-          <div className={"Content"}>
+          <div className={"Content"} onScroll={onScrollAlbums}>
             <div className={"CoverList"}>{allAlbums}</div>
           </div>
         </div>
