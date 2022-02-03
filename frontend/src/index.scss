@@ -77,14 +77,15 @@
   }
 
   &--main {
-    height: 100vh;
+    height: 100%;
     flex: 1 1 auto;
     overflow: hidden auto;
-    padding: 0 $padding-horizontal;
+    padding: 0 $padding-horizontal 110px $padding-horizontal;
     z-index: 0;
     scrollbar-width: none;
     flex-direction: column;
     display: flex;
+    position: relative;
   }
 
   @media screen and(max-width: $breakpoint-md) {
