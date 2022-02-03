@@ -78,12 +78,10 @@ export default function ArtistAlbums() {
   return (
     <>
       {albumItems.length > 0 ? (
-        <div style={{ overflow: "hidden auto" }}>
-          <h2>{header}</h2>
+        <div style={{ overflow: "hidden auto" }} onScroll={onScrollAlbums}>
+          <h2 className="Header">{header}</h2>
           <div className={"Content"}>
-            <div className={"CoverList"} onScroll={onScrollAlbums}>
-              {allAlbums}
-            </div>
+            <div className={"CoverList"}>{allAlbums}</div>
           </div>
         </div>
       ) : (
