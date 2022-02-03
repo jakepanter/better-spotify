@@ -49,7 +49,7 @@ class Podcasts extends Component<IProps, IState> {
     // Fallback if User doesn't have any shows saved
     else if (data.items.length == 0) {
       const fallbackShows =
-        "4QwUbrMJZ27DpjuYmN4Tun%2C1OLcQdw2PFDPG1jo3s0wbp%2C7BTOsF2boKmlYr76BelijW%2C6wPqbSlsvoi3Rgjjc2Sn4R%2C5m4Ll1qIBX29cTd0T9WwKp";
+        "02RUOjUej5WoawxQWISAW9%2C1OLcQdw2PFDPG1jo3s0wbp%2C7BTOsF2boKmlYr76BelijW%2C6wPqbSlsvoi3Rgjjc2Sn4R%2C5m4Ll1qIBX29cTd0T9WwKp";
       const fallback: MultipleShowsResponse = await fetch(
         `${API_URL}api/spotify/shows?showIds=${fallbackShows}`,
         {
