@@ -30,7 +30,8 @@
   .infoCustomizeStartpage {
     flex-basis: 100%;
     padding-bottom: 5px;
-    span{
+
+    span {
       font-size: 17px;
       vertical-align: text-top;
       margin-right: 5px;
@@ -50,6 +51,7 @@
     display: flex;
     flex-flow: row wrap;
     margin-right: 1rem;
+    margin-top: 1rem;
     max-width: calc(100% / 3);
 
     .button {
@@ -103,6 +105,7 @@
     display: flex;
     flex-flow: row wrap;
     margin-right: 1rem;
+    margin-top: 1rem;
 
     &Selects {
       align-items: center;
@@ -135,24 +138,25 @@
     border: 1px solid rgba($color-default, .5);
     border-radius: $border-radius;
     max-width: calc(100% / 3);
+    margin-top: 1rem;
 
     .Checkbox {
       margin-right: $spacer;
     }
   }
 
-  @media screen and(max-width: 1600px) {
-    .DashboardSettingsForm, {
-      margin-top: 1rem;
-      max-width: 100%;
-    }
+  @media screen and(max-width: 1513px) {
     .DashboardTagTracklistsForm {
-      max-width: 100%;
+      max-width: unset;
+      button:not(:last-child), .DashboardTagTracklistsForm select {
+        margin-bottom: 5px;
+      }
     }
   }
-  @media screen and(max-width: 1385px) {
-    .DashboardChartsForm {
-      margin-top: 1rem;
+  @media screen and(max-width: 1100px) {
+    .DashboardSettingsForm {
+      max-width: unset;
+      flex-direction: row;
     }
   }
 }
