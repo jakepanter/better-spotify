@@ -3,5 +3,6 @@
 .Releases {
   display: flex;
   flex-flow: column nowrap;
-  height: 100%;
+  // need this calculation to fix the player position - if change, check if player position is correct on the very end of the page
+  height: calc(100% - 150px);
 }
