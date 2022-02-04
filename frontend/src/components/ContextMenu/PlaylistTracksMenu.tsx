@@ -30,8 +30,10 @@ function PlaylistTracksMenu(props: Props) {
 
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
 
-  const trackId = props.data.tracks.map((track) => track.split("-")[0].split(":")[2])[0];
   const tags = TagsSystem.getTags();
+  const [trackId, setTrackId] = useState(
+    props.data.tracks.map((track) => track.split("-")[0].split(":")[2])[0]
+  );
   const [tagsForTrack, setTagsForTrack] = useState<string[]>(TagsSystem.getTagsOfElement(trackId));
 
   const state = useContext(AppContext);
@@ -60,8 +62,13 @@ function PlaylistTracksMenu(props: Props) {
   }, []);
 
   useEffect(() => {
+    setTagsForTrack(TagsSystem.getTagsOfElement(trackId));
+  }, [trackId]);
+
+  useEffect(() => {
     toggleMenu(true);
-  }, [props.anchorPoint]);
+    setTrackId(props.data.tracks.map((track) => track.split("-")[0].split(":")[2])[0]);
+  }, [props.anchorPoint, props.data]);
 
   const addToPlaylist = async (playlistId: String) => {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
@@ -164,7 +171,7 @@ function PlaylistTracksMenu(props: Props) {
         {props.data.playlist.owner.id === me?.id && (
           <MenuItem onClick={removeFromPlaylist}>Remove from Playlist</MenuItem>
         )}
-        <SubMenu label={"Tags"} overflow={"auto"} position={"anchor"}>
+        <SubMenu label={"Edit Tags"} overflow={"auto"} position={"anchor"}>
           <MenuItem onClick={navigateToTags}>New Tag</MenuItem>
           {Object.keys(tags.availableTags).length > 0 && <MenuDivider />}
           {Object.entries(tags.availableTags).map((e) => (

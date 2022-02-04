@@ -1,9 +1,9 @@
 @import "./src/boilerplate.scss";
 
-.Albums {
+.SearchPageCustom {
   display: flex;
   flex-flow: column nowrap;
-  height: 100%;
   flex-grow: 1;
-  overflow: hidden;
+  overflow: hidden auto;
+  margin-bottom: 2rem;
 }

@@ -67,7 +67,7 @@ function TrackListItem(props: Props) {
   const id_tracklist = props.id_tracklist;
   const type = props.type;
   let track_uri = "spotify:track:" + props.track.id;
-
+  
   const sendRequest = useCallback(async () => {
     // POST request using fetch inside useEffect React hook
     let context_uri;
@@ -75,20 +75,20 @@ function TrackListItem(props: Props) {
       context_uri = "spotify:album:" + id_tracklist;
     } else if (type=="playlist") {
       context_uri = "spotify:playlist:" + id_tracklist;
-    } else if (type === 'saved' || type === 'tags') {
+    } else if (type === 'saved') {
       const userId = await fetchUserId();
       context_uri = userId + ':collection:'
     } else if (type === 'show') {
       context_uri = "spotify:show:" + id_tracklist;
       track_uri = "spotify:episode:" + props.track.id;
-    } else if (type === "search" || type === "topTracks") {
+    } else if (type === "search" || type === "topTracks" || type === "tags") {
       context_uri = "spotify:album:" + track.album?.id;
     }
     const body: Body = {
       context_uri: context_uri,
       position_ms: 0
     }
-    if (type !== 'saved' && type !== 'tags') {
+    if (type !== 'saved') {
       body.offset = {
         uri: track_uri
       }
@@ -281,6 +281,16 @@ function TrackListItem(props: Props) {
         ) : (
             <></>
         )}
+
+        
+        {track.added_at !== undefined ? (
+          <div className={"TableCell TableCellAddedAt"}>
+            {formatTimeDiff(new Date(track.added_at).getTime(), Date.now())}
+          </div>
+        ) : (
+          <></>
+        )}
+
         <div className={"TableCell TableCellDuration"}>
           {formatTimestamp(track.duration_ms)}
         </div>

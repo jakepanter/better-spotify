@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import AppContext from "../../AppContext";
-import "../../cards.scss";
 import {
   CreatePlaylistResponse,
   ListOfUsersPlaylistsResponse,
@@ -10,9 +9,9 @@ import {
 } from "spotify-types";
 import "./Playlists.scss";
 import { API_URL } from "../../utils/constants";
-import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import { createNewPlaylist, fetchPlaylist } from "../../helpers/api-helpers";
 import { getAuthHeader } from "../../helpers/api-helpers";
+import Card from "../Card/Card";
 
 export default function Playlists() {
   const [playlists, setPlaylists] = useState<ListOfUsersPlaylistsResponse>();
@@ -100,23 +99,15 @@ export default function Playlists() {
 
   const myPlaylists = items.map((playlist) => {
     return (
-      <Link
-        to={`/playlist/${playlist.id}`}
-        className={"Card"}
+      <Card
         key={playlist.id}
-        onContextMenu={(e) => handleRightClick(e, playlist.id)}
-      >
-        {playlist.images.length > 0 ? (
-          <div
-            className={"CardCover"}
-            style={{ backgroundImage: `url(${playlist.images[0].url})` }}
-          />
-        ) : (
-          <CoverPlaceholder className="CardCover" />
-        )}
-        <span className={"CardTitle"}>{playlist.name}</span>
-        <span className={"CardArtist"}>{playlist.owner.display_name}</span>
-      </Link>
+        linkTo={`/playlist/${playlist.id}`}
+        item={playlist.id}
+        imageUrl={playlist.images[0] !== null ? playlist.images[0].url : ""}
+        title={playlist.name}
+        subtitle={playlist.owner.display_name}
+        handleRightClick={handleRightClick}
+      />
     );
   });
 

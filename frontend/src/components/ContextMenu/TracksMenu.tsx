@@ -29,8 +29,10 @@ function TracksMenu(props: Props) {
 
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
 
-  const trackId = props.data.map((track) => track.split("-")[0].split(":")[2])[0];
   const tags = TagsSystem.getTags();
+  const [trackId, setTrackId] = useState(
+    props.data.map((track) => track.split("-")[0].split(":")[2])[0]
+  );
   const [tagsForTrack, setTagsForTrack] = useState<string[]>(TagsSystem.getTagsOfElement(trackId));
 
   const state = useContext(AppContext);
@@ -59,8 +61,13 @@ function TracksMenu(props: Props) {
   }, []);
 
   useEffect(() => {
+    setTagsForTrack(TagsSystem.getTagsOfElement(trackId));
+  }, [trackId]);
+
+  useEffect(() => {
     toggleMenu(true);
-  }, [props.anchorPoint]);
+    setTrackId(props.data.map((track) => track.split("-")[0].split(":")[2])[0]);
+  }, [props.anchorPoint, props.data]);
 
   const addToPlaylist = async (playlistId: String) => {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
@@ -145,7 +152,7 @@ function TracksMenu(props: Props) {
             <MenuItem disabled>Fetching Playlists...</MenuItem>
           )}
         </SubMenu>
-        <SubMenu label={"Tags"} overflow={"auto"} position={"anchor"}>
+        <SubMenu label={"Edit Tags"} overflow={"auto"} position={"anchor"}>
           <MenuItem onClick={navigateToTags}>New Tag</MenuItem>
           {Object.keys(tags.availableTags).length > 0 && <MenuDivider />}
           {Object.entries(tags.availableTags).map((e) => (

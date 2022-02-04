@@ -24,13 +24,8 @@ interface ThemeState {
     trackNameColor: string;
 }
 
-interface tracks {
-    currentTrack: TrackObjectFull | EpisodeObject | null;
-}
-
 export default function Player(props: IProps) {
-    const [track, setTrack] = useState<tracks>();
-
+    const [track, setTrack] = useState<TrackObjectFull | EpisodeObject | null>();
     const [token, setToken] = useState('');
     const [theme, setTheme] = useState<ThemeState>({
         color: '',
@@ -43,14 +38,23 @@ export default function Player(props: IProps) {
     })
 
     // fetch the track and use for displaying information about the currently playing track
-    async function getPlayingTrackData(trackId: string) {
+    async function getPlayingTrackData(trackId: string, uri: string) {
         const authHeader = getAuthHeader();
-        const track = await fetch(`${API_URL}api/spotify/track/${trackId}`, {
-            headers: {
-                'Authorization': authHeader
-            }
-        }).then((res) => res.json());
-        setTrack({currentTrack: track});
+        if (uri.includes("track")) {
+            const track = await fetch(`${API_URL}api/spotify/track/${trackId}`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }).then((res) => res.json());
+            setTrack(track);
+        } else if(uri.includes("episode")) {
+            const episode = await fetch(`${API_URL}api/spotify/episode/${trackId}`, {
+                headers: {
+                    'Authorization': authHeader
+                }
+            }).then((res) => res.json());
+            setTrack(episode)
+        }
     }
 
     useEffect(() => {
@@ -105,14 +109,29 @@ export default function Player(props: IProps) {
                 setPlaybackStateCallback={playbackCallback}
             />
             }
-            {track !== undefined && track.currentTrack && track.currentTrack.type === "track" ?
+            {track !== undefined && track && track.type === "track" ?
                 (<div className={"redirect"}>
-                    <Link to={`/album/${track.currentTrack.album.id}`} className={"redirect-album"}/>
-                    <div className={"test"}>
-                        <span className={"artists-section"}>{track.currentTrack.artists.map<React.ReactNode>((a) =>
+                    <Link to={`/album/${track.album.id}`} className={"redirect-album"}/>
+                    <div className={"playing-info"}>
+                        <span className={"artists-section"}>{track.artists.map<React.ReactNode>((a) =>
                             <Link to={`/artist/${a.id}`} className={"artists-name"}
                                   key={a.id}>{a.name}</Link>).reduce((a, b) => [a, ', ', b])}</span></div>
-                </div>) : (<></>)}
+                </div>) :
+                <></>}
+            {track !== undefined && track && track.type === "episode" ?
+                (<div className={"redirect"}>
+                    <Link to={`/show/${track.show.id}`} className={"redirect-album"}/>
+                    <div className={"playing-info"}>
+                        <span className={"episode-section"}>
+                            <Link to={`/episode/${track.id}`} style={{color: "red"}} className={"artists-name"} key={track.show.id}>{track.name}</Link>
+                        </span>
+                        <span className={"artists-section"}>
+                            <Link to={`/show/${track.show.id}`} style={{color: "blue"}} className={"artists-name"} key={track.show.id}>{track.show.name}</Link>
+                        </span>
+                    </div>
+                </div>) :
+                <></>}
+
         </div>
     )
 }
