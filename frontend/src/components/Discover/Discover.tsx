@@ -28,7 +28,9 @@ interface IState {
   }[];
 }
 
-const limit = 5;
+//limit is the number of items which shall be fetched
+//it also defines the number of artists in more like 'artist"
+const limit = 6;
 
 class Discover extends Component<IProps, IState> {
   constructor(props: IProps) {
@@ -64,7 +66,7 @@ class Discover extends Component<IProps, IState> {
         this.fetchRelatedArtists(topArtist.id).then((relatedArtists) => {
           const fiveRelatedArtists = relatedArtists.artists
             .sort(() => 0.5 - Math.random())
-            .slice(0, 5);
+            .slice(0, limit);
           const list = {
             artist: topArtist,
             relatedArtists: fiveRelatedArtists,
