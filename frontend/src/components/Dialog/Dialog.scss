@@ -6,7 +6,7 @@
   bottom: 0;
   display: flex;
   justify-content: center;
-  left: 190px;
+  left: 0;
   opacity: 0;
   position: fixed;
   right: 0;
@@ -27,10 +27,12 @@
   flex-flow: column nowrap;
   max-height: calc(100% - #{$spacer});
   overflow: hidden auto;
-  position: relative;
+  position: absolute;
   width: calc(100% - #{$spacer});
   max-width: 720px;
-
+  left: 50%;
+  top: 50%;
+transform: translate(-50%, -50%);
   .button {
     color: $color-default;
     display: inline-flex;
