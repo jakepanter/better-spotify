@@ -76,7 +76,9 @@ export class DashboardService {
     const newAlbums = currentDashboard.albums.filter((a) => a.id !== id);
     DashboardService.saveCurrentDashboardState({...currentDashboard, albums: newAlbums});
 
-    NotificationsService.push('success', 'Removed album from start page');
+    if (currentDashboard.albums.length !== newAlbums.length) {
+      NotificationsService.push('success', 'Removed album from start page');
+    }
   }
 
   static containsAlbum(id: string) {
@@ -100,12 +102,25 @@ export class DashboardService {
     const newPlaylists = currentDashboard.playlists.filter((p) => p.id !== id);
     DashboardService.saveCurrentDashboardState({...currentDashboard, playlists: newPlaylists});
 
-    NotificationsService.push('success', 'Removed playlist from start page');
+    if (currentDashboard.playlists.length !== newPlaylists.length) {
+      NotificationsService.push('success', 'Removed playlist from start page');
+    }
   }
 
   static containsPlaylist(id: string) {
     const currentDashboard = DashboardService.getCurrentDashboardState();
     return currentDashboard.playlists.some((p) => p.id === id);
+  }
+
+  // TagTracklists methods
+  static removeTagTracklist(id: string) {
+    const currentDashboard = DashboardService.getCurrentDashboardState();
+    const newTagTracklists = currentDashboard.tagTracklists.filter((p) => p.id !== id);
+    DashboardService.saveCurrentDashboardState({...currentDashboard, tagTracklists: newTagTracklists});
+
+    if (currentDashboard.tagTracklists.length !== newTagTracklists.length) {
+      NotificationsService.push('success', 'Removed tag tracklist from start page');
+    }
   }
 
   // Helper methods

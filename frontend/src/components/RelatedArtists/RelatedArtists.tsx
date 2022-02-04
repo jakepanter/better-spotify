@@ -59,44 +59,27 @@ class RelatedArtists extends Component<IProps, IState> {
 
   render() {
     if (this.state.relatedArtistsList.length === 0) return <p>loading...</p>;
-    const relatedArtists = this.state.relatedArtistsList.map(
-      (artist) => (
-        <Card
-          key={artist.id}
-          item={artist.id}
-          linkTo={`/artist/${artist.id}`}
-          imageUrl={artist.images.length > 0 ? artist.images[0].url : ""}
-          title={artist.name}
-          handleRightClick={this.handleRightClick}
-          roundCover={true}
-        />
-      )
-      // {
-      //     return (
-      //         <li className="column" key={artist.id}>
-      //             <Link to={`/artist/${artist.id}`}>
-      //                 {artist.images.length !== 0 ? (
-      //                     <div className={"cover"} style={{
-      //                         backgroundImage: `url(${artist.images[0].url})`
-      //                     }}>
-      //                     </div>
-      //                 ) :(
-      //                     <CoverPlaceholder/>
-      //                 )}
-      //                 <span className="title">{artist.name}</span>
-      //             </Link>
-      //         </li>
-      //     );
-      // }
-    );
+    const relatedArtists = this.state.relatedArtistsList.map((artist) => (
+      <Card
+        key={artist.id}
+        item={artist.id}
+        linkTo={`/artist/${artist.id}`}
+        imageUrl={artist.images[0] !== null ? artist.images[0].url : ""}
+        title={artist.name}
+        handleRightClick={this.handleRightClick}
+        roundCover={true}
+      />
+    ));
 
     return (
-      <div style={{ overflow: "hidden auto" }}>
-        <h2>More Like &quot;{this.state.artistName}&quot;</h2>
-        <div className={"Content"}>
-          <ul className={"CoverList"}>{relatedArtists}</ul>
+      <>
+        <h2 className="Header">More Like &quot;{this.state.artistName}&quot;</h2>
+        <div style={{ overflow: "hidden auto" }}>
+          <div className={"Content"}>
+            <div className={"CoverList"}>{relatedArtists}</div>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 }

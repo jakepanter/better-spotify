@@ -70,6 +70,7 @@ export default function Releases() {
 
   return (
     <div className={"Releases"}>
+      <h2 className="Header">New Releases</h2>
       <div className={"Content"} onScroll={onScroll}>
         <div className={"CoverList"}>{releasedAlbums}</div>
       </div>
