@@ -146,7 +146,7 @@ export default function SearchPage() {
           </h2>
         </div>
         <div className={"Content searchPage"}>
-          <ul className={"CoverList"}>{Playlists}</ul>
+          <div className={"CoverList"}>{Playlists}</div>
         </div>
       </div>
     );
@@ -181,7 +181,7 @@ export default function SearchPage() {
           </h2>
         </div>
         <div className={"Content searchPage"}>
-          <ul className={"CoverList"}>{Shows}</ul>
+          <div className={"CoverList"}>{Shows}</div>
         </div>
       </div>
     );
@@ -215,7 +215,7 @@ export default function SearchPage() {
           </h2>
         </div>
         <div className={"Content searchPage"}>
-          <ul className={"CoverList"}>{Episodes}</ul>
+          <div className={"CoverList"}>{Episodes}</div>
         </div>
       </div>
     );

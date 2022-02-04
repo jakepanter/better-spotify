@@ -1,1 +1,9 @@
 @import "./src/boilerplate.scss";
+
+.ArtistAlbum {
+  display: flex;
+  flex-flow: column nowrap;
+  height: 100%;
+  flex-grow: 1;
+  overflow: hidden auto;
+}
