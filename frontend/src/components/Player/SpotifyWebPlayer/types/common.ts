@@ -2,6 +2,7 @@
 import * as React from 'react';
 
 import { SpotifyDevice, SpotifyPlayerTrack, WebPlaybackTrack } from './spotify';
+import {PlaybackState} from "../../../../utils/playbackSlice";
 
 export type PlainObject<T = any> = Record<string, T>;
 
@@ -28,6 +29,9 @@ export interface Props {
   // eslint-disable-next-line no-unused-vars
   updateSavedStatus?: (fn: (status: boolean) => any) => any;
   uris?: string | string[];
+  // eslint-disable-next-line no-unused-vars
+  setPlaybackStateCallback: (state: PlaybackState) => void;
+  handlePlayingTrack: Function;
 }
 
 export interface State {
@@ -51,6 +55,7 @@ export interface State {
   status: string;
   track: SpotifyPlayerTrack;
   volume: number;
+  shuffleState: boolean;
 }
 
 export interface ComponentsProps {

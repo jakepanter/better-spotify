@@ -76,11 +76,11 @@
 
   .EpisodeControl .PlayEpisode {
     &:before {
-      color: rgba($color-default-light, 0.45);
+      color: rgba($color-primary, 0.85);
     }
 
     &:hover::before {
-      color: rgba($color-default-light, .6);
+      color: rgba($color-primary, 1);
     }
   }
 

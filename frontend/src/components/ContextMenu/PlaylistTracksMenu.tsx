@@ -7,6 +7,7 @@ import {
   CurrentUsersProfileResponse,
   ListOfUsersPlaylistsResponse,
   PlaylistObjectFull,
+  SingleTrackResponse,
 } from "spotify-types";
 import AppContext from "../../AppContext";
 import useSWR, { mutate } from "swr";
@@ -29,8 +30,10 @@ function PlaylistTracksMenu(props: Props) {
 
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
 
-  const trackId = props.data.tracks.map((track) => track.split("-")[0].split(":")[2])[0];
   const tags = TagsSystem.getTags();
+  const [trackId, setTrackId] = useState(
+    props.data.tracks.map((track) => track.split("-")[0].split(":")[2])[0]
+  );
   const [tagsForTrack, setTagsForTrack] = useState<string[]>(TagsSystem.getTagsOfElement(trackId));
   const [liked, setLiked] = useState<boolean>(false);
 
@@ -45,6 +48,10 @@ function PlaylistTracksMenu(props: Props) {
     `${API_URL}api/spotify/me`,
     fetcher
   );
+  const { data: track, error: trackError } = useSWR<SingleTrackResponse>(
+    `${API_URL}api/spotify/track/${trackId}`,
+    fetcher
+  );
 
   const ref = useRef();
   useOutsideClick(ref, () => {
@@ -56,8 +63,13 @@ function PlaylistTracksMenu(props: Props) {
   }, []);
 
   useEffect(() => {
+    setTagsForTrack(TagsSystem.getTagsOfElement(trackId));
+  }, [trackId]);
+
+  useEffect(() => {
     toggleMenu(true);
-  }, [props.anchorPoint]);
+    setTrackId(props.data.tracks.map((track) => track.split("-")[0].split(":")[2])[0]);
+  }, [props.anchorPoint, props.data]);
 
   const addToPlaylist = async (playlistId: String) => {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
@@ -104,22 +116,12 @@ function PlaylistTracksMenu(props: Props) {
 
   const showAlbum = async () => {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
-    //extract track id
-    const trackId = props.data.tracks.map((track) => track.split("track:")[1].split("-")[0])[0];
-    const track: any = await fetch(`${API_URL}api/spotify/track/${trackId}`, {
-      headers: { Authorization: authHeader },
-    }).then((r) => r.json());
-    history.push(`/album/${track.album.id}`);
+    history.push(`/album/${track!.album.id}`);
   };
 
-  const showArtist = async () => {
+  const showArtist = async (index?: number) => {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
-    //extract track id
-    const trackId = props.data.tracks.map((track) => track.split("track:")[1].split("-")[0])[0];
-    const track: any = await fetch(`${API_URL}api/spotify/track/${trackId}`, {
-      headers: { Authorization: authHeader },
-    }).then((r) => r.json());
-    history.push(`/artist/${track.artists[0].id}`);
+    history.push(`/artist/${track!.artists[index ?? 0].id}`);
   };
 
   const setTags = (tagId: string, checked: boolean) => {
@@ -163,7 +165,7 @@ function PlaylistTracksMenu(props: Props) {
     }
   };
 
-  if (playlistsError || meError) return <p>error</p>;
+  if (playlistsError || meError || trackError) return <p>error</p>;
 
   if (props.data.tracks.length === 1) {
     return (
@@ -197,7 +199,7 @@ function PlaylistTracksMenu(props: Props) {
         {props.data.playlist.owner.id === me?.id && (
           <MenuItem onClick={removeFromPlaylist}>Remove from Playlist</MenuItem>
         )}
-        <SubMenu label={"Tags"} overflow={"auto"} position={"anchor"}>
+        <SubMenu label={"Edit Tags"} overflow={"auto"} position={"anchor"}>
           <MenuItem onClick={navigateToTags}>New Tag</MenuItem>
           {Object.keys(tags.availableTags).length > 0 && <MenuDivider />}
           {Object.entries(tags.availableTags).map((e) => (
@@ -213,9 +215,17 @@ function PlaylistTracksMenu(props: Props) {
             </MenuItem>
           ))}
         </SubMenu>
-        <MenuItem disabled onClick={showArtist}>
-          Show Artist
-        </MenuItem>
+        {track && track.artists.length > 1 ? (
+          <SubMenu label={"Show Artist"}>
+            {track.artists.map((a, i) => (
+              <MenuItem key={a.name} onClick={() => showArtist(i)}>
+                {a.name}
+              </MenuItem>
+            ))}
+          </SubMenu>
+        ) : (
+          <MenuItem onClick={() => showArtist()}>Show Artist</MenuItem>
+        )}
         <MenuItem onClick={showAlbum}>Show Album</MenuItem>
         <MenuItem disabled>Like</MenuItem>
       </ControlledMenu>

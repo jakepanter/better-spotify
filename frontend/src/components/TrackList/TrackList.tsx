@@ -54,6 +54,7 @@ type Props =
       loadMoreCallback: () => void;
       fullyLoaded: boolean;
       id_tracklist: string;
+      is_saved: boolean[];
     }
   | {
       type: "songhistory";
@@ -297,7 +298,9 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
             <div className={"TableCell TableCellAlbum"}>Album</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
+            <div className={"TableCell TableCellLiked"}>Liked</div>
             <div className={"TableCell TableCellTags"}>Tags</div>
+            <div className={"TableCell TableCellActions"}>Playlist</div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
@@ -315,6 +318,7 @@ function TrackList(props: Props) {
                     duration_ms={item.duration_ms}
                     album={item.album}
                     key={type + "-track-" + item.id + "-" + index}
+                    liked={props.is_saved[index]}
                     listIndex={index}
                     selected={isTrackSelected(item, index)}
                     onSelectionChange={handleSelectionChange}
@@ -345,6 +349,7 @@ function TrackList(props: Props) {
                 <div className={"TableCell TableCellAlbum"}>Album</div>
                 <div className={"TableCell TableCellDuration"}>Duration</div>
                 <div className={"TableCell TableCellTags"}>Tags</div>
+                <div className={"TableCell TableCellActions"}>Playlist</div>
               </div>
               <div className={"TableBody"}>
                 {props.tracks.map((item, index) => {
@@ -389,6 +394,7 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellAlbum"}>Album</div>
             <div className={"TableCell TableCellAddedAt"}>Added</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
+            <div className={"TableCell TableCellLiked"}>Liked</div>
             <div className={"TableCell TableCellTags"}>Tags</div>
             <div className={"TableCell TableCellActions"}>Playlist</div>
           </div>
@@ -406,6 +412,7 @@ function TrackList(props: Props) {
                   name={track.name}
                   artists={track.artists}
                   duration_ms={track.duration_ms}
+                  liked={true}
                   album={track.album}
                   added_at={item.added_at}
                   key={type + "-track-" + track.id + "-" + index}

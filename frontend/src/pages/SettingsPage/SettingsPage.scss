@@ -21,6 +21,7 @@
 
     .button {
       background: none;
+      color: $color-default;
       margin-right: 10px;
       border-radius: $border-radius;
       padding: 10px;
@@ -146,6 +147,7 @@
 
 .light_mode {
   .Settings .SpacingTop .button {
+      color: $color-default-light;
     &:disabled,
     &[disabled] {
       border-color: $gray-dark;

@@ -230,9 +230,6 @@ export default class Info extends React.PureComponent<Props, State> {
         {image && (
           <a
             aria-label={title}
-            href={getSpotifyLink(uri)}
-            rel="noreferrer"
-            target="_blank"
             title={title}
           >
             <img alt={name} src={image} />

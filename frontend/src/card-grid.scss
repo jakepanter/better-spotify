@@ -1,0 +1,50 @@
+.Header {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  margin-bottom: 0;
+  padding: $spacer / 2;
+  h2 {
+    margin-bottom: 0;
+  }
+}
+
+.Content {
+  padding-top: $spacer / 2;
+  flex: 1 1 0;
+  overflow: hidden auto;
+}
+
+.CoverList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
+  grid-template-rows: repeat(auto-fill, 1fr);
+  gap: $spacer / 2;
+  padding: 0 $spacer / 2;
+}
+
+.ViewMoreLink {
+  font-size: 16px;
+  float: right;
+  color: $gray-dark;
+  text-decoration: none;
+  text-transform: none;
+
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+.light_mode {
+  .Header {
+    color: $color-default-light;
+  }
+  .ViewMoreLink {
+    color: $color-default-light;
+    &:hover {
+      color: $color-primary;
+    }
+  }
+}
