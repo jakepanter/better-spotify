@@ -1,11 +1,10 @@
 @import './src/boilerplate.scss';
 
 .Player {
-  position: sticky;
+  position: absolute;
   bottom: 0;
-  right: 0;
-  z-index: 2;
-  width: 100%;
+  left: 0;
+  z-index: 1;
   padding: 1rem;
   background: $color-background;
   width: 100%;

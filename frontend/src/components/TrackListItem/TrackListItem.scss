@@ -105,6 +105,7 @@
           font-size: 50px;
           text-align: center;
           color: rgba($white, 0.45);
+          transition: $transition-base;
         }
       }
     }
@@ -144,7 +145,7 @@
 }
 
 .Selected {
-  background-color: $color-primary;
+  background-color: rgba($color-primary, .2);
 
   .checkbox.checked {
     color: $color-default;
@@ -223,7 +224,7 @@
   }
 
   .Selected {
-    background-color: $color-primary;
+    background-color: rgba($color-primary, .5);
 
     .checkbox.checked {
       color: $color-default-light;
@@ -241,8 +242,18 @@
     .checkbox.checked {
       color: $color-default-light;
     }
+
     .Tag {
       color: $color-default-light !important;
+    }
+  }
+
+  .EpisodeRow a .noTags .TableCellPlayEpisode {
+    &:hover::before {
+      color: rgba($color-default-light, 1.0);
+    }
+    &:before {
+      color: rgba($color-default-light, 0.45);
     }
   }
 }

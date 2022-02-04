@@ -26,6 +26,15 @@
       text-transform: none;
       opacity: 0.8;
     }
+
+    .artists-name {
+      color: $color-default;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 
   &Header {
@@ -81,6 +90,9 @@
 
 .light_mode {
   .more-button span {
+    color: $color-default-light;
+  }
+  &HeaderFull .artists-name {
     color: $color-default-light;
   }
 }
