@@ -1,3 +1,5 @@
+import {DashboardService} from "../components/Dashboard/Dashboard";
+
 const LOCALSTORAGE_KEY = 'tags';
 
 export interface TagData {
@@ -77,8 +79,12 @@ export default class TagsSystem {
       [key: string]: string[],
     } = {};
 
+    // Remove tag from elements
     Object.entries(tags.spotifyElements).forEach((e) => newSpotifyElements[e[0]] = e[1].filter((id) => id !== tagId));
     tags.spotifyElements = newSpotifyElements;
+
+    // Remove tag from start page
+    DashboardService.removeTagTracklist(tagId);
 
     TagsSystem.saveTags(tags);
   }
