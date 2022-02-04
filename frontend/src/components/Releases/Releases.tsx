@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { ListOfNewReleasesResponse, AlbumObjectSimplified } from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import "./Releases.scss";
-import { useHistory} from "react-router-dom";
 import { formatTimeDiff } from "../../utils/functions";
 import { getAuthHeader } from "../../helpers/api-helpers";
 import Card from "../Card/Card";
@@ -15,7 +14,6 @@ export default function Releases() {
   // The list of releases (albums)
   const [albums, setAlbums] = useState<AlbumObjectSimplified[]>([]);
   const [offset, setOffset] = useState<number>(0);
-    const history = useHistory();
 
   // Fetch more album tracks if necessary
   useEffect(() => {
@@ -63,7 +61,7 @@ export default function Releases() {
         linkTo={`/album/${album.id}`}
         imageUrl={album.images.length > 0 ? album.images[0].url : ""}
         title={album.name}
-        subtitle={album.artists.map((a) => a.name).join(", ")}
+        subtitle={album.artists}
         subsubtitle={formatTimeDiff(new Date(album.release_date).getTime(), Date.now())}
         handleRightClick={handleRightClick}
       />

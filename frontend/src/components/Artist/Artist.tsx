@@ -176,7 +176,7 @@ class Artist extends Component<IProps, IState> {
         linkTo={`/album/${album.id}`}
         imageUrl={album.images[0] !== null ? album.images[0].url : ""}
         title={album.name}
-        subtitle={album.artists.map((a) => a.name).join(", ")}
+        subtitle={album.artists}
         handleRightClick={this.handleRightClick}
       />
     ));
@@ -189,7 +189,7 @@ class Artist extends Component<IProps, IState> {
         linkTo={`/album/${single.id}`}
         imageUrl={single.images[0] !== null ? single.images[0].url : ""}
         title={single.name}
-        subtitle={single.artists.map((a) => a.name).join(", ")}
+        subtitle={single.artists}
         handleRightClick={this.handleRightClick}
       />
     ));
@@ -202,7 +202,7 @@ class Artist extends Component<IProps, IState> {
         linkTo={`/album/${album.id}`}
         imageUrl={album.images[0] !== null ? album.images[0].url : ""}
         title={album.name}
-        subtitle={album.artists.map((a) => a.name).join(", ")}
+        subtitle={album.artists}
         handleRightClick={this.handleRightClick}
       />
     ));
@@ -215,7 +215,7 @@ class Artist extends Component<IProps, IState> {
         linkTo={`/album/${compilation.id}`}
         imageUrl={compilation.images[0] !== null ? compilation.images[0].url : ""}
         title={compilation.name}
-        subtitle={compilation.artists.map((a) => a.name).join(", ")}
+        subtitle={compilation.artists}
         handleRightClick={this.handleRightClick}
       />
     ));

@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 import { UsersSavedAlbumsResponse, SavedAlbumObject } from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import "./Albums.scss";
@@ -12,7 +11,6 @@ export default function Albums() {
   const [items, setItems] = useState<SavedAlbumObject[]>([]);
   const [next, setNext] = useState<string>(`${API_URL}api/spotify/collections/albums`);
   const state = useContext(AppContext);
-  const history = useHistory()
 
   useEffect(() => {
     fetchData(next);
@@ -44,12 +42,6 @@ export default function Albums() {
     });
   };
 
-  const goToArtist = (e: any, artistId: string) => {
-    e.preventDefault();
-    history.push(`/artist/${artistId}`)
-  };
-
-
   //fetch next albums when you reach the bottom of the current list
   const onScroll = (e: any) => {
     const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
@@ -70,7 +62,7 @@ export default function Albums() {
         item={item.album.id}
         imageUrl={item.album.images[0] !== null ? item.album.images[0].url : ""}
         title={item.album.name}
-        subtitle={item.album.artists.map((a) => a.name).join(", ")}
+        subtitle={item.album.artists}
         handleRightClick={handleRightClick}
       />
     );
