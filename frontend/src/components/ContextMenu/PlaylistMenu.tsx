@@ -146,7 +146,7 @@ function PlaylistMenu(props: Props) {
           <MenuItem disabled>Fetching Playlists...</MenuItem>
         )}
       </SubMenu>
-      {props.data.owner.id === me?.id && <MenuItem onClick={editDetails}>Edit Details</MenuItem>}
+      {props.data.owner.id === me?.id && <MenuItem onClick={editDetails}>Edit Playlist</MenuItem>}
       <MenuItem onClick={deletePlaylist}>Unfollow</MenuItem>
     </ControlledMenu>
   );
