@@ -54,6 +54,7 @@
     max-height: 25px;
     border-color: #1C1C23;
     margin: 16px 32px 16px auto;
+    color: $color-default;
 
     &:hover {
       background-color: $color-primary;
@@ -88,4 +89,8 @@
     background-color: $color-accent-light;
     border-color: $color-accent-light;
   }
+}
+.light_mode {
+  .AllEpisodes{
+  color: $color-default-light;}
 }

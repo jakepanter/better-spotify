@@ -41,7 +41,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1;
+    // z-index: 1;
+    //removed for New Tag Dalog to always be on top
 
     @media screen and(min-width: $breakpoint-md) {
       box-sizing: content-box;
@@ -80,11 +81,12 @@
     height: 100vh;
     flex: 1 1 auto;
     overflow: hidden auto;
-    padding: 0 $padding-horizontal;
+    padding: 0 $padding-horizontal 110px $padding-horizontal;
     z-index: 0;
     scrollbar-width: none;
     flex-direction: column;
     display: flex;
+    position: relative;
   }
 
   @media screen and(max-width: $breakpoint-md) {
