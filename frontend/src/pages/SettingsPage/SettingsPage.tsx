@@ -57,6 +57,7 @@ function SettingsPage() {
     TagsSystem.deleteTag(selectedTag);
 
     setTags(TagsSystem.getTags());
+    setSelectedTag('');
   }
 
   return <div className={'Settings'}>
