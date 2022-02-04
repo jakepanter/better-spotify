@@ -25,7 +25,7 @@ export async function getDevices() {
 
 export async function getPlaybackState() {
   const authHeader = getAuthHeader();
-  return fetch(`${API_URL}api/spotify/me/player`, {
+  return fetch(`${API_URL}api/spotify/me/player?additional_types=track,episode`, {
     headers: {
       'Authorization': authHeader
     }

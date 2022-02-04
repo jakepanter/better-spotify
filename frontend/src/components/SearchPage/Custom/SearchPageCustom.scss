@@ -1,9 +1,9 @@
 @import "./src/boilerplate.scss";
 
-.Discover {
+.SearchPageCustom {
   display: flex;
   flex-flow: column nowrap;
   flex-grow: 1;
-  overflow: hidden;
+  overflow: hidden auto;
   margin-bottom: 2rem;
 }
