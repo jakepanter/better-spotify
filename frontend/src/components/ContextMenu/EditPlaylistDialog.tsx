@@ -34,11 +34,12 @@ function EditPlaylistDialog(props: Props) {
   const { getRootProps, getInputProps, open } = useDropzone({
     accept: "image/*",
     maxSize: 5000000,
+    maxFiles: 1,
     multiple: false,
     noClick: true,
     noKeyboard: true,
     onDropRejected: () => {
-      setError("THIS FILE IS TOO LARGE! MAX SIZE 5MB");
+      setError("This file is too large! Max size is 5MB");
     },
     onDrop: (acceptedFiles) => {
       setError("");
@@ -52,6 +53,7 @@ function EditPlaylistDialog(props: Props) {
     compressAccurately(file, {
       size: 180,
       accuracy: 0.99,
+      scale: 0.75,
       type: EImageType.JPEG,
     }).then((compressedImage) => {
       reader.addEventListener("load", () => setImage(reader.result), false);
@@ -70,11 +72,11 @@ function EditPlaylistDialog(props: Props) {
 
   const saveChanges = async () => {
     // update title and description if changed
-    let changes: any;
+    let changes: any = {};
     if (title !== props.data.name && title !== "") changes.name = title;
     if (description !== props.data.description && description !== "")
       changes.description = description;
-    if (changes) {
+    if (Object.keys(changes).length > 0) {
       await fetch(`${API_URL}api/spotify/playlist/${props.data.id}/edit`, {
         method: "POST",
         headers: {
@@ -85,7 +87,10 @@ function EditPlaylistDialog(props: Props) {
       });
     }
     // update cover image if changed
-    if ((props.data.images[0] && image !== props.data.images[0].url) || image !== "") {
+    if (
+      (props.data.images[0] && image !== props.data.images[0].url) ||
+      (!props.data.images[0] && image !== "")
+    ) {
       const img = (image as string).split("base64,")[1];
       await fetch(`${API_URL}api/spotify/playlist/${props.data.id}/image`, {
         method: "POST",
@@ -107,33 +112,29 @@ function EditPlaylistDialog(props: Props) {
       onClose={closeMenu}
     >
       <div className="dialog-wrapper">
-        <div>
-          <div {...getRootProps({ className: "dropzone cover-wrapper" })} onClick={open}>
-            <input {...getInputProps()} />
-            <div className="hover-overlay">
-              <span className="material-icons">upload</span>
-              <span>Drag &amp; drop or click to select an image to upload</span>
-            </div>
-            {image !== "" ? (
-              <img width={200} src={image?.toString()} alt={props.data.name + " Cover"} />
-            ) : (
-              <CoverPlaceholder style={{ width: "200px", height: "200px" }} />
-            )}
+        <div {...getRootProps({ className: "dropzone cover-wrapper" })} onClick={open}>
+          <input {...getInputProps()} />
+          <div className="hover-overlay">
+            <span className="material-icons">upload</span>
+            <span>Drag &amp; drop or click to select an image to upload</span>
           </div>
-          <p style={{ color: "darkgrey", fontSize: "12px" }}>Maximum image size is 5MB</p>
+          {image !== "" ? (
+            <img width={200} src={image?.toString()} alt={props.data.name + " Cover"} />
+          ) : (
+            <CoverPlaceholder style={{ width: "200px", height: "200px" }} />
+          )}
         </div>
 
         <div className="details">
           <p>Title</p>
-          <h3>
-            <input
-              type="text"
-              minLength={1}
-              maxLength={50}
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-          </h3>
+          <input
+            type="text"
+            minLength={1}
+            maxLength={50}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            style={{ fontSize: "22px" }}
+          />
 
           <p>Description</p>
           <textarea
@@ -144,6 +145,7 @@ function EditPlaylistDialog(props: Props) {
           ></textarea>
         </div>
       </div>
+      <p style={{ color: "darkgrey", fontSize: "12px" }}>Maximum image size is 5MB</p>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
 

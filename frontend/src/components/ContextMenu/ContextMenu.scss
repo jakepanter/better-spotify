@@ -38,11 +38,11 @@
 // EDIT DIALOG
 .dialog-wrapper {
   display: flex;
-  margin-bottom: 20px;
   input,
   textarea {
+    box-sizing: border-box;
     width: 100%;
-    background-color: rgba($black, .75);
+    background-color: rgba($black, 0.75);
     border-radius: $border-radius;
     padding: 5px;
     margin-bottom: 10px;
@@ -51,15 +51,17 @@
     outline: none;
   }
   textarea {
-    // resize: vertical;
-    height: 70px;
-    max-height: 70px;
+    resize: none;
+    flex: 1 1 auto;
+    margin: 0;
   }
 }
 
 .details {
   width: 100%;
   margin-left: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .cover-wrapper {
@@ -100,8 +102,9 @@
     object-fit: cover;
   }
 }
-.light_mode{
-  textarea, input {
+.light_mode {
+  textarea,
+  input {
     background-color: rgba($color-background-light, 1);
     color: $color-default-light;
   }
