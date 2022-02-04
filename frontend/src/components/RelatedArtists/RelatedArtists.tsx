@@ -65,7 +65,7 @@ class RelatedArtists extends Component<IProps, IState> {
           key={artist.id}
           item={artist.id}
           linkTo={`/artist/${artist.id}`}
-          imageUrl={artist.images[0] !== null ? artist.images[0].url : ""}
+          imageUrl={artist.images.length > 0 ? artist.images[0].url : ""}
           title={artist.name}
           handleRightClick={this.handleRightClick}
           roundCover={true}

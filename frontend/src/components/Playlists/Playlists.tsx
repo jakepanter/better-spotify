@@ -103,7 +103,7 @@ export default function Playlists() {
         key={playlist.id}
         linkTo={`/playlist/${playlist.id}`}
         item={playlist.id}
-        imageUrl={playlist.images[0] !== null ? playlist.images[0].url : ""}
+        imageUrl={playlist.images.length > 0 ? playlist.images[0].url : ""}
         title={playlist.name}
         subtitle={playlist.owner.display_name}
         handleRightClick={handleRightClick}

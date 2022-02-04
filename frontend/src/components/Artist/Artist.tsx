@@ -174,7 +174,7 @@ class Artist extends Component<IProps, IState> {
         key={album.id + index}
         item={album.id}
         linkTo={`/album/${album.id}`}
-        imageUrl={album.images[0] !== null ? album.images[0].url : ""}
+        imageUrl={album.images.length > 0 ? album.images[0].url : ""}
         title={album.name}
         subtitle={album.artists.map((a) => a.name).join(", ")}
         handleRightClick={this.handleRightClick}
@@ -187,7 +187,7 @@ class Artist extends Component<IProps, IState> {
         key={single.id + index}
         item={single.id}
         linkTo={`/album/${single.id}`}
-        imageUrl={single.images[0] !== null ? single.images[0].url : ""}
+        imageUrl={single.images.length > 0 ? single.images[0].url : ""}
         title={single.name}
         subtitle={single.artists.map((a) => a.name).join(", ")}
         handleRightClick={this.handleRightClick}
@@ -200,7 +200,7 @@ class Artist extends Component<IProps, IState> {
         key={album.id + index}
         item={album.id}
         linkTo={`/album/${album.id}`}
-        imageUrl={album.images[0] !== null ? album.images[0].url : ""}
+        imageUrl={album.images.length > 0 ? album.images[0].url : ""}
         title={album.name}
         subtitle={album.artists.map((a) => a.name).join(", ")}
         handleRightClick={this.handleRightClick}
@@ -213,7 +213,7 @@ class Artist extends Component<IProps, IState> {
         key={compilation.id + index}
         item={compilation.id}
         linkTo={`/album/${compilation.id}`}
-        imageUrl={compilation.images[0] !== null ? compilation.images[0].url : ""}
+        imageUrl={compilation.images.length > 0 ? compilation.images[0].url : ""}
         title={compilation.name}
         subtitle={compilation.artists.map((a) => a.name).join(", ")}
         handleRightClick={this.handleRightClick}
@@ -226,7 +226,7 @@ class Artist extends Component<IProps, IState> {
         key={relatedArtist.id}
         item={relatedArtist.id}
         linkTo={`/artist/${relatedArtist.id}`}
-        imageUrl={relatedArtist.images[0] !== null ? relatedArtist.images[0].url : ""}
+        imageUrl={relatedArtist.images.length > 0 ? relatedArtist.images[0].url : ""}
         title={relatedArtist.name}
         handleRightClick={this.handleRightClick}
         roundCover={true}
