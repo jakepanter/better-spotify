@@ -19,6 +19,7 @@ const limit = 20;
 interface IProps {
   id: string;
   headerStyle: "none" | "compact" | "full";
+  multipleAlbums?: number;
 }
 
 export interface AlbumTrack extends TrackObjectSimplified {
@@ -119,7 +120,11 @@ export default function Album(props: IProps) {
     fetchAlbumTrackData(offset);
   }, [offset]);
 
-  if (!album) return <p>loading...</p>;
+  if (!album) {
+    if(!props.multipleAlbums) return <p>loading...</p>;
+    else if(props.multipleAlbums === 0) return <p>loading...</p>;
+    else return <></>;
+  } 
 
   return (
     <div className={"Playlist"}>
