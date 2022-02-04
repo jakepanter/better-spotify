@@ -19,6 +19,7 @@ const limit = 20;
 interface IProps {
   id: string;
   headerStyle: "none" | "compact" | "full";
+  multipleAlbums?: boolean;
 }
 
 export interface AlbumTrack extends TrackObjectSimplified {

@@ -71,21 +71,7 @@ export default function Episode(props: IProps) {
     let release = new Date(episode.release_date);
 
     const months = ["Jan", "Feb", "Mar","Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    dateStr = release.getDate() + ". " + months[release.getMonth()] + " " + release.getFullYear() + " - ";
-  }
-
-  let progressStr: string = "";
-  let progressPercent: string = "0";
-  if(episode.resume_point?.resume_position_ms && episode.duration_ms) {
-    progressStr = Math.round((episode.duration_ms - episode.resume_point.resume_position_ms)/60000).toString() + " Minutes and " + Math.round(((episode.duration_ms - episode.resume_point.resume_position_ms))%60000/1000).toString() + " sec left";
-    
-    if(episode.resume_point.fully_played == true) {
-      progressPercent = "100"
-    } else {
-      progressPercent = Math.round((episode.resume_point.resume_position_ms / episode.duration_ms)*100).toString();  
-    }
-  } else {
-    progressStr = Math.round((episode.duration_ms)/60000).toString() + " Minutes and " + Math.round((episode.duration_ms)%60000/1000).toString() + " sec left";
+    dateStr = release.getDate() + ". " + months[release.getMonth()] + " " + release.getFullYear();
   }
 
   return (
@@ -102,7 +88,7 @@ export default function Episode(props: IProps) {
           <h4>Podcast Episode</h4>
           <h1>{episode.name}</h1>
           <p>
-            by {episode.show.publisher}
+            by {episode.show.publisher}, {dateStr}   
           </p>
           <p>
             {episode.show.name}
@@ -113,15 +99,6 @@ export default function Episode(props: IProps) {
       <div>
       <div className="EpisodeControl">
         <div className={"PlayEpisode"} onClick={() => sendRequest()}/>
-        <div className={"ReleaseProgress"}>
-          {dateStr}  
-          {episode.resume_point && episode.duration_ms ? (
-          <>
-          {progressStr}
-          </>
-          ) : (<></>)} 
-        </div>
-        <div className={"progress-bar progress-bar-" + progressPercent}></div>
         <NavLink title={"All Episodes"} className="AllEpisodes button" to={`/show/${episode.show.id}`} exact>
             <span className="left-side-panel--text">All Episodes</span>
         </NavLink>
