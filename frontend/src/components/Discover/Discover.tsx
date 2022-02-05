@@ -138,7 +138,7 @@ class Discover extends Component<IProps, IState> {
           key={recentlyPlayedTrack.played_at}
           item={track.album.id}
           linkTo={`/album/${track.album.id}`}
-          imageUrl={track.album.images[0] !== null ? track.album.images[0].url : ""}
+          imageUrl={track.album.images.length > 0 ? track.album.images[0].url : ""}
           title={track.name}
           subtitle={track.album.artists.map((a) => a.name).join(", ")}
           handleRightClick={this.handleRightClick}
@@ -153,7 +153,7 @@ class Discover extends Component<IProps, IState> {
         key={newReleasedAlbum.id}
         item={newReleasedAlbum.id}
         linkTo={`/album/${newReleasedAlbum.id}`}
-        imageUrl={newReleasedAlbum.images[0] !== null ? newReleasedAlbum.images[0].url : ""}
+        imageUrl={newReleasedAlbum.images.length > 0 ? newReleasedAlbum.images[0].url : ""}
         title={newReleasedAlbum.name}
         subtitle={newReleasedAlbum.artists.map((a) => a.name).join(", ")}
         subsubtitle={formatTimeDiff(new Date(newReleasedAlbum.release_date).getTime(), Date.now())}
