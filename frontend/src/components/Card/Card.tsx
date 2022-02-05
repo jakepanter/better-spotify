@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-import {Link, useHistory} from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import "./Card.scss";
-import {ArtistObjectSimplified} from "spotify-types";
+import { ArtistObjectSimplified } from "spotify-types";
 
 type Props = {
   item: any;
@@ -21,7 +21,7 @@ export default function Card(props: Props) {
 
   const goToArtist = (e: any, artistId: string) => {
     e.preventDefault();
-    history.push(`/artist/${artistId}`)
+    history.push(`/artist/${artistId}`);
   };
 
   return (
@@ -39,8 +39,20 @@ export default function Card(props: Props) {
         <CoverPlaceholder className={props.roundCover ? "Rounded" : ""} />
       )}
       <span className={"CardTitle"}>{props.title}</span>
-      {props.subtitle && (typeof props.subtitle === "string") && <span className={"CardSubtitle"}>{props.subtitle}</span>}
-      {props.subtitle && (typeof props.subtitle !== "string") && <span className={"CardSubtitle"}>{props.subtitle.map<React.ReactNode>((a) => <span onClick={e => goToArtist(e, a.id)} key={a.id}>{a.name}</span>).reduce((a,b)=>[a,', ',b])}</span>}
+      {props.subtitle && typeof props.subtitle === "string" && (
+        <span className={"CardSubtitle"}>{props.subtitle}</span>
+      )}
+      {props.subtitle && typeof props.subtitle !== "string" && (
+        <span className={"CardSubtitle"}>
+          {props.subtitle
+            .map<React.ReactNode>((a) => (
+              <span className="artist-name" onClick={(e) => goToArtist(e, a.id)} key={a.id}>
+                {a.name}
+              </span>
+            ))
+            .reduce((a, b) => [a, ", ", b])}
+        </span>
+      )}
       {props.subsubtitle && <span className={"CardSubsubtitle"}>{props.subsubtitle}</span>}
     </Link>
   );

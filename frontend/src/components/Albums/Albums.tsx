@@ -67,8 +67,6 @@ export default function Albums() {
       />
     );
   });
-  //{item.album.artists.map<React.ReactNode>((a) =>
-    //             <span onClick={e => goToArtist(e, a.id)} className={"artists-name"} key={a.id}>{a.name}</span>).reduce((a,b)=>[a,', ',b])}
 
   return (
     <div className={"Albums"}>
