@@ -139,6 +139,14 @@ export default function Playlist(props: IProps) {
     }
   }, [location]);
 
+  const handleKeyUp = (e: any) => {
+    //lose focus on enter
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      e.target.blur();
+    }
+  };
+
   const changeTitle = (e: any) => {
     const newTitle = e.target.value;
     setTitle(newTitle);
@@ -191,6 +199,7 @@ export default function Playlist(props: IProps) {
                   value={title}
                   onChange={changeTitle}
                   onBlur={updateTitle}
+                  onKeyDown={handleKeyUp}
                 />
               </h1>
               <p>
