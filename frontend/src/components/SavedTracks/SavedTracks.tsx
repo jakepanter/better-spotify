@@ -68,7 +68,7 @@ export default function SavedTracks(props: IProps) {
                         <div className={"PlaylistHeaderMeta"}>
                             <h1>Liked songs</h1>
                             <p>
-                                {total} Song{total === 1 ? "" : "s"}
+                                {total < 0 ? "" : total} Song{total === 1 ? "" : "s"}
                             </p>
                         </div>
                         <div className={"PlaylistHeaderFilter"}>{/* Filter */}</div>
