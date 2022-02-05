@@ -149,7 +149,7 @@ function TracksMenu(props: Props) {
                 </MenuItem>
               ))
           ) : (
-            <MenuItem>Fetching Playlists...</MenuItem>
+            <MenuItem disabled>Fetching Playlists...</MenuItem>
           )}
         </SubMenu>
         <SubMenu label={"Edit Tags"} overflow={"auto"} position={"anchor"}>

@@ -12,7 +12,7 @@ import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import AppContext from "../../AppContext";
 import { useLocation } from "react-router-dom";
-import { getAuthHeader } from '../../helpers/api-helpers';
+import { getAuthHeader } from "../../helpers/api-helpers";
 
 // The fetching limit, can be adjusted by changing this value
 const limit = 50;
@@ -44,11 +44,13 @@ export default function Playlist(props: IProps) {
     const authHeader = getAuthHeader();
     //this only fetches metadata of the playlist not the actual tracks
     const data: SinglePlaylistResponse = await fetch(
-      `${API_URL}api/spotify/playlist/${id}?fields=tracks(total)&fields=images&fields=owner&fields=name&fields=id`, {
-          headers: {
-            'Authorization': authHeader
-          }
-        }).then((res) => res.json());
+      `${API_URL}api/spotify/playlist/${id}?fields=tracks(total)&fields=images&fields=owner&fields=name&fields=description&fields=id`,
+      {
+        headers: {
+          Authorization: authHeader,
+        },
+      }
+    ).then((res) => res.json());
 
     // Save album data
     setPlaylist(data);
@@ -63,11 +65,13 @@ export default function Playlist(props: IProps) {
 
     const authHeader = getAuthHeader();
     const data: PlaylistTrackResponse = await fetch(
-      `${API_URL}api/spotify/playlist/${id}/tracks?offset=${newOffset}&limit=${limit}`, {
-          headers: {
-            'Authorization': authHeader
-          }
-        }).then((res) => res.json());
+      `${API_URL}api/spotify/playlist/${id}/tracks?offset=${newOffset}&limit=${limit}`,
+      {
+        headers: {
+          Authorization: authHeader,
+        },
+      }
+    ).then((res) => res.json());
 
     // Save new tracks
     // Save if tracks are saved
@@ -87,11 +91,12 @@ export default function Playlist(props: IProps) {
   async function fetchIsSavedData(trackIds: string[]) {
     const authHeader = getAuthHeader();
     const data: CheckUsersSavedTracksResponse = await fetch(
-      `${API_URL}api/spotify/me/tracks/contains?trackIds=${trackIds}`, {
-          headers: {
-            'Authorization': authHeader
-          }
-        }
+      `${API_URL}api/spotify/me/tracks/contains?trackIds=${trackIds}`,
+      {
+        headers: {
+          Authorization: authHeader,
+        },
+      }
     ).then((res) => res.json());
 
     return data;
@@ -124,32 +129,44 @@ export default function Playlist(props: IProps) {
   }, [offset]);
 
   useEffect(() => {
-    // remove removed tracks from items
     if (location.state && location.state.removed) {
+      // remove removed tracks from items
       const removedIDs: number[] = location.state.removed.map((track: any) => track.positions[0]);
       setTracks(tracks.filter((item, index) => !removedIDs.includes(index)));
+    } else if (location.state && location.state.edited) {
+      // display changes after editing playlist
+      fetchPlaylistData();
     }
   }, [location]);
+
+  const handleKeyUp = (e: any) => {
+    //lose focus on enter
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      e.target.blur();
+    }
+  };
 
   const changeTitle = (e: any) => {
     const newTitle = e.target.value;
     setTitle(newTitle);
   };
 
-  const updateTitle = () => {
+  const updateTitle = async () => {
     if (title === "" && playlist) {
       setTitle(playlist.name);
     } else {
       if (title !== playlist?.name) {
         const authHeader = getAuthHeader();
-        fetch(`${API_URL}api/spotify/playlist/${playlist?.id}/edit`, {
+        await fetch(`${API_URL}api/spotify/playlist/${playlist?.id}/edit`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            'Authorization': authHeader
+            Authorization: authHeader,
           },
           body: JSON.stringify({ name: title }),
         });
+        fetchPlaylistData();
       }
     }
   };
@@ -182,6 +199,7 @@ export default function Playlist(props: IProps) {
                   value={title}
                   onChange={changeTitle}
                   onBlur={updateTitle}
+                  onKeyDown={handleKeyUp}
                 />
               </h1>
               <p>
