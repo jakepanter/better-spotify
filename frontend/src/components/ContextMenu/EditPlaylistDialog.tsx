@@ -121,7 +121,7 @@ function EditPlaylistDialog(props: Props) {
           {image !== "" ? (
             <img width={200} src={image?.toString()} alt={props.data.name + " Cover"} />
           ) : (
-            <CoverPlaceholder style={{ width: "200px", height: "200px" }} />
+            <CoverPlaceholder />
           )}
         </div>
 
