@@ -95,22 +95,6 @@ export default function Playlists() {
     }
   };
 
-  if (!playlists || !items) return <p>loading...</p>;
-
-  const myPlaylists = items.map((playlist) => {
-    return (
-      <Card
-        key={playlist.id}
-        linkTo={`/playlist/${playlist.id}`}
-        item={playlist.id}
-        imageUrl={playlist.images.length > 0 ? playlist.images[0].url : ""}
-        title={playlist.name}
-        subtitle={playlist.owner.display_name}
-        handleRightClick={handleRightClick}
-      />
-    );
-  });
-
   return (
     <div className={"Playlists"}>
       <h2 className={"Header"}>
@@ -121,7 +105,25 @@ export default function Playlists() {
         </button>
       </h2>
       <div className={"Content"} onScroll={onScroll}>
-        <div className={"CoverList"}>{myPlaylists}</div>
+        <div className={"CoverList"}>
+          {!playlists || !items ? (
+            <></>
+          ) : (
+            items.map((playlist) => {
+              return (
+                <Card
+                  key={playlist.id}
+                  linkTo={`/playlist/${playlist.id}`}
+                  item={playlist.id}
+                  imageUrl={playlist.images.length > 0 ? playlist.images[0].url : ""}
+                  title={playlist.name}
+                  subtitle={playlist.owner.display_name}
+                  handleRightClick={handleRightClick}
+                />
+              );
+            })
+          )}
+        </div>
       </div>
     </div>
   );
