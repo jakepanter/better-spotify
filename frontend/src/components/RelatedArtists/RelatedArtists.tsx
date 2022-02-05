@@ -58,18 +58,22 @@ class RelatedArtists extends Component<IProps, IState> {
   }
 
   render() {
-    if (this.state.relatedArtistsList.length === 0) return <p>loading...</p>;
-    const relatedArtists = this.state.relatedArtistsList.map((artist) => (
-      <Card
-        key={artist.id}
-        item={artist.id}
-        linkTo={`/artist/${artist.id}`}
-        imageUrl={artist.images[0] !== null ? artist.images[0].url : ""}
-        title={artist.name}
-        handleRightClick={this.handleRightClick}
-        roundCover={true}
-      />
-    ));
+    const relatedArtists =
+      this.state.relatedArtistsList.length === 0 ? (
+        <p>loading...</p>
+      ) : (
+        this.state.relatedArtistsList.map((artist) => (
+          <Card
+            key={artist.id}
+            item={artist.id}
+            linkTo={`/artist/${artist.id}`}
+            imageUrl={artist.images[0] !== null ? artist.images[0].url : ""}
+            title={artist.name}
+            handleRightClick={this.handleRightClick}
+            roundCover={true}
+          />
+        ))
+      );
 
     return (
       <>

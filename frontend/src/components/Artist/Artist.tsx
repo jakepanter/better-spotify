@@ -153,20 +153,22 @@ class Artist extends Component<IProps, IState> {
   }
 
   render() {
-    if (Object.keys(this.state.artist).length === 0) return <p>Artist not found</p>;
-    const artist = (
-      <div className="Content" style={{ padding: "1rem" }}>
-        {this.state.artist.images.length > 0 ? (
-          <div
-            className={"cover"}
-            style={{ backgroundImage: `url(${this.state.artist.images[0].url}` }}
-          />
-        ) : (
-          <CoverPlaceholder />
-        )}
-        <p className={"Name"}>{this.state.artist.name}</p>
-      </div>
-    );
+    const artist =
+      Object.keys(this.state.artist).length === 0 ? (
+        <p>loading...</p>
+      ) : (
+        <div className="Content" style={{ padding: "1rem" }}>
+          {this.state.artist.images.length > 0 ? (
+            <div
+              className={"cover"}
+              style={{ backgroundImage: `url(${this.state.artist.images[0].url}` }}
+            />
+          ) : (
+            <CoverPlaceholder />
+          )}
+          <p className={"Name"}>{this.state.artist.name}</p>
+        </div>
+      );
 
     // for albums
     const albums = this.state.albums.map((album, index) => (
