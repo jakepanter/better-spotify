@@ -144,7 +144,7 @@ export default function Album(props: IProps) {
               <h1>{album.name}</h1>
               <p>
                 by {album.artists.map<React.ReactNode>((a) =>
-                  <Link to={`/artist/${a.id}`} className={"artists-name"} key={a.id}>{a.name}</Link>).reduce((a,b)=>[a,', ',b])} —{" "}
+                  <Link to={`/artist/${a.id}`} className={"artists-name"} key={a.id}>{a.name}</Link>).reduce((a,b)=>[a,', ',b])} — {album.release_date.substring(0, 4)} —{" "}
                 {album.tracks.total} Song{album.tracks.total === 1 ? "" : "s"}
               </p>
             </div>
