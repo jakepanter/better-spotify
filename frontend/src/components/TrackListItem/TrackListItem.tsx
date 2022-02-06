@@ -11,6 +11,7 @@ import {
   ArtistObjectSimplified,
   TrackObjectFull,
   TrackObjectSimplified,
+  ResumePointObject,
 } from "spotify-types";
 import { formatTimeDiff, formatTimestamp } from "../../utils/functions";
 import { API_URL } from "../../utils/constants";
@@ -20,9 +21,9 @@ import EpisodePage from "../../pages/EpisodePage/EpisodePage";
 import Button from "../Button/Button";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import AppContext from "../../AppContext";
-import { getAuthHeader } from '../../helpers/api-helpers';
-import {useSelector} from "react-redux";
-import {PlaybackState} from "../../utils/playbackSlice";
+import { getAuthHeader } from "../../helpers/api-helpers";
+import { useSelector } from "react-redux";
+import { PlaybackState } from "../../utils/playbackSlice";
 
 type Body = {
   context_uri: string | undefined;
@@ -33,13 +34,14 @@ type Body = {
 };
 
 type Props = {
-  track: TrackObjectFull | TrackObjectSimplified| EpisodeObject;
+  track: TrackObjectFull | TrackObjectSimplified | EpisodeObject;
   name: string;
   artists?: ArtistObjectSimplified[];
   duration_ms: number;
+  resume_point?: ResumePointObject;
   added_at?: string;
   liked?: boolean;
-  album?: AlbumObjectSimplified| ShowObjectSimplified;
+  album?: AlbumObjectSimplified | ShowObjectSimplified;
   image?: ImageObject;
   description?: string;
   listIndex: number;
@@ -68,18 +70,39 @@ function TrackListItem(props: Props) {
   const id_tracklist = props.id_tracklist;
   const type = props.type;
   let track_uri = "spotify:track:" + props.track.id;
-  
+  let dateStr: string = "";
+
+  if (track.added_at != undefined) {
+    let date = new Date(track.added_at);
+
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    dateStr = date.getDate() + ". " + months[date.getMonth()] + " " + date.getFullYear();
+  }
+
   const sendRequest = useCallback(async () => {
     // POST request using fetch inside useEffect React hook
     let context_uri;
-    if (type === "album"){
+    if (type === "album") {
       context_uri = "spotify:album:" + id_tracklist;
-    } else if (type=="playlist") {
+    } else if (type == "playlist") {
       context_uri = "spotify:playlist:" + id_tracklist;
-    } else if (type === 'saved') {
+    } else if (type === "saved") {
       const userId = await fetchUserId();
-      context_uri = userId + ':collection:'
-    } else if (type === 'show') {
+      context_uri = userId + ":collection:";
+    } else if (type === "show") {
       context_uri = "spotify:show:" + id_tracklist;
       track_uri = "spotify:episode:" + props.track.id;
     } else if (type === "search" || type === "topTracks" || type === "tags") {
@@ -87,21 +110,21 @@ function TrackListItem(props: Props) {
     }
     const body: Body = {
       context_uri: context_uri,
-      position_ms: 0
-    }
-    if (type !== 'saved') {
+      position_ms: 0,
+    };
+    if (type !== "saved") {
       body.offset = {
-        uri: track_uri
-      }
+        uri: track_uri,
+      };
     }
     const authHeader = getAuthHeader();
     fetch(`${API_URL}api/spotify/me/player/play`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': authHeader
+        "Content-Type": "application/json",
+        Authorization: authHeader,
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
     });
   }, []);
 
@@ -114,24 +137,23 @@ function TrackListItem(props: Props) {
   }, [props.selected]);
 
   const handleClick = (e: any) => {
-
-    if(type != "show") {
+    if (type != "show") {
       if (e.shiftKey) {
         setSpecialKey("shift");
       } else if (e.ctrlKey) {
         setSpecialKey("ctrl");
       } else if (e.target.className == "TableCellPlayEpisode") {
-        sendRequest()
+        sendRequest();
       } else {
         setSpecialKey(null);
       }
       setSelected(!selected);
 
-      if (e.detail === 2) sendRequest()
+      if (e.detail === 2) sendRequest();
     }
   };
 
-  const handlePlayButton= (e: any) => {
+  const handlePlayButton = (e: any) => {
     e.preventDefault();
     sendRequest();
   };
@@ -142,11 +164,11 @@ function TrackListItem(props: Props) {
   };
 
   const fetchUserId = async () => {
-      const authHeader = getAuthHeader();
+    const authHeader = getAuthHeader();
     return await fetch(`${API_URL}api/spotify/me`, {
-        headers: {
-            'Authorization': authHeader
-        }
+      headers: {
+        Authorization: authHeader,
+      },
     })
       .then((res) => res.json())
       .then((data) => data.uri);
@@ -169,53 +191,99 @@ function TrackListItem(props: Props) {
       // add
       const authHeader = getAuthHeader();
       await fetch(`${API_URL}api/spotify/me/tracks/add?trackIds=${track.track.id}`, {
-          headers: {
-              'Authorization': authHeader
-          }
-      }).then((res) =>
-        res.json()
-      );
+        headers: {
+          Authorization: authHeader,
+        },
+      }).then((res) => res.json());
       setLiked(true);
     } else {
       // remove
       const authHeader = getAuthHeader();
       await fetch(`${API_URL}api/spotify/me/tracks/remove?trackIds=${track.track.id}`, {
-          headers: {
-              'Authorization': authHeader
-          }
-      }).then((res) =>
-        res.json()
-      );
+        headers: {
+          Authorization: authHeader,
+        },
+      }).then((res) => res.json());
       setLiked(false);
     }
   };
 
   const goToArtist = (e: any, artistId: string) => {
     e.preventDefault();
-    history.push(`/artist/${artistId}`)
+    history.push(`/artist/${artistId}`);
   };
 
-  if(!liked && type==="saved") {
-    return(
-        <div className="hidden"></div>
-    )
+  if (!liked && type === "saved") {
+    return <div className="hidden"></div>;
   } else {
-    if(type === "show") {
+    if (type === "show") {
+      let dateStr: string = "";
+      if (props.added_at) {
+        let release = new Date(props.added_at);
+
+        const months = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+        dateStr =
+          release.getDate() +
+          ". " +
+          months[release.getMonth()] +
+          " " +
+          release.getFullYear() +
+          " - ";
+      }
+
+      let progressStr: string = "";
+      let progressPercent: string = "0";
+      if (props.resume_point?.resume_position_ms && props.duration_ms) {
+        progressStr =
+          Math.round(
+            (props.duration_ms - props.resume_point.resume_position_ms) / 60000
+          ).toString() +
+          " Minutes and " +
+          Math.round(
+            ((props.duration_ms - props.resume_point.resume_position_ms) % 60000) / 1000
+          ).toString() +
+          " sec left";
+
+        if (props.resume_point.fully_played == true) {
+          progressPercent = "100";
+        } else {
+          progressPercent = Math.round(
+            (props.resume_point.resume_position_ms / props.duration_ms) * 100
+          ).toString();
+        }
+      } else {
+        progressStr =
+          Math.round(props.duration_ms / 60000).toString() +
+          " Minutes and " +
+          Math.round((props.duration_ms % 60000) / 1000).toString() +
+          " sec left";
+      }
+
       return (
-        <div className={`Pointer EpisodeRow ${selected ? "Selected" : ""}
+        <div
+          className={`Pointer EpisodeRow ${selected ? "Selected" : ""}
         ${playback.currentTrackId === track.track.id ? "Playing" : ""}
         ${playback.paused ? "Paused" : ""}`}
           onContextMenu={(e) => handleRightClick(e)}
         >
           <Link to={`/episode/${props.track.id}`}>
-          <div className="noTags">
+            <div className="noTags">
               {track.image !== undefined && track.image !== null ? (
                 <div className={"TableCell TableCellArtwork"}>
-                  <img
-                    src={track.image.url}
-                    alt=""
-                    style={{ width: "100px", height: "100px" }}
-                  />
+                  <img src={track.image.url} alt="" style={{ width: "100px", height: "100px" }} />
                 </div>
               ) : (
                 <CoverPlaceholder />
@@ -223,118 +291,129 @@ function TrackListItem(props: Props) {
               <div className={"EpisodeContent"}>
                 <h5 className={"TableCellTitleArtist"}>{track.name}</h5>
                 <p>{track.description}</p>
-                <div className={"TableCellPlayEpisode"} onClick={(e) => handlePlayButton(e)}/>
+                <div className={"TableCellPlayProgress"}>
+                  <div className={"PlayProgress"}>
+                    <div className={"PlayEpisode"} onClick={(e) => handlePlayButton(e)}></div>
+                    <div className={"ReleaseProgress"}>
+                      {dateStr}
+                      {props.resume_point && props.duration_ms ? <>{progressStr}</> : <></>}
+                    </div>
+                  </div>
+                  <div className={"progress-bar progress-bar-" + progressPercent}></div>
+                </div>
               </div>
             </div>
             {track.tags !== undefined ? (
               <div className={"TableCell TableCellTags"}>
-                {track.tags.map((t, i) =>
-                  <Link key={i}
-                    className={`Tag TagColor${t.color}`}
-                    to={`/tag/${t.id}`}
-                  >
+                {track.tags.map((t, i) => (
+                  <Link key={i} className={`Tag TagColor${t.color}`} to={`/tag/${t.id}`}>
                     {t.title}
-                </Link>
-              )}
-            </div>
-        ) : (
-          <></>
-        )}
-        </Link>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <></>
+            )}
+          </Link>
         </div>
       );
-    }
-
-    else {
-        return (
-      <div
-        className={`Pointer TableRow ${selected ? "Selected" : ""}
+    } else {
+      return (
+        <div
+          className={`Pointer TableRow ${selected ? "Selected" : ""}
         ${playback.currentTrackId === track.track.id ? "Playing" : ""}
         ${playback.paused ? "Paused" : ""}`}
-        onClick={(e) => handleClick(e)}
-        onContextMenu={(e) => handleRightClick(e)}
-      >
-        {track.album !== undefined &&  track.album.available_markets !== undefined || track.album !== undefined && type === "topTracks" ? (
-          <div className={"TableCell TableCellArtwork"} onClick={(e) => handlePlayButton(e)}>
-            <img
-              src={track.album.images[2].url}
-              alt=""
-              style={{ width: "40px", height: "40px" }}
-            />
-          </div>
-        ) : (
+          onClick={(e) => handleClick(e)}
+          onContextMenu={(e) => handleRightClick(e)}
+        >
+          {(track.album !== undefined && track.album.available_markets !== undefined) ||
+          (track.album !== undefined && type === "topTracks") ? (
+            <div className={"TableCell TableCellArtwork"} onClick={(e) => handlePlayButton(e)}>
+              <img
+                src={track.album.images[2].url}
+                alt=""
+                style={{ width: "40px", height: "40px" }}
+              />
+            </div>
+          ) : (
             <div className={"TableCellCoverPlaceholder"} onClick={(e) => handlePlayButton(e)}>
               <CoverPlaceholder />
             </div>
-        )}
+          )}
 
-        <div className={"TableCell TableCellTitleArtist"}>
-          <span className={"TableCellTitle"}>{track.name}</span>
-          {track.artists !== undefined ? (
+          <div className={"TableCell TableCellTitleArtist"}>
+            <span className={"TableCellTitle"}>{track.name}</span>
+            {track.artists !== undefined ? (
               <span className={"TableCellArtist"}>
                 {/*TODO style bitte anpassen*/}
-                <span className={"CardArtist"}>{track.artists?.map<React.ReactNode>((a) =>
-                    <span onClick={e => goToArtist(e, a.id)} className={"artists-name"} key={a.id}>{a.name}</span>).reduce((a,b)=>[a,', ',b])}</span>
+                <span className={"CardArtist"}>
+                  {track.artists
+                    ?.map<React.ReactNode>((a) => (
+                      <span
+                        onClick={(e) => goToArtist(e, a.id)}
+                        className={"artists-name"}
+                        key={a.id}
+                      >
+                        {a.name}
+                      </span>
+                    ))
+                    .reduce((a, b) => [a, ", ", b])}
+                </span>
               </span>
-          ) : (
+            ) : (
               <></>
-          )}
-        </div>
-        {track.album !== undefined ? (
+            )}
+          </div>
+          {track.album !== undefined ? (
             <div className={"TableCell TableCellAlbum"}>
               <Link to={`/album/${track.album.id}`} className={"albumLink"} key={trackUniqueId}>
                 {track.album.name}
               </Link>
             </div>
-        ) : (
+          ) : (
             <></>
-        )}
+          )}
 
-        
-        {track.added_at !== undefined ? (
-          <div className={"TableCell TableCellAddedAt"}>
-            {formatTimeDiff(new Date(track.added_at).getTime(), Date.now())}
-          </div>
-        ) : (
-          <></>
-        )}
+          {track.added_at !== undefined ? (
+            <div className={"TableCell TableCellAddedAt"}>
+              {formatTimeDiff(new Date(track.added_at).getTime(), Date.now())}
+            </div>
+          ) : (
+            <></>
+          )}
 
-        <div className={"TableCell TableCellDuration"}>
-          {formatTimestamp(track.duration_ms)}
-        </div>
-        {track.liked !== undefined ? (
-          <div className={"TableCell TableCellLiked"}>
-            <button className={`checkbox ${liked ? 'checked' : ''}`} onClick={handleLikeButton}>
-              <span className={'material-icons'}>{liked ? 'favorite' : 'favorite_border'}</span>
-            </button>
+          <div className={"TableCell TableCellDuration"}>{formatTimestamp(track.duration_ms)}</div>
+          {track.liked !== undefined ? (
+            <div className={"TableCell TableCellLiked"}>
+              <button className={`checkbox ${liked ? "checked" : ""}`} onClick={handleLikeButton}>
+                <span className={"material-icons"}>{liked ? "favorite" : "favorite_border"}</span>
+              </button>
+            </div>
+          ) : (
+            <></>
+          )}
+          {track.tags !== undefined ? (
+            <div className={"TableCell TableCellTags"}>
+              {track.tags.map((t, i) => (
+                <Link key={i} className={`Tag TagColor${t.color}`} to={`/tag/${t.id}`}>
+                  {t.title}
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <></>
+          )}
+          <div className="TableCell TableCellActions">
+            <Button
+              simple
+              icon="playlist_add"
+              className="material-icons"
+              onClick={handleAddToPlaylist}
+            />
           </div>
-        ) : (
-          <></>
-        )}
-        {track.tags !== undefined ? (
-          <div className={"TableCell TableCellTags"}>
-            {track.tags.map((t, i) =>
-              <Link key={i}
-                    className={`Tag TagColor${t.color}`}
-                    to={`/tag/${t.id}`}
-              >
-                {t.title}
-              </Link>
-            )}
-          </div>
-        ) : (
-          <></>
-        )}
-        <div className="TableCell TableCellActions">
-          <Button
-            simple
-            icon="playlist_add"
-            className="material-icons"
-            onClick={handleAddToPlaylist}
-          />
         </div>
-      </div>
-    );}
+      );
+    }
   }
 }
 
