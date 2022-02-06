@@ -65,7 +65,6 @@ function TrackListItem(props: Props) {
   const [liked, setLiked] = useState<boolean>(!!props.liked);
   const state = useContext(AppContext);
   const playback = useSelector((state: PlaybackState) => state.playback);
-
   const id_tracklist = props.id_tracklist;
   const type = props.type;
   let track_uri = "spotify:track:" + props.track.id;
@@ -330,8 +329,7 @@ function TrackListItem(props: Props) {
 
           {track.added_at !== undefined ? (
             <div className={"TableCell TableCellAddedAt"}>
-              {/*{formatTimeDiff(new Date(track.added_at).getTime(), Date.now())}*/}
-              {dateStr}
+                {formatTimeDiff(new Date(track.added_at).getTime(), Date.now())}
             </div>
           ) : (
             <></>

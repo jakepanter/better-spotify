@@ -303,26 +303,27 @@
     &:hover::before {
       color: rgba($color-default-light, 1.0);
     }
+
     &:before {
       color: rgba($color-default-light, 0.45);
     }
   }
-}
 
- .PlayEpisode {
+  .EpisodeRow a .noTags .TableCellPlayProgress .PlayProgress .PlayEpisode {
     &:hover::before {
-      color: rgba($color-default-light, 0.45);
+      color: rgba($color-default-light, 0.75);
     }
 
     &:before {
       color: rgba($color-default-light, 0.45);
     }
   }
-  .progress-bar {
-    background: #DADBDA;
+
+  .EpisodeRow a .noTags .TableCellPlayProgress .progress-bar {
+    background: rgba($color-default-light, 0.3);
   }
 
   .ReleaseProgress {
-    color: rgba($color-default-light, 0.8);
+    color: $color-default-light;
   }
 }
