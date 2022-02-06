@@ -107,6 +107,16 @@ function PlaylistMenu(props: Props) {
     history.push("/playlists");
   };
 
+  const editDetails = async () => {
+    state.setContextMenu({
+      ...state.contextMenu,
+      type: "edit-playlist-details",
+      x: 1,
+      y: 1,
+      data: props.data,
+    });
+  };
+
   if (playlistsError || meError) return <p>error</p>;
 
   return (
@@ -133,9 +143,10 @@ function PlaylistMenu(props: Props) {
               </MenuItem>
             ))
         ) : (
-          <MenuItem>Fetching Playlists...</MenuItem>
+          <MenuItem disabled>Fetching Playlists...</MenuItem>
         )}
       </SubMenu>
+      {props.data.owner.id === me?.id && <MenuItem onClick={editDetails}>Edit Playlist</MenuItem>}
       <MenuItem onClick={deletePlaylist}>Unfollow</MenuItem>
     </ControlledMenu>
   );

@@ -53,20 +53,24 @@ export default function Albums() {
     }
   };
 
-  if (!albums || !items) return <p>loading...</p>;
-  const savedAlbums = items.map((item) => {
-    return (
-      <Card
-        key={item.album.id}
-        linkTo={`/album/${item.album.id}`}
-        item={item.album.id}
-        imageUrl={item.album.images[0] !== null ? item.album.images[0].url : ""}
-        title={item.album.name}
-        subtitle={item.album.artists}
-        handleRightClick={handleRightClick}
-      />
+  const savedAlbums =
+    !albums || !items ? (
+      <p>loading...</p>
+    ) : (
+      items.map((item) => {
+        return (
+          <Card
+            key={item.album.id}
+            linkTo={`/album/${item.album.id}`}
+            item={item.album.id}
+            imageUrl={item.album.images.length > 0 ? item.album.images[0].url : ""}
+            title={item.album.name}
+            subtitle={item.album.artists}
+            handleRightClick={handleRightClick}
+          />
+        );
+      })
     );
-  });
 
   return (
     <div className={"Albums"}>

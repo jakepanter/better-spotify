@@ -105,7 +105,7 @@ function AddToPlaylistsMenu(props: Props) {
             </MenuItem>
           ))
       ) : (
-        <MenuItem>Fetching Playlists...</MenuItem>
+        <MenuItem disabled>Fetching Playlists...</MenuItem>
       )}
     </ControlledMenu>
   );

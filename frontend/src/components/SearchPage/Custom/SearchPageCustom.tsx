@@ -66,9 +66,7 @@ export default function SearchPageCustom() {
       return (
         <div className={"SearchPageCustom"}>
           <h2 className="Header">Search Tracks: &quot;{search}&quot;</h2>
-          <div className={"Content"}>
-            <div className={"CoverList"}>{searchTracks}</div>
-          </div>
+          <div style={{ margin: "1rem", overflow: "hidden" }}>{searchTracks}</div>
         </div>
       );
     }

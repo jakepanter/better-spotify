@@ -76,7 +76,9 @@ export class DashboardService {
     const newAlbums = currentDashboard.albums.filter((a) => a.id !== id);
     DashboardService.saveCurrentDashboardState({...currentDashboard, albums: newAlbums});
 
-    NotificationsService.push('success', 'Removed album from start page');
+    if (currentDashboard.albums.length !== newAlbums.length) {
+      NotificationsService.push('success', 'Removed album from start page');
+    }
   }
 
   static containsAlbum(id: string) {
@@ -100,12 +102,25 @@ export class DashboardService {
     const newPlaylists = currentDashboard.playlists.filter((p) => p.id !== id);
     DashboardService.saveCurrentDashboardState({...currentDashboard, playlists: newPlaylists});
 
-    NotificationsService.push('success', 'Removed playlist from start page');
+    if (currentDashboard.playlists.length !== newPlaylists.length) {
+      NotificationsService.push('success', 'Removed playlist from start page');
+    }
   }
 
   static containsPlaylist(id: string) {
     const currentDashboard = DashboardService.getCurrentDashboardState();
     return currentDashboard.playlists.some((p) => p.id === id);
+  }
+
+  // TagTracklists methods
+  static removeTagTracklist(id: string) {
+    const currentDashboard = DashboardService.getCurrentDashboardState();
+    const newTagTracklists = currentDashboard.tagTracklists.filter((p) => p.id !== id);
+    DashboardService.saveCurrentDashboardState({...currentDashboard, tagTracklists: newTagTracklists});
+
+    if (currentDashboard.tagTracklists.length !== newTagTracklists.length) {
+      NotificationsService.push('success', 'Removed tag tracklist from start page');
+    }
   }
 
   // Helper methods
@@ -123,37 +138,38 @@ export class DashboardService {
 }
 
 const DEFAULT_DASHBOARD_STATE: IState = {
-  layouts:{
-    md: [
-      { w: 1, h: 2, x: 1, y: 0, i: "favorites", moved: false, static: false },
-      { w: 1, h: 2, x: 0, y: 0, i: "albums", moved: false, static: false },
-      { w: 1, h: 2, x: 0, y: 2, i: "playlists", moved: false, static: false },
-      { w: 1, h: 2, x: 1, y: 2, i: "top-daily-global", moved: false, static: false },
+  "layouts":
+    {"md":[
+      {"w":1,"h":2,"x":0,"y":0,"i":"albums","moved":false,"static":false},
+      {"w":1,"h":2,"x":0,"y":2,"i":"playlists","moved":false,"static":false},
+      {"w":1,"h":2,"x":1,"y":0,"i":"top-daily-global","moved":false,"static":false},
+      {"w":1,"h":2,"x":1,"y":2,"i":"top-daily-DE","moved":false,"static":false}
     ],
-    xl: [
-      { w: 2, h: 2, x: 2, y: 0, i: "favorites", moved: false, static: false },
-      { w: 2, h: 2, x: 0, y: 2, i: "albums", moved: false, static: false },
-      { w: 2, h: 2, x: 0, y: 0, i: "playlists", moved: false, static: false },
-      { w: 2, h: 2, x: 2, y: 2, i: "top-daily-global", moved: false, static: false },
+    "xl":[
+      {"w":2,"h":2,"x":2,"y":0,"i":"top-daily-de","moved":false,"static":false},
+      {"w":2,"h":2,"x":0,"y":2,"i":"albums","moved":false,"static":false},
+      {"w":2,"h":2,"x":0,"y":0,"i":"playlists","moved":false,"static":false},
+      {"w":2,"h":2,"x":2,"y":2,"i":"top-daily-global","moved":false,"static":false}
     ],
-    sm: [
-      { w: 1, h: 2, x: 0, y: 0, i: "favorites", moved: false, static: false },
-      { w: 1, h: 2, x: 0, y: 2, i: "albums", moved: false, static: false },
-      { w: 1, h: 2, x: 0, y: 4, i: "playlists", moved: false, static: false },
-      { w: 1, h: 2, x: 0, y: 6, i: "top-daily-global", moved: false, static: false },
+    "sm":[
+      {"w":1,"h":2,"x":0,"y":0,"i":"albums","moved":false,"static":false},
+      {"w":1,"h":2,"x":0,"y":2,"i":"playlists","moved":false,"static":false},
+      {"w":1,"h":2,"x":0,"y":4,"i":"top-daily-global","moved":false,"static":false},
+      {"w":1,"h":1,"x":0,"y":6,"i":"top-daily-DE","moved":false,"static":false}
     ]},
-  albums: [],
-  playlists: [],
-  charts: [
-    { countryCode: "global", chartType: "top", period: "daily" }
+  "albums":[],
+  "playlists":[],
+  "charts":[
+    {"countryCode":"global","chartType":"top","period":"daily"},
+    {"countryCode":"DE","chartType":"top","period":"daily"}
   ],
-  tagTracklists: [],
-  showFavorites: true,
-  showAlbums: true,
-  showPlaylists: true,
-  chartSelection: { countryCode: "global", type: "top", period: "daily" },
-  tagTracklistsSelection: "",
-  width: 1475
+  "tagTracklists":[],
+  "showFavorites":false,
+  "showAlbums":true,
+  "showPlaylists":true,
+  "chartSelection":{"countryCode":"DE","type":"top","period":"daily"},
+  "tagTracklistsSelection":"",
+  "width":195
 };
 
 class Dashboard extends Component<IProps, IState> {
