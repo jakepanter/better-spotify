@@ -297,4 +297,21 @@
       color: $color-default-light !important;
     }
   }
+
+ .PlayEpisode {
+    &:hover::before {
+      color: rgba($color-default-light, 0.45);
+    }
+
+    &:before {
+      color: rgba($color-default-light, 0.45);
+    }
+  }
+  .progress-bar {
+    background: #DADBDA;
+  }
+
+  .ReleaseProgress {
+    color: rgba($color-default-light, 0.8);
+  }
 }
