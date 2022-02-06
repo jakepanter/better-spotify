@@ -15,6 +15,10 @@ import TrackList from "../TrackList/TrackList";
 import { getAuthHeader } from "../../helpers/api-helpers";
 import Card from "../Card/Card";
 
+//limit is the number of items which shall be fetched
+//it also defines the number of artists in more like 'artist"
+const limit = 6;
+
 interface IProps {
   id: string;
 }
@@ -48,6 +52,8 @@ class Artist extends Component<IProps, IState> {
   }
 
   async componentDidMount() {
+    //get country of user
+    const country = localStorage.getItem("country");
     const authHeader = getAuthHeader();
     // fetch artist
     const artistData: SingleArtistResponse = await fetch(
@@ -73,7 +79,7 @@ class Artist extends Component<IProps, IState> {
 
     // fetch albums
     const allAlbums: ArtistsAlbumsResponse = await fetch(
-      `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=album`,
+      `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=${limit}&market=${country}&include_groups=album`,
       {
         headers: {
           Authorization: authHeader,
@@ -84,7 +90,7 @@ class Artist extends Component<IProps, IState> {
 
     // fetch singles
     const allSingles: ArtistsAlbumsResponse = await fetch(
-      `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=single`,
+      `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=${limit}&market=${country}&include_groups=single`,
       {
         headers: {
           Authorization: authHeader,
@@ -95,7 +101,7 @@ class Artist extends Component<IProps, IState> {
 
     // fetch albums where the artist appears on
     const allAppearsOn: ArtistsAlbumsResponse = await fetch(
-      `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=appears_on`,
+      `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=${limit}&market=${country}&include_groups=appears_on`,
       {
         headers: {
           Authorization: authHeader,
@@ -106,7 +112,7 @@ class Artist extends Component<IProps, IState> {
 
     // fetch compilations
     const allCompilations: ArtistsAlbumsResponse = await fetch(
-      `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=5&market=DE&include_groups=compilation`,
+      `${API_URL}api/spotify/artist/${this.props.id}/albums?limit=${limit}&market=${country}&include_groups=compilation`,
       {
         headers: {
           Authorization: authHeader,
@@ -124,7 +130,10 @@ class Artist extends Component<IProps, IState> {
         },
       }
     ).then((res) => res.json());
-    this.setState((state) => ({ ...state, relatedArtists: allRelatedArtists.artists.slice(0, 5),}));
+    this.setState((state) => ({
+      ...state,
+      relatedArtists: allRelatedArtists.artists.slice(0, limit),
+    }));
   }
 
   // this function will be called, when the user clicks on a filter
