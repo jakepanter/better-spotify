@@ -1,6 +1,6 @@
 import { API_URL } from "../utils/constants";
-import { CreatePlaylistResponse } from "spotify-types";
-import store from '../utils/store';
+import { CreatePlaylistResponse, SinglePlaylistResponse } from "spotify-types";
+import store from "../utils/store";
 
 export const addToPlaylist = (playlistId: string, tracks: string[]) => {
   const authHeader = getAuthHeader();
@@ -8,10 +8,19 @@ export const addToPlaylist = (playlistId: string, tracks: string[]) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      'Authorization': authHeader
+      Authorization: authHeader,
     },
     body: JSON.stringify(tracks),
   });
+};
+
+export const fetchPlaylist = async (playlistId: string) => {
+  const authHeader = getAuthHeader();
+  return fetch(`${API_URL}api/spotify/playlist/${playlistId}`, {
+    headers: {
+      Authorization: authHeader,
+    },
+  }).then((res) => res.json().then((value) => value as SinglePlaylistResponse));
 };
 
 export const createNewPlaylist = async (
@@ -27,7 +36,7 @@ export const createNewPlaylist = async (
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      'Authorization': authHeader
+      Authorization: authHeader,
     },
     body: JSON.stringify(data),
   }).then((value) => {

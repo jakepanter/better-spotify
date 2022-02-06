@@ -1,10 +1,16 @@
 @import "src/boilerplate";
 
 .CoverPlaceholder {
-  height: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
   width: 100%;
-  display: inline-block;
-  background: radial-gradient(circle, #008ff7 0%, black 75%);
+  &::before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+  }
 
   .Rounded {
     border-radius: 50%;

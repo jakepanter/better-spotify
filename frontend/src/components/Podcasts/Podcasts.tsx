@@ -66,20 +66,24 @@ class Podcasts extends Component<IProps, IState> {
   }
 
   render() {
-    if (this.state.results.length === 0) return <p>loading...</p>;
-    const shows = this.state.results.map((savedShow) => {
-      return (
-        <Card
-          key={savedShow.id}
-          item={savedShow.id}
-          linkTo={`/show/${savedShow.id}`}
-          imageUrl={savedShow.images.length > 0 ? savedShow.images[0].url : ""}
-          title={savedShow.name}
-          subtitle={savedShow.publisher}
-          handleRightClick={this.handleRightClick}
-        />
+    const shows =
+      this.state.results.length === 0 ? (
+        <p>loading...</p>
+      ) : (
+        this.state.results.map((savedShow) => {
+          return (
+            <Card
+              key={savedShow.id}
+              item={savedShow.id}
+              linkTo={`/show/${savedShow.id}`}
+              imageUrl={savedShow.images.length > 0 ? savedShow.images[0].url : ""}
+              title={savedShow.name}
+              subtitle={savedShow.publisher}
+              handleRightClick={this.handleRightClick}
+            />
+          );
+        })
       );
-    });
     if (this.state.results)
       return (
         <div className={"Shows"}>

@@ -90,13 +90,11 @@
         display: flex;
         float: left;
         width: 100%;
-
-        display:flex;
         flex-direction: row;
         justify-content: space-between;
 
 
-        .PlayProgress{
+        .PlayProgress {
 
           display: flex;
           flex-direction: row;
@@ -105,6 +103,7 @@
 
           .PlayEpisode {
             width: 52px;
+
             &:hover::before {
               color: rgba($white, 1);
             }
@@ -117,6 +116,7 @@
               font-size: 50px;
               text-align: center;
               color: rgba($white, 0.45);
+              transition: $transition-base;
             }
           }
 
@@ -125,9 +125,8 @@
             font-size: 13px;
             opacity: 0.8;
           }
-
         }
-      
+
         .progress-bar {
           margin-left: 8px;
           margin-right: 45%;
@@ -197,7 +196,7 @@
 }
 
 .Selected {
-  background-color: $color-primary;
+  background-color: rgba($color-primary, .2);
 
   .checkbox.checked {
     color: $color-default;
@@ -275,7 +274,7 @@
   }
 
   .Selected {
-    background-color: $color-primary;
+    background-color: rgba($color-primary, .5);
 
     .checkbox.checked {
       color: $color-default-light;
@@ -293,10 +292,22 @@
     .checkbox.checked {
       color: $color-default-light;
     }
+
+
     .Tag {
       color: $color-default-light !important;
     }
   }
+
+  .EpisodeRow a .noTags .TableCellPlayEpisode {
+    &:hover::before {
+      color: rgba($color-default-light, 1.0);
+    }
+    &:before {
+      color: rgba($color-default-light, 0.45);
+    }
+  }
+}
 
  .PlayEpisode {
     &:hover::before {

@@ -127,7 +127,7 @@ function AlbumsMenu(props: Props) {
               </MenuItem>
             ))
         ) : (
-          <MenuItem>Fetching Playlists...</MenuItem>
+          <MenuItem disabled>Fetching Playlists...</MenuItem>
         )}
       </SubMenu>
       <MenuItem disabled>Remove from Library</MenuItem>

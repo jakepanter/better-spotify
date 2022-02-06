@@ -19,7 +19,7 @@ export default class App {
     // Init express server
     this.server = express();
     this.server.use(cors());
-    this.server.use(bodyParser.json());
+    this.server.use(bodyParser.json({ limit: '1MB' }));
     this.server.use(bodyParser.urlencoded({ extended: true }));
     this.server.use(express.static(path.join(__dirname, '../../frontend/build')));
 
