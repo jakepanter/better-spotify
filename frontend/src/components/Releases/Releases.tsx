@@ -52,21 +52,25 @@ export default function Releases() {
     }
   };
 
-  if (!releases || !albums) return <p>loading...</p>;
-  const releasedAlbums = albums.map((album) => {
-    return (
-      <Card
-        key={album.id}
-        item={album.id}
-        linkTo={`/album/${album.id}`}
-        imageUrl={album.images.length > 0 ? album.images[0].url : ""}
-        title={album.name}
-        subtitle={album.artists.map((a) => a.name).join(", ")}
-        subsubtitle={formatTimeDiff(new Date(album.release_date).getTime(), Date.now())}
-        handleRightClick={handleRightClick}
-      />
+  const releasedAlbums =
+    !releases || !albums ? (
+      <p>loading...</p>
+    ) : (
+      albums.map((album) => {
+        return (
+          <Card
+            key={album.id}
+            item={album.id}
+            linkTo={`/album/${album.id}`}
+            imageUrl={album.images.length > 0 ? album.images[0].url : ""}
+            title={album.name}
+            subtitle={album.artists}
+            subsubtitle={formatTimeDiff(new Date(album.release_date).getTime(), Date.now())}
+            handleRightClick={handleRightClick}
+          />
+        );
+      })
     );
-  });
 
   return (
     <div className={"Releases"}>

@@ -53,6 +53,9 @@
   &Subtitle {
     font-size: 18px;
     color: $color-default;
+    .artist-name:hover {
+      text-decoration: underline;
+    }
   }
   &Subsubtitle {
     font-size: 16px;

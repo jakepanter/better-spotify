@@ -1,0 +1,11 @@
+@import './src/boilerplate.scss';
+
+.album-artists{
+  text-decoration: none !important;
+  color: $color-default !important;
+
+  &:hover{
+    text-decoration: underline !important;
+  }
+}
+

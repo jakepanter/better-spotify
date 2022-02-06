@@ -49,7 +49,7 @@ class Podcasts extends Component<IProps, IState> {
     // Fallback if User doesn't have any shows saved
     else if (data.items.length == 0) {
       const fallbackShows =
-        "4QwUbrMJZ27DpjuYmN4Tun%2C1OLcQdw2PFDPG1jo3s0wbp%2C7BTOsF2boKmlYr76BelijW%2C6wPqbSlsvoi3Rgjjc2Sn4R%2C5m4Ll1qIBX29cTd0T9WwKp";
+        "02RUOjUej5WoawxQWISAW9%2C1OLcQdw2PFDPG1jo3s0wbp%2C7BTOsF2boKmlYr76BelijW%2C6wPqbSlsvoi3Rgjjc2Sn4R%2C5m4Ll1qIBX29cTd0T9WwKp";
       const fallback: MultipleShowsResponse = await fetch(
         `${API_URL}api/spotify/shows?showIds=${fallbackShows}`,
         {
@@ -66,20 +66,24 @@ class Podcasts extends Component<IProps, IState> {
   }
 
   render() {
-    if (this.state.results.length === 0) return <p>loading...</p>;
-    const shows = this.state.results.map((savedShow) => {
-      return (
-        <Card
-          key={savedShow.id}
-          item={savedShow.id}
-          linkTo={`/show/${savedShow.id}`}
-          imageUrl={savedShow.images.length > 0 ? savedShow.images[0].url : ""}
-          title={savedShow.name}
-          subtitle={savedShow.publisher}
-          handleRightClick={this.handleRightClick}
-        />
+    const shows =
+      this.state.results.length === 0 ? (
+        <p>loading...</p>
+      ) : (
+        this.state.results.map((savedShow) => {
+          return (
+            <Card
+              key={savedShow.id}
+              item={savedShow.id}
+              linkTo={`/show/${savedShow.id}`}
+              imageUrl={savedShow.images.length > 0 ? savedShow.images[0].url : ""}
+              title={savedShow.name}
+              subtitle={savedShow.publisher}
+              handleRightClick={this.handleRightClick}
+            />
+          );
+        })
       );
-    });
     if (this.state.results)
       return (
         <div className={"Shows"}>
