@@ -5,10 +5,11 @@ import {
   CreatePlaylistResponse,
   ListOfUsersPlaylistsResponse,
   PlaylistObjectSimplified,
+  SinglePlaylistResponse,
 } from "spotify-types";
 import "./Playlists.scss";
 import { API_URL } from "../../utils/constants";
-import { createNewPlaylist } from "../../helpers/api-helpers";
+import { createNewPlaylist, fetchPlaylist } from "../../helpers/api-helpers";
 import { getAuthHeader } from "../../helpers/api-helpers";
 import Card from "../Card/Card";
 
@@ -24,12 +25,26 @@ export default function Playlists() {
   }, [next]);
 
   useEffect(() => {
-    // remove unfollowed playlist from items
     if (location.state && location.state.unfollowed) {
+      // remove unfollowed playlist from items
       const unfollowedPlaylistId = location.state.unfollowed;
       setItems(items.filter((list) => list.id !== unfollowedPlaylistId));
+    } else if (location.state && location.state.edited) {
+      // update the edited playlist in items
+      const editedPlaylistId = location.state.edited;
+      updateSinglePlaylist(editedPlaylistId);
     }
   }, [location]);
+
+  const updateSinglePlaylist = async (playlistId: string) => {
+    const updatedPlaylist: SinglePlaylistResponse = await fetchPlaylist(playlistId);
+    setItems(
+      items.map((playlist) => {
+        if (playlist.id !== playlistId) return playlist;
+        return updatedPlaylist;
+      })
+    );
+  };
 
   async function fetchData(url: string) {
     const authHeader = getAuthHeader();
@@ -80,21 +95,24 @@ export default function Playlists() {
     }
   };
 
-  if (!playlists || !items) return <p>loading...</p>;
-
-  const myPlaylists = items.map((playlist) => {
-    return (
-      <Card
-        key={playlist.id}
-        linkTo={`/playlist/${playlist.id}`}
-        item={playlist.id}
-        imageUrl={playlist.images[0] !== null ? playlist.images[0].url : ""}
-        title={playlist.name}
-        subtitle={playlist.owner.display_name}
-        handleRightClick={handleRightClick}
-      />
+  const myPlaylists =
+    !playlists || !items ? (
+      <p>loading...</p>
+    ) : (
+      items.map((playlist) => {
+        return (
+          <Card
+            key={playlist.id}
+            linkTo={`/playlist/${playlist.id}`}
+            item={playlist.id}
+            imageUrl={playlist.images.length > 0 ? playlist.images[0].url : ""}
+            title={playlist.name}
+            subtitle={playlist.owner.display_name}
+            handleRightClick={handleRightClick}
+          />
+        );
+      })
     );
-  });
 
   return (
     <div className={"Playlists"}>
