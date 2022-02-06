@@ -31,8 +31,6 @@ interface IState {
 }
 
 class Artist extends Component<IProps, IState> {
-  // to check if a component is mounted, following source is used to achieve that: https://stackoverflow.com/questions/39767482/is-there-a-way-to-check-if-the-react-component-is-unmounted
-  private _isMounted: boolean;
   constructor(props: IProps) {
     super(props);
     this.state = {
@@ -45,14 +43,11 @@ class Artist extends Component<IProps, IState> {
       relatedArtists: [],
       filter: "All",
     };
-    this._isMounted = false;
     this.handleFilterChange = this.handleFilterChange.bind(this);
     this.handleRightClick = this.handleRightClick.bind(this);
   }
 
   async componentDidMount() {
-    this._isMounted = true;
-
     const authHeader = getAuthHeader();
     // fetch artist
     const artistData: SingleArtistResponse = await fetch(
@@ -63,7 +58,7 @@ class Artist extends Component<IProps, IState> {
         },
       }
     ).then((res) => res.json());
-    this._isMounted && this.setState({ artist: artistData });
+    this.setState({ artist: artistData });
 
     //fetch artist top tracks
     const topTracks: ArtistsTopTracksResponse = await fetch(
@@ -74,7 +69,7 @@ class Artist extends Component<IProps, IState> {
         },
       }
     ).then((res) => res.json());
-    this._isMounted && this.setState({ artistTopTracks: topTracks.tracks });
+    this.setState({ artistTopTracks: topTracks.tracks });
 
     // fetch albums
     const allAlbums: ArtistsAlbumsResponse = await fetch(
@@ -85,7 +80,7 @@ class Artist extends Component<IProps, IState> {
         },
       }
     ).then((res) => res.json());
-    this._isMounted && this.setState((state) => ({ ...state, albums: allAlbums.items }));
+    this.setState((state) => ({ ...state, albums: allAlbums.items }));
 
     // fetch singles
     const allSingles: ArtistsAlbumsResponse = await fetch(
@@ -96,7 +91,7 @@ class Artist extends Component<IProps, IState> {
         },
       }
     ).then((res) => res.json());
-    this._isMounted && this.setState((state) => ({ ...state, singles: allSingles.items }));
+    this.setState((state) => ({ ...state, singles: allSingles.items }));
 
     // fetch albums where the artist appears on
     const allAppearsOn: ArtistsAlbumsResponse = await fetch(
@@ -107,7 +102,7 @@ class Artist extends Component<IProps, IState> {
         },
       }
     ).then((res) => res.json());
-    this._isMounted && this.setState((state) => ({ ...state, appearsOn: allAppearsOn.items }));
+    this.setState((state) => ({ ...state, appearsOn: allAppearsOn.items }));
 
     // fetch compilations
     const allCompilations: ArtistsAlbumsResponse = await fetch(
@@ -118,8 +113,7 @@ class Artist extends Component<IProps, IState> {
         },
       }
     ).then((res) => res.json());
-    this._isMounted &&
-      this.setState((state) => ({ ...state, compilations: allCompilations.items }));
+    this.setState((state) => ({ ...state, compilations: allCompilations.items }));
 
     // fet related artists
     const allRelatedArtists = await fetch(
@@ -130,21 +124,13 @@ class Artist extends Component<IProps, IState> {
         },
       }
     ).then((res) => res.json());
-    this._isMounted &&
-      this.setState((state) => ({
-        ...state,
-        relatedArtists: allRelatedArtists.artists.slice(0, 5),
-      }));
+    this.setState((state) => ({ ...state, relatedArtists: allRelatedArtists.artists.slice(0, 5),}));
   }
 
   // this function will be called, when the user clicks on a filter
   handleFilterChange(value: string) {
     //the value of the filter-option will be set
     this.setState({ filter: value });
-  }
-
-  componentWillUnmount(): void {
-    this._isMounted = false;
   }
 
   handleRightClick(e: any, item: any) {
@@ -178,7 +164,7 @@ class Artist extends Component<IProps, IState> {
         linkTo={`/album/${album.id}`}
         imageUrl={album.images.length > 0 ? album.images[0].url : ""}
         title={album.name}
-        subtitle={album.artists.map((a) => a.name).join(", ")}
+        subtitle={album.artists}
         handleRightClick={this.handleRightClick}
       />
     ));
@@ -191,7 +177,7 @@ class Artist extends Component<IProps, IState> {
         linkTo={`/album/${single.id}`}
         imageUrl={single.images.length > 0 ? single.images[0].url : ""}
         title={single.name}
-        subtitle={single.artists.map((a) => a.name).join(", ")}
+        subtitle={single.artists}
         handleRightClick={this.handleRightClick}
       />
     ));
@@ -204,7 +190,7 @@ class Artist extends Component<IProps, IState> {
         linkTo={`/album/${album.id}`}
         imageUrl={album.images.length > 0 ? album.images[0].url : ""}
         title={album.name}
-        subtitle={album.artists.map((a) => a.name).join(", ")}
+        subtitle={album.artists}
         handleRightClick={this.handleRightClick}
       />
     ));
@@ -217,7 +203,7 @@ class Artist extends Component<IProps, IState> {
         linkTo={`/album/${compilation.id}`}
         imageUrl={compilation.images.length > 0 ? compilation.images[0].url : ""}
         title={compilation.name}
-        subtitle={compilation.artists.map((a) => a.name).join(", ")}
+        subtitle={compilation.artists}
         handleRightClick={this.handleRightClick}
       />
     ));
