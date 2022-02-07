@@ -121,12 +121,12 @@ export default function Player(props: IProps) {
             {track !== undefined && track && track.type === "episode" ?
                 (<div className={"redirect"}>
                     <Link to={`/show/${track.show.id}`} className={"redirect-album"}/>
-                    <div className={"playing-info"}>
+                    <div className={"playing-info playing-info-episode"}>
                         <span className={"episode-section"}>
-                            <Link to={`/episode/${track.id}`} style={{color: "red"}} className={"artists-name"} key={track.show.id}>{track.name}</Link>
+                            <Link to={`/episode/${track.id}`} className={"episode-name"} key={track.show.id}>{track.name}</Link>
                         </span>
-                        <span className={"artists-section"}>
-                            <Link to={`/show/${track.show.id}`} style={{color: "blue"}} className={"artists-name"} key={track.show.id}>{track.show.name}</Link>
+                        <span className={"episode-section"}>
+                            <Link to={`/show/${track.show.id}`} className={"episode-artist"} key={track.show.id}>{track.show.name}</Link>
                         </span>
                     </div>
                 </div>) :
