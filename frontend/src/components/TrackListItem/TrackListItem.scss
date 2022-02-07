@@ -1,7 +1,7 @@
 @import "./src/boilerplate.scss";
 
 .hidden {
-  display: none
+  display: none;
 }
 
 .albumLink {
@@ -49,7 +49,6 @@
     color: $color-default;
 
     .noTags {
-
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
@@ -84,28 +83,80 @@
         }
       }
 
-      .TableCellPlayEpisode {
+      .TableCellPlayProgress {
         margin-top: 8px;
-        flex: 0 0 42px;
-        width: 52px;
         position: relative;
-        justify-content: center;
         align-items: center;
         display: flex;
+        float: left;
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
 
-        &:hover::before {
-          color: rgba($white, 1.0);
+
+        .PlayProgress {
+
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: center;
+
+          .PlayEpisode {
+            width: 52px;
+
+            &:hover::before {
+              color: rgba($white, 1);
+            }
+
+            &:before {
+              content: "\e038";
+              font-family: "Material Icons";
+              width: 50px;
+              display: inline-block;
+              font-size: 50px;
+              text-align: center;
+              color: rgba($white, 0.45);
+              transition: $transition-base;
+            }
+          }
+
+          .ReleaseProgress {
+            margin-left: 8px;
+            font-size: 13px;
+            opacity: 0.8;
+          }
         }
 
-        &:before {
-          content: "\e038";
-          font-family: "Material Icons";
-          width: 50px;
+        .progress-bar {
+          margin-left: 8px;
+          margin-right: 45%;
+          background: $white;
+          border-radius: 99px;
+          width: 200px;
+          height: 5px;
+          position: relative;
+          //right: 10%;
+          overflow: hidden;
           display: inline-block;
-          font-size: 50px;
-          text-align: center;
-          color: rgba($white, 0.45);
-          transition: $transition-base;
+
+          &::before {
+            border-radius: 99px;
+            position: absolute;
+            height: 5px;
+            background: $color-primary;
+            content: "";
+            width: 0;
+            transition: width 0.2s;
+          }
+        }
+
+        $start: 1;
+        $end: 100;
+
+        @for $i from $start through $end {
+          .progress-bar-#{$i}::before {
+            width: $i * 1%;
+          }
         }
       }
     }
@@ -201,7 +252,6 @@
   min-height: 100px;
 }
 
-
 .light_mode {
   @keyframes playingColor_light {
     0% {
@@ -243,6 +293,7 @@
       color: $color-default-light;
     }
 
+
     .Tag {
       color: $color-default-light !important;
     }
@@ -252,8 +303,27 @@
     &:hover::before {
       color: rgba($color-default-light, 1.0);
     }
+
     &:before {
       color: rgba($color-default-light, 0.45);
     }
+  }
+
+  .EpisodeRow a .noTags .TableCellPlayProgress .PlayProgress .PlayEpisode {
+    &:hover::before {
+      color: rgba($color-default-light, 0.75);
+    }
+
+    &:before {
+      color: rgba($color-default-light, 0.45);
+    }
+  }
+
+  .EpisodeRow a .noTags .TableCellPlayProgress .progress-bar {
+    background: rgba($color-default-light, 0.3);
+  }
+
+  .ReleaseProgress {
+    color: $color-default-light;
   }
 }

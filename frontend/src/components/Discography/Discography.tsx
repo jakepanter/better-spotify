@@ -35,8 +35,8 @@ export default function Discography(props: IProps) {
 
   if (!albums && !albumItems) return <p>loading...</p>;
 
-  const allAlbums = albumItems.map((album) => {
-    return <Album id={album.id} headerStyle={"full"} key={album.id} />;
+  const allAlbums = albumItems.map((album, index) => {
+    return <Album id={album.id} headerStyle={"full"} multipleAlbums={index} key={album.id} />;
   });
 
   const onScroll = (e: any) => {

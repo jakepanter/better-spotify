@@ -36,6 +36,8 @@
     display: flex;
     align-items: flex-end;
     border: none;
+    // Do not delete: Fix for link in player - episode
+    max-width: 450px;
 
     p:last-child a {
       font-size: 12px;
@@ -99,6 +101,38 @@
         // Do not change: Necessary to have visibility at 0 - in system linking
         color: rgba(red, 0);
         cursor: pointer;
+      }
+
+      .episode-name, .episode-artist {
+        display: block;
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+        // Do not change: Necessary to have visibility at 0 - in system linking
+        color: rgba(red, 0);
+        cursor: pointer;
+      }
+
+      .episode-artist {
+        font-size: 12px;
+      }
+    }
+
+    .playing-info-episode {
+      flex-direction: column;
+      bottom: 40%;
+      width: 380px;
+      left: 80px;
+      @media screen and (max-width: 1600px) {
+        width: 350px;
+      }
+      @media screen and (max-width: 1400px) {
+        width: 280px;
+      }
+      @media screen and (max-width: 1200px) {
+        width: 200px;
       }
     }
   }
@@ -170,13 +204,14 @@
 
   }
 }
+
 .light_mode {
   .Player {
     background: $color-background-light;
 
     // Volume bar background
     .rrs__track {
-       background-color: rgba($color-default-light, .5) !important;
+      background-color: rgba($color-default-light, .5) !important;
     }
 
 
