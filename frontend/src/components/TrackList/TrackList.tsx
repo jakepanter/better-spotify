@@ -451,6 +451,8 @@ function TrackList(props: Props) {
                   track={episode}
                   name={episode.name}
                   duration_ms={episode.duration_ms}
+                  resume_point={episode.resume_point}
+                  added_at={episode.release_date}
                   image={episode.images[0]}
                   description={episode.description}
                   liked={episode.is_saved}

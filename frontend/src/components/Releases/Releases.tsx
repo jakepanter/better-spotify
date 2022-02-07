@@ -64,7 +64,7 @@ export default function Releases() {
             linkTo={`/album/${album.id}`}
             imageUrl={album.images.length > 0 ? album.images[0].url : ""}
             title={album.name}
-            subtitle={album.artists.map((a) => a.name).join(", ")}
+            subtitle={album.artists}
             subsubtitle={formatTimeDiff(new Date(album.release_date).getTime(), Date.now())}
             handleRightClick={handleRightClick}
           />

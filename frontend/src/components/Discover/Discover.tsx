@@ -28,7 +28,9 @@ interface IState {
   }[];
 }
 
-const limit = 5;
+//limit is the number of items which shall be fetched
+//it also defines the number of artists in more like 'artist"
+const limit = 6;
 
 class Discover extends Component<IProps, IState> {
   constructor(props: IProps) {
@@ -64,7 +66,7 @@ class Discover extends Component<IProps, IState> {
         this.fetchRelatedArtists(topArtist.id).then((relatedArtists) => {
           const fiveRelatedArtists = relatedArtists.artists
             .sort(() => 0.5 - Math.random())
-            .slice(0, 5);
+            .slice(0, limit);
           const list = {
             artist: topArtist,
             relatedArtists: fiveRelatedArtists,
@@ -143,7 +145,7 @@ class Discover extends Component<IProps, IState> {
               linkTo={`/album/${track.album.id}`}
               imageUrl={track.album.images.length > 0 ? track.album.images[0].url : ""}
               title={track.name}
-              subtitle={track.album.artists.map((a) => a.name).join(", ")}
+              subtitle={track.album.artists}
               handleRightClick={this.handleRightClick}
             />
           );
@@ -162,7 +164,7 @@ class Discover extends Component<IProps, IState> {
             linkTo={`/album/${newReleasedAlbum.id}`}
             imageUrl={newReleasedAlbum.images.length > 0 ? newReleasedAlbum.images[0].url : ""}
             title={newReleasedAlbum.name}
-            subtitle={newReleasedAlbum.artists.map((a) => a.name).join(", ")}
+            subtitle={newReleasedAlbum.artists}
             subsubtitle={formatTimeDiff(
               new Date(newReleasedAlbum.release_date).getTime(),
               Date.now()

@@ -66,6 +66,14 @@ export default function Episode(props: IProps) {
 
   if (!episode) return <p>loading...</p>;
 
+  let dateStr: string = "";
+  if(episode.release_date) {
+    let release = new Date(episode.release_date);
+
+    const months = ["Jan", "Feb", "Mar","Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    dateStr = release.getDate() + ". " + months[release.getMonth()] + " " + release.getFullYear();
+  }
+
   return (
     <div className={"Playlist"}>
       <div className={"PlaylistHeader PlaylistHeaderFull"}>
@@ -80,7 +88,7 @@ export default function Episode(props: IProps) {
           <h4>Podcast Episode</h4>
           <h1>{episode.name}</h1>
           <p>
-            by {episode.show.publisher}
+            by {episode.show.publisher}, {dateStr}   
           </p>
           <p>
             {episode.show.name}

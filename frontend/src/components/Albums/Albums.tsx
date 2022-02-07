@@ -65,7 +65,7 @@ export default function Albums() {
             item={item.album.id}
             imageUrl={item.album.images.length > 0 ? item.album.images[0].url : ""}
             title={item.album.name}
-            subtitle={item.album.artists.map((a) => a.name).join(", ")}
+            subtitle={item.album.artists}
             handleRightClick={handleRightClick}
           />
         );
