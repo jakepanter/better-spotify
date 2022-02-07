@@ -310,24 +310,22 @@ function TrackList(props: Props) {
                   ...tags.availableTags[id],
                 })) ?? [];
               return (
-                <div key="TrackList">
-                  <TrackListItem
-                    track={item}
-                    name={item.name}
-                    artists={item.artists}
-                    duration_ms={item.duration_ms}
-                    album={item.album}
-                    key={type + "-track-" + item.id + "-" + index}
-                    liked={props.is_saved[index]}
-                    listIndex={index}
-                    selected={isTrackSelected(item, index)}
-                    onSelectionChange={handleSelectionChange}
-                    onContextMenuOpen={handleContextMenuOpen}
-                    id_tracklist={""}
-                    type={type}
-                    tags={tagList}
-                  />
-                </div>
+                <TrackListItem
+                  track={item}
+                  name={item.name}
+                  artists={item.artists}
+                  duration_ms={item.duration_ms}
+                  album={item.album}
+                  key={type + "-track-" + item.id + "-" + index}
+                  liked={props.is_saved[index]}
+                  listIndex={index}
+                  selected={isTrackSelected(item, index)}
+                  onSelectionChange={handleSelectionChange}
+                  onContextMenuOpen={handleContextMenuOpen}
+                  id_tracklist={""}
+                  type={type}
+                  tags={tagList}
+                />
               );
             })}
             {!fullyLoaded ? (
@@ -453,6 +451,8 @@ function TrackList(props: Props) {
                   track={episode}
                   name={episode.name}
                   duration_ms={episode.duration_ms}
+                  resume_point={episode.resume_point}
+                  added_at={episode.release_date}
                   image={episode.images[0]}
                   description={episode.description}
                   liked={episode.is_saved}

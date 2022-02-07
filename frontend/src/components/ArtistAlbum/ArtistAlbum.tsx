@@ -4,6 +4,7 @@ import { API_URL } from "../../utils/constants";
 import { useParams } from "react-router-dom";
 import { getAuthHeader } from "../../helpers/api-helpers";
 import Card from "../Card/Card";
+import "./ArtistAlbum.scss";
 
 let header: string = "Albums";
 
@@ -63,9 +64,9 @@ export default function ArtistAlbums() {
       key={album.id + index}
       item={album.id}
       linkTo={`/album/${album.id}`}
-      imageUrl={album.images[0] !== null ? album.images[0].url : ""}
+      imageUrl={album.images.length > 0 ? album.images[0].url : ""}
       title={album.name}
-      subtitle={album.artists.map((a) => a.name).join(", ")}
+      subtitle={album.artists}
       handleRightClick={handleRightClick}
     />
   ));
@@ -78,12 +79,10 @@ export default function ArtistAlbums() {
   return (
     <>
       {albumItems.length > 0 ? (
-        <div style={{ overflow: "hidden auto" }}>
-          <h2>{header}</h2>
-          <div className={"Content"}>
-            <ul className={"CoverList"} onScroll={onScrollAlbums}>
-              {allAlbums}
-            </ul>
+        <div className="ArtistAlbum">
+          <h2 className="Header">{header}</h2>
+          <div className={"Content"} onScroll={onScrollAlbums}>
+            <div className={"CoverList"}>{allAlbums}</div>
           </div>
         </div>
       ) : (

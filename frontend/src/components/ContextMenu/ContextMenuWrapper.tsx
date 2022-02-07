@@ -7,6 +7,7 @@ import PlaylistMenu from "./PlaylistMenu";
 import PlaylistsMenu from "./PlaylistsMenu";
 import AlbumsMenu from "./AlbumsMenu";
 import PlaylistTracksMenu from "./PlaylistTracksMenu";
+import EditPlaylistDialog from "./EditPlaylistDialog";
 
 type MenuProps = {
   type: String;
@@ -48,6 +49,8 @@ function ContextMenuWrapper(props: MenuProps) {
     return <PlaylistsMenu data={props.data} anchorPoint={anchorPoint} />;
   else if (props.type === "albums")
     return <AlbumsMenu data={props.data} anchorPoint={anchorPoint} />;
+  else if (props.type === "edit-playlist-details")
+    return <EditPlaylistDialog data={props.data} anchorPoint={anchorPoint} />;
   return null;
 }
 

@@ -179,11 +179,9 @@ function App() {
                 <Discover />
               </Route>
               <Route path="/song-history">
-                <h1>Song History</h1>
                 <SongHistory />
               </Route>
               <Route path="/new-releases">
-                <h1>New Releases</h1>
                 <Releases />
               </Route>
               <Route path="/related-artists/:id">
