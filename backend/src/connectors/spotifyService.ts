@@ -197,6 +197,27 @@ export default class SpotifyService {
     return albums.body;
   }
 
+  isAlbumSaved = async (accessToken: string, albumIds: string[]) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    const data = await this.spotifyApi.containsMySavedAlbums(albumIds);
+    this.spotifyApi.resetAccessToken();
+    return data.body;
+  }
+
+  addToSavedAlbums = async (accessToken: string, albumIds: string[]) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    const data = await this.spotifyApi.addToMySavedAlbums(albumIds);
+    this.spotifyApi.resetAccessToken();
+    return data.body;
+  };
+
+  removeFromSavedAlbums = async (accessToken: string, albumIds: string[]) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    const data = await this.spotifyApi.removeFromMySavedAlbums(albumIds);
+    this.spotifyApi.resetAccessToken();
+    return data.body;
+  };
+
   isSaved = async (accessToken: string, trackIds: string[]) => {
     this.spotifyApi.setAccessToken(accessToken);
     const data = await this.spotifyApi.containsMySavedTracks(trackIds);
