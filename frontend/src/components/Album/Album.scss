@@ -1,11 +1,57 @@
 @import './src/boilerplate.scss';
 
-.album-artists{
+.albumsLikeOption {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row;
+
+  .button {
+    color: rgba($color-default, .5);
+    font-size: 14px;
+    text-overflow: ellipsis;
+
+    span {
+      font-size: 45px;
+      color: $color-default;
+      transition: $transition-base;
+    }
+
+    &:hover {
+      background: none !important;
+      color: rgba($color-default, .5);
+
+      span {
+        color: $color-primary;
+      }
+    }
+  }
+
+  .checked span {
+    color: $color-primary !important;
+  }
+}
+
+.album-artists {
   text-decoration: none !important;
   color: $color-default !important;
 
-  &:hover{
+  &:hover {
     text-decoration: underline !important;
   }
 }
 
+.light_mode .albumsLikeOption .button {
+  color: rgba($color-default-light, .5);
+
+  span {
+    color: $color-default-light;
+  }
+
+  &:hover {
+    color: rgba($color-default-light, .5);
+
+    span {
+      color: $color-primary;
+    }
+  }
+}

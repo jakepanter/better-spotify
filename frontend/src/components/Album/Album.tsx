@@ -204,9 +204,11 @@ export default function Album(props: IProps) {
                 {album.tracks.total === 1 ? "" : "s"}
               </p>
             </div>            
-            <div className={"PlaylistHeaderFilter"}>
-              <button className={`checkbox ${liked ? "checked" : ""}`} onClick={handleLikeButton}>
+            <div className={"PlaylistHeaderFilter albumsLikeOption"}>
+              <button className={`button checkbox ${liked ? "checked" : ""}`} onClick={handleLikeButton}>
                 <span className={"material-icons"}>{liked ? "favorite" : "favorite_border"}</span>
+                  <br />
+                <p>Like entire album</p>
               </button>
             </div>
           </div>
