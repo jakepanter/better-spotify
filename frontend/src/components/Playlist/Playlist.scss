@@ -84,7 +84,8 @@
   }
 
   .Tracklist {
-    flex: 1 1 auto;
+    flex: 0 1 auto;
+    padding-bottom: $border-width;
   }
 
   input {
