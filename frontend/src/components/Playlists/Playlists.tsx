@@ -12,6 +12,7 @@ import { API_URL } from "../../utils/constants";
 import { createNewPlaylist, fetchPlaylist } from "../../helpers/api-helpers";
 import { getAuthHeader } from "../../helpers/api-helpers";
 import Card from "../Card/Card";
+import {NotificationsService} from "../NotificationService/NotificationsService";
 
 export default function Playlists() {
   const [playlists, setPlaylists] = useState<ListOfUsersPlaylistsResponse>();
@@ -82,6 +83,8 @@ export default function Playlists() {
     );
     const arr = [newPlaylist, ...items];
     setItems(arr);
+
+    NotificationsService.push('success', 'Created new playlist');
   };
 
   //fetch next playlists when you reach the bottom of the current list

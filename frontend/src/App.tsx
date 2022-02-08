@@ -190,8 +190,8 @@ function App() {
             </Switch>
             <Player token={authentication.accessToken} key={String(lightmode)} lightTheme={lightmode} />
           </div>
-          <NotificationsDisplay/>
         </div>
+        <NotificationsDisplay/>
       </Router>
     </AppContext.Provider>
   );
