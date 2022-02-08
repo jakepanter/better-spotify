@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {
   CurrentUsersProfileResponse,
   ListOfUsersPlaylistsResponse,
@@ -14,6 +14,7 @@ import AppContext from "../../AppContext";
 import useOutsideClick from "../../helpers/useOutsideClick";
 import { useHistory } from "react-router-dom";
 import { getAuthHeader } from "../../helpers/api-helpers";
+import { DashboardService } from "../Dashboard/Dashboard";
 
 type Props = {
   data: SinglePlaylistResponse;
@@ -34,6 +35,9 @@ function PlaylistMenu(props: Props) {
   const { toggleMenu, ...menuProps } = useMenuState({ transition: true });
   const state = useContext(AppContext);
   const history = useHistory();
+  const [isOnStartpage, setIsOnStartpage] = useState<boolean>(
+    DashboardService.containsPlaylist(props.data.id)
+  );
 
   const { data: playlists, error: playlistsError } = useSWR<ListOfUsersPlaylistsResponse>(
     `${API_URL}api/spotify/playlists`,
@@ -117,6 +121,16 @@ function PlaylistMenu(props: Props) {
     });
   };
 
+  const toggleStartpage = () => {
+    if (isOnStartpage) {
+      DashboardService.removePlaylist(props.data.id);
+      setIsOnStartpage(false);
+    } else {
+      DashboardService.addPlaylist(props.data.id);
+      setIsOnStartpage(true);
+    }
+  };
+
   if (playlistsError || meError) return <p>error</p>;
 
   return (
@@ -127,7 +141,9 @@ function PlaylistMenu(props: Props) {
       ref={ref}
     >
       <MenuItem disabled>Add to Queue</MenuItem>
-      <MenuItem disabled>Add to Startpage</MenuItem>
+      <MenuItem onClick={() => toggleStartpage()}>
+        {isOnStartpage ? "Remove from Startpage" : "Add to Startpage"}
+      </MenuItem>
       <SubMenu label={"Add to Playlist"}>
         {playlists && me ? (
           playlists.items
