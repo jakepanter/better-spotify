@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import AppContext from "../../AppContext";
 import {
   CreatePlaylistResponse,
@@ -117,7 +117,7 @@ export default function Playlists() {
   return (
     <div className={"Playlists"}>
       <h2 className={"Header"}>
-        Playlists
+        <Link to={'/playlists'} className={"PlaylistHeaderLink"}>Playlists</Link>
         <button className="add-button" onClick={handleCreateNewPlaylist}>
           <span className="material-icons">add</span>
           <span className="text">New Playlist</span>
