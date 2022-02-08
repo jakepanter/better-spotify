@@ -3,6 +3,7 @@ import { ArtistsAlbumsResponse, AlbumObjectSimplified } from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import Album from "../Album/Album";
 import { getAuthHeader } from "../../helpers/api-helpers";
+import "./Discography.scss";
 
 // The fetching limit, can be adjusted by changing this value
 const limit = 2;
@@ -55,10 +56,9 @@ export default function Discography(props: IProps) {
   }, [nextAlbumURL]);
 
   return (
-    <div style={{ overflow: "hidden auto" }}>
+    <div className={"Discography"}>
       <div
         className={"list-items"}
-        style={{ overflow: "hidden auto", height: "75vh" }}
         onScroll={onScroll}
       >
         {allAlbums}

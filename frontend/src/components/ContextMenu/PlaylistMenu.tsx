@@ -15,6 +15,7 @@ import useOutsideClick from "../../helpers/useOutsideClick";
 import { useHistory } from "react-router-dom";
 import { getAuthHeader } from "../../helpers/api-helpers";
 import { DashboardService } from "../Dashboard/Dashboard";
+import { NotificationsService } from "../NotificationService/NotificationsService";
 
 type Props = {
   data: SinglePlaylistResponse;
@@ -98,6 +99,8 @@ function PlaylistMenu(props: Props) {
       });
       alreadyAddedTracks += 100;
     }
+
+    NotificationsService.push('success', 'Added tracks to other playlist');
   };
 
   const deletePlaylist = async () => {
@@ -109,6 +112,8 @@ function PlaylistMenu(props: Props) {
     });
     mutate(`${API_URL}api/spotify/playlists`);
     history.push("/playlists");
+
+    NotificationsService.push('success', 'Removed playlist from library');
   };
 
   const editDetails = async () => {

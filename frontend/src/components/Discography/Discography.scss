@@ -1,0 +1,14 @@
+@import "./src/boilerplate.scss";
+.Discography{
+  overflow: hidden auto;
+  scrollbar-width: none;
+  .list-items{
+    overflow: hidden auto;
+    // necessary for fetching
+    height: 75vh;
+    padding-right: 1rem;
+  }
+  .Playlist:not(:first-child){
+    margin-top: 2.5rem;
+  }
+}
