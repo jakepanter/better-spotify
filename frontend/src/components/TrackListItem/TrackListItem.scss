@@ -163,6 +163,28 @@
   }
 }
 
+.EpisodeRow {
+  &.Playing {
+    .PlayProgress {
+      .PlayEpisode {
+        &:before {
+          content: "\e035" !important;
+        }
+      }
+    }
+  }
+
+  &.Playing.Paused {
+    .PlayProgress {
+      .PlayEpisode {
+        &:before {
+          content: "\e038" !important;
+        }
+      }
+    }
+  }
+}
+
 .Playing {
   background-color: $color-secondary;
   animation-name: playingColor;

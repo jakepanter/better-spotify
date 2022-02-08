@@ -42,6 +42,22 @@
         color: rgba($white, 1);
       }
     }
+
+    &.Playing {
+      .TableCellArtwork {
+        &:before {
+          content: "\e035";
+        }
+      }
+    }
+
+    &.Playing.Paused {
+      .TableCellArtwork {
+        &:before {
+          content: "\e038";
+        }
+      }
+    }
   }
 
   .TableHeader {
@@ -184,6 +200,22 @@
       &Tags {
         display: none;
       }
+    }
+  }
+}
+
+.Playing {
+  .TableCellCoverPlaceholder {
+    &:before {
+      content: "\e035";
+    }
+  }
+}
+
+.Playing.Paused {
+  .TableCellCoverPlaceholder {
+    &:before {
+      content: "\e038";
     }
   }
 }

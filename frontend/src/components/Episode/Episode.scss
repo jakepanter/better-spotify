@@ -70,6 +70,26 @@
   }
 }
 
+.EpisodePlaying {
+  .EpisodeControl {
+    .PlayEpisode {
+      &:before {
+        content: "\e035";
+      }
+    }
+  }
+}
+
+.EpisodePlaying.EpisodePaused {
+  .EpisodeControl {
+    .PlayEpisode {
+      &:before {
+        content: "\e038";
+      }
+    }
+  }
+}
+
 .light_mode {
   .EpisodeDescription {
     color: $color-default-light;
