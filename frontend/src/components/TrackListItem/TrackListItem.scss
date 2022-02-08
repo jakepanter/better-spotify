@@ -170,6 +170,11 @@
   animation-iteration-count: infinite;
   color: $color-primary;
 
+  a, button span{
+    // important necessary to overwrite color in playing mode
+    color: $color-primary !important;
+  }
+
   .checkbox.checked {
     color: $color-default;
   }
@@ -300,6 +305,7 @@
   }
 
   .EpisodeRow a .noTags .TableCellPlayEpisode {
+    f
     &:hover::before {
       color: rgba($color-default-light, 1.0);
     }
