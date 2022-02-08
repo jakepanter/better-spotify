@@ -64,7 +64,7 @@ function App() {
     if (wasPlaying) {
       setTimeout(() => {
         startPlaying();
-      }, 1500);
+      }, 2000);
     }
   };
 
