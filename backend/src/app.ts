@@ -437,9 +437,11 @@ export default class App {
 
     this.server.put('/api/spotify/me/player/play', async (req: Request, res: Response) => {
       const accessToken = getToken(req);
-      const result = await this.spotifyService.play(accessToken, req.body);
+      const status = await this.spotifyService.play(accessToken, req.body);
 
-      if (result === null) return res.sendStatus(500);
+      if (status === null) return res.sendStatus(500);
+      if (!status) return res.sendStatus(404);
+
       return res.sendStatus(200);
     });
 
@@ -551,14 +553,6 @@ export default class App {
       return res.json(artists);
     });
 
-    this.server.put('/api/spotify/me/player/play', async (req: Request, res: Response) => {
-      const accessToken = getToken(req);
-      const result = await this.spotifyService.play(accessToken, req.body);
-
-      if (result === null) return res.sendStatus(500);
-      return res.json(result);
-    });
-
     this.server.put('/api/spotify/me/player/shuffle', async (req: Request, res: Response) => {
       const accessToken = getToken(req);
       const state: boolean = JSON.parse(req.query?.state as string);
@@ -575,15 +569,6 @@ export default class App {
 
       if (result === null) return res.sendStatus(500);
       return res.sendStatus(200);
-    });
-
-    // get current song
-    this.server.get('/api/spotify/player/currently-playing', async (req: Request, res: Response) => {
-      const accessToken = getToken(req);
-      const currentlyPlaying = await this.spotifyService.getPlaybackState(accessToken);
-
-      if (currentlyPlaying === null) return res.sendStatus(500);
-      return res.json(currentlyPlaying);
     });
 
     // This must be before this.server.listen(...)

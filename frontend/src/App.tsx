@@ -23,7 +23,7 @@ import ShowPage from "./pages/ShowPage/ShowPage";
 import EpisodePage from "./pages/EpisodePage/EpisodePage";
 import AuthorizePage from "./components/AuthorizePage/AuthorizePage";
 import AppContext, { ContextMenu } from "./AppContext";
-import { NotificationsDisplay } from "./components/NotificationService/NotificationsService";
+import {NotificationsDisplay, NotificationsService} from "./components/NotificationService/NotificationsService";
 import ArtistPage from "./pages/ArtistPage/ArtistPage";
 import DiscographyPage from "./pages/DiscographyPage/DiscographyPage";
 import ArtistAlbums from "./components/ArtistAlbum/ArtistAlbum";
@@ -76,7 +76,9 @@ function App() {
         "Content-Type": "application/json",
         Authorization: authHeader,
       }
-    })
+    }).then((res) => {
+      if (!res.ok) NotificationsService.push('warning', 'No active playback device found');
+    });
   };
 
   useEffect(() => {
