@@ -208,7 +208,7 @@ export default function Album(props: IProps) {
               <button className={`button checkbox ${liked ? "checked" : ""}`} onClick={handleLikeButton}>
                 <span className={"material-icons"}>{liked ? "favorite" : "favorite_border"}</span>
                   <br />
-                <p>Like entire album</p>
+                <p>Add to Collection</p>
               </button>
             </div>
           </div>
