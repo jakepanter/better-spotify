@@ -54,7 +54,7 @@ class RelatedArtists extends Component<IProps, IState> {
   }
 
   handleRightClick() {
-    console.log("right");
+    //TODO?
   }
 
   render() {
