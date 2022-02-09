@@ -6,7 +6,7 @@ import { getAuthHeader } from "../../helpers/api-helpers";
 import "./Discography.scss";
 
 // The fetching limit, can be adjusted by changing this value
-const limit = 2;
+const limit = 5;
 
 interface IProps {
   id: string;
@@ -56,8 +56,11 @@ export default function Discography(props: IProps) {
   }, [nextAlbumURL]);
 
   return (
-    <div className={"Discography"} onScroll={onScroll}>
-      <div className={"list-items"}>{allAlbums}</div>
+    <div className={"Discography"}>
+      <h2 className="Header">Discography</h2>
+      <div className="Content" onScroll={onScroll}>
+        {allAlbums}
+      </div>
     </div>
   );
 }
