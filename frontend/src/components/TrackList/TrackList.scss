@@ -256,7 +256,7 @@
     }
 
     .TableRow {
-      &:hover:not(.TableHeader):not(.Selected) {
+      &:hover:not(.TableHeader):not(.Selected):not(.Playing) {
         color: $color-default-light;
         background-color: darken($white, 10%);
 

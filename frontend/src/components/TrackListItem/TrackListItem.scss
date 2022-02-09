@@ -179,15 +179,21 @@
   animation-iteration-count: infinite;
   color: $color-primary;
 
-  a, button span{
+  a, button span {
     color: $color-primary;
-    &:hover{
+
+    &:hover {
       color: $color-primary;
     }
   }
 
   .checkbox.checked {
     color: $color-default;
+  }
+
+  .Tag {
+    // in case of playing + selected at the same time -- playing should have the highest level
+    color: $color-primary !important;
   }
 }
 
@@ -210,10 +216,13 @@
 .Selected {
   background-color: rgba($color-primary, .2);
 
-  .checkbox.checked {
+  .Tag {
     color: $color-default;
   }
 
+  .checkbox.checked {
+    color: $color-default;
+  }
 }
 
 .Tag {
@@ -281,6 +290,10 @@
   .Selected {
     background-color: rgba($color-primary, .5);
 
+    .Tag {
+      color: $color-default-light;
+    }
+
     .checkbox.checked {
       color: $color-default-light;
     }
@@ -294,7 +307,7 @@
       color: $color-default-light;
     }
 
-    .albumLink:hover{
+    .albumLink:hover {
       color: $color-primary;
     }
   }
