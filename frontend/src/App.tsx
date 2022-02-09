@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
 import Albums from "./components/Albums/Albums";
 import Playlists from "./components/Playlists/Playlists";
 import Podcasts from "./components/Podcasts/Podcasts"
@@ -32,6 +32,7 @@ import { getAuthentication, refreshAuthentication } from './utils/authentication
 import {PlaybackState} from "./utils/playbackSlice";
 import {getAuthHeader} from "./helpers/api-helpers";
 import {API_URL} from "./utils/constants";
+import PrivacyPolicy from "./components/AuthorizePage/PrivacyPolicy/PrivacyPolicy";
 
 type AuthState = {
   authentication: {
@@ -117,7 +118,17 @@ function App() {
 
   if (!authentication.accessToken || authentication.accessToken === '') {
     return (
-        <AuthorizePage />
+      <Router>
+        <Switch>
+          <Route exact path="/">
+            <AuthorizePage />
+          </Route>
+          <Route path="/privacypolicy">
+            <PrivacyPolicy/>
+          </Route>
+          <Route render={() => <Redirect to="/" />} />
+        </Switch>
+      </Router>
     );
   }
 
