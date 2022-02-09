@@ -117,10 +117,6 @@ export default function Playlists() {
       })
     );
 
-  const cardOnStartpage = () =>{
-    if(useLocation().pathname === "/") return true;
-  };
-
   return (
     <div className={"Playlists"}>
       <h2 className={"Header"}>
@@ -131,7 +127,7 @@ export default function Playlists() {
         </button>
       </h2>
       <div className={"Content"} onScroll={onScroll}>
-        <div className={`CoverList ${cardOnStartpage() ? 'startpageCard' : ''}`}>{myPlaylists}</div>
+        <div className={"CoverList"}>{myPlaylists}</div>
       </div>
     </div>
   );
