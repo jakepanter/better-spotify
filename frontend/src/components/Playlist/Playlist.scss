@@ -3,7 +3,7 @@
 .Playlist {
   display: flex;
   flex-flow: column nowrap;
-  // height: 100%;
+  height: 100%;
   overflow: hidden;
 
   &HeaderCompact {
@@ -39,7 +39,7 @@
 
   &Header {
     flex: 0 0 auto;
-    h1{
+    h1 {
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;

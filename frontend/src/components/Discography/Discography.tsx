@@ -55,12 +55,8 @@ export default function Discography(props: IProps) {
   }, [nextAlbumURL]);
 
   return (
-    <div style={{ overflow: "hidden auto" }}>
-      <div
-        className={"list-items"}
-        style={{ overflow: "hidden auto", height: "75vh" }}
-        onScroll={onScroll}
-      >
+    <div style={{ overflow: "hidden auto" }} onScroll={onScroll}>
+      <div className={"list-items"} style={{ overflow: "hidden auto" }}>
         {allAlbums}
       </div>
     </div>
