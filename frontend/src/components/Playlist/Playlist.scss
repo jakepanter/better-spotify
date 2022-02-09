@@ -39,6 +39,12 @@
 
   &Header {
     flex: 0 0 auto;
+    h1{
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 700px;
+    }
 
     h1,
     h2 {

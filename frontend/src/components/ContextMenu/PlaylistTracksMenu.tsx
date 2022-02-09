@@ -16,7 +16,7 @@ import useOutsideClick from "../../helpers/useOutsideClick";
 import { createNewPlaylist, getAuthHeader } from "../../helpers/api-helpers";
 import { API_URL } from "../../utils/constants";
 import TagsSystem from "../../utils/tags-system";
-import {NotificationsService} from "../NotificationService/NotificationsService";
+import { NotificationsService } from "../NotificationService/NotificationsService";
 
 type Props = {
   data: { tracks: String[]; playlist: PlaylistObjectFull };
@@ -90,7 +90,7 @@ function PlaylistTracksMenu(props: Props) {
     }
   }, [playlistsError, meError, trackError, likedError]);
 
-  const addToPlaylist = async (playlistId: String) => {
+  const addToPlaylist = async (playlistId: String, notify: boolean = false) => {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
     //HACKY: because props.tracks contains the trackUniqueId[] we have to remove the -id at the end from each track
     const tracks = props.data.tracks.map((track) => track.split("-")[0]);
@@ -99,6 +99,11 @@ function PlaylistTracksMenu(props: Props) {
       headers: { "Content-Type": "application/json", Authorization: authHeader },
       body: JSON.stringify(tracks),
     });
+    if (notify)
+      NotificationsService.push(
+        "success",
+        `Added track${props.data.tracks.length > 1 ? "s" : ""} to playlist`
+      );
   };
 
   const removeFromPlaylist = async () => {
@@ -114,6 +119,11 @@ function PlaylistTracksMenu(props: Props) {
       body: JSON.stringify(tracks),
     });
     history.push(history.location.pathname, { removed: tracks });
+
+    NotificationsService.push(
+      "success",
+      `Removed track${props.data.tracks.length > 1 ? "s" : ""} from playlist`
+    );
   };
 
   const addToNewPlaylist = async () => {
@@ -131,6 +141,11 @@ function PlaylistTracksMenu(props: Props) {
     await addToPlaylist(newPlaylist.id);
     mutate(`${API_URL}api/spotify/playlists`);
     history.push(`/playlist/${newPlaylist.id}`, { created: newPlaylist.id });
+
+    NotificationsService.push(
+      "success",
+      `Added track${props.data.tracks.length > 1 ? "s" : ""} to new playlist`
+    );
   };
 
   const showAlbum = async () => {
@@ -206,7 +221,7 @@ function PlaylistTracksMenu(props: Props) {
                 <MenuItem
                   key={list.id}
                   onClick={() => {
-                    addToPlaylist(list.id);
+                    addToPlaylist(list.id, true);
                   }}
                 >
                   {list.name}
@@ -272,7 +287,7 @@ function PlaylistTracksMenu(props: Props) {
                 <MenuItem
                   key={list.id}
                   onClick={() => {
-                    addToPlaylist(list.id);
+                    addToPlaylist(list.id, true);
                   }}
                 >
                   {list.name}
