@@ -203,6 +203,28 @@ export default class App {
       return res.json(albums);
     });
 
+    this.server.get('/api/spotify/me/albums/contains', async (req: Request, res: Response) => {
+      const accessToken = getToken(req);
+      const albumIds: string[] = (req.query.albumIds as string ?? '').split(',');
+      if (albumIds.length === 1 && albumIds[0] === '') return res.json([]);
+      const data = await this.spotifyService.isAlbumSaved(accessToken, albumIds);
+      return res.json(data);
+    });
+
+     this.server.get('/api/spotify/me/albums/add', async (req: Request, res: Response) => {
+      const accessToken = getToken(req);
+      const albumIds: string[] = (req.query.albumIds as string ?? '').split(',');
+      const data = await this.spotifyService.addToSavedAlbums(accessToken, albumIds);
+      return res.json(data);
+    });
+
+    this.server.get('/api/spotify/me/albums/remove', async (req: Request, res: Response) => {
+      const accessToken = getToken(req);
+      const albumIds: string[] = (req.query.albumIds as string ?? '').split(',');
+      const data = await this.spotifyService.removeFromSavedAlbums(accessToken, albumIds);
+      return res.json(data);
+    });
+
     this.server.get('/api/spotify/playlists', async (req: Request, res: Response) => {
       const accessToken = getToken(req);
       const limit = Number(req.query?.limit ?? 50);

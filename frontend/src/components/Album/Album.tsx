@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   AlbumObjectFull,
   AlbumTracksResponse,
+  CheckUserSavedAlbumsResponse,
   CheckUsersSavedTracksResponse,
   SingleAlbumResponse,
   TrackObjectSimplified,
@@ -34,7 +35,8 @@ export default function Album(props: IProps) {
   const [tracks, setTracks] = useState<AlbumTrack[]>([]);
   // The current offset for fetching new tracks
   const [offset, setOffset] = useState<number>(limit);
-
+  const [liked, setLiked] = useState<boolean>();
+ 
   async function fetchAlbumData() {
     const authHeader = getAuthHeader();
     const data: SingleAlbumResponse = await fetch(
@@ -48,6 +50,12 @@ export default function Album(props: IProps) {
 
     // Save album data
     setAlbum(data);
+
+    //get Saved Status and set it
+    const albumLiked: CheckUserSavedAlbumsResponse = await isAlbumSavedData(
+      [data.id]
+    );
+    setLiked(albumLiked[0]);
 
     // Save if tracks are saved
     const saved: CheckUsersSavedTracksResponse = await fetchIsSavedData(
@@ -94,6 +102,20 @@ export default function Album(props: IProps) {
     ]);
   }
 
+  async function isAlbumSavedData(albumIds: string[]) {
+    const authHeader = getAuthHeader();
+    const data: CheckUserSavedAlbumsResponse = await fetch(
+      `${API_URL}api/spotify/me/albums/contains?albumIds=${albumIds}`,
+      {
+        headers: {
+          Authorization: authHeader,
+        },
+      }
+    ).then((res) => res.json());
+
+    return data;
+  }
+
   async function fetchIsSavedData(trackIds: string[]) {
     const authHeader = getAuthHeader();
     const data: CheckUsersSavedTracksResponse = await fetch(
@@ -107,6 +129,30 @@ export default function Album(props: IProps) {
 
     return data;
   }
+
+  const handleLikeButton = async () => {
+    if(album !== undefined) {
+      if (!liked) {
+        // add
+        const authHeader = getAuthHeader();
+        await fetch(`${API_URL}api/spotify/me/albums/add?albumIds=${album.id}`, {
+          headers: {
+            Authorization: authHeader,
+          },
+        }).then((res) => res.json());
+        setLiked(true);
+      } else {
+        // remove
+        const authHeader = getAuthHeader();
+        await fetch(`${API_URL}api/spotify/me/albums/remove?albumIds=${album.id}`, {
+          headers: {
+            Authorization: authHeader,
+          },
+        }).then((res) => res.json());
+        setLiked(false);
+      }
+    } 
+  };
 
   // Fetch the main album data
   useEffect(() => {
@@ -157,8 +203,14 @@ export default function Album(props: IProps) {
                 — {album.release_date.substring(0, 4)} — {album.tracks.total} Song
                 {album.tracks.total === 1 ? "" : "s"}
               </p>
+            </div>            
+            <div className={"PlaylistHeaderFilter albumsLikeOption"}>
+              <button className={`button checkbox ${liked ? "checked" : ""}`} onClick={handleLikeButton}>
+                <span className={"material-icons"}>{liked ? "favorite" : "favorite_border"}</span>
+                  <br />
+                <p>Add to Collection</p>
+              </button>
             </div>
-            <div className={"PlaylistHeaderFilter"}>{/* Filter */}</div>
           </div>
         )
       ) : (
