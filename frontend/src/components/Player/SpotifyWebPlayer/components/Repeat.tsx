@@ -59,7 +59,7 @@ const Wrapper = styled('div')(
       },
     },
   }),
-  'DevicesRSWP',
+  'DevicesRSWP1',
 );
 
 export default function Repeat (props: Props) {

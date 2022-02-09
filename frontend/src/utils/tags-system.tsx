@@ -1,4 +1,5 @@
 import {DashboardService} from "../components/Dashboard/Dashboard";
+import {NotificationsService} from "../components/NotificationService/NotificationsService";
 
 const LOCALSTORAGE_KEY = 'tags';
 
@@ -47,6 +48,8 @@ export default class TagsSystem {
 
     TagsSystem.saveTags(tags);
 
+    NotificationsService.push('success', 'Added new tag');
+
     return newTagId;
   }
 
@@ -68,6 +71,8 @@ export default class TagsSystem {
     tags.availableTags[tagId] = editedTag;
 
     TagsSystem.saveTags(tags);
+
+    NotificationsService.push('success', 'Edited tag');
   }
 
   static deleteTag(tagId: string) {
@@ -87,6 +92,8 @@ export default class TagsSystem {
     DashboardService.removeTagTracklist(tagId);
 
     TagsSystem.saveTags(tags);
+
+    NotificationsService.push('success', 'Deleted tag');
   }
 
   static getTagsOfElement(elementId: string) {
@@ -116,6 +123,8 @@ export default class TagsSystem {
       }
       tags.spotifyElements[elementId].push(tagId);
       TagsSystem.saveTags(tags);
+
+      NotificationsService.push('success', 'Added tag');
     }
   }
 
@@ -126,6 +135,8 @@ export default class TagsSystem {
     tags.spotifyElements[elementId] = currentTags.filter((tag) => tag !== tagId);
 
     TagsSystem.saveTags(tags);
+
+    NotificationsService.push('success', 'Removed tag');
   }
 }
 
