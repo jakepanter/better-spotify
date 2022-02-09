@@ -44,16 +44,12 @@
     }
 
     &.Playing {
-      .TableCellArtwork {
-        &:before {
-          content: "\e035";
-        }
+      .TableCellArtwork::before {
+        content: "\e035";
       }
-    }
 
-    &.Playing.Paused {
-      .TableCellArtwork {
-        &:before {
+      &.Paused {
+        .TableCellArtwork::before {
           content: "\e038";
         }
       }
@@ -205,18 +201,12 @@
 }
 
 .Playing {
-  .TableCellCoverPlaceholder {
-    &:before {
-      content: "\e035";
-    }
+  .TableCellCoverPlaceholder::before {
+    content: "\e035";
   }
-}
 
-.Playing.Paused {
-  .TableCellCoverPlaceholder {
-    &:before {
-      content: "\e038";
-    }
+  &.Paused .TableCellCoverPlaceholder::before {
+    content: "\e038";
   }
 }
 
@@ -238,6 +228,7 @@
     pointer-events: none;
     color: rgba($white, 0.45);
   }
+
   // Fix for Placeholder in table
   .CoverPlaceholder {
     display: none;
