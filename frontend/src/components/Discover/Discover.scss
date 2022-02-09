@@ -6,17 +6,6 @@
   flex-grow: 1;
   overflow: hidden;
   margin-bottom: 2rem;
-
-  .CoverList {
-      a {
-        //zwischen
-        @media screen and(min-width: $breakpoint-lg) and(max-width: $breakpoint-xl) {
-          &:nth-child(n+4) {
-            display: none;
-          }
-        }
-      }
-    }
 }
 
 
