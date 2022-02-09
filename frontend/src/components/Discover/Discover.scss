@@ -8,10 +8,17 @@
   margin-bottom: 2rem;
 
   .CoverList {
-      a {
-        //zwischen
-        @media screen and(min-width: $breakpoint-lg) and(max-width: $breakpoint-xl) {
-          &:nth-child(n+4) {
+    @function ends-with($string, $find) {
+      @if (str-index($string, $find) == (str-length($string) - str-length($find) + 1)) {
+        @return true;
+      } @else {
+        @return false;
+      }
+    }
+
+    a {
+        @media screen and(max-width: 1902px) {
+          &:nth-child(n+6) {
             display: none;
           }
         }
