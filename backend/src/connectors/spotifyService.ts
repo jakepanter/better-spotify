@@ -623,6 +623,13 @@ export default class SpotifyService {
   play = async (accessToken: string, options: PlayOptions) => {
     try {
       this.spotifyApi.setAccessToken(accessToken);
+      // Check if a device is available
+      const { body } = await this.spotifyApi.getMyDevices();
+      if (body.devices.length === 0
+        || !body.devices.some((device) => device.is_active)) {
+        this.spotifyApi.resetAccessToken();
+        return false;
+      }
       this.spotifyApi.play(options);
       this.spotifyApi.resetAccessToken();
       return true;

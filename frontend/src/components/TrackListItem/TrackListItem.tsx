@@ -24,6 +24,7 @@ import AppContext from "../../AppContext";
 import { getAuthHeader } from "../../helpers/api-helpers";
 import { useSelector } from "react-redux";
 import { PlaybackState } from "../../utils/playbackSlice";
+import {NotificationsService} from "../NotificationService/NotificationsService";
 
 type Body = {
   context_uri: string | undefined;
@@ -126,6 +127,8 @@ function TrackListItem(props: Props) {
           Authorization: authHeader,
         },
         body: JSON.stringify(body),
+      }).then((res) => {
+        if (!res.ok) NotificationsService.push('warning', 'No active playback device found');
       });
     } else if (reqType === 'pause') {
       const authHeader = getAuthHeader();

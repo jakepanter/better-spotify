@@ -7,6 +7,7 @@ import "./Episode.scss";
 import { getAuthHeader } from '../../helpers/api-helpers';
 import { useSelector } from "react-redux";
 import {PlaybackState} from "../../utils/playbackSlice";
+import {NotificationsService} from "../NotificationService/NotificationsService";
 
 interface IProps {
   id: string;
@@ -60,7 +61,9 @@ export default function Episode(props: IProps) {
           'Authorization': authHeader
         },
         body: JSON.stringify(body)
-      }).then(response => response.json())
+      }).then((res) => {
+        if (!res.ok) NotificationsService.push('warning', 'No active playback device found');
+      });
     } else if (reqType === 'pause') {
       fetch(`${API_URL}api/spotify/me/player/pause`, {
         method: 'PUT',
