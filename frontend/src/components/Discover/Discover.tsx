@@ -79,7 +79,7 @@ class Discover extends Component<IProps, IState> {
 
   async fetchRecentlyPlayedTracks() {
     const authHeader = getAuthHeader();
-    const res = await fetch(`${API_URL}api/spotify/player/recently-played?limit=${limit}`, {
+    const res = await fetch(`${API_URL}api/spotify/player/recently-played?limit=${limit * 2}`, {
       headers: {
         Authorization: authHeader,
       },
@@ -147,7 +147,8 @@ class Discover extends Component<IProps, IState> {
       this.state.recentlyPlayedTracks.length === 0 ? (
         <p>loading...</p>
       ) : (
-        this.removeDuplicates(this.state.recentlyPlayedTracks).map((recentlyPlayedTrack) => {
+        this.removeDuplicates(this.state.recentlyPlayedTracks).map((recentlyPlayedTrack, index) => {
+          if (index >= limit) return null;
           const track = recentlyPlayedTrack.track as TrackObjectFull;
           return (
             <Card
@@ -168,21 +169,24 @@ class Discover extends Component<IProps, IState> {
       this.state.newReleases.length === 0 ? (
         <p>loading...</p>
       ) : (
-        this.state.newReleases.map((newReleasedAlbum) => (
-          <Card
-            key={newReleasedAlbum.id}
-            item={newReleasedAlbum.id}
-            linkTo={`/album/${newReleasedAlbum.id}`}
-            imageUrl={newReleasedAlbum.images.length > 0 ? newReleasedAlbum.images[0].url : ""}
-            title={newReleasedAlbum.name}
-            subtitle={newReleasedAlbum.artists}
-            subsubtitle={formatTimeDiff(
-              new Date(newReleasedAlbum.release_date).getTime(),
-              Date.now()
-            )}
-            handleRightClick={this.handleRightClick}
-          />
-        ))
+        this.state.newReleases.map((newReleasedAlbum, index) => {
+          if (index >= limit) return null;
+          return (
+            <Card
+              key={newReleasedAlbum.id}
+              item={newReleasedAlbum.id}
+              linkTo={`/album/${newReleasedAlbum.id}`}
+              imageUrl={newReleasedAlbum.images.length > 0 ? newReleasedAlbum.images[0].url : ""}
+              title={newReleasedAlbum.name}
+              subtitle={newReleasedAlbum.artists}
+              subsubtitle={formatTimeDiff(
+                new Date(newReleasedAlbum.release_date).getTime(),
+                Date.now()
+              )}
+              handleRightClick={this.handleRightClick}
+            />
+          );
+        })
       );
 
     //for related artists
@@ -191,17 +195,20 @@ class Discover extends Component<IProps, IState> {
         ? null
         : this.state.relatedArtistsList.map((relatedArtistsListItem) => {
             const relatedArtistsForOneArtist = relatedArtistsListItem.relatedArtists.map(
-              (relatedArtist) => (
-                <Card
-                  key={relatedArtist.id}
-                  item={relatedArtist.id}
-                  linkTo={`/artist/${relatedArtist.id}`}
-                  imageUrl={relatedArtist.images.length > 0 ? relatedArtist.images[0].url : ""}
-                  title={relatedArtist.name}
-                  handleRightClick={this.handleRightClick}
-                  roundCover={true}
-                />
-              )
+              (relatedArtist, index) => {
+                if (index >= limit) return null;
+                return (
+                  <Card
+                    key={relatedArtist.id}
+                    item={relatedArtist.id}
+                    linkTo={`/artist/${relatedArtist.id}`}
+                    imageUrl={relatedArtist.images.length > 0 ? relatedArtist.images[0].url : ""}
+                    title={relatedArtist.name}
+                    handleRightClick={this.handleRightClick}
+                    roundCover={true}
+                  />
+                );
+              }
             );
             return relatedArtistsForOneArtist;
           });
