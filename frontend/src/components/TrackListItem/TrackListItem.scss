@@ -180,11 +180,6 @@
   animation-iteration-count: infinite;
   color: $color-primary;
 
-  a, button span{
-    // important necessary to overwrite color in playing mode
-    color: $color-primary;
-  }
-
   .checkbox.checked {
     color: $color-default;
   }
