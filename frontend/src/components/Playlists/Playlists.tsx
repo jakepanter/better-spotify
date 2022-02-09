@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import AppContext from "../../AppContext";
 import {
   CreatePlaylistResponse,
@@ -12,6 +12,7 @@ import { API_URL } from "../../utils/constants";
 import { createNewPlaylist, fetchPlaylist } from "../../helpers/api-helpers";
 import { getAuthHeader } from "../../helpers/api-helpers";
 import Card from "../Card/Card";
+import {NotificationsService} from "../NotificationService/NotificationsService";
 
 export default function Playlists() {
   const [playlists, setPlaylists] = useState<ListOfUsersPlaylistsResponse>();
@@ -82,6 +83,8 @@ export default function Playlists() {
     );
     const arr = [newPlaylist, ...items];
     setItems(arr);
+
+    NotificationsService.push('success', 'Created new playlist');
   };
 
   //fetch next playlists when you reach the bottom of the current list
@@ -117,7 +120,7 @@ export default function Playlists() {
   return (
     <div className={"Playlists"}>
       <h2 className={"Header"}>
-        Playlists
+        <Link to={'/playlists'} className={"PlaylistHeaderLink"}>Playlists</Link>
         <button className="add-button" onClick={handleCreateNewPlaylist}>
           <span className="material-icons">add</span>
           <span className="text">New Playlist</span>

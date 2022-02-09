@@ -11,6 +11,7 @@ import Dialog from "../Dialog/Dialog";
 import { useDropzone } from "react-dropzone";
 import { compressAccurately, EImageType } from "image-conversion";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
+import {NotificationsService} from "../NotificationService/NotificationsService";
 
 type Props = {
   data: SinglePlaylistResponse;
@@ -91,6 +92,7 @@ function EditPlaylistDialog(props: Props) {
       (props.data.images[0] && image !== props.data.images[0].url) ||
       (!props.data.images[0] && image !== "")
     ) {
+      NotificationsService.push('info', 'Saving playlist...');
       const img = (image as string).split("base64,")[1];
       await fetch(`${API_URL}api/spotify/playlist/${props.data.id}/image`, {
         method: "POST",
@@ -103,6 +105,7 @@ function EditPlaylistDialog(props: Props) {
     }
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
     history.push(history.location.pathname, { edited: props.data.id });
+    NotificationsService.push('success', 'Playlist saved');
   };
 
   return (

@@ -6,6 +6,11 @@
   justify-content: space-between;
   overflow: hidden;
   margin-bottom: 2rem;
+
+  // Fix placeholder width for artists page
+  .CoverPlaceholder{
+    max-width: 250px;
+  }
 }
 
 .Name {
@@ -53,14 +58,4 @@
   .select .input-select {
     background: rgba($color-accent-light, 0.7);
   }
-}
-
-.CoverList {
-    a {
-      @media screen and(min-width: $breakpoint-md) and(max-width: $breakpoint-xl) {
-        &:nth-child(n+4) {
-          display: none;
-        }
-      }
-    }
 }

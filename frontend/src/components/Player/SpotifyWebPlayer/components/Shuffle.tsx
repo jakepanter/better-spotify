@@ -59,7 +59,7 @@ const Wrapper = styled('div')(
       },
     },
   }),
-  'DevicesRSWP',
+  'DevicesRSWP2',
 );
 
 export default function Shuffle (props: Props) {
