@@ -13,6 +13,7 @@ import { NavLink } from "react-router-dom";
 import { formatTimeDiff } from "../../utils/functions";
 import { getAuthHeader } from "../../helpers/api-helpers";
 import Card from "../Card/Card";
+import AppContext from "../../AppContext";
 
 interface IProps {}
 
@@ -33,6 +34,8 @@ interface IState {
 const limit = 6;
 
 class Discover extends Component<IProps, IState> {
+  static contextType = AppContext;
+
   constructor(props: IProps) {
     super(props);
 
@@ -126,11 +129,19 @@ class Discover extends Component<IProps, IState> {
     return relatedArtists;
   }
 
-  handleRightClick() {
-    console.log("clicky");
+  handleRightClick(e: any, item: any, type: string, contextMenu: any, setContextMenu: any) {
+    setContextMenu({
+      ...contextMenu,
+      type: type,
+      isOpen: true,
+      x: e.clientX,
+      y: e.clientY,
+      data: item,
+    });
   }
 
   render() {
+    const { contextMenu, setContextMenu } = this.context;
     // for recently played tracks
     const recentlyPlayedList =
       this.state.recentlyPlayedTracks.length === 0 ? (
@@ -146,7 +157,15 @@ class Discover extends Component<IProps, IState> {
               imageUrl={track.album.images.length > 0 ? track.album.images[0].url : ""}
               title={track.name}
               subtitle={track.album.artists}
-              handleRightClick={this.handleRightClick}
+              handleRightClick={(e) =>
+                this.handleRightClick(
+                  e,
+                  [track.uri + "-1"],
+                  "tracklist-album",
+                  contextMenu,
+                  setContextMenu
+                )
+              }
             />
           );
         })
@@ -169,7 +188,9 @@ class Discover extends Component<IProps, IState> {
               new Date(newReleasedAlbum.release_date).getTime(),
               Date.now()
             )}
-            handleRightClick={this.handleRightClick}
+            handleRightClick={(e) =>
+              this.handleRightClick(e, newReleasedAlbum, "albums", contextMenu, setContextMenu)
+            }
           />
         ))
       );
@@ -187,7 +208,9 @@ class Discover extends Component<IProps, IState> {
                   linkTo={`/artist/${relatedArtist.id}`}
                   imageUrl={relatedArtist.images.length > 0 ? relatedArtist.images[0].url : ""}
                   title={relatedArtist.name}
-                  handleRightClick={this.handleRightClick}
+                  handleRightClick={(e) =>
+                    this.handleRightClick(e, relatedArtist, "", contextMenu, setContextMenu)
+                  }
                   roundCover={true}
                 />
               )
