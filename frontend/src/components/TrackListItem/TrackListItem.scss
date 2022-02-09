@@ -5,11 +5,11 @@
 }
 
 .albumLink {
-  text-decoration: none !important;
+  text-decoration: none;
   color: $color-default;
 
   &:hover {
-    text-decoration: underline !important;
+    text-decoration: underline;
     color: $color-default;
   }
 }
@@ -21,7 +21,7 @@
 .TableRow {
   user-select: none;
 
-  &:hover:not(.Selected):not(.TableHeader) {
+  &:hover:not(.Selected):not(.TableHeader):not(.Playing) {
     background-color: $color-secondary;
   }
 }
@@ -45,7 +45,7 @@
     height: 100%;
     width: 100%;
 
-    text-decoration: none !important;
+    text-decoration: none;
     color: $color-default;
 
     .noTags {
@@ -135,7 +135,6 @@
           width: 200px;
           height: 5px;
           position: relative;
-          //right: 10%;
           overflow: hidden;
           display: inline-block;
 
@@ -171,21 +170,16 @@
   color: $color-primary;
 
   a, button span{
-    // important necessary to overwrite color in playing mode
-    color: $color-primary !important;
+    color: $color-primary;
   }
 
   .checkbox.checked {
     color: $color-default;
   }
-
-  .Tag {
-    color: $color-default !important;
-  }
 }
 
 .Paused {
-  animation: none !important;
+  animation: none;
 }
 
 @keyframes playingColor {
@@ -207,9 +201,6 @@
     color: $color-default;
   }
 
-  .Tag {
-    color: $color-default !important;
-  }
 }
 
 .Tag {
@@ -270,12 +261,8 @@
     }
   }
 
-  .albumLink {
+  .TableRow:not(.Playing) .albumLink {
     color: $color-default-light;
-
-    &:hover {
-      color: $color-default-light;
-    }
   }
 
   .Selected {
@@ -283,10 +270,6 @@
 
     .checkbox.checked {
       color: $color-default-light;
-    }
-
-    .Tag {
-      color: $color-default-light !important;
     }
   }
 
@@ -298,14 +281,12 @@
       color: $color-default-light;
     }
 
-
-    .Tag {
-      color: $color-default-light !important;
+    .albumLink:hover{
+      color: $color-primary;
     }
   }
 
   .EpisodeRow a .noTags .TableCellPlayEpisode {
-    f
     &:hover::before {
       color: rgba($color-default-light, 1.0);
     }
