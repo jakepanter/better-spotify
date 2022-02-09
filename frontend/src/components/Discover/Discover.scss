@@ -8,22 +8,32 @@
   margin-bottom: 2rem;
 
   .CoverList {
-    @function ends-with($string, $find) {
-      @if (str-index($string, $find) == (str-length($string) - str-length($find) + 1)) {
-        @return true;
-      } @else {
-        @return false;
-      }
-    }
-
     a {
-        @media screen and(max-width: 1902px) {
-          &:nth-child(n+6) {
-            display: none;
-          }
+      @media screen and(max-width: 1902px) {
+        &:nth-child(n+6) {
+          display: none;
+        }
+      }
+
+      @media screen and(max-width: 1630px) {
+        &:nth-child(n+5) {
+          display: none;
+        }
+      }
+
+      @media screen and(max-width: 1314px) {
+        &:nth-child(n+4) {
+          display: none;
+        }
+      }
+
+      @media screen and(max-width: 1053px) {
+        &:nth-child(n+3) {
+          display: none;
         }
       }
     }
+  }
 }
 
 
