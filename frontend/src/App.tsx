@@ -29,6 +29,9 @@ import DiscographyPage from "./pages/DiscographyPage/DiscographyPage";
 import ArtistAlbums from "./components/ArtistAlbum/ArtistAlbum";
 import { useSelector, useDispatch } from 'react-redux';
 import { getAuthentication, refreshAuthentication } from './utils/authenticationSlice';
+import {PlaybackState} from "./utils/playbackSlice";
+import {getAuthHeader} from "./helpers/api-helpers";
+import {API_URL} from "./utils/constants";
 
 type AuthState = {
   authentication: {
@@ -50,7 +53,31 @@ function App() {
   });
   const [lightmode, setLightmode] = useState(localStorage.getItem('lightmode') === 'true' ? true : false);
 
-  const toggleLightmode = () => setLightmode(!lightmode);
+  const playback = useSelector((state: PlaybackState) => state.playback);
+  const authentication = useSelector((state: AuthState) => state.authentication)
+  const dispatch = useDispatch()
+
+  const toggleLightmode = () => {
+    let wasPlaying = false;
+    if (!playback.paused) wasPlaying = true;
+    setLightmode(!lightmode);
+    if (wasPlaying) {
+      setTimeout(() => {
+        startPlaying();
+      }, 2000);
+    }
+  };
+
+  const startPlaying = () => {
+    const authHeader = getAuthHeader();
+    fetch(`${API_URL}api/spotify/me/player/play`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authHeader,
+      }
+    })
+  };
 
   useEffect(() => {
     localStorage.setItem('miniMenu', String(miniMenu));
@@ -60,8 +87,6 @@ function App() {
     localStorage.setItem('lightmode', String(lightmode));
   }, [lightmode]);
 
-  const authentication = useSelector((state: AuthState) => state.authentication)
-  const dispatch = useDispatch()
 
   const menuToggle = () => setMiniMenu(!miniMenu);
 
@@ -190,8 +215,8 @@ function App() {
             </Switch>
             <Player token={authentication.accessToken} key={String(lightmode)} lightTheme={lightmode} />
           </div>
-          <NotificationsDisplay/>
         </div>
+        <NotificationsDisplay/>
       </Router>
     </AppContext.Provider>
   );

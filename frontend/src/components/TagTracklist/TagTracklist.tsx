@@ -5,6 +5,7 @@ import {CheckUsersSavedTracksResponse, MultipleTracksResponse, TrackObjectFull} 
 import TrackList from "../TrackList/TrackList";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import { getAuthHeader } from '../../helpers/api-helpers';
+import { Link } from "react-router-dom";
 
 interface IProps {
   id: string;
@@ -86,7 +87,7 @@ function TagTracklist(props: IProps) {
       {headerStyle !== "none" ? (
         headerStyle === "compact" ? (
           <div className={"PlaylistHeader PlaylistHeaderCompact"}>
-            <h2>{tagData.title}</h2>
+            <Link to={'/tag/' + id} className={"PlaylistHeaderLink"}><h2>{tagData.title}</h2></Link>
           </div>
         ) : (
           <div className={"PlaylistHeader PlaylistHeaderFull"}>
