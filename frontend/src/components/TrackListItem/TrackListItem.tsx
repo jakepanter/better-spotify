@@ -92,40 +92,51 @@ function TrackListItem(props: Props) {
     dateStr = date.getDate() + ". " + months[date.getMonth()] + " " + date.getFullYear();
   }
 
-  const sendRequest = useCallback(async () => {
-    // POST request using fetch inside useEffect React hook
-    let context_uri;
-    if (type === "album") {
-      context_uri = "spotify:album:" + id_tracklist;
-    } else if (type == "playlist") {
-      context_uri = "spotify:playlist:" + id_tracklist;
-    } else if (type === "saved") {
-      const userId = await fetchUserId();
-      context_uri = userId + ":collection:";
-    } else if (type === "show") {
-      context_uri = "spotify:show:" + id_tracklist;
-      track_uri = "spotify:episode:" + props.track.id;
-    } else if (type === "search" || type === "topTracks" || type === "tags") {
-      context_uri = "spotify:album:" + track.album?.id;
-    }
-    const body: Body = {
-      context_uri: context_uri,
-      position_ms: 0,
-    };
-    if (type !== "saved") {
-      body.offset = {
-        uri: track_uri,
+  const sendRequest = useCallback(async (reqType: string) => {
+    if (reqType === 'play') {
+      // POST request using fetch inside useEffect React hook
+      let context_uri;
+      if (type === "album") {
+        context_uri = "spotify:album:" + id_tracklist;
+      } else if (type == "playlist") {
+        context_uri = "spotify:playlist:" + id_tracklist;
+      } else if (type === "saved") {
+        const userId = await fetchUserId();
+        context_uri = userId + ":collection:";
+      } else if (type === "show") {
+        context_uri = "spotify:show:" + id_tracklist;
+        track_uri = "spotify:episode:" + props.track.id;
+      } else if (type === "search" || type === "topTracks" || type === "tags") {
+        context_uri = "spotify:album:" + track.album?.id;
+      }
+      const body: Body = {
+        context_uri: context_uri,
+        position_ms: 0,
       };
+      if (type !== "saved") {
+        body.offset = {
+          uri: track_uri,
+        };
+      }
+      const authHeader = getAuthHeader();
+      fetch(`${API_URL}api/spotify/me/player/play`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authHeader,
+        },
+        body: JSON.stringify(body),
+      });
+    } else if (reqType === 'pause') {
+      const authHeader = getAuthHeader();
+      fetch(`${API_URL}api/spotify/me/player/pause`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authHeader,
+        }
+      });
     }
-    const authHeader = getAuthHeader();
-    fetch(`${API_URL}api/spotify/me/player/play`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authHeader,
-      },
-      body: JSON.stringify(body),
-    });
   }, []);
 
   useEffect(() => {
@@ -143,19 +154,20 @@ function TrackListItem(props: Props) {
       } else if (e.ctrlKey) {
         setSpecialKey("ctrl");
       } else if (e.target.className == "TableCellPlayEpisode") {
-        sendRequest();
+        sendRequest('play');
       } else {
         setSpecialKey(null);
       }
       setSelected(!selected);
 
-      if (e.detail === 2) sendRequest();
+      if (e.detail === 2) sendRequest('play');
     }
   };
 
   const handlePlayButton = (e: any) => {
     e.preventDefault();
-    sendRequest();
+    if (playback.currentTrackId === track.track.id && !playback.paused) sendRequest('pause');
+    else sendRequest('play');
   };
 
   const handleRightClick = (e: any) => {

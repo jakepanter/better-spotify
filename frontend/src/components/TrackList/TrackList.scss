@@ -42,6 +42,18 @@
         color: rgba($white, 1);
       }
     }
+
+    &.Playing {
+      .TableCellArtwork::before {
+        content: "\e035";
+      }
+
+      &.Paused {
+        .TableCellArtwork::before {
+          content: "\e038";
+        }
+      }
+    }
   }
 
   .TableHeader {
@@ -61,6 +73,15 @@
 
       &:after {
         background: none;
+      }
+    }
+
+    &Link {
+      color: rgba($color-default, 0.35);
+      text-decoration: none;
+    
+      &:hover {
+        text-decoration: underline;
       }
     }
   }
@@ -188,6 +209,16 @@
   }
 }
 
+.Playing {
+  .TableCellCoverPlaceholder::before {
+    content: "\e035";
+  }
+
+  &.Paused .TableCellCoverPlaceholder::before {
+    content: "\e038";
+  }
+}
+
 .TableCellCoverPlaceholder {
   flex: 0 0 42px;
   width: 42px;
@@ -206,6 +237,7 @@
     pointer-events: none;
     color: rgba($white, 0.45);
   }
+
   // Fix for Placeholder in table
   .CoverPlaceholder {
     display: none;
@@ -237,6 +269,15 @@
       background-color: $white;
       border-bottom: $border-width $border-style transparentize($color-default-light, 0.89);
       color: rgba($color-default-light, 0.65);
+
+      &Link {
+        color: rgba($color-default-light, 0.65);
+        text-decoration: none;
+      
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
   }
 }

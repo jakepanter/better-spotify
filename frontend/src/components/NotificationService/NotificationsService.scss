@@ -6,9 +6,10 @@
   flex-flow: column nowrap;
   left: 0;
   padding: 0 $spacer / 4;
+  pointer-events: none;
   position: fixed;
   width: 320px;
-  z-index: 100;
+  z-index: 1000;
 
   .Notification {
     align-items: center;

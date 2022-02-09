@@ -14,6 +14,7 @@ import useOutsideClick from "../../helpers/useOutsideClick";
 import { useHistory } from "react-router-dom";
 import { DashboardService } from "../Dashboard/Dashboard";
 import { getAuthHeader } from "../../helpers/api-helpers";
+import {NotificationsService} from "../NotificationService/NotificationsService";
 
 type Props = {
   data: PlaylistObjectSimplified;
@@ -100,6 +101,8 @@ function PlaylistsMenu(props: Props) {
       });
       alreadyAddedTracks += 100;
     }
+
+    NotificationsService.push('success', 'Added tracks to other playlist');
   };
 
   const deletePlaylist = async () => {
@@ -110,15 +113,21 @@ function PlaylistsMenu(props: Props) {
     });
     mutate(`${API_URL}api/spotify/playlists`);
     history.push(history.location.pathname, { unfollowed: playlistId });
+
+    NotificationsService.push('success', 'Removed playlist from library');
   };
 
   const toggleStartpage = () => {
     if (isOnStartpage) {
       DashboardService.removePlaylist(props.data.id);
       setIsOnStartpage(false);
+
+      NotificationsService.push('success', 'Added playlist to start page');
     } else {
       DashboardService.addPlaylist(props.data.id);
       setIsOnStartpage(true);
+
+      NotificationsService.push('success', 'Removed playlist from start page');
     }
   };
 

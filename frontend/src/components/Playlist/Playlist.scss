@@ -73,6 +73,15 @@
       width: 30%;
     }
 
+    &Link {
+      color: $color-default;
+      text-decoration: none;
+    
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
     .more-button {
       background: none;
       border: none;
@@ -101,5 +110,13 @@
   }
   .PlaylistHeaderFull .artists-name {
     color: $color-default-light;
+  }
+  .PlaylistHeaderLink {
+    color: $color-default-light;
+    text-decoration: none;
+  
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }

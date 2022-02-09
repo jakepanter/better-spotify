@@ -3,6 +3,7 @@ import "./Playlist.scss";
 import TrackList from "../TrackList/TrackList";
 import {
   CheckUsersSavedTracksResponse,
+  CurrentUsersProfileResponse,
   PlaylistObjectFull,
   PlaylistTrackObject,
   PlaylistTrackResponse,
@@ -11,8 +12,9 @@ import {
 import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import AppContext from "../../AppContext";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { getAuthHeader } from "../../helpers/api-helpers";
+import useSWR from "swr";
 
 // The fetching limit, can be adjusted by changing this value
 const limit = 50;
@@ -38,6 +40,16 @@ export default function Playlist(props: IProps) {
   const [offset, setOffset] = useState<number>(0);
   const state = useContext(AppContext);
   const location = useLocation<any>();
+
+  const authHeader = getAuthHeader();
+  const fetcher = (url: any) =>
+    fetch(url, {
+      headers: { Authorization: authHeader },
+    }).then((r) => r.json());
+  const { data: me, error: meError } = useSWR<CurrentUsersProfileResponse>(
+    `${API_URL}api/spotify/me`,
+    fetcher
+  );
 
   async function fetchPlaylistData() {
     //this only fetches the total number of tracks, cover image and owner of the playlist, not the actual tracks
@@ -171,14 +183,15 @@ export default function Playlist(props: IProps) {
     }
   };
 
-  if (!playlist) return <p>loading...</p>;
+  if (meError) return <p>error</p>;
+  if (!playlist || !me) return <p>loading...</p>;
 
   return (
     <div className={"Playlist"}>
       {headerStyle !== "none" ? (
         headerStyle === "compact" ? (
           <div className={"PlaylistHeader PlaylistHeaderCompact"}>
-            <h2>{playlist.name}</h2>
+            <Link to={'/playlist/' + id} className={"PlaylistHeaderLink"}><h2>{playlist.name}</h2></Link>
           </div>
         ) : (
           <div className={"PlaylistHeader PlaylistHeaderFull"}>
@@ -193,6 +206,7 @@ export default function Playlist(props: IProps) {
               <h4>Playlist</h4>
               <h1>
                 <input
+                  readOnly={playlist.owner.id !== me.id}
                   type="text"
                   maxLength={50}
                   min={1}
