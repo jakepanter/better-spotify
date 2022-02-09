@@ -130,13 +130,24 @@ class Discover extends Component<IProps, IState> {
     console.log("clicky");
   }
 
+  removeDuplicates(tracks: PlayHistoryObject[]): PlayHistoryObject[] {
+    // Credit for removing duplicates: https://dev.to/coachmatt_io/comment/8hdm
+    const seen = new Set();
+    const filteredArr = tracks.filter((el) => {
+      const duplicate = seen.has(el.track.id);
+      seen.add(el.track.id);
+      return !duplicate;
+    });
+    return filteredArr;
+  }
+
   render() {
     // for recently played tracks
     const recentlyPlayedList =
       this.state.recentlyPlayedTracks.length === 0 ? (
         <p>loading...</p>
       ) : (
-        this.state.recentlyPlayedTracks.map((recentlyPlayedTrack) => {
+        this.removeDuplicates(this.state.recentlyPlayedTracks).map((recentlyPlayedTrack) => {
           const track = recentlyPlayedTrack.track as TrackObjectFull;
           return (
             <Card
