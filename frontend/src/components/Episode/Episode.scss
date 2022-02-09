@@ -71,22 +71,12 @@
 }
 
 .EpisodePlaying {
-  .EpisodeControl {
-    .PlayEpisode {
-      &:before {
-        content: "\e035";
-      }
-    }
+  &.EpisodePaused .PlayEpisode::before {
+    content: "\e038";
   }
-}
 
-.EpisodePlaying.EpisodePaused {
-  .EpisodeControl {
-    .PlayEpisode {
-      &:before {
-        content: "\e038";
-      }
-    }
+  .PlayEpisode::before {
+    content: "\e035";
   }
 }
 
@@ -111,7 +101,9 @@
     border-color: $color-accent-light;
   }
 }
+
 .light_mode {
-  .AllEpisodes{
-  color: $color-default-light;}
+  .AllEpisodes {
+    color: $color-default-light;
+  }
 }
