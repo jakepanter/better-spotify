@@ -225,6 +225,8 @@ function TrackListItem(props: Props) {
     history.push(`/artist/${artistId}`);
   };
 
+  const isAvailable = track.album !== undefined && track.album.available_markets !== undefined && track.album.images.length !== 0;
+
   if (!liked && type === "saved") {
     return <div className="hidden"></div>;
   } else {
@@ -283,7 +285,6 @@ function TrackListItem(props: Props) {
           Math.round((props.duration_ms % 60000) / 1000).toString() +
           " sec left";
       }
-
       return (
         <div
           className={`Pointer EpisodeRow ${selected ? "Selected" : ""}
@@ -332,17 +333,17 @@ function TrackListItem(props: Props) {
     } else {
       return (
         <div
-          className={`Pointer TableRow ${track.album !== undefined && track.album.available_markets !== undefined && track.album.images.length !== 0 ? '': 'NotAvailable'} ${selected ? "Selected" : ""}
+          className={`Pointer TableRow ${isAvailable ? '': 'NotAvailable'} ${selected ? "Selected" : ""}
         ${playback.currentTrackId === track.track.id ? "Playing" : ""}
         ${playback.paused ? "Paused" : ""}`}
           onClick={(e) => handleClick(e)}
           onContextMenu={(e) => handleRightClick(e)}
         >
-          {(track.album !== undefined && track.album.available_markets !== undefined && track.album.images.length !== 0) ||
+          {(isAvailable) ||
           (track.album !== undefined && type === "topTracks" && track.album.images.length !== 0) ? (
             <div className={"TableCell TableCellArtwork"} onClick={(e) => handlePlayButton(e)}>
               <img
-                src={track.album.images[2].url}
+                src={track.album?.images[2].url}
                 alt=""
                 style={{ width: "40px", height: "40px" }}
               />
