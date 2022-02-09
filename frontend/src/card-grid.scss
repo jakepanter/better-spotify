@@ -57,3 +57,10 @@
     }
   }
 }
+
+.CoverList.startpageCard {
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  @media screen and(max-width: 1360px) {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}

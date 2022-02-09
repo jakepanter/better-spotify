@@ -78,7 +78,7 @@ export default function Playlists() {
       public: false,
     };
     const newPlaylist: CreatePlaylistResponse = await createNewPlaylist(
-      "coole neue playlist",
+      "new playlist",
       options
     );
     const arr = [newPlaylist, ...items];
@@ -117,6 +117,10 @@ export default function Playlists() {
       })
     );
 
+  const cardOnStartpage = () =>{
+    if(useLocation().pathname === "/") return true;
+  };
+
   return (
     <div className={"Playlists"}>
       <h2 className={"Header"}>
@@ -127,7 +131,7 @@ export default function Playlists() {
         </button>
       </h2>
       <div className={"Content"} onScroll={onScroll}>
-        <div className={"CoverList"}>{myPlaylists}</div>
+        <div className={`CoverList ${cardOnStartpage() ? 'startpageCard' : ''}`}>{myPlaylists}</div>
       </div>
     </div>
   );

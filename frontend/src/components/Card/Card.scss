@@ -83,3 +83,16 @@
     }
   }
 }
+
+.startpageCard .Card {
+  &Title {
+    font-size: 18px;
+  }
+
+  &Subtitle {
+    font-size: 15px;
+  }
+  &Subsubtitle {
+    font-size: 14px;
+  }
+}

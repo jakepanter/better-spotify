@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-import { Link, useHistory } from "react-router-dom";
+import {Link, useHistory, useLocation} from "react-router-dom";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import "./Card.scss";
 import { ArtistObjectSimplified } from "spotify-types";
