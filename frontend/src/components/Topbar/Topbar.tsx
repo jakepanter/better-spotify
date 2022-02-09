@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useLocation} from "react-router-dom";
+import {useHistory, useLocation} from "react-router-dom";
 import "./Topbar.scss";
 import Searchbar from "../Searchbar/Searchbar";
 import 'rc-slider/assets/index.css';
@@ -24,6 +24,8 @@ interface IProps {
 }
 
 const Topbar = (props: IProps) => {
+    let history = useHistory();
+
     const toggleEditable = () => {
         props.onChangeEditable();
     }
@@ -56,6 +58,12 @@ const Topbar = (props: IProps) => {
 
     return (
         <div className={`top-bar ${customizeButton() ? 'customize-start' : ''}`}>
+            <div>
+                <button className={'settings-button'} onClick={history.goBack}>
+                    <span className="material-icons">arrow_back_ios</span>
+                </button>
+                <button onClick={history.goForward}><span className="material-icons">arrow_forward_ios</span></button>
+            </div>
             <div className={'top-bar-item search'} title={"Search for music, podcasts, albums ..."}>
                 <Searchbar/>
             </div>
