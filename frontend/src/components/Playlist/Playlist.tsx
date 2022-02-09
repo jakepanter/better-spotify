@@ -12,7 +12,7 @@ import {
 import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import AppContext from "../../AppContext";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { getAuthHeader } from "../../helpers/api-helpers";
 import useSWR from "swr";
 
@@ -191,7 +191,7 @@ export default function Playlist(props: IProps) {
       {headerStyle !== "none" ? (
         headerStyle === "compact" ? (
           <div className={"PlaylistHeader PlaylistHeaderCompact"}>
-            <h2>{playlist.name}</h2>
+            <Link to={'/playlist/' + id} className={"PlaylistHeaderLink"}><h2>{playlist.name}</h2></Link>
           </div>
         ) : (
           <div className={"PlaylistHeader PlaylistHeaderFull"}>

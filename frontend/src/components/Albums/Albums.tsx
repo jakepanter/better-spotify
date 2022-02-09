@@ -5,6 +5,7 @@ import "./Albums.scss";
 import { getAuthHeader } from "../../helpers/api-helpers";
 import AppContext from "../../AppContext";
 import Card from "../Card/Card";
+import { Link } from "react-router-dom";
 
 export default function Albums() {
   const [albums, setAlbums] = useState<UsersSavedAlbumsResponse>();
@@ -74,7 +75,7 @@ export default function Albums() {
 
   return (
     <div className={"Albums"}>
-      <h2 className={"Header"}>Albums</h2>
+      <h2 className={"Header"}><Link to={'/collections/albums'} className={"AlbumsLink"}>Albums</Link></h2>
       <div className={"Content"} onScroll={onScroll}>
         <div className={"CoverList"}>{savedAlbums}</div>
       </div>

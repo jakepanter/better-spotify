@@ -9,6 +9,7 @@ import TagsSystem from "../../utils/tags-system";
 import { ShowEpisodes } from "../Show/Show";
 import {TagsTrack} from "../TagTracklist/TagTracklist";
 import { SongHistoryTrack } from "../SongHistory/SongHistory";
+import { Link } from "react-router-dom";
 
 type Props =
   | {
@@ -195,9 +196,9 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellArtwork"} />
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
-            <div className={"TableCell TableCellLiked"}>Liked</div>
-            <div className={"TableCell TableCellTags"}>Tags</div>
-            <div className={"TableCell TableCellActions"}>Playlist</div>
+            <div className={"TableCell TableCellLiked"}><Link to={'/me/tracks'} className={"TableHeaderLink"}>Liked</Link></div>
+            <div className={"TableCell TableCellTags"}><Link to={'/settings'} className={"TableHeaderLink"}>Tags</Link></div>
+            <div className={"TableCell TableCellActions"}><Link to={'/playlists'} className={"TableHeaderLink"}>Playlist</Link></div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
@@ -245,12 +246,12 @@ function TrackList(props: Props) {
           <div className={"TableHeader TableRow"}>
             <div className={"TableCell TableCellArtwork"} />
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
-            <div className={"TableCell TableCellAlbum"}>Album</div>
+            <div className={"TableCell TableCellAlbum"}><Link to={'/collections/albums'} className={"TableHeaderLink"}>Album</Link></div>
             <div className={"TableCell TableCellAddedAt"}>Added</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
-            <div className={"TableCell TableCellLiked"}>Liked</div>
-            <div className={"TableCell TableCellTags"}>Tags</div>
-            <div className={"TableCell TableCellActions"}>Playlist</div>
+            <div className={"TableCell TableCellLiked"}><Link to={'/me/tracks'} className={"TableHeaderLink"}>Liked</Link></div>
+            <div className={"TableCell TableCellTags"}><Link to={'/settings'} className={"TableHeaderLink"}>Tags</Link></div>
+            <div className={"TableCell TableCellActions"}><Link to={'/playlists'} className={"TableHeaderLink"}>Playlist</Link></div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
@@ -296,11 +297,11 @@ function TrackList(props: Props) {
           <div className={"TableHeader TableRow"}>
             <div className={"TableCell TableCellArtwork"} />
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
-            <div className={"TableCell TableCellAlbum"}>Album</div>
+            <div className={"TableCell TableCellAlbum"}><Link to={'/collections/albums'} className={"TableHeaderLink"}>Album</Link></div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
-            <div className={"TableCell TableCellLiked"}>Liked</div>
-            <div className={"TableCell TableCellTags"}>Tags</div>
-            <div className={"TableCell TableCellActions"}>Playlist</div>
+            <div className={"TableCell TableCellLiked"}><Link to={'/me/tracks'} className={"TableHeaderLink"}>Liked</Link></div>
+            <div className={"TableCell TableCellTags"}><Link to={'/settings'} className={"TableHeaderLink"}>Tags</Link></div>
+            <div className={"TableCell TableCellActions"}><Link to={'/playlists'} className={"TableHeaderLink"}>Playlist</Link></div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
@@ -344,10 +345,10 @@ function TrackList(props: Props) {
               <div className={"TableHeader TableRow"}>
                 <div className={"TableCell TableCellArtwork"} />
                 <div className={"TableCell TableCellTitleArtist"}>Title</div>
-                <div className={"TableCell TableCellAlbum"}>Album</div>
+                <div className={"TableCell TableCellAlbum"}><Link to={'/collections/albums'} className={"TableHeaderLink"}>Album</Link></div>
                 <div className={"TableCell TableCellDuration"}>Duration</div>
-                <div className={"TableCell TableCellTags"}>Tags</div>
-                <div className={"TableCell TableCellActions"}>Playlist</div>
+                <div className={"TableCell TableCellTags"}><Link to={'/settings'} className={"TableHeaderLink"}>Tags</Link></div>
+                <div className={"TableCell TableCellActions"}><Link to={'/playlists'} className={"TableHeaderLink"}>Playlist</Link></div>
               </div>
               <div className={"TableBody"}>
                 {props.tracks.map((item, index) => {
@@ -389,12 +390,12 @@ function TrackList(props: Props) {
           <div className={"TableHeader TableRow"}>
             <div className={"TableCell TableCellArtwork"} />
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
-            <div className={"TableCell TableCellAlbum"}>Album</div>
+            <div className={"TableCell TableCellAlbum"}><Link to={'/collections/albums'} className={"TableHeaderLink"}>Album</Link></div>
             <div className={"TableCell TableCellAddedAt"}>Added</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
-            <div className={"TableCell TableCellLiked"}>Liked</div>
-            <div className={"TableCell TableCellTags"}>Tags</div>
-            <div className={"TableCell TableCellActions"}>Playlist</div>
+            <div className={"TableCell TableCellLiked"}><Link to={'/me/tracks'} className={"TableHeaderLink"}>Liked</Link></div>
+            <div className={"TableCell TableCellTags"}><Link to={'/settings'} className={"TableHeaderLink"}>Tags</Link></div>
+            <div className={"TableCell TableCellActions"}><Link to={'/playlists'} className={"TableHeaderLink"}>Playlist</Link></div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
@@ -487,10 +488,10 @@ function TrackList(props: Props) {
           <div className={"TableHeader TableRow"}>
             <div className={"TableCell TableCellArtwork"} />
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
-            <div className={"TableCell TableCellAlbum"}>Album</div>
+            <div className={"TableCell TableCellAlbum"}><Link to={'/collections/albums'} className={"TableHeaderLink"}>Album</Link></div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
-            <div className={"TableCell TableCellLiked"}>Liked</div>
-            <div className={"TableCell TableCellTags"}>Tags</div>
+            <div className={"TableCell TableCellLiked"}><Link to={'/me/tracks'} className={"TableHeaderLink"}>Liked</Link></div>
+            <div className={"TableCell TableCellTags"}><Link to={'/settings'} className={"TableHeaderLink"}>Tags</Link></div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((track, index) => {
@@ -537,11 +538,11 @@ function TrackList(props: Props) {
           <div className={"TableHeader TableRow"}>
             <div className={"TableCell TableCellArtwork"} />
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
-            <div className={"TableCell TableCellAlbum"}>Album</div>
+            <div className={"TableCell TableCellAlbum"}><Link to={'/collections/albums'} className={"TableHeaderLink"}>Album</Link></div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
-            <div className={"TableCell TableCellLiked"}>Liked</div>
-            <div className={"TableCell TableCellTags"}>Tags</div>
-            <div className={"TableCell TableCellActions"}>Playlist</div>
+            <div className={"TableCell TableCellLiked"}><Link to={'/me/tracks'} className={"TableHeaderLink"}>Liked</Link></div>
+            <div className={"TableCell TableCellTags"}><Link to={'/settings'} className={"TableHeaderLink"}>Tags</Link></div>
+            <div className={"TableCell TableCellActions"}><Link to={'/playlists'} className={"TableHeaderLink"}>Playlist</Link></div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
