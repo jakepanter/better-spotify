@@ -181,6 +181,9 @@
 
   a, button span{
     color: $color-primary;
+    &:hover{
+      color: $color-primary;
+    }
   }
 
   .checkbox.checked {
