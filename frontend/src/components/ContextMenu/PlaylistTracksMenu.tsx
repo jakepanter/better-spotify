@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { ControlledMenu, MenuDivider, MenuItem, SubMenu, useMenuState } from "@szhsin/react-menu";
 import {
+  CheckUsersSavedTracksResponse,
   CreatePlaylistResponse,
   CurrentUsersProfileResponse,
   ListOfUsersPlaylistsResponse,
@@ -15,6 +16,7 @@ import useOutsideClick from "../../helpers/useOutsideClick";
 import { createNewPlaylist, getAuthHeader } from "../../helpers/api-helpers";
 import { API_URL } from "../../utils/constants";
 import TagsSystem from "../../utils/tags-system";
+import { NotificationsService } from "../NotificationService/NotificationsService";
 
 type Props = {
   data: { tracks: String[]; playlist: PlaylistObjectFull };
@@ -35,6 +37,7 @@ function PlaylistTracksMenu(props: Props) {
     props.data.tracks.map((track) => track.split("-")[0].split(":")[2])[0]
   );
   const [tagsForTrack, setTagsForTrack] = useState<string[]>(TagsSystem.getTagsOfElement(trackId));
+  const [isLiked, setIsLiked] = useState<boolean>(false);
 
   const state = useContext(AppContext);
   const history = useHistory();
@@ -49,6 +52,10 @@ function PlaylistTracksMenu(props: Props) {
   );
   const { data: track, error: trackError } = useSWR<SingleTrackResponse>(
     `${API_URL}api/spotify/track/${trackId}`,
+    fetcher
+  );
+  const { data: liked, error: likedError } = useSWR<CheckUsersSavedTracksResponse>(
+    `${API_URL}api/spotify/me/tracks/contains?trackIds=${trackId}`,
     fetcher
   );
 
@@ -70,7 +77,20 @@ function PlaylistTracksMenu(props: Props) {
     setTrackId(props.data.tracks.map((track) => track.split("-")[0].split(":")[2])[0]);
   }, [props.anchorPoint, props.data]);
 
-  const addToPlaylist = async (playlistId: String) => {
+  useEffect(() => {
+    if (liked !== undefined) {
+      setIsLiked(liked[0]);
+    }
+  }, [liked]);
+
+  // Notifications
+  useEffect(() => {
+    if ([playlistsError, meError, trackError, likedError].some((value) => value !== undefined)) {
+      NotificationsService.push('error', 'Something went wrong while fetching data from the backend');
+    }
+  }, [playlistsError, meError, trackError, likedError]);
+
+  const addToPlaylist = async (playlistId: String, notify: boolean = false) => {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
     //HACKY: because props.tracks contains the trackUniqueId[] we have to remove the -id at the end from each track
     const tracks = props.data.tracks.map((track) => track.split("-")[0]);
@@ -79,6 +99,11 @@ function PlaylistTracksMenu(props: Props) {
       headers: { "Content-Type": "application/json", Authorization: authHeader },
       body: JSON.stringify(tracks),
     });
+    if (notify)
+      NotificationsService.push(
+        "success",
+        `Added track${props.data.tracks.length > 1 ? "s" : ""} to playlist`
+      );
   };
 
   const removeFromPlaylist = async () => {
@@ -94,6 +119,11 @@ function PlaylistTracksMenu(props: Props) {
       body: JSON.stringify(tracks),
     });
     history.push(history.location.pathname, { removed: tracks });
+
+    NotificationsService.push(
+      "success",
+      `Removed track${props.data.tracks.length > 1 ? "s" : ""} from playlist`
+    );
   };
 
   const addToNewPlaylist = async () => {
@@ -111,6 +141,11 @@ function PlaylistTracksMenu(props: Props) {
     await addToPlaylist(newPlaylist.id);
     mutate(`${API_URL}api/spotify/playlists`);
     history.push(`/playlist/${newPlaylist.id}`, { created: newPlaylist.id });
+
+    NotificationsService.push(
+      "success",
+      `Added track${props.data.tracks.length > 1 ? "s" : ""} to new playlist`
+    );
   };
 
   const showAlbum = async () => {
@@ -137,6 +172,34 @@ function PlaylistTracksMenu(props: Props) {
     history.push(`/settings`);
   };
 
+  const handleLikeButton = async () => {
+    if (isLiked) {
+      // remove
+      const authHeader = getAuthHeader();
+      await fetch(`${API_URL}api/spotify/me/tracks/remove?trackIds=${trackId}`, {
+        headers: {
+          'Authorization': authHeader
+        }
+      }).then((res) =>
+        res.json()
+      );
+      setIsLiked(false);
+      NotificationsService.push('success', 'Removed track from saved tracks');
+    } else {
+      // add
+      const authHeader = getAuthHeader();
+      await fetch(`${API_URL}api/spotify/me/tracks/add?trackIds=${trackId}`, {
+        headers: {
+          'Authorization': authHeader
+        }
+      }).then((res) =>
+        res.json()
+      );
+      setIsLiked(true);
+      NotificationsService.push('success', 'Added track to saved tracks');
+    }
+  };
+
   if (playlistsError || meError || trackError) return <p>error</p>;
 
   if (props.data.tracks.length === 1) {
@@ -158,7 +221,7 @@ function PlaylistTracksMenu(props: Props) {
                 <MenuItem
                   key={list.id}
                   onClick={() => {
-                    addToPlaylist(list.id);
+                    addToPlaylist(list.id, true);
                   }}
                 >
                   {list.name}
@@ -199,7 +262,10 @@ function PlaylistTracksMenu(props: Props) {
           <MenuItem onClick={() => showArtist()}>Show Artist</MenuItem>
         )}
         <MenuItem onClick={showAlbum}>Show Album</MenuItem>
-        <MenuItem disabled>Like</MenuItem>
+        <MenuItem disabled={liked === undefined}
+                  onClick={() => handleLikeButton()}>
+          {isLiked ? 'Dislike' : 'Like'}
+        </MenuItem>
       </ControlledMenu>
     );
   } else {
@@ -221,7 +287,7 @@ function PlaylistTracksMenu(props: Props) {
                 <MenuItem
                   key={list.id}
                   onClick={() => {
-                    addToPlaylist(list.id);
+                    addToPlaylist(list.id, true);
                   }}
                 >
                   {list.name}
@@ -234,7 +300,6 @@ function PlaylistTracksMenu(props: Props) {
         {props.data.playlist.owner.id === me?.id && (
           <MenuItem onClick={removeFromPlaylist}>Remove from Playlist</MenuItem>
         )}
-        <MenuItem disabled>Like</MenuItem>
       </ControlledMenu>
     );
   }

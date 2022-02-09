@@ -161,7 +161,7 @@ export default function Album(props: IProps) {
 
   // Fetch more album tracks if necessary
   useEffect(() => {
-    fetchAlbumTrackData(offset);
+    if (album) fetchAlbumTrackData(offset);
   }, [offset]);
 
   if (!album) {

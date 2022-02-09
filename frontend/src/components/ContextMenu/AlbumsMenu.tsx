@@ -14,6 +14,7 @@ import useOutsideClick from "../../helpers/useOutsideClick";
 import { createNewPlaylist, getAuthHeader } from "../../helpers/api-helpers";
 import { useHistory } from "react-router-dom";
 import { DashboardService } from "../Dashboard/Dashboard";
+import {NotificationsService} from "../NotificationService/NotificationsService";
 
 type Props = {
   data: AlbumObjectFull;
@@ -59,15 +60,17 @@ function AlbumsMenu(props: Props) {
     setIsOnStartpage(DashboardService.containsAlbum(props.data.id));
   }, [props.anchorPoint]);
 
-  const addToPlaylist = async (playlistId: String) => {
+  const addToPlaylist = async (playlistId: String, notify: boolean = false) => {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
     const tracks = props.data.tracks.items.map((track) => track.uri);
 
-    fetch(`${API_URL}api/spotify/playlist/${playlistId}/add`, {
+    await fetch(`${API_URL}api/spotify/playlist/${playlistId}/add`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: authHeader },
       body: JSON.stringify(tracks),
     });
+
+    if (notify) NotificationsService.push('success', 'Added tracks to playlist');
   };
 
   const addToNewPlaylist = async () => {
@@ -85,6 +88,8 @@ function AlbumsMenu(props: Props) {
     await addToPlaylist(newPlaylist.id);
     mutate(`${API_URL}api/spotify/playlists`);
     history.push(`/playlist/${newPlaylist.id}`, { created: newPlaylist.id });
+
+    NotificationsService.push('success', 'Added tracks to new playlist');
   };
 
   const toggleStartpage = () => {
@@ -120,7 +125,7 @@ function AlbumsMenu(props: Props) {
               <MenuItem
                 key={list.id}
                 onClick={() => {
-                  addToPlaylist(list.id);
+                  addToPlaylist(list.id, true);
                 }}
               >
                 {list.name}
