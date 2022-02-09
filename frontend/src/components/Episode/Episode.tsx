@@ -5,6 +5,8 @@ import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import "./Episode.scss";
 import { getAuthHeader } from '../../helpers/api-helpers';
+import { useSelector } from "react-redux";
+import {PlaybackState} from "../../utils/playbackSlice";
 
 interface IProps {
   id: string;
@@ -22,6 +24,7 @@ export default function Episode(props: IProps) {
   const { id } = props;
   const [episode, setEpisode] = useState<EpisodeObject>();
   var body: Body;
+  const playback = useSelector((state: PlaybackState) => state.playback);
 
   async function fetchEpisodeData() {
     const authHeader = getAuthHeader();
@@ -47,17 +50,26 @@ export default function Episode(props: IProps) {
     setEpisode(data);
   }
 
-  const sendRequest = useCallback(async () => {
+  const sendRequest = useCallback(async (reqType: string) => {
     const authHeader = getAuthHeader();
-    fetch(`${API_URL}api/spotify/me/player/play`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': authHeader
-      },
-      body: JSON.stringify(body)
-    })
-        .then(response => response.json())
+    if (reqType === 'play') {
+      fetch(`${API_URL}api/spotify/me/player/play`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': authHeader
+        },
+        body: JSON.stringify(body)
+      }).then(response => response.json())
+    } else if (reqType === 'pause') {
+      fetch(`${API_URL}api/spotify/me/player/pause`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': authHeader
+        }
+      })
+    }
   }, []);
 
   useEffect(() => {
@@ -75,7 +87,9 @@ export default function Episode(props: IProps) {
   }
 
   return (
-    <div className={"Playlist"}>
+    <div className={`Playlist
+        ${playback.currentTrackId === episode.id ? "EpisodePlaying" : ""}
+        ${playback.paused ? "EpisodePaused" : ""}`}>
       <div className={"PlaylistHeader PlaylistHeaderFull"}>
         <div className={"PlaylistHeaderCover"}>
           {episode.images !== undefined ? (
@@ -98,7 +112,10 @@ export default function Episode(props: IProps) {
       </div>
       <div>
       <div className="EpisodeControl">
-        <div className={"PlayEpisode"} onClick={() => sendRequest()}/>
+        {playback.currentTrackId === episode.id && !playback.paused
+            ? <div className={"PlayEpisode"} onClick={() => sendRequest('pause')}/>
+            : <div className={"PlayEpisode"} onClick={() => sendRequest('play')}/>
+        }
         <NavLink title={"All Episodes"} className="AllEpisodes button" to={`/show/${episode.show.id}`} exact>
             <span className="left-side-panel--text">All Episodes</span>
         </NavLink>
