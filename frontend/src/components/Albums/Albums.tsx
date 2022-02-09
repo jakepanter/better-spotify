@@ -45,7 +45,7 @@ export default function Albums() {
 
   //fetch next albums when you reach the bottom of the current list
   const onScroll = (e: any) => {
-    const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+    const bottom = Math.abs(e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight) < 2;
     if (bottom && albums && albums.offset < albums.total) {
       const limit = albums.limit;
       const offset = albums.offset + limit;
