@@ -1,3 +1,5 @@
+@import "./src/boilerplate.scss";
+
 .Header {
   align-items: center;
   box-sizing: border-box;
@@ -6,6 +8,7 @@
   justify-content: space-between;
   margin-bottom: 0;
   padding: $spacer / 2;
+
   h2 {
     margin-bottom: 0;
   }
@@ -23,6 +26,10 @@
   grid-template-rows: repeat(auto-fill, 1fr);
   gap: $spacer / 2;
   padding: 0 $spacer / 2;
+
+  @media screen and(max-width: 1360px) {
+    grid-template-columns: repeat(auto-fill, minmax(245px, 1fr));
+  }
 }
 
 .ViewMoreLink {
@@ -41,8 +48,10 @@
   .Header {
     color: $color-default-light;
   }
+
   .ViewMoreLink {
     color: $color-default-light;
+
     &:hover {
       color: $color-primary;
     }

@@ -3,6 +3,7 @@ import {PlaylistTrackResponse, SavedTrackObject} from "spotify-types";
 import {API_URL} from "../../utils/constants";
 import TrackList from "../TrackList/TrackList";
 import { getAuthHeader } from '../../helpers/api-helpers';
+import { Link } from "react-router-dom";
 
 const limit = 50;
 
@@ -53,7 +54,7 @@ export default function SavedTracks(props: IProps) {
             {headerStyle !== "none" ? (
                 headerStyle === "compact" ? (
                     <div className={"PlaylistHeader PlaylistHeaderCompact"}>
-                        <h2>Liked songs</h2>
+                        <Link to={'/me/tracks'} className={"PlaylistHeaderLink"}><h2>Liked songs</h2></Link>
                     </div>
                 ) : (
                     <div className={"PlaylistHeader PlaylistHeaderFull"}>
