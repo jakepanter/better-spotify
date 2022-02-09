@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { API_URL } from "../../utils/constants";
 import "./SearchPage.scss";
 import { Link } from "react-router-dom";
@@ -7,10 +7,12 @@ import { useParams } from "react-router-dom";
 import TrackList from "../TrackList/TrackList";
 import { getAuthHeader } from "../../helpers/api-helpers";
 import Card from "../Card/Card";
+import AppContext from "../../AppContext";
 
 export default function SearchPage() {
   let params = useParams() as { search: string };
   const search = params.search;
+  const state = useContext(AppContext);
 
   const [result, setSearchResult] = useState<SearchResponse>();
   const [tracksSaved, setSaved] = useState<CheckUsersSavedTracksResponse>();
@@ -38,8 +40,31 @@ export default function SearchPage() {
     }
   }
 
-  const handleRightClick = () => {
-    console.log("clicked");
+  const handleRightClick = (e: any, clickedItem: any, type: string) => {
+    switch (type) {
+      case "playlists":
+        state.setContextMenu({
+          ...state.contextMenu,
+          type: type,
+          isOpen: true,
+          x: e.clientX,
+          y: e.clientY,
+          data: clickedItem,
+        });
+        break;
+      case "albums":
+        state.setContextMenu({
+          ...state.contextMenu,
+          type: type,
+          isOpen: true,
+          x: e.clientX,
+          y: e.clientY,
+          data: clickedItem,
+        });
+        break;
+      default:
+        return;
+    }
   };
 
   useEffect(() => {
@@ -58,7 +83,7 @@ export default function SearchPage() {
           linkTo={`/artist/${item.id}`}
           imageUrl={item.images.length > 0 ? item.images[0].url : ""}
           title={item.name}
-          handleRightClick={handleRightClick}
+          handleRightClick={(e) => handleRightClick(e, item, "")}
           roundCover={true}
         />
       );
@@ -95,7 +120,7 @@ export default function SearchPage() {
           imageUrl={item.images.length > 0 ? item.images[0].url : ""}
           title={item.name}
           subtitle={item.artists.map((a) => a.name).join(", ")}
-          handleRightClick={handleRightClick}
+          handleRightClick={(e) => handleRightClick(e, item, "albums")}
         />
       );
     });
@@ -130,7 +155,7 @@ export default function SearchPage() {
           imageUrl={item.images.length > 0 ? item.images[0].url : ""}
           title={item.name}
           subtitle={item.owner.display_name}
-          handleRightClick={handleRightClick}
+          handleRightClick={(e) => handleRightClick(e, item, "playlists")}
         />
       );
     });
@@ -165,7 +190,7 @@ export default function SearchPage() {
           imageUrl={item.images.length > 0 ? item.images[0].url : ""}
           title={item.name}
           subtitle={item.publisher}
-          handleRightClick={handleRightClick}
+          handleRightClick={(e) => handleRightClick(e, item, "")}
         />
       );
     });
@@ -199,7 +224,7 @@ export default function SearchPage() {
           linkTo={`/episode/${item.id}`}
           imageUrl={item.images.length > 0 ? item.images[0].url : ""}
           title={item.name}
-          handleRightClick={handleRightClick}
+          handleRightClick={(e) => handleRightClick(e, item, "")}
         />
       );
     });

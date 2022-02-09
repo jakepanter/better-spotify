@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   AlbumObjectFull,
+  AlbumObjectSimplified,
   CreatePlaylistResponse,
   CurrentUsersProfileResponse,
   ListOfUsersPlaylistsResponse,
@@ -14,10 +15,10 @@ import useOutsideClick from "../../helpers/useOutsideClick";
 import { createNewPlaylist, getAuthHeader } from "../../helpers/api-helpers";
 import { useHistory } from "react-router-dom";
 import { DashboardService } from "../Dashboard/Dashboard";
-import {NotificationsService} from "../NotificationService/NotificationsService";
+import { NotificationsService } from "../NotificationService/NotificationsService";
 
 type Props = {
-  data: AlbumObjectFull;
+  data: AlbumObjectFull | AlbumObjectSimplified;
   anchorPoint: { x: number; y: number };
 };
 
@@ -62,7 +63,15 @@ function AlbumsMenu(props: Props) {
 
   const addToPlaylist = async (playlistId: String, notify: boolean = false) => {
     state.setContextMenu({ ...state.contextMenu, isOpen: false });
-    const tracks = props.data.tracks.items.map((track) => track.uri);
+    let tracks;
+    if ("tracks" in props.data) {
+      tracks = props.data.tracks.items.map((track) => track.uri);
+    } else {
+      const fullAlbum: AlbumObjectFull = await fetcher(
+        `${API_URL}api/spotify/album/${props.data.id}`
+      );
+      tracks = fullAlbum.tracks.items.map((track) => track.uri);
+    }
 
     await fetch(`${API_URL}api/spotify/playlist/${playlistId}/add`, {
       method: "POST",
@@ -70,7 +79,7 @@ function AlbumsMenu(props: Props) {
       body: JSON.stringify(tracks),
     });
 
-    if (notify) NotificationsService.push('success', 'Added tracks to playlist');
+    if (notify) NotificationsService.push("success", "Added tracks to playlist");
   };
 
   const addToNewPlaylist = async () => {
@@ -89,7 +98,7 @@ function AlbumsMenu(props: Props) {
     mutate(`${API_URL}api/spotify/playlists`);
     history.push(`/playlist/${newPlaylist.id}`, { created: newPlaylist.id });
 
-    NotificationsService.push('success', 'Added tracks to new playlist');
+    NotificationsService.push("success", "Added tracks to new playlist");
   };
 
   const toggleStartpage = () => {
