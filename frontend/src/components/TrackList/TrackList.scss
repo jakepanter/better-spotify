@@ -54,6 +54,15 @@
         }
       }
     }
+
+    &.NotAvailable {
+      pointer-events: none;
+      opacity: 0.5;
+
+      >:not(.TableCellTitleArtist):not(.TableCellCoverPlaceholder){
+        display: none;
+      }
+    }
   }
 
   .TableHeader {
