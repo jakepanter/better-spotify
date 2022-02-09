@@ -120,7 +120,6 @@ function AlbumsMenu(props: Props) {
       onClose={() => toggleMenu(false)}
       ref={ref}
     >
-      <MenuItem disabled>Add to Queue</MenuItem>
       <MenuItem onClick={() => toggleStartpage()}>
         {isOnStartpage ? "Remove from Startpage" : "Add to Startpage"}
       </MenuItem>
