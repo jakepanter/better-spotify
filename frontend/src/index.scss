@@ -324,8 +324,8 @@ h6 {
 
     &.active:enabled,
     &:hover:enabled {
-      background: $button-background-active-light;
-      color: $button-color-active-light;
+      background: $color-primary;
+      color: $white;
       border-color: $button-border-color-active-light;
     }
   }
@@ -359,8 +359,8 @@ h6 {
 
     &.active,
     &:hover {
-      background: rgba($button-background-active-light, 0.5);
-      color: $button-color-active-light;
+      background: $color-primary;
+      color: $white;
       border-color: $button-border-color-active-light;
     }
   }
