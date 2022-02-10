@@ -82,7 +82,10 @@ function PlaylistsMenu(props: Props) {
         return (await res.json()) as Promise<PlaylistTrackResponse>;
       });
       tracks = tracks.concat(
-        response.items.filter((item) => item.track).map((item) => item.track.uri)
+        response.items
+          .filter((item) => item.track)
+          .filter((item) => !item.is_local)
+          .map((item) => item.track.uri)
       );
       offset += 50;
     }

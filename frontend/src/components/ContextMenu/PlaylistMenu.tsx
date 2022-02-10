@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   CurrentUsersProfileResponse,
   ListOfUsersPlaylistsResponse,
@@ -75,7 +75,10 @@ function PlaylistMenu(props: Props) {
         return (await res.json()) as Promise<PlaylistTrackResponse>;
       });
       tracks = tracks.concat(
-        response.items.filter((item) => item.track).map((item) => item.track.uri)
+        response.items
+          .filter((item) => item.track)
+          .filter((item) => !item.is_local)
+          .map((item) => item.track.uri)
       );
       offset += 50;
     }
@@ -102,7 +105,7 @@ function PlaylistMenu(props: Props) {
       alreadyAddedTracks += 100;
     }
 
-    NotificationsService.push('success', 'Added tracks to other playlist');
+    NotificationsService.push("success", "Added tracks to other playlist");
   };
 
   const deletePlaylist = async () => {
@@ -115,7 +118,7 @@ function PlaylistMenu(props: Props) {
     mutate(`${API_URL}api/spotify/playlists`);
     history.push("/playlists");
 
-    NotificationsService.push('success', 'Removed playlist from library');
+    NotificationsService.push("success", "Removed playlist from library");
   };
 
   const editDetails = async () => {
