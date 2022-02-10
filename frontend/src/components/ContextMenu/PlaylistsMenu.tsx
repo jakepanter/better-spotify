@@ -137,13 +137,9 @@ function PlaylistsMenu(props: Props) {
     if (isOnStartpage) {
       DashboardService.removePlaylist(props.data.id);
       setIsOnStartpage(false);
-
-      NotificationsService.push("success", "Added playlist to start page");
     } else {
       DashboardService.addPlaylist(props.data.id);
       setIsOnStartpage(true);
-
-      NotificationsService.push("success", "Removed playlist from start page");
     }
   };
 
