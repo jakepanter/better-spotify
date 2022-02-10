@@ -74,7 +74,9 @@ function PlaylistMenu(props: Props) {
       ).then(async (res) => {
         return (await res.json()) as Promise<PlaylistTrackResponse>;
       });
-      tracks = tracks.concat(response.items.map((item) => item.track.uri));
+      tracks = tracks.concat(
+        response.items.filter((item) => item.track).map((item) => item.track.uri)
+      );
       offset += 50;
     }
     return tracks;
