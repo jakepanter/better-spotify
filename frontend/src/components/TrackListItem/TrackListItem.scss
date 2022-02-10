@@ -179,7 +179,7 @@
   animation-iteration-count: infinite;
   color: $color-primary;
 
-  a, button span {
+  .albumLink {
     color: $color-primary;
 
     &:hover {
@@ -187,8 +187,8 @@
     }
   }
 
-  .checkbox.checked {
-    color: $color-default;
+  .checkbox.checked{
+    color:$color-primary;
   }
 
   .Tag {
