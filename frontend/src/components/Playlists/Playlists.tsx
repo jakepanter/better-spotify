@@ -78,7 +78,7 @@ export default function Playlists() {
       public: false,
     };
     const newPlaylist: CreatePlaylistResponse = await createNewPlaylist(
-      "coole neue playlist",
+      "new playlist",
       options
     );
     const arr = [newPlaylist, ...items];

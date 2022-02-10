@@ -1,6 +1,7 @@
 import React from 'react';
 import './AuthorizePage.scss';
 import {API_URL} from "../../utils/constants";
+import { Link } from 'react-router-dom';
 
 
 function authorize() {
@@ -32,8 +33,8 @@ function AuthorizePage() {
                                checked={checked}
                                onChange={handleChange}/>
                         <p>
-                            By registering you agree to the terms and conditions. On the following page you will be informed
-                            about the terms and conditions of spotify*.
+                            By registering you agree to the terms and conditions as well as our <Link to={"/privacypolicy"}>privacy policy</Link>. On the following page you will be informed
+                            about the terms and conditions of spotify.
                         </p>
                     </label>
                 </div>

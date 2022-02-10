@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
 import Albums from "./components/Albums/Albums";
 import Playlists from "./components/Playlists/Playlists";
 import Podcasts from "./components/Podcasts/Podcasts"
@@ -23,7 +23,7 @@ import ShowPage from "./pages/ShowPage/ShowPage";
 import EpisodePage from "./pages/EpisodePage/EpisodePage";
 import AuthorizePage from "./components/AuthorizePage/AuthorizePage";
 import AppContext, { ContextMenu } from "./AppContext";
-import { NotificationsDisplay } from "./components/NotificationService/NotificationsService";
+import {NotificationsDisplay, NotificationsService} from "./components/NotificationService/NotificationsService";
 import ArtistPage from "./pages/ArtistPage/ArtistPage";
 import DiscographyPage from "./pages/DiscographyPage/DiscographyPage";
 import ArtistAlbums from "./components/ArtistAlbum/ArtistAlbum";
@@ -32,6 +32,7 @@ import { getAuthentication, refreshAuthentication } from './utils/authentication
 import {PlaybackState} from "./utils/playbackSlice";
 import {getAuthHeader} from "./helpers/api-helpers";
 import {API_URL} from "./utils/constants";
+import PrivacyPolicy from "./components/AuthorizePage/PrivacyPolicy/PrivacyPolicy";
 
 type AuthState = {
   authentication: {
@@ -76,7 +77,9 @@ function App() {
         "Content-Type": "application/json",
         Authorization: authHeader,
       }
-    })
+    }).then((res) => {
+      if (!res.ok) NotificationsService.push('warning', 'No active playback device found');
+    });
   };
 
   useEffect(() => {
@@ -115,7 +118,17 @@ function App() {
 
   if (!authentication.accessToken || authentication.accessToken === '') {
     return (
-        <AuthorizePage />
+      <Router>
+        <Switch>
+          <Route exact path="/">
+            <AuthorizePage />
+          </Route>
+          <Route path="/privacypolicy">
+            <PrivacyPolicy/>
+          </Route>
+          <Route render={() => <Redirect to="/" />} />
+        </Switch>
+      </Router>
     );
   }
 
