@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ListOfNewReleasesResponse, AlbumObjectSimplified } from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import "./Releases.scss";
 import { formatTimeDiff } from "../../utils/functions";
 import { getAuthHeader } from "../../helpers/api-helpers";
 import Card from "../Card/Card";
+import AppContext from "../../AppContext";
 
 const limit = 24;
 
@@ -14,6 +15,7 @@ export default function Releases() {
   // The list of releases (albums)
   const [albums, setAlbums] = useState<AlbumObjectSimplified[]>([]);
   const [offset, setOffset] = useState<number>(0);
+  const state = useContext(AppContext);
 
   // Fetch more album tracks if necessary
   useEffect(() => {
@@ -38,8 +40,15 @@ export default function Releases() {
     setAlbums(arr);
   }
 
-  const handleRightClick = () => {
-    console.log("clicked");
+  const handleRightClick = (e: any, clickedItem: any) => {
+    state.setContextMenu({
+      ...state.contextMenu,
+      type: "albums",
+      isOpen: true,
+      x: e.clientX,
+      y: e.clientY,
+      data: clickedItem,
+    });
   };
 
   //fetch next albums when you reach the bottom of the current list
@@ -60,7 +69,7 @@ export default function Releases() {
         return (
           <Card
             key={album.id}
-            item={album.id}
+            item={album}
             linkTo={`/album/${album.id}`}
             imageUrl={album.images.length > 0 ? album.images[0].url : ""}
             title={album.name}

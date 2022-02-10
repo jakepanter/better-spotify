@@ -242,6 +242,27 @@ export default class SpotifyService {
     }
   }
 
+  isAlbumSaved = async (accessToken: string, albumIds: string[]) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    const data = await this.spotifyApi.containsMySavedAlbums(albumIds);
+    this.spotifyApi.resetAccessToken();
+    return data.body;
+  }
+
+  addToSavedAlbums = async (accessToken: string, albumIds: string[]) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    const data = await this.spotifyApi.addToMySavedAlbums(albumIds);
+    this.spotifyApi.resetAccessToken();
+    return data.body;
+  };
+
+  removeFromSavedAlbums = async (accessToken: string, albumIds: string[]) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    const data = await this.spotifyApi.removeFromMySavedAlbums(albumIds);
+    this.spotifyApi.resetAccessToken();
+    return data.body;
+  };
+
   isSaved = async (accessToken: string, trackIds: string[]) => {
     try {
       this.spotifyApi.setAccessToken(accessToken);
@@ -602,6 +623,13 @@ export default class SpotifyService {
   play = async (accessToken: string, options: PlayOptions) => {
     try {
       this.spotifyApi.setAccessToken(accessToken);
+      // Check if a device is available
+      const { body } = await this.spotifyApi.getMyDevices();
+      if (body.devices.length === 0
+        || !body.devices.some((device) => device.is_active)) {
+        this.spotifyApi.resetAccessToken();
+        return false;
+      }
       this.spotifyApi.play(options);
       this.spotifyApi.resetAccessToken();
       return true;

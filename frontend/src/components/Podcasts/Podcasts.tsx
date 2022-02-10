@@ -26,7 +26,7 @@ class Podcasts extends Component<IProps, IState> {
   }
 
   handleRightClick() {
-    console.log("clicked");
+    //TODO?
   }
 
   async componentDidMount() {

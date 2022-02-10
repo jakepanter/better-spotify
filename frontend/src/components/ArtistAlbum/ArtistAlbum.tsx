@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AlbumObjectSimplified, ArtistsAlbumsResponse } from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import { useParams } from "react-router-dom";
 import { getAuthHeader } from "../../helpers/api-helpers";
 import Card from "../Card/Card";
 import "./ArtistAlbum.scss";
+import AppContext from "../../AppContext";
 
 let header: string = "Albums";
 
@@ -12,6 +13,7 @@ export default function ArtistAlbums() {
   let params = useParams() as { id: string; type?: string };
   const id = params.id;
   const type = params.type;
+  const state = useContext(AppContext);
 
   // for displaying correct header on the page
   if (type === "album") {
@@ -55,14 +57,21 @@ export default function ArtistAlbums() {
     }
   };
 
-  const handleRightClick = () => {
-    console.log("yee");
+  const handleRightClick = (e: any, album: AlbumObjectSimplified) => {
+    state.setContextMenu({
+      ...state.contextMenu,
+      type: "albums",
+      isOpen: true,
+      x: e.clientX,
+      y: e.clientY,
+      data: album,
+    });
   };
 
   const allAlbums = albumItems.map((album, index) => (
     <Card
       key={album.id + index}
-      item={album.id}
+      item={album}
       linkTo={`/album/${album.id}`}
       imageUrl={album.images.length > 0 ? album.images[0].url : ""}
       title={album.name}

@@ -210,7 +210,6 @@ function PlaylistTracksMenu(props: Props) {
         onClose={() => toggleMenu(false)}
         ref={ref}
       >
-        <MenuItem disabled>Add to Queue</MenuItem>
         <SubMenu label={"Add to Playlist"}>
           <MenuItem onClick={addToNewPlaylist}>Add to new Playlist</MenuItem>
           <MenuDivider />
@@ -276,7 +275,6 @@ function PlaylistTracksMenu(props: Props) {
         onClose={() => toggleMenu(false)}
         ref={ref}
       >
-        <MenuItem disabled>Add to Queue</MenuItem>
         <SubMenu label={"Add to Playlist"}>
           <MenuItem onClick={addToNewPlaylist}>Add to new Playlist</MenuItem>
           <MenuDivider />

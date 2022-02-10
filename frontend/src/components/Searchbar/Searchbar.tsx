@@ -6,6 +6,7 @@ import { getAuthHeader } from "../../helpers/api-helpers";
 import { TrackObjectFull } from "spotify-types";
 import useOutsideClick from "../../helpers/useOutsideClick";
 import { useHistory } from "react-router-dom";
+import {NotificationsService} from "../NotificationService/NotificationsService";
 
 type Body = {
   context_uri: string | undefined;
@@ -88,7 +89,9 @@ function Searchbar() {
         Authorization: authHeader,
       },
       body: JSON.stringify(body),
-    }).then((response) => response.json());
+    }).then((res) => {
+      if (!res.ok) NotificationsService.push('warning', 'No active playback device found');
+    });
   };
 
   const autofill = result.map((track) => (
