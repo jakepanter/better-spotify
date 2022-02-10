@@ -98,7 +98,12 @@ function PlaylistsMenu(props: Props) {
       ).then(async (res) => {
         return (await res.json()) as Promise<PlaylistTrackResponse>;
       });
-      tracks = tracks.concat(response.items.map((item) => item.track.uri));
+      tracks = tracks.concat(
+        response.items
+          .filter((item) => item.track)
+          .filter((item) => !item.is_local)
+          .map((item) => item.track.uri)
+      );
       offset += 50;
     }
     return tracks;
@@ -196,7 +201,7 @@ function PlaylistsMenu(props: Props) {
       <MenuItem onClick={() => toggleStartpage()}>
         {isOnStartpage ? "Remove from Startpage" : "Add to Startpage"}
       </MenuItem>
-      <SubMenu label={"Add to Playlist"}>
+      <SubMenu label={"Add to Playlist"} disabled={props.data.tracks.total === 0}>
         <MenuItem onClick={addToNewPlaylist}>Add to new Playlist</MenuItem>
         <MenuDivider />
         {playlists && me ? (

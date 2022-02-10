@@ -94,7 +94,12 @@ function PlaylistMenu(props: Props) {
       ).then(async (res) => {
         return (await res.json()) as Promise<PlaylistTrackResponse>;
       });
-      tracks = tracks.concat(response.items.map((item) => item.track.uri));
+      tracks = tracks.concat(
+        response.items
+          .filter((item) => item.track)
+          .filter((item) => !item.is_local)
+          .map((item) => item.track.uri)
+      );
       offset += 50;
     }
     return tracks;
@@ -125,8 +130,8 @@ function PlaylistMenu(props: Props) {
 
   const handleFollowButton = async () => {
     const playlistId = props.data.id;
+    const authHeader = getAuthHeader();
     if (following) {
-      const authHeader = getAuthHeader();
       await fetch(`${API_URL}api/spotify/playlist/${playlistId}/unfollow`, {
         headers: { Authorization: authHeader },
       });
@@ -137,7 +142,6 @@ function PlaylistMenu(props: Props) {
       }
       NotificationsService.push("success", "Removed playlist from library");
     } else {
-      const authHeader = getAuthHeader();
       await fetch(`${API_URL}api/spotify/playlist/${playlistId}/follow`, {
         headers: { Authorization: authHeader },
       });
@@ -180,7 +184,7 @@ function PlaylistMenu(props: Props) {
       <MenuItem onClick={() => toggleStartpage()}>
         {isOnStartpage ? "Remove from Startpage" : "Add to Startpage"}
       </MenuItem>
-      <SubMenu label={"Add to Playlist"}>
+      <SubMenu label={"Add to Playlist"} disabled={props.data.tracks.total === 0}>
         {playlists && me ? (
           playlists.items
             .filter((list) => list.owner.id === me.id)
