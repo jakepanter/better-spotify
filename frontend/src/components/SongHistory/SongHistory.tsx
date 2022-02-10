@@ -40,14 +40,24 @@ export default function SongHistory() {
     );
     // Save recently played tracks as SongHistoryTrack-objects
     const fetchedTracks = recentPlayedTracksData.items as SongHistoryTrack[];
-    setRecentlyPlayedTracks((oldTracks) => [
-      ...oldTracks,
+
+    // Credit for removing duplicates: https://dev.to/coachmatt_io/comment/8hdm
+    const seen = new Set();
+    const arr = [
+      ...recentPlayedTracks,
       // Check if track is saved or not and set is_saved-property
       ...fetchedTracks.map((t, i) => {
         t.is_saved = saved[i];
         return t;
       }),
-    ]);
+    ];
+    const filteredArr = arr.filter((el) => {
+      const duplicate = seen.has(el.track.id);
+      seen.add(el.track.id);
+      return !duplicate;
+    });
+
+    setRecentlyPlayedTracks(filteredArr);
   }
 
   async function fetchIsSavedData(trackIds: string[]) {

@@ -5,6 +5,39 @@
   flex-flow: column nowrap;
   overflow: hidden;
   margin-bottom: 2rem;
+
+  .CoverList {
+    a {
+      @media screen and(min-width: 1903px) {
+        &:nth-child(n+7) {
+          display: none;
+        }
+      }
+      @media screen and(max-width: 1902px) {
+        &:nth-child(n+6) {
+          display: none;
+        }
+      }
+
+      @media screen and(max-width: 1630px) {
+        &:nth-child(n+5) {
+          display: none;
+        }
+      }
+
+      @media screen and(max-width: 1314px) {
+        &:nth-child(n+4) {
+          display: none;
+        }
+      }
+
+      @media screen and(max-width: 1053px) {
+        &:nth-child(n+3) {
+          display: none;
+        }
+      }
+    }
+  }
 }
 
 // kann vielleicht nochmal genutzt werden?

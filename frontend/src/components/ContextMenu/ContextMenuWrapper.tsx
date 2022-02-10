@@ -39,6 +39,8 @@ function ContextMenuWrapper(props: MenuProps) {
     return <TracksMenu data={props.data} anchorPoint={anchorPoint} />;
   else if (props.type === "tracklist-search")
     return <TracksMenu data={props.data} anchorPoint={anchorPoint} />;
+  else if (props.type === "tracklist-topTracks")
+    return <TracksMenu data={props.data} anchorPoint={anchorPoint} />;
   else if (props.type === "tracklist-songhistory")
     return <TracksMenu data={props.data} anchorPoint={anchorPoint} />;
   else if (props.type === "addToPlaylist")

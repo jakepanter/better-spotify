@@ -14,6 +14,7 @@ import "./Artist.scss";
 import TrackList from "../TrackList/TrackList";
 import { getAuthHeader } from "../../helpers/api-helpers";
 import Card from "../Card/Card";
+import AppContext from "../../AppContext";
 
 //limit is the number of items which shall be fetched
 //it also defines the number of artists in more like 'artist"
@@ -35,6 +36,8 @@ interface IState {
 }
 
 class Artist extends Component<IProps, IState> {
+  static contextType = AppContext;
+
   constructor(props: IProps) {
     super(props);
     this.state = {
@@ -142,12 +145,20 @@ class Artist extends Component<IProps, IState> {
     this.setState({ filter: value });
   }
 
-  handleRightClick(e: any, item: any) {
-    console.log(e, item);
-    console.log("rightclicked");
+  handleRightClick(e: any, item: any, type: string, contextMenu: any, setContextMenu: any) {
+    setContextMenu({
+      ...contextMenu,
+      type: type,
+      isOpen: true,
+      x: e.clientX,
+      y: e.clientY,
+      data: item,
+    });
   }
 
   render() {
+    const { contextMenu, setContextMenu } = this.context;
+
     const artist =
       Object.keys(this.state.artist).length === 0 ? (
         <p>loading...</p>
@@ -174,7 +185,9 @@ class Artist extends Component<IProps, IState> {
         imageUrl={album.images.length > 0 ? album.images[0].url : ""}
         title={album.name}
         subtitle={album.artists}
-        handleRightClick={this.handleRightClick}
+        handleRightClick={(e) =>
+          this.handleRightClick(e, album, "albums", contextMenu, setContextMenu)
+        }
       />
     ));
 
@@ -187,7 +200,9 @@ class Artist extends Component<IProps, IState> {
         imageUrl={single.images.length > 0 ? single.images[0].url : ""}
         title={single.name}
         subtitle={single.artists}
-        handleRightClick={this.handleRightClick}
+        handleRightClick={(e) =>
+          this.handleRightClick(e, single, "albums", contextMenu, setContextMenu)
+        }
       />
     ));
 
@@ -200,7 +215,9 @@ class Artist extends Component<IProps, IState> {
         imageUrl={album.images.length > 0 ? album.images[0].url : ""}
         title={album.name}
         subtitle={album.artists}
-        handleRightClick={this.handleRightClick}
+        handleRightClick={(e) =>
+          this.handleRightClick(e, album, "albums", contextMenu, setContextMenu)
+        }
       />
     ));
 
@@ -213,7 +230,9 @@ class Artist extends Component<IProps, IState> {
         imageUrl={compilation.images.length > 0 ? compilation.images[0].url : ""}
         title={compilation.name}
         subtitle={compilation.artists}
-        handleRightClick={this.handleRightClick}
+        handleRightClick={(e) =>
+          this.handleRightClick(e, compilation, "albums", contextMenu, setContextMenu)
+        }
       />
     ));
 
@@ -225,7 +244,9 @@ class Artist extends Component<IProps, IState> {
         linkTo={`/artist/${relatedArtist.id}`}
         imageUrl={relatedArtist.images.length > 0 ? relatedArtist.images[0].url : ""}
         title={relatedArtist.name}
-        handleRightClick={this.handleRightClick}
+        handleRightClick={(e) =>
+          this.handleRightClick(e, relatedArtist, "", contextMenu, setContextMenu)
+        }
         roundCover={true}
       />
     ));

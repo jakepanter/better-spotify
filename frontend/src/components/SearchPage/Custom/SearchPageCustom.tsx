@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { API_URL } from "../../../utils/constants";
 import { CheckUsersSavedTracksResponse, SearchResponse } from "spotify-types";
 import { useParams } from "react-router-dom";
@@ -6,6 +6,7 @@ import TrackList from "../../TrackList/TrackList";
 import { getAuthHeader } from "../../../helpers/api-helpers";
 import Card from "../../Card/Card";
 import "./SearchPageCustom.scss";
+import AppContext from "../../../AppContext";
 
 export default function SearchPageCustom() {
   let params = useParams() as { type: string; search: string };
@@ -13,6 +14,7 @@ export default function SearchPageCustom() {
   const type = params.type;
   const [result, setSearchResult] = useState<SearchResponse>();
   const [tracksSaved, setSaved] = useState<CheckUsersSavedTracksResponse>();
+  const state = useContext(AppContext);
 
   async function fetchSearchResult() {
     const authHeader = getAuthHeader();
@@ -40,8 +42,31 @@ export default function SearchPageCustom() {
     }
   }
 
-  const handleRightClick = () => {
-    console.log("clicked");
+  const handleRightClick = (e: any, clickedItem: any, type: string) => {
+    switch (type) {
+      case "playlists":
+        state.setContextMenu({
+          ...state.contextMenu,
+          type: type,
+          isOpen: true,
+          x: e.clientX,
+          y: e.clientY,
+          data: clickedItem,
+        });
+        break;
+      case "albums":
+        state.setContextMenu({
+          ...state.contextMenu,
+          type: type,
+          isOpen: true,
+          x: e.clientX,
+          y: e.clientY,
+          data: clickedItem,
+        });
+        break;
+      default:
+        return;
+    }
   };
 
   useEffect(() => {
@@ -82,7 +107,7 @@ export default function SearchPageCustom() {
           imageUrl={item.images.length > 0 ? item.images[0].url : ""}
           title={item.name}
           subtitle={item.artists.map((a) => a.name).join(", ")}
-          handleRightClick={handleRightClick}
+          handleRightClick={(e) => handleRightClick(e, item, "albums")}
         />
       );
     });
@@ -107,7 +132,7 @@ export default function SearchPageCustom() {
           imageUrl={item.images.length > 0 ? item.images[0].url : ""}
           title={item.name}
           subtitle={item.owner.display_name}
-          handleRightClick={handleRightClick}
+          handleRightClick={(e) => handleRightClick(e, item, "playlists")}
         />
       );
     });
@@ -131,7 +156,7 @@ export default function SearchPageCustom() {
           linkTo={`/artist/${item.id}`}
           imageUrl={item.images.length > 0 ? item.images[0].url : ""}
           title={item.name}
-          handleRightClick={handleRightClick}
+          handleRightClick={(e) => handleRightClick(e, item, "")}
           roundCover={true}
         />
       );
@@ -157,7 +182,7 @@ export default function SearchPageCustom() {
           imageUrl={item.images.length > 0 ? item.images[0].url : ""}
           title={item.name}
           subtitle={item.publisher}
-          handleRightClick={handleRightClick}
+          handleRightClick={(e) => handleRightClick(e, item, "")}
         />
       );
     });
@@ -181,7 +206,7 @@ export default function SearchPageCustom() {
           linkTo={`/episode/${item.id}`}
           imageUrl={item.images.length > 0 ? item.images[0].url : ""}
           title={item.name}
-          handleRightClick={handleRightClick}
+          handleRightClick={(e) => handleRightClick(e, item, "")}
         />
       );
     });
