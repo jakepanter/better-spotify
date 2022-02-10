@@ -174,7 +174,7 @@ function PlaylistsMenu(props: Props) {
       <MenuItem onClick={() => toggleStartpage()}>
         {isOnStartpage ? "Remove from Startpage" : "Add to Startpage"}
       </MenuItem>
-      <SubMenu label={"Add to Playlist"}>
+      <SubMenu label={"Add to Playlist"} disabled={props.data.tracks.total === 0}>
         <MenuItem onClick={addToNewPlaylist}>Add to new Playlist</MenuItem>
         <MenuDivider />
         {playlists && me ? (
