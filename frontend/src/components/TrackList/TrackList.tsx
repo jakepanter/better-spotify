@@ -1,16 +1,21 @@
 import "./TrackList.scss";
 import React, { useContext, useEffect, useState, useRef } from "react";
-import { EpisodeObjectFull, PlaylistObjectFull, SavedTrackObject, TrackObjectFull } from "spotify-types";
+import {
+  EpisodeObjectFull,
+  PlaylistObjectFull,
+  SavedTrackObject,
+  TrackObjectFull,
+} from "spotify-types";
 import { AlbumTrack } from "../Album/Album";
 import { PlaylistTrack } from "../Playlist/Playlist";
 import TrackListItem from "../TrackListItem/TrackListItem";
 import AppContext from "../../AppContext";
 import TagsSystem from "../../utils/tags-system";
 import { ShowEpisodes } from "../Show/Show";
-import {TagsTrack} from "../TagTracklist/TagTracklist";
+import { TagsTrack } from "../TagTracklist/TagTracklist";
 import { SongHistoryTrack } from "../SongHistory/SongHistory";
 import { Link } from "react-router-dom";
-import {TopTrack} from "../Artist/Artist";
+import { TopTrack } from "../Artist/Artist";
 
 type Props =
   | {
@@ -35,7 +40,7 @@ type Props =
       fullyLoaded: boolean;
       id_tracklist: string;
     }
-    | {
+  | {
       type: "show";
       tracks: ShowEpisodes[];
       loadMoreCallback: () => void;
@@ -64,13 +69,14 @@ type Props =
       loadMoreCallback: () => void;
       fullyLoaded: boolean;
       id_tracklist: string;
-    }| {
-  type: "topTracks";
-  tracks: TopTrack[];
-  loadMoreCallback: () => void;
-  fullyLoaded: boolean;
-  id_tracklist: string;
-};
+    }
+  | {
+      type: "topTracks";
+      tracks: TopTrack[];
+      loadMoreCallback: () => void;
+      fullyLoaded: boolean;
+      id_tracklist: string;
+    };
 
 function scrollHandler(e: React.UIEvent<HTMLDivElement>, loadMoreCallback: () => void) {
   if (e.currentTarget.scrollTop + e.currentTarget.clientHeight >= e.currentTarget.scrollHeight) {
@@ -167,7 +173,10 @@ function TrackList(props: Props) {
     setSelected(arr);
   };
 
-  const isTrackSelected = (track: TrackObjectFull | AlbumTrack | EpisodeObjectFull, index: number) => {
+  const isTrackSelected = (
+    track: TrackObjectFull | AlbumTrack | EpisodeObjectFull,
+    index: number
+  ) => {
     const trackUniqueId = `${track.uri}-${index}`;
     return selectedTracks.some((track) => track === trackUniqueId);
   };
@@ -187,6 +196,7 @@ function TrackList(props: Props) {
 
   return (
     <>
+      {/* ----- ALBUM ----- */}
       {type === "album" && (
         <div
           className={`Tracklist ${sizeClass}`}
@@ -197,9 +207,21 @@ function TrackList(props: Props) {
             <div className={"TableCell TableCellArtwork"} />
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
-            <div className={"TableCell TableCellLiked"}><Link to={'/me/tracks'} className={"TableHeaderLink"}>Liked</Link></div>
-            <div className={"TableCell TableCellTags"}><Link to={'/settings'} className={"TableHeaderLink"}>Tags</Link></div>
-            <div className={"TableCell TableCellActions"}><Link to={'/playlists'} className={"TableHeaderLink"}>Playlist</Link></div>
+            <div className={"TableCell TableCellLiked"}>
+              <Link to={"/me/tracks"} className={"TableHeaderLink"}>
+                Liked
+              </Link>
+            </div>
+            <div className={"TableCell TableCellTags"}>
+              <Link to={"/settings"} className={"TableHeaderLink"}>
+                Tags
+              </Link>
+            </div>
+            <div className={"TableCell TableCellActions"}>
+              <Link to={"/playlists"} className={"TableHeaderLink"}>
+                Playlist
+              </Link>
+            </div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
@@ -238,6 +260,7 @@ function TrackList(props: Props) {
         </div>
       )}
 
+      {/* ----- PLAYLIST ----- */}
       {type === "playlist" && (
         <div
           className={`Tracklist ${sizeClass}`}
@@ -247,16 +270,33 @@ function TrackList(props: Props) {
           <div className={"TableHeader TableRow"}>
             <div className={"TableCell TableCellArtwork"} />
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
-            <div className={"TableCell TableCellAlbum"}><Link to={'/collections/albums'} className={"TableHeaderLink"}>Album</Link></div>
+            <div className={"TableCell TableCellAlbum"}>
+              <Link to={"/collections/albums"} className={"TableHeaderLink"}>
+                Album
+              </Link>
+            </div>
             <div className={"TableCell TableCellAddedAt"}>Added</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
-            <div className={"TableCell TableCellLiked"}><Link to={'/me/tracks'} className={"TableHeaderLink"}>Liked</Link></div>
-            <div className={"TableCell TableCellTags"}><Link to={'/settings'} className={"TableHeaderLink"}>Tags</Link></div>
-            <div className={"TableCell TableCellActions"}><Link to={'/playlists'} className={"TableHeaderLink"}>Playlist</Link></div>
+            <div className={"TableCell TableCellLiked"}>
+              <Link to={"/me/tracks"} className={"TableHeaderLink"}>
+                Liked
+              </Link>
+            </div>
+            <div className={"TableCell TableCellTags"}>
+              <Link to={"/settings"} className={"TableHeaderLink"}>
+                Tags
+              </Link>
+            </div>
+            <div className={"TableCell TableCellActions"}>
+              <Link to={"/playlists"} className={"TableHeaderLink"}>
+                Playlist
+              </Link>
+            </div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
-              const { track } = item;
+              const { track }: any = item;
+              if (!track) return;
               const tagList =
                 TagsSystem.getTagsOfElement(track.id).map((id) => ({
                   id,
@@ -279,6 +319,7 @@ function TrackList(props: Props) {
                   id_tracklist={id_tracklist}
                   type={type}
                   tags={tagList}
+                  episode={track.type == "episode"}
                 />
               );
             })}
@@ -293,16 +334,33 @@ function TrackList(props: Props) {
         </div>
       )}
 
+      {/* ----- SEARCH ----- */}
       {type === "search" && (
         <div className={`Tracklist ${sizeClass}`} ref={container}>
           <div className={"TableHeader TableRow"}>
             <div className={"TableCell TableCellArtwork"} />
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
-            <div className={"TableCell TableCellAlbum"}><Link to={'/collections/albums'} className={"TableHeaderLink"}>Album</Link></div>
+            <div className={"TableCell TableCellAlbum"}>
+              <Link to={"/collections/albums"} className={"TableHeaderLink"}>
+                Album
+              </Link>
+            </div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
-            <div className={"TableCell TableCellLiked"}><Link to={'/me/tracks'} className={"TableHeaderLink"}>Liked</Link></div>
-            <div className={"TableCell TableCellTags"}><Link to={'/settings'} className={"TableHeaderLink"}>Tags</Link></div>
-            <div className={"TableCell TableCellActions"}><Link to={'/playlists'} className={"TableHeaderLink"}>Playlist</Link></div>
+            <div className={"TableCell TableCellLiked"}>
+              <Link to={"/me/tracks"} className={"TableHeaderLink"}>
+                Liked
+              </Link>
+            </div>
+            <div className={"TableCell TableCellTags"}>
+              <Link to={"/settings"} className={"TableHeaderLink"}>
+                Tags
+              </Link>
+            </div>
+            <div className={"TableCell TableCellActions"}>
+              <Link to={"/playlists"} className={"TableHeaderLink"}>
+                Playlist
+              </Link>
+            </div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
@@ -340,50 +398,73 @@ function TrackList(props: Props) {
           </div>
         </div>
       )}
-      {
-        type === "topTracks" && (
-            <div className={`Tracklist ${sizeClass}`} ref={container}>
-              <div className={"TableHeader TableRow"}>
-                <div className={"TableCell TableCellArtwork"} />
-                <div className={"TableCell TableCellTitleArtist"}>Title</div>
-                <div className={"TableCell TableCellAlbum"}><Link to={'/collections/albums'} className={"TableHeaderLink"}>Album</Link></div>
-                <div className={"TableCell TableCellDuration"}>Duration</div>
-                <div className={"TableCell TableCellLiked"}><Link to={'/me/tracks'} className={"TableHeaderLink"}>Liked</Link></div>
-                <div className={"TableCell TableCellTags"}><Link to={'/settings'} className={"TableHeaderLink"}>Tags</Link></div>
-                <div className={"TableCell TableCellActions"}><Link to={'/playlists'} className={"TableHeaderLink"}>Playlist</Link></div>
-              </div>
-              <div className={"TableBody"}>
-                {props.tracks.map((item, index) => {
-                  const tagList = TagsSystem.getTagsOfElement(item.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
-                  return (
-                        <TrackListItem
-                            track={item}
-                            name={item.name}
-                            artists={item.artists}
-                            duration_ms={item.duration_ms}
-                            album={item.album}
-                            key={type + "-track-" + item.id + "-" + index}
-                            liked={item.is_saved}
-                            listIndex={index}
-                            selected={isTrackSelected(item, index)}
-                            onSelectionChange={handleSelectionChange}
-                            onContextMenuOpen={handleContextMenuOpen}
-                            id_tracklist={''}
-                            type={type}
-                            tags={tagList}
-                        />
-                  );
-                })}
-                {!fullyLoaded ? (
-                    <div className={"PlaylistLoader"}>
-                      <div className={"loader"} />
-                    </div>
-                ) : (
-                    <></>
-                )}
-              </div>
+
+      {/* ----- TOP TRACKS ----- */}
+      {type === "topTracks" && (
+        <div className={`Tracklist ${sizeClass}`} ref={container}>
+          <div className={"TableHeader TableRow"}>
+            <div className={"TableCell TableCellArtwork"} />
+            <div className={"TableCell TableCellTitleArtist"}>Title</div>
+            <div className={"TableCell TableCellAlbum"}>
+              <Link to={"/collections/albums"} className={"TableHeaderLink"}>
+                Album
+              </Link>
             </div>
-        )}
+            <div className={"TableCell TableCellDuration"}>Duration</div>
+            <div className={"TableCell TableCellLiked"}>
+              <Link to={"/me/tracks"} className={"TableHeaderLink"}>
+                Liked
+              </Link>
+            </div>
+            <div className={"TableCell TableCellTags"}>
+              <Link to={"/settings"} className={"TableHeaderLink"}>
+                Tags
+              </Link>
+            </div>
+            <div className={"TableCell TableCellActions"}>
+              <Link to={"/playlists"} className={"TableHeaderLink"}>
+                Playlist
+              </Link>
+            </div>
+          </div>
+          <div className={"TableBody"}>
+            {props.tracks.map((item, index) => {
+              const tagList =
+                TagsSystem.getTagsOfElement(item.id).map((id) => ({
+                  id,
+                  ...tags.availableTags[id],
+                })) ?? [];
+              return (
+                <TrackListItem
+                  track={item}
+                  name={item.name}
+                  artists={item.artists}
+                  duration_ms={item.duration_ms}
+                  album={item.album}
+                  key={type + "-track-" + item.id + "-" + index}
+                  liked={item.is_saved}
+                  listIndex={index}
+                  selected={isTrackSelected(item, index)}
+                  onSelectionChange={handleSelectionChange}
+                  onContextMenuOpen={handleContextMenuOpen}
+                  id_tracklist={""}
+                  type={type}
+                  tags={tagList}
+                />
+              );
+            })}
+            {!fullyLoaded ? (
+              <div className={"PlaylistLoader"}>
+                <div className={"loader"} />
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ----- SAVED ----- */}
       {type === "saved" && (
         <div
           className={`Tracklist ${sizeClass}`}
@@ -393,12 +474,28 @@ function TrackList(props: Props) {
           <div className={"TableHeader TableRow"}>
             <div className={"TableCell TableCellArtwork"} />
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
-            <div className={"TableCell TableCellAlbum"}><Link to={'/collections/albums'} className={"TableHeaderLink"}>Album</Link></div>
+            <div className={"TableCell TableCellAlbum"}>
+              <Link to={"/collections/albums"} className={"TableHeaderLink"}>
+                Album
+              </Link>
+            </div>
             <div className={"TableCell TableCellAddedAt"}>Added</div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
-            <div className={"TableCell TableCellLiked"}><Link to={'/me/tracks'} className={"TableHeaderLink"}>Liked</Link></div>
-            <div className={"TableCell TableCellTags"}><Link to={'/settings'} className={"TableHeaderLink"}>Tags</Link></div>
-            <div className={"TableCell TableCellActions"}><Link to={'/playlists'} className={"TableHeaderLink"}>Playlist</Link></div>
+            <div className={"TableCell TableCellLiked"}>
+              <Link to={"/me/tracks"} className={"TableHeaderLink"}>
+                Liked
+              </Link>
+            </div>
+            <div className={"TableCell TableCellTags"}>
+              <Link to={"/settings"} className={"TableHeaderLink"}>
+                Tags
+              </Link>
+            </div>
+            <div className={"TableCell TableCellActions"}>
+              <Link to={"/playlists"} className={"TableHeaderLink"}>
+                Playlist
+              </Link>
+            </div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
@@ -439,17 +536,20 @@ function TrackList(props: Props) {
         </div>
       )}
 
+      {/* ----- SHOW ----- */}
       {type === "show" && (
         <div
           className={"Tracklist"}
-          onScroll={(e: React.UIEvent<HTMLDivElement>) =>
-            scrollHandler(e, loadMoreCallback)
-          }
+          onScroll={(e: React.UIEvent<HTMLDivElement>) => scrollHandler(e, loadMoreCallback)}
         >
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
-              const episode = item ;
-              const tagList = TagsSystem.getTagsOfElement(episode.id).map((id) => ({id, ...tags.availableTags[id]})) ?? [];
+              const episode = item;
+              const tagList =
+                TagsSystem.getTagsOfElement(episode.id).map((id) => ({
+                  id,
+                  ...tags.availableTags[id],
+                })) ?? [];
               return (
                 <TrackListItem
                   track={episode}
@@ -480,8 +580,9 @@ function TrackList(props: Props) {
             )}
           </div>
         </div>
-      )}  
+      )}
 
+      {/* ----- TAGS ----- */}
       {type === "tags" && (
         <div
           className={`Tracklist ${sizeClass}`}
@@ -491,10 +592,22 @@ function TrackList(props: Props) {
           <div className={"TableHeader TableRow"}>
             <div className={"TableCell TableCellArtwork"} />
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
-            <div className={"TableCell TableCellAlbum"}><Link to={'/collections/albums'} className={"TableHeaderLink"}>Album</Link></div>
+            <div className={"TableCell TableCellAlbum"}>
+              <Link to={"/collections/albums"} className={"TableHeaderLink"}>
+                Album
+              </Link>
+            </div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
-            <div className={"TableCell TableCellLiked"}><Link to={'/me/tracks'} className={"TableHeaderLink"}>Liked</Link></div>
-            <div className={"TableCell TableCellTags"}><Link to={'/settings'} className={"TableHeaderLink"}>Tags</Link></div>
+            <div className={"TableCell TableCellLiked"}>
+              <Link to={"/me/tracks"} className={"TableHeaderLink"}>
+                Liked
+              </Link>
+            </div>
+            <div className={"TableCell TableCellTags"}>
+              <Link to={"/settings"} className={"TableHeaderLink"}>
+                Tags
+              </Link>
+            </div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((track, index) => {
@@ -532,6 +645,7 @@ function TrackList(props: Props) {
         </div>
       )}
 
+      {/* ----- SONG HISTORY ----- */}
       {type === "songhistory" && (
         <div
           className={`Tracklist ${sizeClass}`}
@@ -541,11 +655,27 @@ function TrackList(props: Props) {
           <div className={"TableHeader TableRow"}>
             <div className={"TableCell TableCellArtwork"} />
             <div className={"TableCell TableCellTitleArtist"}>Title</div>
-            <div className={"TableCell TableCellAlbum"}><Link to={'/collections/albums'} className={"TableHeaderLink"}>Album</Link></div>
+            <div className={"TableCell TableCellAlbum"}>
+              <Link to={"/collections/albums"} className={"TableHeaderLink"}>
+                Album
+              </Link>
+            </div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
-            <div className={"TableCell TableCellLiked"}><Link to={'/me/tracks'} className={"TableHeaderLink"}>Liked</Link></div>
-            <div className={"TableCell TableCellTags"}><Link to={'/settings'} className={"TableHeaderLink"}>Tags</Link></div>
-            <div className={"TableCell TableCellActions"}><Link to={'/playlists'} className={"TableHeaderLink"}>Playlist</Link></div>
+            <div className={"TableCell TableCellLiked"}>
+              <Link to={"/me/tracks"} className={"TableHeaderLink"}>
+                Liked
+              </Link>
+            </div>
+            <div className={"TableCell TableCellTags"}>
+              <Link to={"/settings"} className={"TableHeaderLink"}>
+                Tags
+              </Link>
+            </div>
+            <div className={"TableCell TableCellActions"}>
+              <Link to={"/playlists"} className={"TableHeaderLink"}>
+                Playlist
+              </Link>
+            </div>
           </div>
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {

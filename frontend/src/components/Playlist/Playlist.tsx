@@ -88,7 +88,7 @@ export default function Playlist(props: IProps) {
     // Save new tracks
     // Save if tracks are saved
     let saved: CheckUsersSavedTracksResponse = [];
-    const playlistTracksIds = data.items.map((i) => i.track.id)
+    const playlistTracksIds = data.items.filter((item) => item.track).map((i) => i.track.id);
     if (playlistTracksIds.length !== 0) {
       // Save whether tracks are saved or not
       saved = await fetchIsSavedData(playlistTracksIds);
@@ -194,7 +194,9 @@ export default function Playlist(props: IProps) {
       {headerStyle !== "none" ? (
         headerStyle === "compact" ? (
           <div className={"PlaylistHeader PlaylistHeaderCompact"}>
-            <Link to={'/playlist/' + id} className={"PlaylistHeaderLink"}><h2>{playlist.name}</h2></Link>
+            <Link to={"/playlist/" + id} className={"PlaylistHeaderLink"}>
+              <h2>{playlist.name}</h2>
+            </Link>
           </div>
         ) : (
           <div className={"PlaylistHeader PlaylistHeaderFull"}>
