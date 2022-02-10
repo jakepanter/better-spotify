@@ -34,6 +34,14 @@ const Topbar = (props: IProps) => {
         props.onChangeLightmode();
     }
 
+    const goBackward = () => {
+        console.log(history.length)
+        history.goBack();
+    }
+    const goForward = () => {
+        console.log(history.length)
+        history.goForward();
+    }
     const [image, setImage] = useState<string>('');
 
     useEffect(() => {
@@ -59,10 +67,10 @@ const Topbar = (props: IProps) => {
     return (
         <div className={`top-bar ${customizeButton() ? 'customize-start' : ''}`}>
             <div>
-                <button className={'settings-button'} onClick={history.goBack}>
+                <button className={'settings-button'} onClick={goBackward}>
                     <span className="material-icons">arrow_back_ios</span>
                 </button>
-                <button onClick={history.goForward}><span className="material-icons">arrow_forward_ios</span></button>
+                <button onClick={goForward}><span className="material-icons">arrow_forward_ios</span></button>
             </div>
             <div className={'top-bar-item search'} title={"Search for music, podcasts, albums ..."}>
                 <Searchbar/>
