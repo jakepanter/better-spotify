@@ -206,7 +206,7 @@ class Artist extends Component<IProps, IState> {
       />
     ));
 
-    // fetch albums where the artist appears on
+    // for albums where the artist appears on
     const appearsOnAlbum = this.state.appearsOn.map((album, index) => (
       <Card
         key={album.id + index}

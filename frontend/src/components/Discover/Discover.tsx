@@ -61,6 +61,7 @@ class Discover extends Component<IProps, IState> {
 
     // fetch related artist of top three artists
     this.fetchTopArtists().then((topArtists) => {
+      // Following source is used to sort the array randomly: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
       //slice top three artists
       const topThreeArtists: ArtistObjectFull[] = topArtists.items
         .sort(() => 0.5 - Math.random())
