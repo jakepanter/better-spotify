@@ -255,13 +255,28 @@
     }
 
     .TableRow {
+      .TableCellCoverPlaceholder::before {
+        color: rgba($black, 0.2);
+      }
       &:hover:not(.TableHeader):not(.Selected):not(.Playing) {
         color: $color-default-light;
         background-color: darken($white, 10%);
 
-
         .TableCellCoverPlaceholder::before {
           color: rgba($black, 1);
+        }
+      }
+
+      &.Selected .TableCellCoverPlaceholder::before {
+        color: rgba($black, 1);
+      }
+
+      &.Playing:not(.Selected) {
+        .TableCellCoverPlaceholder::before {
+          color: $color-primary;
+        }
+        .checkbox{
+          color: $color-primary;
         }
       }
     }
