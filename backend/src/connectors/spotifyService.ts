@@ -644,16 +644,29 @@ export default class SpotifyService {
   play = async (accessToken: string, options: PlayOptions) => {
     try {
       this.spotifyApi.setAccessToken(accessToken);
-      // Check if a device is available
-      const { body } = await this.spotifyApi.getMyDevices();
-      if (body.devices.length === 0
-        || !body.devices.some((device) => device.is_active)) {
-        this.spotifyApi.resetAccessToken();
-        return false;
+      // Check if the track is available in the current market
+      if (options.offset !== undefined) {
+        // @ts-ignore
+        const trackUri = (options.offset?.uri as string).split(':');
+        if (trackUri[1] === 'track') {
+          const track = await this.spotifyApi.getTrack(trackUri[2]);
+          if (!track.body.available_markets?.includes('DE')) {
+            this.spotifyApi.resetAccessToken();
+            return 403;
+          }
+        }
       }
+
+      // Check if a device is available
+      const devices = await this.spotifyApi.getMyDevices();
+      if ((devices.body.devices.length === 0 || !devices.body.devices.some((d) => d.is_active))) {
+        this.spotifyApi.resetAccessToken();
+        return 404;
+      }
+
       this.spotifyApi.play(options);
       this.spotifyApi.resetAccessToken();
-      return true;
+      return 200;
     } catch (e) {
       console.log(e);
       return null;
