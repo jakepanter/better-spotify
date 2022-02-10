@@ -123,7 +123,9 @@ export default function Show(props: IProps) {
     }, [id]);
 
     useEffect(() => {
-        fetchShowEpisodeData(offset);
+        if(show) {
+            fetchShowEpisodeData(offset);
+        }
     }, [offset]);
 
     if(!show) return <p>loading...</p>;
