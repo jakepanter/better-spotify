@@ -511,7 +511,7 @@ class Dashboard extends Component<IProps, IState> {
         <ResponsiveGridLayout
           className={`Dashboard ${editable ? 'editable' : ''}`}
           layouts={layouts}
-          breakpoints={{xl: 1600, md: 768, sm: 0}}
+          breakpoints={{xl: 1200, md: 768, sm: 0}}
           cols={{xl: 4, md: 2, sm: 1}}
           rowHeight={400}
           isResizable={editable}
