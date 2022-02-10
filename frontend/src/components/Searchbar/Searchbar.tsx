@@ -101,7 +101,7 @@ function Searchbar() {
       className={"SearchbarResultItem"}
       onClick={() => playSong(track.uri, track.album?.id)}
     >
-      {track.album !== undefined ? (
+      {track.album !== undefined && track.album.images.length > 0 ? (
         <img height={32} width={32} src={track.album.images[2].url} alt={"Album Cover"} />
       ) : (
         <CoverPlaceholder />
