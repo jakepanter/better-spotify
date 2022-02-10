@@ -90,7 +90,8 @@ function Searchbar() {
       },
       body: JSON.stringify(body),
     }).then((res) => {
-      if (!res.ok) NotificationsService.push('warning', 'No active playback device found');
+      if (res.status === 404) NotificationsService.push('warning', 'No active playback device found');
+      if (res.status === 403) NotificationsService.push('info', 'This track cannot be played');
     });
   };
 
@@ -101,7 +102,7 @@ function Searchbar() {
       className={"SearchbarResultItem"}
       onClick={() => playSong(track.uri, track.album?.id)}
     >
-      {track.album !== undefined ? (
+      {track.album !== undefined && track.album.images.length > 0 ? (
         <img height={32} width={32} src={track.album.images[2].url} alt={"Album Cover"} />
       ) : (
         <CoverPlaceholder />

@@ -128,7 +128,8 @@ function TrackListItem(props: Props) {
         },
         body: JSON.stringify(body),
       }).then((res) => {
-        if (!res.ok) NotificationsService.push('warning', 'No active playback device found');
+        if (res.status === 404) NotificationsService.push('warning', 'No active playback device found');
+        if (res.status === 403) NotificationsService.push('info', 'This track cannot be played');
       });
     } else if (reqType === 'pause') {
       const authHeader = getAuthHeader();
@@ -397,7 +398,7 @@ function TrackListItem(props: Props) {
           )}
 
           <div className={"TableCell TableCellDuration"}>{formatTimestamp(track.duration_ms)}</div>
-          {track.liked !== undefined ? (
+          {track.liked !== null ? (
             <div className={"TableCell TableCellLiked"}>
               <button className={`checkbox ${liked ? "checked" : ""}`} onClick={handleLikeButton}>
                 <span className={"material-icons"}>{liked ? "favorite" : "favorite_border"}</span>

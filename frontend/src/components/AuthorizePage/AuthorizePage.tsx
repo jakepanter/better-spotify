@@ -33,7 +33,7 @@ function AuthorizePage() {
                                checked={checked}
                                onChange={handleChange}/>
                         <p>
-                            By registering you agree to the terms and conditions as well as our <Link to={"/privacypolicy"}>privacy policy</Link>. On the following page you will be informed
+                            By registering you agree to our <Link to={"/privacypolicy"}>privacy policy</Link>. On the following page you will be informed
                             about the terms and conditions of spotify.
                         </p>
                     </label>

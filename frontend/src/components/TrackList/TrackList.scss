@@ -193,6 +193,14 @@
       display: flex;
       flex: 0.3 0 0;
       flex-flow: row nowrap;
+      overflow-x: scroll;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      cursor: ew-resize;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
   }
 
