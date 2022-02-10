@@ -416,94 +416,96 @@ class Dashboard extends Component<IProps, IState> {
           <div className={'DashboardConfigurator'}>
             <h3>Customize startpage</h3>
             <p className={"infoCustomizeStartpage"}><span className="material-icons">info</span>Hover over the panels to move them according to your needs. The size of the panels can be changed in the lower right corner of each panel.</p>
-            <div className={`${tagSelection.length === 0 ? "noTagAvailable" : ""} DashboardTagTracklistsForm`}>
-              <h4>tag panels</h4>
-              <p className={"addTagNote"}>Please <Link to="/settings">add a tag</Link> first</p>
-              <div className={"DashboardTagTracklistsFormSelects"}>
-                <select
-                  className={'input-select'}
-                  value={tagSelection}
-                  onChange={(e) => this.updateTagTracklistSelection(e)}
-                >
-                  {Object.entries(tags.availableTags).map((t) => <option key={t[0]} value={t[0]}>{t[1].title}</option>)}
-                </select>
+            <div className={"DashboardCustomizeGrid"}>
+              <div className={`${tagSelection.length === 0 ? "noTagAvailable" : ""} DashboardTagTracklistsForm`}>
+                <h4>tag panels</h4>
+                <p className={"addTagNote"}>Please <Link to="/settings">add a tag</Link> first</p>
+                <div className={"DashboardTagTracklistsFormSelects"}>
+                  <select
+                    className={'input-select'}
+                    value={tagSelection}
+                    onChange={(e) => this.updateTagTracklistSelection(e)}
+                  >
+                    {Object.entries(tags.availableTags).map((t) => <option key={t[0]} value={t[0]}>{t[1].title}</option>)}
+                  </select>
+                </div>
+                <div className={'DashboardTagTracklistsFormButtons'}>
+                  <button
+                    className={'button'}
+                    disabled={tagSelection === ''}
+                    onClick={() => this.addTagTracklist(tagSelection)}
+                  >
+                    Add Tag Tracklist
+                  </button>
+                  <button
+                    className={'button'}
+                    disabled={tagSelection === ''}
+                    onClick={() => this.removeTagTracklist(tagSelection)}
+                  >
+                    Remove Tag Tracklist
+                  </button>
+                </div>
               </div>
-              <div className={'DashboardTagTracklistsFormButtons'}>
-                <button
-                  className={'button'}
-                  disabled={tagSelection === ''}
-                  onClick={() => this.addTagTracklist(tagSelection)}
-                >
-                  Add Tag Tracklist
-                </button>
-                <button
-                  className={'button'}
-                  disabled={tagSelection === ''}
-                  onClick={() => this.removeTagTracklist(tagSelection)}
-                >
-                  Remove Tag Tracklist
-                </button>
+              <div className={'DashboardChartsForm'}>
+                <h4>chart panels</h4>
+                <div className={'DashboardChartsFormSelects'}>
+                  <select
+                    className={'DashboardChartsCountryCode input-select'}
+                    value={chartSelection.countryCode}
+                    onChange={(e) => this.updateChartSelection(e, 'countryCode')}
+                  >
+                    {ALL_COUNTRY_CODES.map((code) => <option key={code} value={code}>{code}</option>)}
+                  </select>
+                  <select
+                    className={'DashboardChartsType input-select'}
+                    value={chartSelection.type}
+                    onChange={(e) => this.updateChartSelection(e, 'type')}
+                  >
+                    {ALL_CHART_TYPES.map((code) => <option key={code} value={code}>{code}</option>)}
+                  </select>
+                  <select
+                    className={'DashboardChartsPeriod input-select'}
+                    value={chartSelection.period}
+                    onChange={(e) => this.updateChartSelection(e, 'period')}
+                  >
+                    {ALL_CHART_PERIODS.map((code) => <option key={code} value={code}>{code}</option>)}
+                  </select>
+                </div>
+                <div className={'DashboardChartsFormButtons'}>
+                  <button
+                    className={'button'}
+                    disabled={!chartExists(chartSelection.countryCode, chartSelection.type, chartSelection.period)}
+                    onClick={() => this.addChart(chartSelection.countryCode, chartSelection.type, chartSelection.period)}
+                  >
+                    Add Chart
+                  </button>
+                  <button
+                    className={'button'}
+                    disabled={!chartExists(chartSelection.countryCode, chartSelection.type, chartSelection.period)}
+                    onClick={() => this.removeChart(chartSelection.countryCode, chartSelection.type, chartSelection.period)}
+                  >
+                    Remove Chart
+                  </button>
+                </div>
               </div>
-            </div>
-            <div className={'DashboardChartsForm'}>
-              <h4>chart panels</h4>
-              <div className={'DashboardChartsFormSelects'}>
-                <select
-                  className={'DashboardChartsCountryCode input-select'}
-                  value={chartSelection.countryCode}
-                  onChange={(e) => this.updateChartSelection(e, 'countryCode')}
-                >
-                  {ALL_COUNTRY_CODES.map((code) => <option key={code} value={code}>{code}</option>)}
-                </select>
-                <select
-                  className={'DashboardChartsType input-select'}
-                  value={chartSelection.type}
-                  onChange={(e) => this.updateChartSelection(e, 'type')}
-                >
-                  {ALL_CHART_TYPES.map((code) => <option key={code} value={code}>{code}</option>)}
-                </select>
-                <select
-                  className={'DashboardChartsPeriod input-select'}
-                  value={chartSelection.period}
-                  onChange={(e) => this.updateChartSelection(e, 'period')}
-                >
-                  {ALL_CHART_PERIODS.map((code) => <option key={code} value={code}>{code}</option>)}
-                </select>
+              <div className={'DashboardSettingsForm'}>
+                <h4>personal panels</h4>
+                <Checkbox
+                  checked={showFavorites}
+                  label={'Show liked songs'}
+                  onChange={(value) => this.showFavorites(value)}
+                />
+                <Checkbox
+                  checked={showPlaylists}
+                  label={'Show Playlists'}
+                  onChange={(value) => this.showPlaylists(value)}
+                />
+                <Checkbox
+                    checked={showAlbums}
+                    label={'Show Albums'}
+                    onChange={(value) => this.showAlbums(value)}
+                />
               </div>
-              <div className={'DashboardChartsFormButtons'}>
-                <button
-                  className={'button'}
-                  disabled={!chartExists(chartSelection.countryCode, chartSelection.type, chartSelection.period)}
-                  onClick={() => this.addChart(chartSelection.countryCode, chartSelection.type, chartSelection.period)}
-                >
-                  Add Chart
-                </button>
-                <button
-                  className={'button'}
-                  disabled={!chartExists(chartSelection.countryCode, chartSelection.type, chartSelection.period)}
-                  onClick={() => this.removeChart(chartSelection.countryCode, chartSelection.type, chartSelection.period)}
-                >
-                  Remove Chart
-                </button>
-              </div>
-            </div>
-            <div className={'DashboardSettingsForm'}>
-              <h4>personal panels</h4>
-              <Checkbox
-                checked={showFavorites}
-                label={'Show liked songs'}
-                onChange={(value) => this.showFavorites(value)}
-              />
-              <Checkbox
-                checked={showPlaylists}
-                label={'Show Playlists'}
-                onChange={(value) => this.showPlaylists(value)}
-              />
-              <Checkbox
-                  checked={showAlbums}
-                  label={'Show Albums'}
-                  onChange={(value) => this.showAlbums(value)}
-              />
             </div>
           </div>
           : <></>
