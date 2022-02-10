@@ -5,7 +5,7 @@ import {
   ArtistObjectFull,
   AlbumObjectSimplified,
   ArtistsTopTracksResponse,
-  ArtistsAlbumsResponse,
+  ArtistsAlbumsResponse, CheckUsersSavedTracksResponse,
 } from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import { NavLink } from "react-router-dom";
@@ -24,9 +24,14 @@ interface IProps {
   id: string;
 }
 
+export interface TopTrack extends TrackObjectFull {
+  is_saved: boolean;
+}
+
 interface IState {
   artist: ArtistObjectFull;
   artistTopTracks: TrackObjectFull[];
+  topTracks: TopTrack[];
   albums: AlbumObjectSimplified[];
   singles: AlbumObjectSimplified[];
   appearsOn: AlbumObjectSimplified[];
@@ -34,6 +39,8 @@ interface IState {
   relatedArtists: ArtistObjectFull[];
   filter: string;
 }
+
+
 
 class Artist extends Component<IProps, IState> {
   static contextType = AppContext;
@@ -43,12 +50,13 @@ class Artist extends Component<IProps, IState> {
     this.state = {
       artist: {} as ArtistObjectFull,
       artistTopTracks: [],
+      topTracks: [],
       albums: [],
       singles: [],
       appearsOn: [],
       compilations: [],
       relatedArtists: [],
-      filter: "All",
+      filter: "All"
     };
     this.handleFilterChange = this.handleFilterChange.bind(this);
     this.handleRightClick = this.handleRightClick.bind(this);
@@ -70,7 +78,7 @@ class Artist extends Component<IProps, IState> {
     this.setState({ artist: artistData });
 
     //fetch artist top tracks
-    const topTracks: ArtistsTopTracksResponse = await fetch(
+    const artistTopTracks: ArtistsTopTracksResponse = await fetch(
       `${API_URL}api/spotify/artist/${this.props.id}/top-tracks`,
       {
         headers: {
@@ -78,7 +86,27 @@ class Artist extends Component<IProps, IState> {
         },
       }
     ).then((res) => res.json());
-    this.setState({ artistTopTracks: topTracks.tracks });
+    this.setState({ artistTopTracks: artistTopTracks.tracks });
+
+    let saved: CheckUsersSavedTracksResponse = [];
+    const savedTracks = this.state.artistTopTracks.map((i) => i.id);
+    if(savedTracks.length !== 0){
+      //check if tracks are liked
+      saved = await fetch(
+          `${API_URL}api/spotify/me/tracks/contains?trackIds=${savedTracks}`,
+          {
+            headers: {
+              Authorization: authHeader,
+            },
+          }
+      ).then((res) => res.json());
+    }
+    const topTracks = this.state.artistTopTracks as TopTrack[];
+    topTracks.map((t, i) => {
+        t.is_saved = saved[i]
+    });
+    this.setState({topTracks: topTracks});
+
 
     // fetch albums
     const allAlbums: ArtistsAlbumsResponse = await fetch(
@@ -266,7 +294,7 @@ class Artist extends Component<IProps, IState> {
                 }}
               >
                 <option value="All">Filter: All</option>
-                {this.state.artistTopTracks.length > 0 ? (
+                {this.state.topTracks.length > 0 ? (
                   <option value="Discography">Discography</option>
                 ) : (
                   <></>
@@ -292,7 +320,7 @@ class Artist extends Component<IProps, IState> {
 
         {/*Discography - top tracks*/}
         {(this.state.filter === "Discography" || this.state.filter == "All") &&
-        this.state.artistTopTracks ? (
+        this.state.topTracks ? (
           <div className={"ArtistSection"}>
             <div className={"Header"}>
               <h2>
@@ -305,7 +333,7 @@ class Artist extends Component<IProps, IState> {
             <div style={{ margin: "0 1rem" }}>
               <TrackList
                 type={"topTracks"}
-                tracks={this.state.artistTopTracks}
+                tracks={this.state.topTracks}
                 loadMoreCallback={() => {}}
                 fullyLoaded={true}
                 id_tracklist={""}

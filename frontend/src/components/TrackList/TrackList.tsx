@@ -10,6 +10,7 @@ import { ShowEpisodes } from "../Show/Show";
 import {TagsTrack} from "../TagTracklist/TagTracklist";
 import { SongHistoryTrack } from "../SongHistory/SongHistory";
 import { Link } from "react-router-dom";
+import {TopTrack} from "../Artist/Artist";
 
 type Props =
   | {
@@ -65,7 +66,7 @@ type Props =
       id_tracklist: string;
     }| {
   type: "topTracks";
-  tracks: TrackObjectFull[];
+  tracks: TopTrack[];
   loadMoreCallback: () => void;
   fullyLoaded: boolean;
   id_tracklist: string;
@@ -347,6 +348,7 @@ function TrackList(props: Props) {
                 <div className={"TableCell TableCellTitleArtist"}>Title</div>
                 <div className={"TableCell TableCellAlbum"}><Link to={'/collections/albums'} className={"TableHeaderLink"}>Album</Link></div>
                 <div className={"TableCell TableCellDuration"}>Duration</div>
+                <div className={"TableCell TableCellLiked"}><Link to={'/me/tracks'} className={"TableHeaderLink"}>Liked</Link></div>
                 <div className={"TableCell TableCellTags"}><Link to={'/settings'} className={"TableHeaderLink"}>Tags</Link></div>
                 <div className={"TableCell TableCellActions"}><Link to={'/playlists'} className={"TableHeaderLink"}>Playlist</Link></div>
               </div>
@@ -361,6 +363,7 @@ function TrackList(props: Props) {
                             duration_ms={item.duration_ms}
                             album={item.album}
                             key={type + "-track-" + item.id + "-" + index}
+                            liked={item.is_saved}
                             listIndex={index}
                             selected={isTrackSelected(item, index)}
                             onSelectionChange={handleSelectionChange}
