@@ -5,7 +5,8 @@ import {
   ArtistObjectFull,
   AlbumObjectSimplified,
   ArtistsTopTracksResponse,
-  ArtistsAlbumsResponse, CheckUsersSavedTracksResponse,
+  ArtistsAlbumsResponse,
+  CheckUsersSavedTracksResponse,
 } from "spotify-types";
 import { API_URL } from "../../utils/constants";
 import { NavLink } from "react-router-dom";
@@ -106,7 +107,6 @@ class Artist extends Component<IProps, IState> {
         t.is_saved = saved[i]
     });
     this.setState({topTracks: topTracks});
-
 
     // fetch albums
     const allAlbums: ArtistsAlbumsResponse = await fetch(
