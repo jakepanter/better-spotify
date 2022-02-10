@@ -218,7 +218,7 @@ function PlaylistsMenu(props: Props) {
       </SubMenu>
       {props.data.owner.id === me?.id && <MenuItem onClick={editDetails}>Edit Playlist</MenuItem>}
       <MenuItem disabled={following === undefined} onClick={handleFollowButton}>
-        {following ? "Unfollow" : "Follow"}
+        {!following ? "Follow" : me?.id === props.data.owner.id ? "Delete" : "Unfollow"}
       </MenuItem>
     </ControlledMenu>
   );
