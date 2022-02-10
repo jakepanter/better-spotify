@@ -87,9 +87,12 @@ export default function Playlist(props: IProps) {
 
     // Save new tracks
     // Save if tracks are saved
-    const saved: CheckUsersSavedTracksResponse = await fetchIsSavedData(
-      data.items.map((i) => i.track.id)
-    );
+    let saved: CheckUsersSavedTracksResponse = [];
+    const playlistTracksIds = data.items.map((i) => i.track.id)
+    if (playlistTracksIds.length !== 0) {
+      // Save whether tracks are saved or not
+      saved = await fetchIsSavedData(playlistTracksIds);
+    }
     const fetchedTracks = data.items as PlaylistTrack[];
     setTracks((oldTracks) => [
       ...oldTracks,
