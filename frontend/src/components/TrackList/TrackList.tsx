@@ -293,7 +293,7 @@ function TrackList(props: Props) {
           <div className={"TableBody"}>
             {props.tracks.map((item, index) => {
               const { track }: any = item;
-              track.type;
+              if (!track) return;
               const tagList =
                 TagsSystem.getTagsOfElement(track.id).map((id) => ({
                   id,
