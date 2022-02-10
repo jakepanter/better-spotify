@@ -1,14 +1,15 @@
 @import "./src/boilerplate.scss";
-.Discography{
+.Discography {
+  display: flex;
+  flex-flow: column nowrap;
+  flex-grow: 1;
+  height: 100%;
   overflow: hidden auto;
-  scrollbar-width: none;
-  .list-items{
-    overflow: hidden auto;
-    // necessary for fetching
-    height: 75vh;
-    padding-right: 1rem;
-  }
-  .Playlist:not(:first-child){
-    margin-top: 2.5rem;
+  // scrollbar-width: none;
+  .Playlist {
+    height: auto;
+    &:not(:first-child) {
+      margin-top: 2.5rem;
+    }
   }
 }
