@@ -304,14 +304,6 @@
   .Playing:not(.Selected) {
     background-color: $color-background-light;
     animation-name: playingColor_light;
-
-    .checkbox.checked {
-      color: $color-default-light;
-    }
-
-    .albumLink:hover {
-      color: $color-primary;
-    }
   }
 
   .EpisodeRow a .noTags .TableCellPlayEpisode {
