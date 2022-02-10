@@ -191,7 +191,7 @@ th {
 }
 
 .input-select {
-  padding: $button-padding-horizontal $button-padding-vertical;
+  padding: 12px $button-padding-vertical;
   display: inline-block;
   font-family: $ff-buttons;
   line-height: $lh-buttons;
@@ -202,7 +202,7 @@ th {
   font-style: $fs-base;
   border-width: $button-border-width;
   border-style: $button-border-style;
-  border-radius: $button-border-radius;
+  border-radius: $border-radius;
   max-width: 100%;
   transition: $button-transition-base;
   background: $button-background;
