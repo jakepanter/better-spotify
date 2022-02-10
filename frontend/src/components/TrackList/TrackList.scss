@@ -27,7 +27,6 @@
 
     &:hover:not(.TableHeader):not(.Selected):not(.Playing) {
       user-select: none;
-      background-color: $color-secondary;
       color: $color-default;
       background-color: lighten($color-accent-dark, 5%);
 

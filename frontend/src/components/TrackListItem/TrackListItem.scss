@@ -172,7 +172,7 @@
   }
 }
 
-.Playing {
+.Playing:not(.Selected) {
   background-color: $color-secondary;
   animation-name: playingColor;
   animation-duration: 2s;
@@ -192,13 +192,12 @@
   }
 
   .Tag {
-    // in case of playing + selected at the same time -- playing should have the highest level
-    color: $color-primary !important;
+    color: $color-primary;
   }
 }
 
 .Paused {
-  animation: none;
+  animation: none !important;
 }
 
 @keyframes playingColor {
@@ -297,9 +296,12 @@
     .checkbox.checked {
       color: $color-default-light;
     }
+    .albumLink {
+      color: $color-default-light;
+    }
   }
 
-  .Playing {
+  .Playing:not(.Selected) {
     background-color: $color-background-light;
     animation-name: playingColor_light;
 
