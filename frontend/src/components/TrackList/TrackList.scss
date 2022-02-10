@@ -25,9 +25,8 @@
     width: 100%;
     transition: $transition-base;
 
-    &:hover:not(.TableHeader):not(.Selected) {
+    &:hover:not(.TableHeader):not(.Selected):not(.Playing) {
       user-select: none;
-      background-color: $color-secondary;
       color: $color-default;
       background-color: lighten($color-accent-dark, 5%);
 
@@ -46,11 +45,13 @@
     &.Playing {
       .TableCellArtwork::before {
         content: "\e035";
+        visibility: visible;
       }
 
       &.Paused {
         .TableCellArtwork::before {
           content: "\e038";
+          visibility: visible;
         }
       }
     }
@@ -88,7 +89,7 @@
     &Link {
       color: rgba($color-default, 0.35);
       text-decoration: none;
-    
+
       &:hover {
         text-decoration: underline;
       }
@@ -263,13 +264,28 @@
     }
 
     .TableRow {
-      &:hover:not(.TableHeader):not(.Selected) {
+      .TableCellCoverPlaceholder::before {
+        color: rgba($black, 0.2);
+      }
+      &:hover:not(.TableHeader):not(.Selected):not(.Playing) {
         color: $color-default-light;
         background-color: darken($white, 10%);
 
-
         .TableCellCoverPlaceholder::before {
           color: rgba($black, 1);
+        }
+      }
+
+      &.Selected .TableCellCoverPlaceholder::before {
+        color: rgba($black, 1);
+      }
+
+      &.Playing:not(.Selected) {
+        .TableCellCoverPlaceholder::before {
+          color: $color-primary;
+        }
+        .checkbox{
+          color: $color-primary;
         }
       }
     }
@@ -282,7 +298,7 @@
       &Link {
         color: rgba($color-default-light, 0.65);
         text-decoration: none;
-      
+
         &:hover {
           text-decoration: underline;
         }

@@ -389,6 +389,27 @@ export default class SpotifyService {
     }
   };
 
+  isShowSaved = async (accessToken: string, showIds: string[]) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    const data = await this.spotifyApi.containsMySavedShows(showIds);
+    this.spotifyApi.resetAccessToken();
+    return data.body;
+  }
+
+  addToSavedShows = async (accessToken: string, showIds: string[]) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    const data = await this.spotifyApi.addToMySavedShows(showIds);
+    this.spotifyApi.resetAccessToken();
+    return data.body;
+  };
+
+  removeFromSavedShows = async (accessToken: string, showIds: string[]) => {
+    this.spotifyApi.setAccessToken(accessToken);
+    const data = await this.spotifyApi.removeFromMySavedShows(showIds);
+    this.spotifyApi.resetAccessToken();
+    return data.body;
+  };
+
   getShowEpisodes = async (accessToken: string, showId: string, limit: number, offset: number) => {
     try {
       const options: any = { limit, offset };

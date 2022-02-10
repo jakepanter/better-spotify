@@ -414,6 +414,28 @@ export default class App {
       return res.json(show);
     });
 
+    this.server.get('/api/spotify/me/shows/contains', async (req: Request, res: Response) => {
+      const accessToken = getToken(req);
+      const showIds: string[] = (req.query.showIds as string ?? '').split(',');
+      if (showIds.length === 1 && showIds[0] === '') return res.json([]);
+      const data = await this.spotifyService.isShowSaved(accessToken, showIds);
+      return res.json(data);
+    });
+
+     this.server.get('/api/spotify/me/shows/add', async (req: Request, res: Response) => {
+      const accessToken = getToken(req);
+      const showIds: string[] = (req.query.showIds as string ?? '').split(',');
+      const data = await this.spotifyService.addToSavedShows(accessToken, showIds);
+      return res.json(data);
+    });
+
+    this.server.get('/api/spotify/me/shows/remove', async (req: Request, res: Response) => {
+      const accessToken = getToken(req);
+      const showIds: string[] = (req.query.showIds as string ?? '').split(',');
+      const data = await this.spotifyService.removeFromSavedShows(accessToken, showIds);
+      return res.json(data);
+    });
+
     this.server.get('/api/spotify/episode/:episodeId', async (req: Request, res: Response) => {
       const accessToken = getToken(req);
       const { episodeId } = req.params;
