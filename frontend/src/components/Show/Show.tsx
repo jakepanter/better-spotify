@@ -4,6 +4,7 @@ import { API_URL } from "../../utils/constants";
 import CoverPlaceholder from "../CoverPlaceholder/CoverPlaceholder";
 import TrackList from "../TrackList/TrackList";
 import { getAuthHeader } from '../../helpers/api-helpers';
+import "./Show.scss";
 
 // The fetching limit, can be adjusted by changing this value
 const limit = 20;
@@ -25,6 +26,7 @@ export default function Show(props: IProps) {
     const [episodes, setEpisodes] = useState<ShowEpisodes[]>([]);
     // The current offset for fetching new episodes
     const [offset, setOffset] = useState<number>(0);
+    const [liked, setLiked] = useState<boolean>();
 
     async function fetchShowData() {
         const authHeader = getAuthHeader();
@@ -36,6 +38,11 @@ export default function Show(props: IProps) {
             }).then((res) => res.json());
 
         setShow(data);
+
+        const showLiked: boolean[] = await isShowSavedData(
+          [data.id]
+        );
+        setLiked(showLiked[0]);
 
         const fetchedEpisodes = data.episodes.items as ShowEpisodes[];
         setEpisodes((oldEpisodes) => [
@@ -72,6 +79,44 @@ export default function Show(props: IProps) {
             }),
         ]);    
     }
+
+    async function isShowSavedData(showIds: string[]) {
+      const authHeader = getAuthHeader();
+      const data: boolean[] = await fetch(
+        `${API_URL}api/spotify/me/shows/contains?showIds=${showIds}`,
+        {
+          headers: {
+            Authorization: authHeader,
+          },
+        }
+      ).then((res) => res.json());
+  
+      return data;
+    }
+
+    const handleLikeButton = async () => {
+      if(show !== undefined) {
+        if (!liked) {
+          // add
+          const authHeader = getAuthHeader();
+          await fetch(`${API_URL}api/spotify/me/shows/add?showIds=${show.id}`, {
+            headers: {
+              Authorization: authHeader,
+            },
+          }).then((res) => res.json());
+          setLiked(true);
+        } else {
+          // remove
+          const authHeader = getAuthHeader();
+          await fetch(`${API_URL}api/spotify/me/shows/remove?showIds=${show.id}`, {
+            headers: {
+              Authorization: authHeader,
+            },
+          }).then((res) => res.json());
+          setLiked(false);
+        }
+      } 
+    };
     
     useEffect(() => {
         fetchShowData();
@@ -108,7 +153,13 @@ export default function Show(props: IProps) {
                 {show.episodes.total} Episode{show.episodes.total === 1 ? "" : "s"}
               </p>
             </div>
-            <div className={"PlaylistHeaderFilter"}>{/* Filter */}</div>
+            <div className={"PlaylistHeaderFilter showsLikeOption"}>
+              <button className={`button checkbox ${liked ? "checked" : ""}`} onClick={handleLikeButton}>
+                <span className={"material-icons"}>{liked ? "favorite" : "favorite_border"}</span>
+                  <br />
+                <p>Add to Collection</p>
+              </button>
+            </div>
           </div>
         )
       ) : (
