@@ -122,7 +122,6 @@ function AlbumsMenu(props: Props) {
   };
 
   const handleLikeButton = async () => {
-    console.log("liked");
     if (props.data !== undefined) {
       if (!liked) {
         // add
