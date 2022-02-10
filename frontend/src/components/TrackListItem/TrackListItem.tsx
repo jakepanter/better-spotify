@@ -24,7 +24,7 @@ import AppContext from "../../AppContext";
 import { getAuthHeader } from "../../helpers/api-helpers";
 import { useSelector } from "react-redux";
 import { PlaybackState } from "../../utils/playbackSlice";
-import {NotificationsService} from "../NotificationService/NotificationsService";
+import { NotificationsService } from "../NotificationService/NotificationsService";
 
 type Body = {
   context_uri: string | undefined;
@@ -56,6 +56,7 @@ type Props = {
   onContextMenuOpen: (trackUri: String, x: number, y: number) => void;
   id_tracklist: string;
   type: string;
+  episode?: boolean;
 };
 
 function TrackListItem(props: Props) {
@@ -94,7 +95,7 @@ function TrackListItem(props: Props) {
   }
 
   const sendRequest = useCallback(async (reqType: string) => {
-    if (reqType === 'play') {
+    if (reqType === "play") {
       // POST request using fetch inside useEffect React hook
       let context_uri;
       if (type === "album") {
@@ -128,16 +129,16 @@ function TrackListItem(props: Props) {
         },
         body: JSON.stringify(body),
       }).then((res) => {
-        if (!res.ok) NotificationsService.push('warning', 'No active playback device found');
+        if (!res.ok) NotificationsService.push("warning", "No active playback device found");
       });
-    } else if (reqType === 'pause') {
+    } else if (reqType === "pause") {
       const authHeader = getAuthHeader();
       fetch(`${API_URL}api/spotify/me/player/pause`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: authHeader,
-        }
+        },
       });
     }
   }, []);
@@ -157,20 +158,20 @@ function TrackListItem(props: Props) {
       } else if (e.ctrlKey) {
         setSpecialKey("ctrl");
       } else if (e.target.className == "TableCellPlayEpisode") {
-        sendRequest('play');
+        sendRequest("play");
       } else {
         setSpecialKey(null);
       }
       setSelected(!selected);
 
-      if (e.detail === 2) sendRequest('play');
+      if (e.detail === 2) sendRequest("play");
     }
   };
 
   const handlePlayButton = (e: any) => {
     e.preventDefault();
-    if (playback.currentTrackId === track.track.id && !playback.paused) sendRequest('pause');
-    else sendRequest('play');
+    if (playback.currentTrackId === track.track.id && !playback.paused) sendRequest("pause");
+    else sendRequest("play");
   };
 
   const handleRightClick = (e: any) => {
@@ -334,13 +335,19 @@ function TrackListItem(props: Props) {
     } else {
       return (
         <div
-          className={`Pointer TableRow ${(track.album !== undefined && track.album.id !== null) || type === 'album' ? '': 'NotAvailable'} ${selected ? "Selected" : ""}
+          className={`Pointer TableRow ${
+            (track.album !== undefined && track.album.id !== null) || type === "album"
+              ? ""
+              : "NotAvailable"
+          } ${selected ? "Selected" : ""}
         ${playback.currentTrackId === track.track.id ? "Playing" : ""}
         ${playback.paused ? "Paused" : ""}`}
-          onClick={(e) => handleClick(e)}
-          onContextMenu={(e) => handleRightClick(e)}
+          onClick={props.episode ? undefined : (e) => handleClick(e)}
+          onContextMenu={props.episode ? undefined : (e) => handleRightClick(e)}
         >
-          {(track.album !== undefined && track.album.available_markets !== undefined && track.album.images.length !== 0) ||
+          {(track.album !== undefined &&
+            track.album.available_markets !== undefined &&
+            track.album.images.length !== 0) ||
           (track.album !== undefined && type === "topTracks" && track.album.images.length !== 0) ? (
             <div className={"TableCell TableCellArtwork"} onClick={(e) => handlePlayButton(e)}>
               <img
@@ -357,7 +364,7 @@ function TrackListItem(props: Props) {
 
           <div className={"TableCell TableCellTitleArtist"}>
             <span className={"TableCellTitle"}>{track.name}</span>
-            {track.artists !== undefined ? (
+            {track.artists !== undefined && !props.episode ? (
               <span className={"TableCellArtist"}>
                 {/*TODO style bitte anpassen*/}
                 <span className={"CardArtist"}>
@@ -380,9 +387,15 @@ function TrackListItem(props: Props) {
           </div>
           {track.album !== undefined ? (
             <div className={"TableCell TableCellAlbum"}>
-              <Link to={`/album/${track.album.id}`} className={"albumLink"} key={trackUniqueId}>
-                {track.album.name}
-              </Link>
+              {props.episode ? (
+                <Link to={`/show/${track.album.id}`} className={"albumLink"} key={trackUniqueId}>
+                  {track.album.name}
+                </Link>
+              ) : (
+                <Link to={`/album/${track.album.id}`} className={"albumLink"} key={trackUniqueId}>
+                  {track.album.name}
+                </Link>
+              )}
             </div>
           ) : (
             <></>
@@ -422,7 +435,7 @@ function TrackListItem(props: Props) {
               simple
               icon="playlist_add"
               className="material-icons"
-              onClick={handleAddToPlaylist}
+              onClick={props.episode ? undefined : handleAddToPlaylist}
             />
           </div>
         </div>
