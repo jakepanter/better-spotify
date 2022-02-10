@@ -16,10 +16,18 @@
   display: flex;
   flex-flow: row wrap;
   margin-bottom: $spacer;
-  padding: 1rem;
+  padding-bottom: 1rem;
   position: relative;
   top: 0;
   z-index: 1;
+
+  .DashboardCustomizeGrid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(auto-fill, 1fr);
+    gap: $spacer / 2;
+    width: 100%;
+  }
 
   h3 {
     font-size: 24px;
@@ -27,15 +35,11 @@
     flex-basis: 100%;
   }
 
-  .infoCustomizeStartpage {
-    flex-basis: 100%;
-    padding-bottom: 5px;
-
-    span {
-      font-size: 17px;
-      vertical-align: text-top;
-      margin-right: 5px;
-    }
+  .infoCustomizeStartpage span {
+    font-size: 17px;
+    vertical-align: text-top;
+    margin-right: 5px;
+    margin-bottom: 10px;
   }
 
   h4 {
@@ -50,23 +54,24 @@
     align-items: center;
     display: flex;
     flex-flow: row wrap;
-    margin-right: 1rem;
-    margin-top: 1rem;
-    max-width: calc(100% / 3);
+    grid-column: 1 / 3;
 
     .button {
-      margin-right: 10px;
+      border-radius: $border-radius;
+
+      &:not(:last-child) {
+        margin-right: 10px;
+      }
     }
 
     &Selects {
       align-items: center;
       display: flex;
       flex-flow: row wrap;
-      margin-right: $spacer / 4;
+      margin-right: 10px;
 
       .input-select {
         height: auto;
-        margin-right: 10px;
       }
     }
 
@@ -91,7 +96,7 @@
 
       .input-select {
         pointer-events: none;
-        opacity: .5
+        opacity: .5;
       }
     }
   }
@@ -104,14 +109,12 @@
     align-items: center;
     display: flex;
     flex-flow: row wrap;
-    margin-right: 1rem;
-    margin-top: 1rem;
+    grid-column: 3 / 5;
 
     &Selects {
       align-items: center;
       display: flex;
       flex-flow: row wrap;
-      margin-right: $spacer / 4;
 
       .input-select {
         height: 100%;
@@ -120,8 +123,11 @@
     }
 
     .DashboardChartsFormButtons .button {
-      margin-left: 10px;
+      border-radius: $border-radius;
 
+      &:not(:last-child) {
+        margin-right: 10px;
+      }
     }
 
     h4 {
@@ -131,32 +137,42 @@
 
   // Checkboxes CSS
   .DashboardSettingsForm {
-    align-content: center;
     display: flex;
     flex-flow: column wrap;
     padding: 10px;
     border: 1px solid rgba($color-default, .5);
     border-radius: $border-radius;
-    max-width: calc(100% / 3);
-    margin-top: 1rem;
 
     .Checkbox {
       margin-right: $spacer;
     }
   }
 
-  @media screen and(max-width: 1513px) {
-    .DashboardTagTracklistsForm {
-      max-width: unset;
-      button:not(:last-child), .DashboardTagTracklistsForm select {
+  @media screen and(max-width: 1757px) {
+    .DashboardChartsFormSelects .input-select {
+      margin: 0 10px 10px 0;
+    }
+  }
+
+  @media screen and(max-width: 1585px) {
+    .DashboardCustomizeGrid {
+      grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
+
+      h4 {
         margin-bottom: 5px;
       }
     }
-  }
-  @media screen and(max-width: 1100px) {
-    .DashboardSettingsForm {
-      max-width: unset;
-      flex-direction: row;
+    .DashboardTagTracklistsForm, .DashboardChartsForm {
+      grid-column: unset;
+      padding-bottom: 0px;
+
+      &Selects .input-select {
+        margin: 0 10px 10px 0;
+      }
+
+      .button {
+        margin-bottom: 10px;
+      }
     }
   }
 }
@@ -172,16 +188,10 @@
     overflow: hidden;
     position: relative;
     box-shadow: 0px 0px 10px 0px rgba($color-secondary, 0.1);
-
-    //doesnt work with the context menu, please remove or specify elements
-    // &>* {
-    //   height: 100%;
-    //   width: 100%;
-    // }
   }
 
   .RemoveButton {
-    background-color: lighten($color-accent-dark, 0.5);
+    background-color: transparent;
     border: none;
     color: $color-default;
     display: none;
@@ -191,6 +201,8 @@
     position: absolute;
     right: 0;
     top: 0;
+    z-index: 3;
+    border-radius: 0px 0px 0px $border-radius;
   }
 
   .DashboardItem:hover .RemoveButton {
@@ -254,7 +266,7 @@
     }
 
     .RemoveButton {
-      background-color: lighten($color-accent-light, 0.5);
+      background-color: transparent;
       color: $color-default-light;
     }
 
