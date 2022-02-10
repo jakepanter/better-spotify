@@ -5,6 +5,7 @@ import {
   ListOfUsersPlaylistsResponse,
   PlaylistObjectSimplified,
   PlaylistTrackResponse,
+  UsersFollowPlaylistReponse,
 } from "spotify-types";
 import { ControlledMenu, MenuDivider, MenuItem, SubMenu, useMenuState } from "@szhsin/react-menu";
 import useSWR, { mutate } from "swr";
@@ -39,6 +40,7 @@ function PlaylistsMenu(props: Props) {
   const [isOnStartpage, setIsOnStartpage] = useState<boolean>(
     DashboardService.containsPlaylist(props.data.id)
   );
+  const [following, setFollowing] = useState<boolean>();
 
   const { data: playlists, error: playlistsError } = useSWR<ListOfUsersPlaylistsResponse>(
     `${API_URL}api/spotify/playlists`,
@@ -63,12 +65,27 @@ function PlaylistsMenu(props: Props) {
 
   useEffect(() => {
     offset = 0;
+    isFollowingPlaylistData(props.data.id);
   }, [props.data]);
 
   useEffect(() => {
     toggleMenu(true);
     setIsOnStartpage(DashboardService.containsPlaylist(props.data.id));
   }, [props.anchorPoint]);
+
+  async function isFollowingPlaylistData(playlistId: string) {
+    if (!me) console.error("didnt fetch user profile");
+    const authHeader = getAuthHeader();
+    const data: UsersFollowPlaylistReponse = await fetch(
+      `${API_URL}api/spotify/playlists/contains?playlistId=${playlistId}&ownerId=${me?.id}&followerIds=${me?.id}`,
+      {
+        headers: {
+          Authorization: authHeader,
+        },
+      }
+    ).then((res) => res.json());
+    setFollowing(data[0]);
+  }
 
   const getAllTracksOfPlaylist = async (playlist: PlaylistObjectSimplified): Promise<string[]> => {
     const total = playlist.tracks.total;
@@ -121,16 +138,30 @@ function PlaylistsMenu(props: Props) {
     NotificationsService.push("success", "Added tracks to new playlist");
   };
 
-  const deletePlaylist = async () => {
-    state.setContextMenu({ ...state.contextMenu, isOpen: false });
+  const handleFollowButton = async () => {
     const playlistId = props.data.id;
-    await fetch(`${API_URL}api/spotify/playlist/${playlistId}/unfollow`, {
-      headers: { Authorization: authHeader },
-    });
-    mutate(`${API_URL}api/spotify/playlists`);
-    history.push(history.location.pathname, { unfollowed: playlistId });
+    if (following) {
+      const authHeader = getAuthHeader();
+      await fetch(`${API_URL}api/spotify/playlist/${playlistId}/unfollow`, {
+        headers: { Authorization: authHeader },
+      });
+      setFollowing(false);
+      mutate(`${API_URL}api/spotify/playlists`);
+      history.push(history.location.pathname, { unfollowed: playlistId });
 
-    NotificationsService.push("success", "Removed playlist from library");
+      NotificationsService.push("success", "Removed playlist from library");
+    } else {
+      const authHeader = getAuthHeader();
+      await fetch(`${API_URL}api/spotify/playlist/${playlistId}/follow`, {
+        headers: { Authorization: authHeader },
+      });
+      setFollowing(true);
+      mutate(`${API_URL}api/spotify/playlists`);
+      history.push(history.location.pathname, { followed: playlistId });
+
+      NotificationsService.push("success", "Added playlist to library");
+    }
+    state.setContextMenu({ ...state.contextMenu, isOpen: false });
   };
 
   const toggleStartpage = () => {
@@ -186,7 +217,9 @@ function PlaylistsMenu(props: Props) {
         )}
       </SubMenu>
       {props.data.owner.id === me?.id && <MenuItem onClick={editDetails}>Edit Playlist</MenuItem>}
-      <MenuItem onClick={deletePlaylist}>Unfollow</MenuItem>
+      <MenuItem disabled={following === undefined} onClick={handleFollowButton}>
+        {!following ? "Follow" : me?.id === props.data.owner.id ? "Delete" : "Unfollow"}
+      </MenuItem>
     </ControlledMenu>
   );
 }

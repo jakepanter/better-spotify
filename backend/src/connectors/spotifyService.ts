@@ -447,10 +447,39 @@ export default class SpotifyService {
     }
   }
 
+  followPlaylist = async (accessToken: string, playlistId: string) => {
+    try {
+      this.spotifyApi.setAccessToken(accessToken);
+      const res = await this.spotifyApi.followPlaylist(playlistId);
+      this.spotifyApi.resetAccessToken();
+      return res.body;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  }
+
   unfollowPlaylist = async (accessToken: string, playlistId: string) => {
     try {
       this.spotifyApi.setAccessToken(accessToken);
       const res = await this.spotifyApi.unfollowPlaylist(playlistId);
+      this.spotifyApi.resetAccessToken();
+      return res.body;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  }
+
+  isFollowingPlaylist = async (
+    accessToken: string,
+    ownerId: string,
+    playlistId: string,
+    followerIds: string[],
+  ) => {
+    try {
+      this.spotifyApi.setAccessToken(accessToken);
+      const res = await this.spotifyApi.areFollowingPlaylist(ownerId, playlistId, followerIds);
       this.spotifyApi.resetAccessToken();
       return res.body;
     } catch (e) {
