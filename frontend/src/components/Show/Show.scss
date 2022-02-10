@@ -1,0 +1,32 @@
+@import './src/boilerplate.scss';
+
+.showsLikeOption {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+
+    .button {
+        color: rgba($color-default, .5);
+        font-size: 14px;
+        text-overflow: ellipsis;
+
+        span {
+        font-size: 45px;
+        color: $color-default;
+        transition: $transition-base;
+        }
+
+        &:hover {
+        background: none !important;
+        color: rgba($color-default, .5);
+
+        span {
+            color: $color-primary;
+        }
+        }
+    }
+
+    .checked span {
+        color: $color-primary !important;
+    }
+}

@@ -211,7 +211,7 @@ export default class App {
       return res.json(data);
     });
 
-     this.server.get('/api/spotify/me/albums/add', async (req: Request, res: Response) => {
+    this.server.get('/api/spotify/me/albums/add', async (req: Request, res: Response) => {
       const accessToken = getToken(req);
       const albumIds: string[] = (req.query.albumIds as string ?? '').split(',');
       const data = await this.spotifyService.addToSavedAlbums(accessToken, albumIds);
@@ -414,6 +414,28 @@ export default class App {
       return res.json(show);
     });
 
+    this.server.get('/api/spotify/me/shows/contains', async (req: Request, res: Response) => {
+      const accessToken = getToken(req);
+      const showIds: string[] = (req.query.showIds as string ?? '').split(',');
+      if (showIds.length === 1 && showIds[0] === '') return res.json([]);
+      const data = await this.spotifyService.isShowSaved(accessToken, showIds);
+      return res.json(data);
+    });
+
+     this.server.get('/api/spotify/me/shows/add', async (req: Request, res: Response) => {
+      const accessToken = getToken(req);
+      const showIds: string[] = (req.query.showIds as string ?? '').split(',');
+      const data = await this.spotifyService.addToSavedShows(accessToken, showIds);
+      return res.json(data);
+    });
+
+    this.server.get('/api/spotify/me/shows/remove', async (req: Request, res: Response) => {
+      const accessToken = getToken(req);
+      const showIds: string[] = (req.query.showIds as string ?? '').split(',');
+      const data = await this.spotifyService.removeFromSavedShows(accessToken, showIds);
+      return res.json(data);
+    });
+
     this.server.get('/api/spotify/episode/:episodeId', async (req: Request, res: Response) => {
       const accessToken = getToken(req);
       const { episodeId } = req.params;
@@ -462,9 +484,7 @@ export default class App {
       const status = await this.spotifyService.play(accessToken, req.body);
 
       if (status === null) return res.sendStatus(500);
-      if (!status) return res.sendStatus(404);
-
-      return res.sendStatus(200);
+      return res.sendStatus(status);
     });
 
     this.server.post('/api/spotify/me/player/previous', async (req: Request, res: Response) => {

@@ -86,10 +86,10 @@ export default function Album(props: IProps) {
     ).then((res) => res.json());
 
     let saved: CheckUsersSavedTracksResponse = [];
-    const savedAlbums = data.items.map((i) => i.id);
-    if (savedAlbums.length !== 0) {
+    const albumTracksIds = data.items.map((i) => i.id);
+    if (albumTracksIds.length !== 0) {
       // Save whether tracks are saved or not
-      saved = await fetchIsSavedData(savedAlbums);
+      saved = await fetchIsSavedData(albumTracksIds);
     }
     const fetchedTracks = data.items as AlbumTrack[];
     setTracks((oldTracks) => [

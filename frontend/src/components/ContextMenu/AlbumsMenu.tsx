@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   AlbumObjectFull,
   AlbumObjectSimplified,
+  CheckUserSavedAlbumsResponse,
   CreatePlaylistResponse,
   CurrentUsersProfileResponse,
   ListOfUsersPlaylistsResponse,
@@ -35,6 +36,7 @@ function AlbumsMenu(props: Props) {
   const [isOnStartpage, setIsOnStartpage] = useState<boolean>(
     DashboardService.containsAlbum(props.data.id)
   );
+  const [liked, setLiked] = useState<boolean>();
 
   const { data: playlists, error: playlistsError } = useSWR<ListOfUsersPlaylistsResponse>(
     `${API_URL}api/spotify/playlists`,
@@ -55,6 +57,10 @@ function AlbumsMenu(props: Props) {
     toggleMenu(true);
     setIsOnStartpage(DashboardService.containsAlbum(props.data.id));
   }, []);
+
+  useEffect(() => {
+    isAlbumSavedData([props.data.id]);
+  }, [props.data]);
 
   useEffect(() => {
     toggleMenu(true);
@@ -82,6 +88,20 @@ function AlbumsMenu(props: Props) {
     if (notify) NotificationsService.push("success", "Added tracks to playlist");
   };
 
+  async function isAlbumSavedData(albumIds: string[]) {
+    const authHeader = getAuthHeader();
+    const data: CheckUserSavedAlbumsResponse = await fetch(
+      `${API_URL}api/spotify/me/albums/contains?albumIds=${albumIds}`,
+      {
+        headers: {
+          Authorization: authHeader,
+        },
+      }
+    ).then((res) => res.json());
+    //get Saved Status and set it
+    setLiked(data[0]);
+  }
+
   const addToNewPlaylist = async () => {
     //create new playlist
     // const number = playlists ? playlists.items.length + 1 : "-1";
@@ -99,6 +119,33 @@ function AlbumsMenu(props: Props) {
     history.push(`/playlist/${newPlaylist.id}`, { created: newPlaylist.id });
 
     NotificationsService.push("success", "Added tracks to new playlist");
+  };
+
+  const handleLikeButton = async () => {
+    if (props.data !== undefined) {
+      if (!liked) {
+        // add
+        const authHeader = getAuthHeader();
+        await fetch(`${API_URL}api/spotify/me/albums/add?albumIds=${props.data.id}`, {
+          headers: {
+            Authorization: authHeader,
+          },
+        }).then((res) => res.json());
+        setLiked(true);
+        history.push(history.location.pathname, { added: props.data });
+      } else {
+        // remove
+        const authHeader = getAuthHeader();
+        await fetch(`${API_URL}api/spotify/me/albums/remove?albumIds=${props.data.id}`, {
+          headers: {
+            Authorization: authHeader,
+          },
+        }).then((res) => res.json());
+        setLiked(false);
+        history.push(history.location.pathname, { removed: props.data });
+      }
+    }
+    state.setContextMenu({ ...state.contextMenu, isOpen: false });
   };
 
   const toggleStartpage = () => {
@@ -143,7 +190,9 @@ function AlbumsMenu(props: Props) {
           <MenuItem disabled>Fetching Playlists...</MenuItem>
         )}
       </SubMenu>
-      <MenuItem disabled>Remove from Library</MenuItem>
+      <MenuItem onClick={handleLikeButton} disabled={liked === undefined}>
+        {liked ? "Remove from" : "Add to"} Library
+      </MenuItem>
     </ControlledMenu>
   );
 }

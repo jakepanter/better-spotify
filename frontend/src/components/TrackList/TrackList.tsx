@@ -15,6 +15,7 @@ import { ShowEpisodes } from "../Show/Show";
 import { TagsTrack } from "../TagTracklist/TagTracklist";
 import { SongHistoryTrack } from "../SongHistory/SongHistory";
 import { Link } from "react-router-dom";
+import { TopTrack } from "../Artist/Artist";
 
 type Props =
   | {
@@ -71,7 +72,7 @@ type Props =
     }
   | {
       type: "topTracks";
-      tracks: TrackObjectFull[];
+      tracks: TopTrack[];
       loadMoreCallback: () => void;
       fullyLoaded: boolean;
       id_tracklist: string;
@@ -195,6 +196,7 @@ function TrackList(props: Props) {
 
   return (
     <>
+      {/* ----- ALBUM ----- */}
       {type === "album" && (
         <div
           className={`Tracklist ${sizeClass}`}
@@ -258,6 +260,7 @@ function TrackList(props: Props) {
         </div>
       )}
 
+      {/* ----- PLAYLIST ----- */}
       {type === "playlist" && (
         <div
           className={`Tracklist ${sizeClass}`}
@@ -331,6 +334,7 @@ function TrackList(props: Props) {
         </div>
       )}
 
+      {/* ----- SEARCH ----- */}
       {type === "search" && (
         <div className={`Tracklist ${sizeClass}`} ref={container}>
           <div className={"TableHeader TableRow"}>
@@ -394,6 +398,8 @@ function TrackList(props: Props) {
           </div>
         </div>
       )}
+
+      {/* ----- TOP TRACKS ----- */}
       {type === "topTracks" && (
         <div className={`Tracklist ${sizeClass}`} ref={container}>
           <div className={"TableHeader TableRow"}>
@@ -405,6 +411,11 @@ function TrackList(props: Props) {
               </Link>
             </div>
             <div className={"TableCell TableCellDuration"}>Duration</div>
+            <div className={"TableCell TableCellLiked"}>
+              <Link to={"/me/tracks"} className={"TableHeaderLink"}>
+                Liked
+              </Link>
+            </div>
             <div className={"TableCell TableCellTags"}>
               <Link to={"/settings"} className={"TableHeaderLink"}>
                 Tags
@@ -431,6 +442,7 @@ function TrackList(props: Props) {
                   duration_ms={item.duration_ms}
                   album={item.album}
                   key={type + "-track-" + item.id + "-" + index}
+                  liked={item.is_saved}
                   listIndex={index}
                   selected={isTrackSelected(item, index)}
                   onSelectionChange={handleSelectionChange}
@@ -451,6 +463,8 @@ function TrackList(props: Props) {
           </div>
         </div>
       )}
+
+      {/* ----- SAVED ----- */}
       {type === "saved" && (
         <div
           className={`Tracklist ${sizeClass}`}
@@ -522,6 +536,7 @@ function TrackList(props: Props) {
         </div>
       )}
 
+      {/* ----- SHOW ----- */}
       {type === "show" && (
         <div
           className={"Tracklist"}
@@ -567,6 +582,7 @@ function TrackList(props: Props) {
         </div>
       )}
 
+      {/* ----- TAGS ----- */}
       {type === "tags" && (
         <div
           className={`Tracklist ${sizeClass}`}
@@ -629,6 +645,7 @@ function TrackList(props: Props) {
         </div>
       )}
 
+      {/* ----- SONG HISTORY ----- */}
       {type === "songhistory" && (
         <div
           className={`Tracklist ${sizeClass}`}

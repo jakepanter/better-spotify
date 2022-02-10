@@ -25,6 +25,14 @@
       position: relative;
       overflow: visible;
 
+      a {
+        color: $color-primary;
+        text-decoration: none;
+        &:hover{
+          text-decoration: underline;
+        }
+      }
+
       input[type="checkbox"] {
         position: absolute;
         top: 5px;
