@@ -410,7 +410,7 @@ function TrackListItem(props: Props) {
           )}
 
           <div className={"TableCell TableCellDuration"}>{formatTimestamp(track.duration_ms)}</div>
-          {track.liked !== null ? (
+          {track.liked !== null && !props.episode ? (
             <div className={"TableCell TableCellLiked"}>
               <button className={`checkbox ${liked ? "checked" : ""}`} onClick={handleLikeButton}>
                 <span className={"material-icons"}>{liked ? "favorite" : "favorite_border"}</span>
