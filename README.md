@@ -1,5 +1,9 @@
 # better-spotify
 
+'Better-Spotify' is a web application that is based on the audio-streaming platform Spotify and is designed to provide an improved user experience. The main features Spotify offers are still prominent while also including new ones that were priorly overlooked or discarded.
+
+This was developed as part of a university project.
+
 ## Project Structure
 
 Frontend and backend are two independent npm packages.
