@@ -89,7 +89,7 @@ export default function Playlists() {
 
   //fetch next playlists when you reach the bottom of the current list
   const onScroll = (e: any) => {
-    const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+    const bottom = Math.abs(e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight) < 2;
     if (bottom && playlists && playlists.offset < playlists.total) {
       const limit = playlists.limit;
       const offset = playlists.offset + limit;
